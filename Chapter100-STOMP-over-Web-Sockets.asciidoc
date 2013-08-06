@@ -1,0 +1,5 @@
+== STOMP Over Web Sockets
+
+[role="lead"]
+In this chapter, we describe how STOMP can be used over HTML5 Web Sockets
+to let Web applications act as STOMP publishers and subscribers.

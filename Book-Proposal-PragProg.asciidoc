@@ -1,0 +1,76 @@
+== Proposal for The Pragmatic Programmers
+
+== Mobile and Web Messaging
+
+=== Author
+
+Jeff Mesnil | +jmesnil@gmail.com+ | http://jmesnil.net/
+
+=== Keywords
+
+* Messaging, mobile computing, Web computing, 'Internet of things'
+
+=== Preamble
+
+The use of mobile devices is increasing and widening. Not only smartphones and tablets are connected to Internet but also home devices, car systems, etc.
+Even though these devices are increasingly powerful, they still have some constraints unknown from desktop computers, they have limited battery life and intermittent network availability.
+They require protocols to communicate with other devices and servers in a reliable and efficient way.
+The messaging protocols are suited to overcome these constraints and use efficiently the most critical resources (network bandwidth and memory usage). They guarantee that the data will be effectively delivering even in the event of loss of network connectivity in a timely fashion.
+Web applications are increasingly running on mobile devices. For these applications too, the messaging concepts applies and can make them more efficient and responsive.
+
+The messaging concepts are well known in the enterprise software domain but they are only starting to spread out to other software domains, including mobile and Web computing.
+Software developers for these domains needs a good documentation to leverage these messaging protocols, to use them when they make sense while avoiding their pitfalls.
+
+=== Book Outline
+
+The book would be composed of 4 sections:
+
+1. Messaging concepts
+2. STOMP
+3. MQTT
+4. HTML5 Web Sockets
+
+The 1st section describes the messaging concepts, its models (pub/sub, point-to-point) and features (quality of service, message persistence, message format). It also describes the advantages (and weaknesses) of messaging compared to request/reply protocol (e.g. HTTP). It highlights the differences between messages and user notifications (a frequent source of confusion) and how they complement each other.
+The next 2 sections will describe the messaging protocols (STOMP[1] and MQTT[2]) and their use on mobile devices in native environments.
+The last chapter will introduce HTML5 Web Sockets[3] and how they enable to use messaging protocols inside Web browsers.
+All along the book, an application will be developed to showcase the protocols and their features. I have not clearly define which example to use. One idea is a truck supervision system with truck using mobile devices to track the position using GPS and receiving commands from a control center. The control center itself is a Web application gathering all trucks data and sending out command to them.
+
+The book should be around 200-250 pages.
+
+=== Technology
+
+STOMP and MQTT are the most interesting messaging protocols for mobile and Web computing.
+
+Both are simple (STOMP is text-based, MQTT is binary), available on many platforms and devices.
+They are flexible enough to be used in various use cases. Each have its own strengths and weaknesses that must determine the choice of using one or another.
+They offer guaranteed delivery and different quality of service.
+STOMP is the leading messaging protocol to communicate between heterogeneous platforms.
+Facebook is using MQTT for its mobile messenger app.
+
+HTML5 Web Sockets allow 2-way communication between a Web browser and a server. It is a fundamental block to provide messaging protocols inside Web browsers. JavaScript libraries exist for both STOMP and MQTT to communicate over Web Sockets.
+
+=== Why Me?
+
+I have been a core developer on 2 messaging brokers and am leading the messaging subsystem of WildFly/JBoss application server[3]. I have a deep expertise on messaging systems to share.
+
+I also worked for a media company where I built a messaging infrastructure connecting multiple components on different platforms and languages. I was confronted to the type of challenges that are solved by messaging: loosely-coupled design, heterogeneous platforms, network availabilty, quality of service, etc.
+
+I also developed apps for iOS devices[4][5] and acknowledged first-hand the unique challenges that they bring.
+I have a keen interest in messaging technology and its expanded use outside of enterprise software and into mobile and web computing.
+
+For nine years, I have written technical articles on my web site[6] and talked at several conferences about messaging. I want to share all this expertise and knowledge with other software developers to help them understand and leverage it.
+
+I have a dozen of your books on my bookshelf and have long appreciated their qualities. That would be a real pleasure to collaborate with you on this book.
+
+=== Market
+
+The target demographic will primarily be mobile and Web audiences, though the text will also be applicable to backend developers.
+The protocols and technology described in the text applies to a variety of platforms and languages.
+The code example can be in various languages but I suggest to limit it to the most popular languages for mobile and Web computing (Objective-C/iOS, Java/Android and JavaScript).
+
+[1] http://mqtt.org
+[2] http://stomp.github.io
+[3] http://wildfly.org
+[4] https://itunes.apple.com/en/app/toms-hardware/id347080280
+[5] https://itunes.apple.com/en/app/toms-guide/id347093048
+[6] http://jmesnil.net/weblog/

@@ -1,0 +1,6 @@
+== Mobile Messaging
+
+[role="lead"]
+In this chapter, we present some challenges offered by mobile devices and their
+specific constraints. We highlight how messaging protocols can alleviate these
+constraints and are well suited for mobile applications.

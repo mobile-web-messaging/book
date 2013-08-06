@@ -1,0 +1,15 @@
+== MQTT
+
+[role="lead"]
+In this chapter, we present MQTT, a binary-based protocol develop for telemetry
+communication. Its simplicity and compactness make it ideally suited for mobile devices.
+
+TODO
+
+=== Protocol Features
+
+TODO
+
+=== Protocol clients
+
+TODO

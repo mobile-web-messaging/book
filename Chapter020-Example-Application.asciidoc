@@ -1,0 +1,11 @@
+== Truck Tracker Messaging Application
+
+[role="lead"]
+In this chapter, we present the _Truck Tracker_ application that will be built all along the book.
+
+The application consists in 2 (or 3) components:
+
+* a mobile app (on iOS) that sends the GPS data of the device (the _truck_) and
+receive delivery orders
+* a Web app (the _control center_) that displays the positions of all the trucks
+on a map and can be used to send order to any of them

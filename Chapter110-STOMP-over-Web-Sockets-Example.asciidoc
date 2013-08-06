@@ -1,0 +1,9 @@
+== STOMP Over Web Sockets Example
+
+[role="lead"]
+In this chapter, we built a Web application that uses STOMP over Web Sockets to
+display truck GPS positions on a map and send them orders.
+
+=== Truck Tracker Control Center
+
+TODO

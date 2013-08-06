@@ -1,0 +1,18 @@
+== Web Messaging
+
+[role="lead"]
+In this chapter, we present some challenges that the Web (and HTTP) present to
+build Web applications that are updated dynamically. We highlight how new
+features in HTML5 allows two-way communication between the Web client and the
+server. These new features can be leveraged to use messaging protocols in Web
+applications.
+
+TODO
+
+=== HTTP Constraints
+
+TODO
+
+=== Web Browser Constraints
+
+TODO

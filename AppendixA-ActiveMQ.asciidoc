@@ -1,0 +1,80 @@
+[appendix]
+== Appendix: Apache ActiveMQ Configuration
+
+[role="lead"]
+In this appendix, we describe how to install and configure Apache ActiveMQ to
+support STOMP and MQTT protocols
+
+=== Download and Installation
+
+http://activemq.apache.org/activemq-580-release.html[ActiveMQ 5.8.0 Download page]
+http://activemq.apache.org/getting-started.html[Getting started]
+
+    $ tar zxvf apache-activemq-5.8.0-bin.tar.gz
+    $ cd apache-activemq-5.8.0
+    $ ./bin/activemq create ~/Work/mybroker
+    $ cd ~/Work/mybroker
+    $ ./bin/mybroker start
+    $ tail data/activemq.log
+    ...
+    2013-06-14 19:44:52,801 | INFO  | Apache ActiveMQ 5.8.0 (mybroker, ID:retsina.local-53410-1371231892651-0:1) started | org.apache.activemq.broker.BrokerService | main
+    ...
+
+Stop the broker to update its configuration to accepts STOMP and MQTT connections.
+
+    $ ./bin/mybroker stop
+    ...
+    Stopping broker: mybroker
+    .... FINISHED
+
+=== STOMP Configuration
+
+http://activemq.apache.org/stomp.html[STOMP configuration]
+
+    $ vim ./conf/activemq.xml
+    ...
+    <transportConnectors>
+       ...
+       <transportConnector name="stomp" uri="stomp://localhost:61613"/>
+       ...
+    </transportConnectors>
+
+When ActiveMQ is restarted, it displays a log that it accepts connections for the STOMP URL +stomp://localhost:61613+.
+
+    2013-06-14 19:44:52,797 | INFO  | Listening for connections at: stomp://localhost:61613 | org.apache.activemq.transport.TransportServerThreadSupport | main
+    2013-06-14 19:44:52,797 | INFO  | Connector stomp Started | org.apache.activemq.broker.TransportConnector | main
+
+
+=== MQTT Configuration
+
+http://activemq.apache.org/mqtt.html[MQTT configuration]
+
+    $ vim ./conf/activemq.xml
+    ...
+    <transportConnectors>
+        ...
+        <transportConnector name="mqtt" uri="mqtt://localhost:1883"/>
+        ...
+    </transportConnectors>
+
+When ActiveMQ is restarted, it displays a log that it accepts connections for the MQTT URL +mqtt://localhost:1883+.
+
+    2013-06-14 19:44:52,799 | INFO  | Listening for connections at: mqtt://localhost:1883 | org.apache.activemq.transport.TransportServerThreadSupport | main
+    2013-06-14 19:44:52,800 | INFO  | Connector mqtt Started | org.apache.activemq.broker.TransportConnector | main
+
+
+=== Web Sockets Configuration
+
+http://activemq.apache.org/websockets.html[Web Sockets configuration]
+
+    $ vim ./conf/activemq.xml
+    ...
+    <transportConnectors>
+       ...
+       <transportConnector name="websocket" uri="ws://0.0.0.0:61614"/>
+       ...
+    </transportConnectors>
+
+When ActiveMQ is restarted, it displays a log that it accepts connections for the Web Sockers URL +ws://0.0.0.0:61614+.
+
+    2013-06-14 19:55:01,490 | INFO  | Connector websocket Started | org.apache.activemq.broker.TransportConnector | main

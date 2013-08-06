@@ -1,0 +1,49 @@
+== Proposal for O’Reilly Media
+
+== Mobile and Web Messaging
+
+=== Author
+Jeff Mesnil | +jmesnil@gmail.com+ | http://jmesnil.net/
+
+=== Preamble
+
+The use of mobile devices is increasing and widening. Not only smartphones and tablets are connected to internet but also automation devices, car systems, etc.
+Even though these devices are increasingly powerful, they still have some constraints unknown from desktop devices, they have limited battery life and intermittent network availability.
+They require efficient protocols to communicate with other devices and servers in a reliable efficient way.
+
+The messaging technology enables to overcome some of these constraints by providing protocols that use efficiently the most critical resources (network bandwith and memory usage) and guarantee that the data will be effectively delivering even in the event of loss of network connectivity.
+
+Applications are increasingly running inside a Web browsers or using Web technology. For these applications too, the messaging concepts applies and can make them more efficient and responsive.
+
+=== Keywords
+
+* Messaging, mobile computing, Web computing, 'Internet of things'
+
+=== Motivation
+
+The messaging concepts are well known in the enterprise software domain but they are only starting to spread out to other software domains, including mobile and Web computing.
+Software developers for this domain needs good documentation to leverage these messaging technologies, using them when they make sense while avoiding their pitfalls.
+
+* What does it mean to use messaging to communicate between devices?
+* When does using messaging make sense for mobile and Web computing?
+* Which messaging protocols are better suited for each use cases?
+* How do we connect heterogeneous devices to function seamlessly?
+
+This book will answer these questions and many others.
+
+=== Why Me?
+
+I have been a core developer on 2 messaging brokers and am leading the messaging subsystem of JBoss application server. I have a deep expertise on messaging system.
+
+I previously worked for a media company where I built a messaging infrastructure connecting multiple components on different platforms and languages. I was confronted to the type of challenges that are solved by messaging: loosely-coupled designs, heterogeneous platforms, network availabilty, etc.
+
+I also developped apps for mobile devices and acknowledged first-hand the unique challenges that they bring.
+I have a keen interest in messaging technology and its expanded use outside of enterprise software and into mobile and web computing.
+
+For nine years, I have written technical articles on my http://jmesnil.net/weblog[web site] and talked at several conferences about messaging. I want to gather all this expertise and knowledge and bring it to other software developers to help them understand and leverage this technology.
+
+=== Market
+
+The target demographic will primarily be mobile and Web audiences, though the text will also be applicable to backend developers.
+The protocols and technology described in the text applies to a variety of platforms and languages.
+The code example can be in various languages but I suggest to limit it to the most popular languages for mobile and Web computing (Objective-C/iOS, Java/Android and JavaScript).

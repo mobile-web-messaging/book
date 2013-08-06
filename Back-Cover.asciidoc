@@ -1,0 +1,41 @@
+== Mobile and Web Messaging
+
+The use of mobile devices is increasing and widening. Not only smartphones and
+tablets are connected to Internet but also home devices, car systems, etc. in
+the _Internet of Things_.
+
+Even though these devices are increasingly powerful, they still have some
+constraints unknown from desktop computers and servers, they have limited
+battery life and intermittent network availability.
+They require protocols to communicate with other devices and servers in a
+reliable and efficient way.
+The messaging protocols are suited to overcome these constraints and use
+efficiently their most critical resources (network bandwidth and memory usage).
+
+Web applications are increasingly running on these devices. For these
+applications too, the messaging protocols can make them more efficient
+and responsive.
+
+===  Why You Need This Book
+
+The messaging concepts are well known in the enterprise software domain but they
+are only starting to spread out to other platforms.
+This book provides an introduction to messaging protocols for mobile and
+Web developers:
+
+* Explains the concept of messaging protocols in contrast to request/reply
+protocols such as HTTP
+* Emphasizes the power of messaging protocols suited for mobile and Web
+platforms
+* Includes examples of mobile and Web applications sending and receiving
+messages from messaging brokers
+* Introduces messaging protocols suited for mobile devices
+* Discusses messaging client libraries for popular mobile platforms and Web
+browsers
+* Demonstrates how to integrate messaging into the application data flow
+* Explains how to access legacy enterprise messaging infrastructure from
+mobile devices
+
+*Previous programming experience is recommended.*
+
+*Mobile and Web Development*

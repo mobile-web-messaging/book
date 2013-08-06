@@ -8,6 +8,10 @@ coverage
 InstalledFiles
 lib/bundler/man
 output/
+coverage
+InstalledFiles
+lib/bundler/man
+output/
 pkg
 rdoc
 spec/reports

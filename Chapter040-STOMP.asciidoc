@@ -1,0 +1,49 @@
+== STOMP
+
+[role="lead"]
+In this chapter, we present the STOMP protocol, a simple text-based messaging
+protocol that is well suited to build simple lightweight messaging applications.
+
+=== Anatomy of a STOMP Frame
+
+TODO
+
+==== Destination
+
+TODO
+
+==== Headers
+
+TODO
+
+==== Payload
+
+TODO
+
+=== Connection
+
+TODO
+
+=== Send a Message
+
+TODO
+
+==== Content Headers
+
+TODO
+
+=== Receive a Message
+
+TODO
+
+==== Heart-beat
+
+TODO
+
+==== Message acknowledgement
+
+TODO
+
+==== Transaction
+
+TODO
