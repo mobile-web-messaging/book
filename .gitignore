@@ -5,6 +5,7 @@ _vendor
 .config
 .rvmrc
 coverage
+Gemfile*
 InstalledFiles
 lib/bundler/man
 output/
@@ -13,6 +14,7 @@ InstalledFiles
 lib/bundler/man
 output/
 pkg
+Rakefile
 rdoc
 spec/reports
 test/tmp
