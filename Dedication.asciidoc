@@ -1,4 +1,0 @@
-[dedication]
-== Dedication
-
-This book is dedicated to my cat, Garfield.
