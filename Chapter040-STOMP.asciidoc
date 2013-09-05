@@ -1,49 +1,343 @@
+[[ch_stomp]]
 == STOMP
 
 [role="lead"]
 In this chapter, we present the STOMP protocol, a simple text-based messaging
-protocol that is well suited to build simple lightweight messaging applications.
+protocol that is well suited to build simple lightweight messaging applications on any platforms.
+
+STOMP provides an interoperable wire format so that clients can communicate with any message broker.
+The simplicity of the protocol ensures that it's straightforward to have interoperability between any client and brokers.
+
+This chapter covers the latest released version of the protocol:
+http://stomp.github.io/stomp-specification-1.2.html[STOMP 1.2]
 
 === Anatomy of a STOMP Frame
 
-TODO
+STOMP is modelled on HTTP and based on _frames_. Each frame is composed of 3 elements:
 
-==== Destination
+* a _command_
+* an (optional) set of _headers_
+* an (optional) _payload_
 
-TODO
+.STOMP Frame Structure
+----
+COMMAND
+header1:value1
+header2:value2
+
+payload^@
+----
+
+STOMP is based on text (with UTF-8 as its default encoding)
+but it can also transmit binary data in its payload by specifying an altenative encoding.
+
+A STOMP client can serve two roles:
+
+. it can be a _producer_ and send messages using a +SEND+ frame
+(that is a frame with the +SEND+ command)
+. it can be a _consumer_ and subscribe to receive messages using a +SUBSCRIBE+ frame.
+Each received messages will be delivered by the broker to the client as +MESSAGE+ frames.
+
++SEND+, +SUBSCRIBE+, +MESSAGE+, along with the +CONNECT+ (resp. +DISCONNECT+) frame used to connect (resp. disconnect) to the messaging broker,
+are the most important frames.
+Other frames correspond to additional features (message acknowledgement, transaction, error handling).
 
 ==== Headers
 
-TODO
+Any STOMP frame accepts an optional set of headers.
+
+Some headers are defined in the specification and are mandatory for a given frame.
+For example, a +SEND+ frame must have a +destination+ header to indicate the destination of the messages.
+Other headers are optional.
+For example, if a +SEND+ frame contains a payload, it should also include both +content-type+ and +content-length+ headers.
 
 ==== Payload
 
-TODO
+Only +SEND+, +MESSAGE+ and +ERROR+ frames can contain payload.
+
+The payload in +SEND+ and +MESSAGE+ are the data that are exchanged.
+
+A messaging broker may send +ERROR+ frames to the client if something went wrong.
+The +ERROR+ frame may contain a payload with detailed information about the problem
+(in addition to a short description in a +message+ header).
 
 === Connection
 
-TODO
+.Install and configure a messaging broker
+[IMPORTANT]
+====
+Before using a STOMP client, we have to install and configure a messaging broker to
+communicate with it.
+
+In the book, we use Apache ActiveMQ as the messaging broker. The <<appendix_activemq>>
+appendix shows how to install and configure ActiveMQ with STOMP.
+
+Once ActiveMQ has been started, it will accept STOMP connections on +localhost:61613+.
+====
+
+Since STOMP is text-based, we can send and receive message from the command line
+using a +telnet+ client.
+
+[source]
+----
+$ telnet localhost 61613
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+----
+
+Once we are connected to the broker, the first step is to send a +CONNECT+ frame
+to establish a STOMP connection:
+
+.Connect to a STOMP broker
+[source]
+----
+CONNECT
+accept-version: 1.2
+
+^@
+----
+
+We indicate a +accept-version+ header with the value +1.2+ to be able to communicate
+with the broker using the version 1.2 of the protocol.
+
+A STOMP frame must be ended by a NULL octet.
+The +^@+ is the ASCII character for NULL octet. Type +ctrl + @+ to enter it.
+
+Note also that there is a blank line between the +accept-version+ header and the NULL octet.
+The blank line is mandatory to determine the end of the headers and the beginning
+of the optional payload (that is not present in the +CONNECT+ frame).
+
+Once you type +ctrl + @+, the messaging broker will handle the +CONNECT+ frame
+and reply with a +CONNECTED+ frame:
+
+.Receive a connection confirmation
+[source]
+----
+CONNECTED
+heart-beat:0,0
+session:ID:retsina.local-64904-1378366884467-2:1
+server:ActiveMQ/5.8.0
+version:1.2
+----
+
+If there was any problem during the connection, an +ERROR+ frame would have been returned.
 
 === Send a Message
 
-TODO
+Now that the telnet client is connected to the messaging broker, we can send a message to a destination.
 
-==== Content Headers
+STOMP clients can send message to _destinations_ that are opaque strings specific to each messaging broker implementation.
+STOMP itself has no notion of delivery semantics (whether a destination is a queue, a topic or another exchange types)
+and you have to consult the messaging broker documentation to check how to name the destination for STOMP.
 
-TODO
+.Send a message
+[source]
+----
+SEND
+destination: /queue/myqueue
+
+Hello, STOMP!^@
+----
+
+This +SEND+ frame contains +destination+ header to indicate the destination of the message.
+
+It also contains payload with the text content +Hello, STOMP!+.
+The payload is immediately followed by the NULL octet +^@+ to end the frame.
+
+Once you type +ctrl + @+, the message is processed by the broker.
+
+[NOTE]
+====
+ActiveMQ convention is to prefix the destination by +/queue/+ to send to a queue.
+To send to a topic, we would have used +/topic/mytopic+ instead.
+
+ActiveMQ will automatically create a destination based on the +destination+ header so we do not have to create it beforehands.
+Other brokers may behave differently and require to create the destination before sending any messages to it.
+====
+
+==== Frame Receiption
+If you want some feedback and know that a message has indeed be received by the broker, you can use a +receipt+ header with an ID to ask for a +RECEIPT+ frame
+
+.Send a message with a receipt
+[source]
+----
+SEND
+destination: /queue/myqueue
+receipt: 123
+
+Hello, STOMP with a receipt!^@
+----
+
+When this +SEND+ frame is sent, the server will reply with a +RECEIPT+ frame
+containing the corresponding receipt ID in a +receipt-id+ header:
+
+.Receive the receipt
+[source]
+----
+RECEIPT
+receipt-id: 123
+
+----
+
+==== Error frame
+
+If we send a message with an invalid format, the messaging broker will reply immediately with an +ERROR+ frame.
+For example, let's try to send a +SEND+ frame without its mandatory +destination+ header:
+
+.Send an invalid message
+[source]
+----
+SEND
+
+A SEND frame witout a destination is not allowed^@
+----
+
+We immediately receive an +ERROR+ frame in the telnet client:
+
+.Receive an error
+[source]
+----
+ERROR
+content-type:text/plain
+message:SEND received without a Destination specified!
+
+org.apache.activemq.transport.stomp.ProtocolException: SEND received without a Destination specified!
+        at org.apache.activemq.transport.stomp.ProtocolConverter.onStompSend(ProtocolConverter.java:299)
+        at org.apache.activemq.transport.stomp.ProtocolConverter.onStompCommand(ProtocolConverter.java:233)
+        ...
+----
 
 === Receive a Message
 
+So far, we have use telnet client as a STOMP _producer_ to send messages.
+
+We will now use it as a STOMP _consumer_ to receive the messages we have sent.
+
+To receive messages, a STOMP client must send a +SUBSCRIBE+ with a +destination+ header.
+
+.Subscribe to a destination
+[source]
+----
+SUBSCRIBE
+destination: /queue/myqueue
+id: mysub
+
+^@
+----
+
+We must also indicate a +id+ header that corresponds to the subscription ID.
+It is the responsibility of the client to choose this ID.
+
+As soon as the messaging broker will receive this +SUBSCRIBE+ frame,
+it will start to send to the STOMP client +MESSAGE+ frames corresponding to the message sent to this destination.
+
+.Receive two messages
+[source]
+----
+MESSAGE
+message-id:ID\cretsina.local-64904-1378366884467-2\c1\c-1\c1\c1
+destination:/queue/myqueue
+timestamp:1378367602698
+expires:0
+priority:4
+
+Hello, STOMP!
+MESSAGE
+message-id:ID\cretsina.local-64904-1378366884467-2\c1\c-1\c1\c2
+destination:/queue/myqueue
+timestamp:1378368275375
+expires:0
+priority:4
+
+Hello, STOMP with a receipt!
+----
+
+We have received the 2 messages that we have previously sent.
+
+The telnet client is now both a producer and a consumer. If we send another message, we will receive it immediately:
+
+.send a message
+[source]
+----
+SEND
+destination:/queue/myqueue
+
+another message^@
+----
+
+.receive the message immediately
+[source]
+----
+MESSAGE
+message-id:ID\cretsina.local-64904-1378366884467-2\c3\c-1\c1\c3
+destination:/queue/myqueue
+timestamp:1378369910799
+expires:0
+subscription: mysub
+priority:4
+
+another message
+----
+
+=== Unsubscription
+
+To stop consuming messages from a destination, the client must send a +UNSUBSCRIBE+ frame
+with a +id+ header corresponding to the subscription ID indicated in the +SUBSCRIBE+ frame (+mysub+ in the example above).
+
+.Unsubscribe a consumer
+[source]
+----
+UNSUBSCRIBE
+id: mysub
+
+^@
+----
+
+The telnet client can still send messages but it will no longer receive those sent to the +queue/myqueue+ destination.
+
+=== Disconnection
+To disconnect from the messaging broker, the client must send a +DISCONNECT+ frame.
+
+To ensure a graceful disconnection, the best practice is to send a +DISCONNECT+ frame
+with a +receipt+ header and wait to receive the corresponding +RECEIPT+ frame.
+The client can then safely close the socket that is connected to the messaging broker.
+
+.Grafecul disconnection
+[source]
+----
+DISCONNECT
+receipt: 456
+
+^@
+----
+
+When the +DISCONNECT+ frame is sent, the client receives the corresponding +RECEIPT+ frame.
+
+.Receive a receipt for the graceful disconnection
+[source]
+----
+RECEIPT
+receipt-id: 456
+----
+
+The messaging broker then closes its socket and the telnet client is closed:
+
+[source]
+----
+Connection closed by foreign host.
+----
+
+=== Heart-beat
+
 TODO
 
-==== Heart-beat
+=== Message acknowledgement
 
 TODO
 
-==== Message acknowledgement
+=== Transaction
 
 TODO
 
-==== Transaction
-
-TODO
+=== STOMP extensions
