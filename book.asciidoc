@@ -1,5 +1,0 @@
-:bookseries: basic
-
-= Mobile and Web Messaging
-
-include::Book.asciidoc[]
