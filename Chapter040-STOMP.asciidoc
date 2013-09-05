@@ -19,7 +19,9 @@ STOMP is modelled on HTTP and based on _frames_. Each frame is composed of 3 ele
 * an (optional) set of _headers_
 * an (optional) _payload_
 
+[[ex_stomp_1]]
 .STOMP Frame Structure
+====
 ----
 COMMAND
 header1:value1
@@ -27,7 +29,7 @@ header2:value2
 
 payload^@
 ----
-
+====
 STOMP is based on text (with UTF-8 as its default encoding)
 but it can also transmit binary data in its payload by specifying an altenative encoding.
 
@@ -78,23 +80,35 @@ Once ActiveMQ has been started, it will accept STOMP connections on +localhost:6
 Since STOMP is text-based, we can send and receive message from the command line
 using a +telnet+ client.
 
-----
-$ telnet localhost 61613
+[[ex_stomp_2]]
+.Connection with a telnet client
+====
+++++
+<screen>
+$ <userinput>telnet localhost 61613</userinput>
 Trying 127.0.0.1...
 Connected to localhost.
 Escape character is '^]'.
-----
+</screen>
+++++
+====
 
 Once we are connected to the broker, the first step is to send a +CONNECT+ frame
 to establish a STOMP connection:
 
+[[ex_stomp_3]]
 .Connect to a STOMP broker
-----
+====
+++++
+<screen>
+<userinput>
 CONNECT
 accept-version: 1.2
 
-^@
-----
+</userinput>^@
+</screen>
+++++
+====
 
 We indicate a +accept-version+ header with the value +1.2+ to be able to communicate
 with the broker using the version 1.2 of the protocol.
