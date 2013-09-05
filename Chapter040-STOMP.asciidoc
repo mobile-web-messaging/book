@@ -78,7 +78,6 @@ Once ActiveMQ has been started, it will accept STOMP connections on +localhost:6
 Since STOMP is text-based, we can send and receive message from the command line
 using a +telnet+ client.
 
-[source]
 ----
 $ telnet localhost 61613
 Trying 127.0.0.1...
@@ -90,7 +89,6 @@ Once we are connected to the broker, the first step is to send a +CONNECT+ frame
 to establish a STOMP connection:
 
 .Connect to a STOMP broker
-[source]
 ----
 CONNECT
 accept-version: 1.2
@@ -112,7 +110,6 @@ Once you type +ctrl + @+, the messaging broker will handle the +CONNECT+ frame
 and reply with a +CONNECTED+ frame:
 
 .Receive a connection confirmation
-[source]
 ----
 CONNECTED
 heart-beat:0,0
@@ -132,7 +129,6 @@ STOMP itself has no notion of delivery semantics (whether a destination is a que
 and you have to consult the messaging broker documentation to check how to name the destination for STOMP.
 
 .Send a message
-[source]
 ----
 SEND
 destination: /queue/myqueue
@@ -160,7 +156,6 @@ Other brokers may behave differently and require to create the destination befor
 If you want some feedback and know that a message has indeed be received by the broker, you can use a +receipt+ header with an ID to ask for a +RECEIPT+ frame
 
 .Send a message with a receipt
-[source]
 ----
 SEND
 destination: /queue/myqueue
@@ -173,7 +168,6 @@ When this +SEND+ frame is sent, the server will reply with a +RECEIPT+ frame
 containing the corresponding receipt ID in a +receipt-id+ header:
 
 .Receive the receipt
-[source]
 ----
 RECEIPT
 receipt-id: 123
@@ -186,7 +180,6 @@ If we send a message with an invalid format, the messaging broker will reply imm
 For example, let's try to send a +SEND+ frame without its mandatory +destination+ header:
 
 .Send an invalid message
-[source]
 ----
 SEND
 
@@ -196,7 +189,6 @@ A SEND frame witout a destination is not allowed^@
 We immediately receive an +ERROR+ frame in the telnet client:
 
 .Receive an error
-[source]
 ----
 ERROR
 content-type:text/plain
@@ -217,7 +209,6 @@ We will now use it as a STOMP _consumer_ to receive the messages we have sent.
 To receive messages, a STOMP client must send a +SUBSCRIBE+ with a +destination+ header.
 
 .Subscribe to a destination
-[source]
 ----
 SUBSCRIBE
 destination: /queue/myqueue
@@ -233,7 +224,6 @@ As soon as the messaging broker will receive this +SUBSCRIBE+ frame,
 it will start to send to the STOMP client +MESSAGE+ frames corresponding to the message sent to this destination.
 
 .Receive two messages
-[source]
 ----
 MESSAGE
 message-id:ID\cretsina.local-64904-1378366884467-2\c1\c-1\c1\c1
@@ -257,8 +247,7 @@ We have received the 2 messages that we have previously sent.
 
 The telnet client is now both a producer and a consumer. If we send another message, we will receive it immediately:
 
-.send a message
-[source]
+.Send a message
 ----
 SEND
 destination:/queue/myqueue
@@ -266,8 +255,7 @@ destination:/queue/myqueue
 another message^@
 ----
 
-.receive the message immediately
-[source]
+.Receive the message immediately
 ----
 MESSAGE
 message-id:ID\cretsina.local-64904-1378366884467-2\c3\c-1\c1\c3
@@ -286,7 +274,6 @@ To stop consuming messages from a destination, the client must send a +UNSUBSCRI
 with a +id+ header corresponding to the subscription ID indicated in the +SUBSCRIBE+ frame (+mysub+ in the example above).
 
 .Unsubscribe a consumer
-[source]
 ----
 UNSUBSCRIBE
 id: mysub
@@ -304,7 +291,6 @@ with a +receipt+ header and wait to receive the corresponding +RECEIPT+ frame.
 The client can then safely close the socket that is connected to the messaging broker.
 
 .Grafecul disconnection
-[source]
 ----
 DISCONNECT
 receipt: 456
@@ -315,7 +301,6 @@ receipt: 456
 When the +DISCONNECT+ frame is sent, the client receives the corresponding +RECEIPT+ frame.
 
 .Receive a receipt for the graceful disconnection
-[source]
 ----
 RECEIPT
 receipt-id: 456
@@ -323,7 +308,6 @@ receipt-id: 456
 
 The messaging broker then closes its socket and the telnet client is closed:
 
-[source]
 ----
 Connection closed by foreign host.
 ----
