@@ -40,25 +40,41 @@ but it can also transmit binary data in its payload by specifying an altenative 
 
 A STOMP client can serve two roles:
 
+[NOTE]
+====
+TODO: cross-reference with the messaging concepts of producer and consumer
+====
+
 . it can be a _producer_ and send messages using a +SEND+ frame
 (that is a frame with the +SEND+ command)
 . it can be a _consumer_ and subscribe to receive messages using a +SUBSCRIBE+ frame.
 Each received messages will be delivered by the broker to the client as +MESSAGE+ frames.
 
-+SEND+, +SUBSCRIBE+, +MESSAGE+, along with the +CONNECT+ (resp. +DISCONNECT+) frame used to connect (resp. disconnect) to the messaging broker,
-are the most important frames.
-Other frames correspond to additional features (message acknowledgement, transaction, error handling).
+=== Commands
+
+A STOMP frame starts with a command string terminated by an end-of-line (EOL).
+
++SEND+, +SUBSCRIBE+, +MESSAGE+, along with +CONNECT+ (resp. +DISCONNECT+) used to connect (resp. disconnect) to the messaging broker,
+are the most important commands.
+
+Other commands correspond to additional features (message acknowledgement, transaction, receiption and error handling).
+
+This chapter describes all the commands supported by STOMP 1.2.
 
 ==== Headers
 
-Any STOMP frame accepts an optional set of headers.
+Following the command, a STOMP frame accepts an optional set of headers which follows the format +<key>:<value>+ and are terminated by EOL.
+The end of the headers is indicated by an empty blank line.
 
 Some headers are defined in the specification and are mandatory for a given frame.
 For example, a +SEND+ frame must have a +destination+ header to indicate the destination of the messages.
+
 Other headers are optional.
 For example, if a +SEND+ frame contains a payload, it should also include both +content-type+ and +content-length+ headers.
 
 ==== Payload
+
+After the headers, a STOMP frame may contain a payload.
 
 Only +SEND+, +MESSAGE+ and +ERROR+ frames can contain payload.
 
@@ -67,6 +83,8 @@ The payload in +SEND+ and +MESSAGE+ are the data that are exchanged.
 A messaging broker may send +ERROR+ frames to the client if something went wrong.
 The +ERROR+ frame may contain a payload with detailed information about the problem
 (in addition to a short description in a +message+ header).
+
+Finally, a STOMP frame is terminated by a NULL octet (+^@+).
 
 === Connection
 
@@ -98,8 +116,9 @@ Escape character is '^]'.
 ++++
 ====
 
-Once we are connected to the broker, the first step is to send a +CONNECT+ frame
-to establish a STOMP connection:
+The telnet client is connected to the broker using a TCP connection. It must now also establish a STOMP connection.
+
+The client must send a +CONNECT+ frame to establish this STOMP connection:
 
 [[ex_stomp_connect]]
 .Connect to a STOMP broker
@@ -119,9 +138,6 @@ with the broker using the version 1.2 of the protocol</para>
 </calloutlist>
 ++++
 ====
-
-We indicate a +accept-version+ header with the value +1.2+ to be able to communicate
-with the broker using the version 1.2 of the protocol.
 
 [CAUTION]
 ====
@@ -143,12 +159,30 @@ and reply with a +CONNECTED+ frame:
 ====
 ++++
 <screen>
-CONNECTED
-heart-beat:0,0
-session:ID:retsina.local-64904-1378366884467-2:1
-server:ActiveMQ/5.8.0
-version:1.2
+CONNECTED                                         <co xml:id="co.ex_stomp_connected_1"/>
+heart-beat:0,0                                    <co xml:id="co.ex_stomp_connected_2"/>
+session:ID:retsina.local-64904-1378366884467-2:1  <co xml:id="co.ex_stomp_connected_3"/>
+server:ActiveMQ/5.8.0                             <co xml:id="co.ex_stomp_connected_4"/>
+version:1.2                                       <co xml:id="co.ex_stomp_connected_5"/>
 </screen>
+<calloutlist>
+  <callout arearefs="co.ex_stomp_connected_1">
+    <para>The <literal>CONNECTED</literal> frame means the connection was successful.
+ If there were any problem during the connection, an <literal>ERROR</literal> frame would have been returned.</para>
+  </callout>
+  <callout arearefs="co.ex_stomp_connected_2">
+    <para>The <literal>heart-beat</literal> header is explained below in <xref linkend="ch_stomp_heartbeat"/>.</para>
+  </callout>
+  <callout arearefs="co.ex_stomp_connected_3">
+    <para>The <literal>session</literal> header uniquely identifies the session between the client and the broker.</para>
+  </callout>
+  <callout arearefs="co.ex_stomp_connected_4">
+    <para>The <literal>server</literal> header contains information about the STOMP broker. In that example, we are connected to Apache ActiveMQ 5.8.0.</para>
+  </callout>
+  <callout arearefs="co.ex_stomp_connected_5">
+    <para>The <literal>version</literal> header is the version of the STOMP protocol that will be used during the session.</para>
+  </callout>
+</calloutlist>
 ++++
 ====
 
@@ -439,22 +473,46 @@ receipt-id: 456
 
 The messaging broker then closes its socket and the telnet client is closed:
 
-====
 ++++
 <screen>
 Connection closed by foreign host.
 </screen>
 ++++
-====
 
+[[ch_stomp_heartbeat]]
 === Heart-beat
 
 STOMP offers a mechanism to test the healthiness of a connection between a STOMP client and a broker
 
-We will open a new telnet client for this example:
+[NOTE]
+====
+TODO: better explanation on the necessity of heart-beating to circumvent TCP.
+====
 
-[[ex_stomp_hb_telnet]]
-.Connection with a telnet client
+Heart-beat is negotiated between the client and the broker during the exchange of the +CONNECT+ and +CONNECTED+ frames.
+
+When we connected previous in <<ex_stomp_connect>>, we received a +CONNECTED+ (in <<ex_stomp_connected>> ) with a header +heart-beat:0,0+.
+
+The +heart-beat+ header's value is composed of 2 positive integers:
+
+. The smallest number of milliseconds between heart-beats that the sender of the frame guarantees (or +0+ if it will not send heart-beats).
+. The desired number of milliseconds between heart-beats that the sender of the frame expects to receive from the other party (or +0+ if it does not want to receive heart-beats).
+
+The sender of +CONNECT+ frame is a STOMP client, the sender of a +CONNECTED+ frame is a STOMP broker.
+
+A +CONNECTED+ frame with a +heart-beat:0,0+ header indicates that:
+
+. The broker will *not* send heart-beats to the client
+. The broker does *not* want to receive heart-beats from the client
+
+Heart-beating is optional. Sending a +CONNECT+ frame without a +heart-beat+ header is equivalent to setting it to +0,0+.
+
+Let's now activate heart-beating upon connection.
+
+We will open a new telnet client for this example and send a +CONNECT+ frame with a +heart-beat+ header:
+
+[[ex_stomp_hb_connect]]
+.Connect to a STOMP broker with heart-beat
 ====
 ++++
 <screen>
@@ -462,46 +520,6 @@ $ <userinput>telnet localhost 61613</userinput>
 Trying 127.0.0.1...
 Connected to localhost.
 Escape character is '^]'.
-</screen>
-++++
-====
-
-Heart-beat is negotiated between the client and the broker during the exchange of the +CONNECT+ and +CONNECTED+ frames.
-
-When we connected previous in <<ex_stomp_connect>>, we received a +CONNECTED+ with a +heart-beat+ header:
-
-[[ex_stomp_hb_connected]]
-.Connected without any hear-beat
-====
-++++
-<screen>
-CONNECTED
-heart-beat:0,0
-...
-</screen>
-++++
-====
-
-The value of the +heart-beat+ is composed of 2 integers value:
-
-. The first value is the smallest number of milliseconds between heart-beats that the sender of the frame that it can guarantee or +0+ if it will not send heart-beats
-  (in this case, the sender of the +CONNETED+ frame is the broker)
-. The second value is the desired number of milliseconds between heart-beats that the sender of the frame expects to receive from the other party or +0+ if it does not want to receive heart-beats.
-
-A +CONNECTED+ frame with the +heart-beat+ set to +0,0+ indicates that:
-
-. The broker will *not* send heart-beats to the client
-. The broker does *not* want to receive heart-beats from the client
-
-Heart-beating is optional. Sending a +CONNECT+ frame without a +heart-beat+ header is equivalent to setting it to +0,0+.
-
-Let's now activate heart-beating upon connection:
-
-[[ex_stomp_hb_connect]]
-.Connect to a STOMP broker with heart-beat
-====
-++++
-<screen>
 <userinput>CONNECT
 accept-version: 1.2
 heart-beat: 10000,2000 <co xml:id="co.ex_stomp_hb_connect_1"/>
@@ -510,13 +528,13 @@ heart-beat: 10000,2000 <co xml:id="co.ex_stomp_hb_connect_1"/>
 </screen>
 <calloutlist>
   <callout arearefs="co.ex_stomp_hb_connect_1">
-    <para>We guarantee to send a heart-beat every 10 seconds (10000ms) and expect to receive heart-beats from the broker every 2 seconds (2000ms).</para>
+    <para>the client guarantee to send a heart-beat every 10 seconds (10000ms) and expect to receive heart-beats from the broker every 2 seconds (2000ms).</para>
   </callout>
 </calloutlist>
 ++++
 ====
 
-The broker reply with a +CONNECTED+ frame but the value of the +heart-beat+ header is different from last time:
+The broker replies with a +CONNECTED+ frame but the value of the +heart-beat+ header is different from last time:
 
 [[ex_stomp_hb_connected_with_hb]]
 .Connect to a STOMP broker with heart-beat
@@ -533,13 +551,18 @@ version:1.2
 </screen>
 <calloutlist>
   <callout arearefs="co.ex_stomp_hb_connected_with_hb_1">
-    <para>The broker replied that it guarantee to send heart-beat every 20 seconds and expect to receive heart-beats from the client every 10 seconds.</para>
+    <para>The broker replied that it guarantees to send heart-beat every 2 seconds and expect to receive heart-beats from the client every 10 seconds.</para>
   </callout>
 </calloutlist>
 ++++
 ====
 
 In this case, the heart-beating negotiation is straightforward since the broker replied with the same heart-beat expectation that we send.
+
+[NOTE]
+====
+TODO: Add some description of the heart-beating negotation when values differ http://stomp.github.io/stomp-specification-1.2.html#Heart-beating
+====
 
 If we wait more that 10 seconds, the telnet client is closed:
 
@@ -567,6 +590,10 @@ It is considered good practice to leave an error of margin with the heart-beats 
 TODO
 
 === Transaction
+
+TODO
+
+=== Authentication
 
 TODO
 
