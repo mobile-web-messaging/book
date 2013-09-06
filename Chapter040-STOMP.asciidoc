@@ -3,7 +3,7 @@
 
 [role="lead"]
 In this chapter, we present the STOMP protocol, a simple text-based messaging
-protocol that is well suited to build simple lightweight messaging applications on any platforms.
+protocol that is well suited to build lightweight messaging applications on any platforms.
 
 STOMP provides an interoperable wire format so that clients can communicate with any message broker.
 The simplicity of the protocol ensures that it's straightforward to have interoperability between any client and brokers.
@@ -13,9 +13,10 @@ http://stomp.github.io/stomp-specification-1.2.html[STOMP 1.2]
 
 === Anatomy of a STOMP Frame
 
-STOMP is modelled on HTTP and based on _frames_. Each frame is composed of 3 elements:
+STOMP is modelled on HTTP and based on _frames_.
+Each frame is composed of 3 elements:
 
-* a _command_ <1>
+* a _command_
 * an (optional) set of _headers_
 * an (optional) _payload_
 
@@ -32,30 +33,30 @@ payload^@      <4>
 <1> A frame starts with a command string followed by an end-of-line (EOL)
 <2> Header entries followed the format +<key>:<value>+ and is ended by EOL
 <3> A blank line separates the set of headers from the payload
-<4> A frame is ended by a NULL octet (+ctl + @+ in ASCII)
+<4> A frame is ended by a NULL octet (represented by +^@+ in ASCII)
 ====
 
-STOMP is based on text (with UTF-8 as its default encoding)
-but it can also transmit binary data in its payload by specifying an altenative encoding.
+STOMP is based on text (using UTF-8 for its default encoding)
+but it can also transmit binary data in its payload by specifying an alternative encoding.
 
-A STOMP client can serve two roles:
+A STOMP client can serve two messaging roles:
 
 [NOTE]
 ====
 TODO: cross-reference with the messaging concepts of producer and consumer
 ====
 
-. it can be a _producer_ and send messages using a +SEND+ frame
-(that is a frame with the +SEND+ command)
-. it can be a _consumer_ and subscribe to receive messages using a +SUBSCRIBE+ frame.
-Each received messages will be delivered by the broker to the client as +MESSAGE+ frames.
+. It can be a _producer_ and send messages with +SEND+ frames
+(i.e. frames with the +SEND+ command)
+. It can be a _consumer_ and subscribe to receive messages using a +SUBSCRIBE+ frame. Each received messages will be delivered by the broker to the client as +MESSAGE+ frames.
+
+Messages are *pushed* to STOMP clients. The protocol does not offer any command to pull messages from the broker.
 
 === Commands
 
 A STOMP frame starts with a command string terminated by an end-of-line (EOL).
 
-+SEND+, +SUBSCRIBE+, +MESSAGE+, along with +CONNECT+ (resp. +DISCONNECT+) used to connect (resp. disconnect) to the messaging broker,
-are the most important commands.
++SEND+, +SUBSCRIBE+, +MESSAGE+, along with +CONNECT+ (resp. +DISCONNECT+) used to connect (resp. disconnect) to the broker, are the principal commands.
 
 Other commands correspond to additional features (message acknowledgement, transaction, receiption and error handling).
 
@@ -63,7 +64,9 @@ This chapter describes all the commands supported by STOMP 1.2.
 
 ==== Headers
 
-Following the command, a STOMP frame accepts an optional set of headers which follows the format +<key>:<value>+ and are terminated by EOL.
+Following the command string, a STOMP frame accepts an optional set of headers.
+A header follows the format +<key>:<value>+ and is terminated by an EOL.
+
 The end of the headers is indicated by an empty blank line.
 
 Some headers are defined in the specification and are mandatory for a given frame.
@@ -78,30 +81,30 @@ After the headers, a STOMP frame may contain a payload.
 
 Only +SEND+, +MESSAGE+ and +ERROR+ frames can contain payload.
 
-The payload in +SEND+ and +MESSAGE+ are the data that are exchanged.
+The payload in +SEND+ and +MESSAGE+ are the user data that are exchanged between the client and the broker.
 
 A messaging broker may send +ERROR+ frames to the client if something went wrong.
-The +ERROR+ frame may contain a payload with detailed information about the problem
-(in addition to a short description in a +message+ header).
+The +ERROR+ frame may contain a payload with detailed information about the problem (in addition to a short description in a +message+ header).
 
-Finally, a STOMP frame is terminated by a NULL octet (+^@+).
+Finally, a STOMP frame is always terminated by a NULL octet (+^@+).
 
 === Connection
 
 .Install and configure a messaging broker
 [IMPORTANT]
 ====
-Before using a STOMP client, we have to install and configure a messaging broker to
-communicate with it.
+Before using a STOMP client, a messaging broker must be installed and
+
+configured to be able to exchange messages.
 
 In the book, we use Apache ActiveMQ as the messaging broker. The <<appendix_activemq>>
 appendix shows how to install and configure ActiveMQ with STOMP.
 
-Once ActiveMQ has been started, it will accept STOMP connections on +localhost:61613+.
+Once ActiveMQ is started, it accepts STOMP connections on +localhost:61613+.
 ====
 
-Since STOMP is text-based, we can send and receive message from the command line
-using a +telnet+ client.
+Since STOMP is text-based, we can send and receive message from the command
+line using a +telnet+ client.
 
 [[ex_stomp_telnet]]
 .Connection with a telnet client
@@ -116,9 +119,8 @@ Escape character is '^]'.
 ++++
 ====
 
-The telnet client is connected to the broker using a TCP connection. It must now also establish a STOMP connection.
-
-The client must send a +CONNECT+ frame to establish this STOMP connection:
+The telnet client is now connected to the broker using a TCP connection.
+It must also establish a STOMP connection by sending a +CONNECT+ frame:
 
 [[ex_stomp_connect]]
 .Connect to a STOMP broker
@@ -146,12 +148,11 @@ A STOMP frame must be ended by a NULL octet.
 The +^@+ is the ASCII character for NULL octet. Type +ctrl + @+ to enter it.
 ====
 
-
 Note also that there is a blank line between the +accept-version+ header and the NULL octet.
 The blank line is mandatory to determine the end of the headers and the beginning
 of the optional payload (that is not present in the +CONNECT+ frame).
 
-Once you type +ctrl + @+, the messaging broker will handle the +CONNECT+ frame
+Once you type +ctrl + @+, the messaging broker will process the +CONNECT+ frame
 and reply with a +CONNECTED+ frame:
 
 [[ex_stomp_connected]]
@@ -186,15 +187,24 @@ version:1.2                                       <co xml:id="co.ex_stomp_connec
 ++++
 ====
 
-If there was any problem during the connection, an +ERROR+ frame would have been returned.
+The STOMP connection is now established and the telnet client can now exchange messages with the broker.
 
 === Send a Message
 
-Now that the telnet client is connected to the messaging broker, we can send a message to a destination.
+Now that the telnet client is connected to the messaging broker, it can send a message to a _destination_ on the broker.
 
-STOMP clients can send message to _destinations_ that are opaque strings specific to each messaging broker implementation.
-STOMP itself has no notion of delivery semantics (whether a destination is a queue, a topic or another exchange types)
-and you have to consult the messaging broker documentation to check how to name the destination for STOMP.
+_Destinations_ are opaque strings specific to each messaging broker implementation.
+
+STOMP itself has no notion of delivery semantics (whether a destination is a queue, a topic or another exchange type) and you have to consult the messaging broker documentation to check how to name the destination for STOMP.
+
+[NOTE]
+====
+ActiveMQ convention is to prefix the destination by +/queue/+ to send to a queue.
+To send to a topic, we would prefix the destination by +/topic/+ instead.
+
+ActiveMQ will automatically create a destination based on the +destination+ header so we do not have to create it beforehands.
+Other brokers may behave differently and require to create the destination before sending any messages to it.
+====
 
 [[ex_stomp_send]]
 .Send a message
@@ -214,24 +224,25 @@ Hello, STOMP!</userinput>^@
 ++++
 ====
 
-This +SEND+ frame contains +destination+ header to indicate the destination of the message.
-
-It also contains payload with the text content +Hello, STOMP!+.
-The payload is immediately followed by the NULL octet +^@+ to end the frame.
-
-Once you type +ctrl + @+, the message is processed by the broker.
-
 [NOTE]
 ====
-ActiveMQ convention is to prefix the destination by +/queue/+ to send to a queue.
-To send to a topic, we would have used +/topic/mytopic+ instead.
-
-ActiveMQ will automatically create a destination based on the +destination+ header so we do not have to create it beforehands.
-Other brokers may behave differently and require to create the destination before sending any messages to it.
+TODO: cross-reference to the queue concept (one-to-one)
 ====
 
+By following ActiveMQ convention, the message was sent to a queue. This message can only be received by a single consumer.
+
+The +destination+ header indicates the destination of the message.
+
+It also contains payload with the text +Hello, STOMP!+.
+The payload is immediately followed by the NULL octet (represented by +^@+) to end the frame.
+
+Once you +ctrl + @+ to enter the NULL octet, the message is processed by the broker.
+
 ==== Frame Receiption
-If you want some feedback and know that a message has indeed be received by the broker, you can use a +receipt+ header with an ID to ask for a +RECEIPT+ frame
+
+The STOMP broker can sent some feedback to let the client know that a frame has been *processed*. This is a general mechanism available on any frame sent by a client to a broker (and not only on the +SEND+ frame).
+
+To receive a confirmation that a message is handled by the STOMP broker, you can use a +receipt+ header with an ID to ask for a +RECEIPT+ frame
 
 [[ex_stomp_send_with_receipt]]
 .Send a message with a receipt
@@ -247,14 +258,13 @@ Hello, STOMP with a receipt!</userinput>^@
 <calloutlist>
   <callout arearefs="co.ex_stomp_send_with_receipt_1">
     <para>The <literal>receipt</literal> header will serve to identify the receipt sent by the broker
-when it will have successfully processed this <literal>SEND</literal> frame.</para>
+when it will have successfully handle this <literal>SEND</literal> frame.</para>
   </callout>
 </calloutlist>
 ++++
 ====
 
-When this +SEND+ frame is sent, the server will reply with a +RECEIPT+ frame
-containing the corresponding receipt ID in a +receipt-id+ header:
+When this +SEND+ frame is received by the broker and handled, the broker replies with a +RECEIPT+ frame containing the corresponding receipt ID in a +receipt-id+ header:
 
 [[ex_stomp_receipt]]
 .Receive the receipt
@@ -276,8 +286,9 @@ that has been successfully processed by the broker.</para>
 
 ==== Error frame
 
-If we send a message with an invalid format, the messaging broker will reply immediately with an +ERROR+ frame.
-For example, let's try to send a +SEND+ frame without its mandatory +destination+ header:
+If a message is sent with an invalid format, the messaging broker will reply immediately with an +ERROR+ frame.
+
+For example, it is not valid to send a message without a +destination+ header (where would the message go?):
 
 [[ex_stomp_invalid_send]]
 .Send an invalid message
@@ -297,7 +308,7 @@ A SEND frame witout a destination is not allowed</userinput>^@
 ++++
 ====
 
-We immediately receive an +ERROR+ frame in the telnet client:
+Once the message is sent, the client receives an +ERROR+ frame:
 
 [[ex_stomp_error]]
 .Receive an error
@@ -305,14 +316,25 @@ We immediately receive an +ERROR+ frame in the telnet client:
 ++++
 <screen>
 ERROR
-content-type:text/plain
-message:SEND received without a Destination specified!
-
+content-type:text/plain                                <co xml:id="ex_stomp_error_1"/>
+message:SEND received without a Destination specified! <co xml:id="ex_stomp_error_2"/>
+                                                       <co xml:id="ex_stomp_error_3"/>
 org.apache.activemq.transport.stomp.ProtocolException: SEND received without a Destination specified!
         at org.apache.activemq.transport.stomp.ProtocolConverter.onStompSend(ProtocolConverter.java:299)
         at org.apache.activemq.transport.stomp.ProtocolConverter.onStompCommand(ProtocolConverter.java:233)
         ...
 </screen>
+<calloutlist>
+  <callout arearefs="ex_stomp_error_1">
+    <para>This <literal>ERROR</literal> frame has a <literal>content-type</literal> header that let the client know the payload is in plain text (encoded in UTF-8 by default)</para>
+  </callout>
+  <callout arearefs="ex_stomp_error_1">
+    <para>A <literal>ERROR</literal> frame contains a <literal>message</literal> header with a short description of the problem encountered by the broker.</para>
+  </callout>
+  <callout arearefs="ex_stomp_error_1">
+    <para>It also contains a text payload with more information on the problem. In this case, the problem is:<literal>SEND received without a Destination specified</literal>.</para>
+    </callout>
+</calloutlist>
 ++++
 ====
 
@@ -591,7 +613,13 @@ TODO
 
 === Transaction
 
-TODO
+use case
+
+tx begin
+send message with tx + receipt
+=> no receipt?
+tx commit
+=> get receipt?
 
 === Authentication
 
