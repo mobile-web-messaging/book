@@ -52,7 +52,7 @@ TODO: cross-reference with the messaging concepts of producer and consumer
 
 Messages are *pushed* to STOMP clients. The protocol does not offer any command to pull messages from the broker.
 
-=== Commands
+==== Command
 
 A STOMP frame starts with a command string terminated by an end-of-line (EOL).
 
@@ -91,10 +91,9 @@ Finally, a STOMP frame is always terminated by a NULL octet (+^@+).
 === Connection
 
 .Install and configure a messaging broker
-[IMPORTANT]
+[NOTE]
 ====
-Before using a STOMP client, a messaging broker must be installed and
-
+Before using a STOMP client, a messaging broker must be installed and 
 configured to be able to exchange messages.
 
 In the book, we use Apache ActiveMQ as the messaging broker. The <<appendix_activemq>>
@@ -103,7 +102,7 @@ appendix shows how to install and configure ActiveMQ with STOMP.
 Once ActiveMQ is started, it accepts STOMP connections on +localhost:61613+.
 ====
 
-Since STOMP is text-based, we can send and receive message from the command
+Since STOMP is text-based, we can send and receive message from the command 
 line using a +telnet+ client.
 
 [[ex_stomp_telnet]]
@@ -242,7 +241,7 @@ Once you +ctrl + @+ to enter the NULL octet, the message is processed by the bro
 
 The STOMP broker can sent some feedback to let the client know that a frame has been *processed*. This is a general mechanism available on any frame sent by a client to a broker (and not only on the +SEND+ frame).
 
-To receive a confirmation that a message is handled by the STOMP broker, you can use a +receipt+ header with an ID to ask for a +RECEIPT+ frame
+To receive a confirmation that a message is handled by the STOMP broker, a frame sent by the client must indicate a +receipt+ header.
 
 [[ex_stomp_send_with_receipt]]
 .Send a message with a receipt
@@ -258,13 +257,13 @@ Hello, STOMP with a receipt!</userinput>^@
 <calloutlist>
   <callout arearefs="co.ex_stomp_send_with_receipt_1">
     <para>The <literal>receipt</literal> header will serve to identify the receipt sent by the broker
-when it will have successfully handle this <literal>SEND</literal> frame.</para>
+when it will have successfully handled this frame.</para>
   </callout>
 </calloutlist>
 ++++
 ====
 
-When this +SEND+ frame is received by the broker and handled, the broker replies with a +RECEIPT+ frame containing the corresponding receipt ID in a +receipt-id+ header:
+When this +SEND+ frame is received by the broker and succesfully handled, the broker replies with a +RECEIPT+ frame containing the corresponding receipt ID in a +receipt-id+ header:
 
 [[ex_stomp_receipt]]
 .Receive the receipt
@@ -277,8 +276,7 @@ receipt-id: 123 <co xml:id="co.ex_stomp_receipt_1"/>
 </screen>
 <calloutlist>
   <callout arearefs="co.ex_stomp_receipt_1">
-    <para>The <literal>receipt-id</literal> header corresponds to the <literal>receipt</literal> header set on the frame
-that has been successfully processed by the broker.</para>
+    <para>The <literal>receipt-id</literal> header corresponds to the <literal>receipt</literal> header set on the frame successfully handled by the broker.</para>
   </callout>
 </calloutlist>
 ++++
@@ -318,8 +316,8 @@ Once the message is sent, the client receives an +ERROR+ frame:
 ERROR
 content-type:text/plain                                <co xml:id="ex_stomp_error_1"/>
 message:SEND received without a Destination specified! <co xml:id="ex_stomp_error_2"/>
-                                                       <co xml:id="ex_stomp_error_3"/>
-org.apache.activemq.transport.stomp.ProtocolException: SEND received without a Destination specified!
+
+org.apache.activemq.transport.stomp.ProtocolException: SEND received without a Destination specified! <co xml:id="ex_stomp_error_3"/>
         at org.apache.activemq.transport.stomp.ProtocolConverter.onStompSend(ProtocolConverter.java:299)
         at org.apache.activemq.transport.stomp.ProtocolConverter.onStompCommand(ProtocolConverter.java:233)
         ...
@@ -332,7 +330,7 @@ org.apache.activemq.transport.stomp.ProtocolException: SEND received without a D
     <para>A <literal>ERROR</literal> frame contains a <literal>message</literal> header with a short description of the problem encountered by the broker.</para>
   </callout>
   <callout arearefs="ex_stomp_error_1">
-    <para>It also contains a text payload with more information on the problem. In this case, the problem is:<literal>SEND received without a Destination specified</literal>.</para>
+    <para>It also contains a text payload with more information on the problem.</para>
     </callout>
 </calloutlist>
 ++++
@@ -340,9 +338,9 @@ org.apache.activemq.transport.stomp.ProtocolException: SEND received without a D
 
 === Receive a Message
 
-So far, we have use telnet client as a STOMP _producer_ to send messages.
+So far, the telnet client has acted as a STOMP _producer_ and sent messages.
 
-We will now use it as a STOMP _consumer_ to receive the messages we have sent.
+It will now also become a STOMP _consumer_ to receive messages.
 
 To receive messages, a STOMP client must send a +SUBSCRIBE+ with a +destination+ header.
 
@@ -352,24 +350,27 @@ To receive messages, a STOMP client must send a +SUBSCRIBE+ with a +destination+
 ++++
 <screen>
 <userinput>SUBSCRIBE
-destination: /queue/myqueue
-id: mysub <co xml:id="co.sub"/>
+destination: /queue/myqueue <co xml:id="co.ex_stomp_subscribe_1"/>
+id: mysub                   <co xml:id="co.ex_stomp_subscribe_2"/>
 
 </userinput>^@
 </screen>
 <calloutlist>
-  <callout arearefs="co.sub">
-    <para>The subscription will be identified by the <literal>mysub</literal> ID.</para>
+  <callout arearefs="co.ex_stomp_subscribe_1">
+    <para>The <literal>destination</literal> is the name of destination the client wants to consume messages from.</para>
+  </callout>
+  <callout arearefs="co.ex_stomp_subscribe_2">
+    <para>The subscription will be identified by the <literal>mysub</literal> identifier indicated in the <literal>id</literal> header.</para>
   </callout>
 </calloutlist>
 ++++
 ====
 
-We must also indicate a +id+ header that corresponds to the subscription ID.
-It is the responsibility of the client to choose this ID.
+The +id+ header corresponds to the subscription identifier and must be unique among all the subscriptions _inside the same connection_.
+It is the responsibility of the client to choose this subscription identifier.
 
-As soon as the messaging broker will receive this +SUBSCRIBE+ frame,
-it will start to send to the STOMP client +MESSAGE+ frames corresponding to the message sent to this destination.
+As soon as the messaging broker receives this +SUBSCRIBE+ frame and handle it,
+it starts to send to the client some +MESSAGE+ frames corresponding to the messages sent to this destination.
 
 [[ex_stomp_receive2]]
 .Receive two messages
@@ -379,13 +380,13 @@ it will start to send to the STOMP client +MESSAGE+ frames corresponding to the 
 MESSAGE                                                         <co xml:id="co.ex_stomp_receive2_1"/>
 message-id:ID\cretsina.local-64904-1378366884467-2\c1\c-1\c1\c1 <co xml:id="co.ex_stomp_receive2_2"/>
 destination:/queue/myqueue                                      <co xml:id="co.ex_stomp_receive2_3"/>
-timestamp:1378367602698
-expires:0
 subscription: mysub                                             <co xml:id="co.ex_stomp_receive2_4"/>
-priority:4
+timestamp:1378367602698                                         <co xml:id="co.ex_stomp_receive2_5"/>
+expires:0                                                       <co xml:id="co.ex_stomp_receive2_6"/>
+priority:4                                                      <co xml:id="co.ex_stomp_receive2_7"/>
 
 Hello, STOMP!
-MESSAGE                                                         <co xml:id="co.ex_stomp_receive2_5"/>
+MESSAGE                                                         <co xml:id="co.ex_stomp_receive2_8"/>
 message-id:ID\cretsina.local-64904-1378366884467-2\c1\c-1\c1\c2
 destination:/queue/myqueue
 timestamp:1378368275375
@@ -396,7 +397,7 @@ priority:4
 Hello, STOMP with a receipt!
 </screen>
 <calloutlist>
-  <callout arearefs="co.ex_stomp_receive2_1 co.ex_stomp_receive2_5">
+  <callout arearefs="co.ex_stomp_receive2_1 co.ex_stomp_receive2_8">
     <para>Each received message is contained in a <literal>MESSAGE</literal> frame.</para>
   </callout>
   <callout arearefs="co.ex_stomp_receive2_2">
@@ -408,17 +409,22 @@ Hello, STOMP with a receipt!
   <callout arearefs="co.ex_stomp_receive2_4">
     <para>The <literal>subscription</literal> indicates which consumer is receiving the message.</para>
   </callout>
+  <callout arearefs="co.ex_stomp_receive2_5 co.ex_stomp_receive2_6 co.ex_stomp_receive2_7">
+    <para>A <literal>MESSAGE</literal> frame may contain additional headers (<literal>timestamp</literal>, <literal>expires</literal>,
+ <literal>priority</literal> in this case) not specified by the STOMP protocol corresponding to extensions provided by the broker.</para>
+  </callout>
 </calloutlist>
 ++++
 ====
 
 We have received the 2 messages that we have previously sent in the two examples
-above (<<ex_stomp_send>> and <<ex_stomp_send_with_receipt>>).
+above (<<ex_stomp_send>> and <<ex_stomp_send_with_receipt>>). They were sent in a queue and the telnet client is the only consumer that is subscribed to this destination.
 
-The telnet client is now both a producer and a consumer. If we send another message, we will receive it immediately:
+The telnet client is now a consumer of the +/queue/myqueue+ destination.
+If another message is sent to this destination, it will receive this message immediately:
 
 [[ex_stomp_send_receive]]
-.Example Send a message and receive it
+. Send a message and receive it
 ====
 ++++
 <screen>
@@ -443,7 +449,7 @@ another message
 === Unsubscription
 
 To stop consuming messages from a destination, the client must send a +UNSUBSCRIBE+ frame
-with a +id+ header corresponding to the subscription ID indicated in the +SUBSCRIBE+ frame (+mysub+ in the example above).
+with a +id+ header corresponding to the subscription identifier indicated in the +SUBSCRIBE+ frame (+mysub+ in the example above).
 
 [[ex_stomp_unsubscribe]]
 .Unsubscribe a consumer
@@ -451,21 +457,27 @@ with a +id+ header corresponding to the subscription ID indicated in the +SUBSCR
 ++++
 <screen>
 <userinput>UNSUBSCRIBE
-id: mysub
+id: mysub <co xml:id="co.ex_stomp_unsubscribe_1"/>
 
 </userinput>^@
 </screen>
+<calloutlist>
+  <callout arearefs="co.ex_stomp_unsubscribe_1">
+    <para>The <literal>id</literal> is the subscription identifier set in the corresponding <literal>SUBSCRIBE</literal> frame.</para>
+  </callout>
+</calloutlist>
 ++++
 ====
 
-The telnet client can still send messages but it will no longer receive those sent to the +queue/myqueue+ destination.
+The telnet client can still act as a producer and send messages but it will no longer receive any sent to the +/queue/myqueue+ destination.
 
 === Disconnection
+
 To disconnect from the messaging broker, the client must send a +DISCONNECT+ frame.
 
 To ensure a graceful disconnection, the best practice is to send a +DISCONNECT+ frame
 with a +receipt+ header and wait to receive the corresponding +RECEIPT+ frame.
-The client can then safely close the socket that is connected to the messaging broker.
+The client can then safely close the TCP connection to the  broker (if the broker does not close it from its side first).
 
 [[ex_stomp_disconnect]]
 .Grafecul disconnection
@@ -473,10 +485,15 @@ The client can then safely close the socket that is connected to the messaging b
 ++++
 <screen>
 <userinput>DISCONNECT
-receipt: 456
+receipt: 456 <co xml:id="co.ex_stomp_disconnect_1"/>
 
 </userinput>^@
 </screen>
+<calloutlist>
+  <callout arearefs="co.ex_stomp_disconnect_1">
+    <para>The <literal>receipt</literal> value will be used to correlate this frame with the corresponding <literal>RECEIPT</literal> frame.</para>
+  </callout>
+</calloutlist>
 ++++
 ====
 
@@ -488,8 +505,13 @@ When the +DISCONNECT+ frame is sent, the client receives the corresponding +RECE
 ++++
 <screen>
 RECEIPT
-receipt-id: 456
+receipt-id: 456 <co xml:id="co.ex_stomp_disconnect_receipt_1"/>
 </screen>
+<calloutlist>
+  <callout arearefs="co.ex_stomp_disconnect_1">
+    <para>The <literal>receipt-id</literal> value is the same that the <literal>DISCONNECT</literal>'s <literal>receipt</literal> value.</para>
+  </callout>
+</calloutlist>
 ++++
 ====
 
