@@ -449,7 +449,118 @@ Connection closed by foreign host.
 
 === Heart-beat
 
-TODO
+STOMP offers a mechanism to test the healthiness of a connection between a STOMP client and a broker
+
+We will open a new telnet client for this example:
+
+[[ex_stomp_hb_telnet]]
+.Connection with a telnet client
+====
+++++
+<screen>
+$ <userinput>telnet localhost 61613</userinput>
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+</screen>
+++++
+====
+
+Heart-beat is negotiated between the client and the broker during the exchange of the +CONNECT+ and +CONNECTED+ frames.
+
+When we connected previous in <<ex_stomp_connect>>, we received a +CONNECTED+ with a +heart-beat+ header:
+
+[[ex_stomp_hb_connected]]
+.Connected without any hear-beat
+====
+++++
+<screen>
+CONNECTED
+heart-beat:0,0
+...
+</screen>
+++++
+====
+
+The value of the +heart-beat+ is composed of 2 integers value:
+
+. The first value is the smallest number of milliseconds between heart-beats that the sender of the frame that it can guarantee or +0+ if it will not send heart-beats
+  (in this case, the sender of the +CONNETED+ frame is the broker)
+. The second value is the desired number of milliseconds between heart-beats that the sender of the frame expects to receive from the other party or +0+ if it does not want to receive heart-beats.
+
+A +CONNECTED+ frame with the +heart-beat+ set to +0,0+ indicates that:
+
+. The broker will *not* send heart-beats to the client
+. The broker does *not* want to receive heart-beats from the client
+
+Heart-beating is optional. Sending a +CONNECT+ frame without a +heart-beat+ header is equivalent to setting it to +0,0+.
+
+Let's now activate heart-beating upon connection:
+
+[[ex_stomp_hb_connect]]
+.Connect to a STOMP broker with heart-beat
+====
+++++
+<screen>
+<userinput>CONNECT
+accept-version: 1.2
+heart-beat: 10000,2000 <co xml:id="co.ex_stomp_hb_connect_1"/>
+
+</userinput>^@
+</screen>
+<calloutlist>
+  <callout arearefs="co.ex_stomp_hb_connect_1">
+    <para>We guarantee to send a heart-beat every 10 seconds (10000ms) and expect to receive heart-beats from the broker every 2 seconds (2000ms).</para>
+  </callout>
+</calloutlist>
+++++
+====
+
+The broker reply with a +CONNECTED+ frame but the value of the +heart-beat+ header is different from last time:
+
+[[ex_stomp_hb_connected_with_hb]]
+.Connect to a STOMP broker with heart-beat
+====
+++++
+<screen>
+<userinput>CONNECTED
+heart-beat:2000,10000  <co xml:id="co.ex_stomp_hb_connected_with_hb_1"/>
+session:ID:retsina.local-60200-1378476149103-2:2
+server:ActiveMQ/5.8.0
+version:1.2
+
+</userinput>^@
+</screen>
+<calloutlist>
+  <callout arearefs="co.ex_stomp_hb_connected_with_hb_1">
+    <para>The broker replied that it guarantee to send heart-beat every 20 seconds and expect to receive heart-beats from the client every 10 seconds.</para>
+  </callout>
+</calloutlist>
+++++
+====
+
+In this case, the heart-beating negotiation is straightforward since the broker replied with the same heart-beat expectation that we send.
+
+If we wait more that 10 seconds, the telnet client is closed:
+
+====
+++++
+<screen>
+Connection closed by foreign host.
+</screen>
+++++
+====
+
+Indeed the telnet client did not fulfill its promises to send heart-beats at least every 10 seconds.
+
+What is a heart-beat? A heart-beat is *any data send over the network*.
+If the client does not send any STOMP frame, it must send an end-of-line (EOL) as a heart-beat.
+
+To simulate this, open a new telnet client and send the same +CONNECT+ frame than in <<ex_stomp_hb_connect>> and send a EOL every 10 seconds by typing +Enter+.
+You will also notice that a new line that appears every 2 seconds. This corresponds to the EOL sent by the broker as an heart-beat.
+
+This client will remain open as long as you send EOL in the imparted time. Note that if you stop sending heart-beats, it may take more that 10 seconds for the broker to closed the connection.
+It is considered good practice to leave an error of margin with the heart-beats because of timing inaccuracies (some broker may wait more than twice the heart-beat time before closing the connection).
 
 === Message acknowledgement
 
