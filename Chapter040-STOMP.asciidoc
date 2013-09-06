@@ -15,7 +15,7 @@ http://stomp.github.io/stomp-specification-1.2.html[STOMP 1.2]
 
 STOMP is modelled on HTTP and based on _frames_. Each frame is composed of 3 elements:
 
-* a _command_
+* a _command_ <1>
 * an (optional) set of _headers_
 * an (optional) _payload_
 
@@ -23,12 +23,16 @@ STOMP is modelled on HTTP and based on _frames_. Each frame is composed of 3 ele
 .STOMP Frame Structure
 ====
 ----
-COMMAND
-header1:value1
+COMMAND        <1>
+header1:value1 <2>
 header2:value2
-
-payload^@
+               <3>
+payload^@      <4>
 ----
+<1> A frame starts with a command string followed by an end-of-line (EOL)
+<2> Header entries followed the format +<key>:<value>+ and is ended by EOL
+<3> A blank line separates the set of headers from the payload
+<4> A frame is ended by a NULL octet (+ctl + @+ in ASCII)
 ====
 
 STOMP is based on text (with UTF-8 as its default encoding)
@@ -103,10 +107,16 @@ to establish a STOMP connection:
 ++++
 <screen>
 <userinput>CONNECT
-accept-version: 1.2
+accept-version: 1.2 <co xml:id="co.ex_stomp_connect_1"/>
 
 </userinput>^@
 </screen>
+<calloutlist>
+  <callout arearefs="co.ex_stomp_connect_1">
+    <para>The <literal>accept-version</literal> indicates we want to communicate
+with the broker using the version 1.2 of the protocol</para>
+  </callout>
+</calloutlist>
 ++++
 ====
 
@@ -158,10 +168,15 @@ and you have to consult the messaging broker documentation to check how to name 
 ++++
 <screen>
 <userinput>SEND
-destination: /queue/myqueue
+destination: /queue/myqueue <co xml:id="co.ex_stomp_send_1"/>
 
 Hello, STOMP!</userinput>^@
 </screen>
+<calloutlist>
+  <callout arearefs="co.ex_stomp_send_1">
+    <para>The message must be sent to the <literal>/queue/myqueue</literal> destination.</para>
+  </callout>
+</calloutlist>
 ++++
 ====
 
@@ -191,10 +206,16 @@ If you want some feedback and know that a message has indeed be received by the 
 <screen>
 <userinput>SEND
 destination: /queue/myqueue
-receipt: 123
+receipt: 123 <co xml:id="co.ex_stomp_send_with_receipt_1"/>
 
 Hello, STOMP with a receipt!</userinput>^@
 </screen>
+<calloutlist>
+  <callout arearefs="co.ex_stomp_send_with_receipt_1">
+    <para>The <literal>receipt</literal> header will serve to identify the receipt sent by the broker
+when it will have successfully processed this <literal>SEND</literal> frame.</para>
+  </callout>
+</calloutlist>
 ++++
 ====
 
@@ -207,9 +228,15 @@ containing the corresponding receipt ID in a +receipt-id+ header:
 ++++
 <screen>
 RECEIPT
-receipt-id: 123
+receipt-id: 123 <co xml:id="co.ex_stomp_receipt_1"/>
 
 </screen>
+<calloutlist>
+  <callout arearefs="co.ex_stomp_receipt_1">
+    <para>The <literal>receipt-id</literal> header corresponds to the <literal>receipt</literal> header set on the frame
+that has been successfully processed by the broker.</para>
+  </callout>
+</calloutlist>
 ++++
 ====
 
@@ -224,9 +251,15 @@ For example, let's try to send a +SEND+ frame without its mandatory +destination
 ++++
 <screen>
 <userinput>SEND
+<co xml:id="co.ex_stomp_invalid_send_1"/>
 
 A SEND frame witout a destination is not allowed</userinput>^@
 </screen>
+<calloutlist>
+  <callout arearefs="co.ex_stomp_invalid_send_1">
+    <para>The <literal>destination</literal> header is missing.</para>
+  </callout>
+</calloutlist>
 ++++
 ====
 
@@ -264,10 +297,15 @@ To receive messages, a STOMP client must send a +SUBSCRIBE+ with a +destination+
 <screen>
 <userinput>SUBSCRIBE
 destination: /queue/myqueue
-id: mysub
+id: mysub <co xml:id="co.sub"/>
 
 </userinput>^@
 </screen>
+<calloutlist>
+  <callout arearefs="co.sub">
+    <para>The subscription will be identified by the <literal>mysub</literal> ID.</para>
+  </callout>
+</calloutlist>
 ++++
 ====
 
@@ -282,23 +320,39 @@ it will start to send to the STOMP client +MESSAGE+ frames corresponding to the 
 ====
 ++++
 <screen>
-MESSAGE
-message-id:ID\cretsina.local-64904-1378366884467-2\c1\c-1\c1\c1
-destination:/queue/myqueue
+MESSAGE                                                         <co xml:id="co.ex_stomp_receive2_1"/>
+message-id:ID\cretsina.local-64904-1378366884467-2\c1\c-1\c1\c1 <co xml:id="co.ex_stomp_receive2_2"/>
+destination:/queue/myqueue                                      <co xml:id="co.ex_stomp_receive2_3"/>
 timestamp:1378367602698
 expires:0
+subscription: mysub                                             <co xml:id="co.ex_stomp_receive2_4"/>
 priority:4
 
 Hello, STOMP!
-MESSAGE
+MESSAGE                                                         <co xml:id="co.ex_stomp_receive2_5"/>
 message-id:ID\cretsina.local-64904-1378366884467-2\c1\c-1\c1\c2
 destination:/queue/myqueue
 timestamp:1378368275375
 expires:0
+subscription: mysub
 priority:4
 
 Hello, STOMP with a receipt!
 </screen>
+<calloutlist>
+  <callout arearefs="co.ex_stomp_receive2_1 co.ex_stomp_receive2_5">
+    <para>Each received message is contained in a <literal>MESSAGE</literal> frame.</para>
+  </callout>
+  <callout arearefs="co.ex_stomp_receive2_2">
+    <para>An unique <literal>message-id</literal> can be used to identify uniquely a message.</para>
+  </callout>
+  <callout arearefs="co.ex_stomp_receive2_3">
+    <para>The <literal>destination</literal> indicates the destination this message was consumed from.</para>
+  </callout>
+  <callout arearefs="co.ex_stomp_receive2_4">
+    <para>The <literal>subscription</literal> indicates which consumer is receiving the message.</para>
+  </callout>
+</calloutlist>
 ++++
 ====
 
