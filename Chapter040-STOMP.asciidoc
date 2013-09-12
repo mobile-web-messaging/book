@@ -237,9 +237,10 @@ The payload is immediately followed by the NULL octet (represented by +^@+) to e
 
 Once you +ctrl + @+ to enter the NULL octet, the message is processed by the broker.
 
+[[ch_stomp_receipt]]
 ==== Frame Receiption
 
-The STOMP broker can sent some feedback to let the client know that a frame has been *processed*. This is a general mechanism available on any frame sent by a client to a broker (and not only on the +SEND+ frame).
+The STOMP broker can sent some feedback to let the client know that a frame has been received. This is a general mechanism available on any frame sent by a client to a broker (and not only on the +SEND+ frame).
 
 To receive a confirmation that a message is handled by the STOMP broker, a frame sent by the client must indicate a +receipt+ header.
 
@@ -281,6 +282,8 @@ receipt-id: 123 <co xml:id="co.ex_stomp_receipt_1"/>
 </calloutlist>
 ++++
 ====
+
+This +RECEIPT+ lets the client know that the broker has *received* the message but it does not mean that the message has been processed yet (or will be processed at all).
 
 ==== Error frame
 
@@ -663,6 +666,10 @@ We will open a telnet client and subscribe to the destination with an explicit +
 ====
 ++++
 <screen>
+$ <userinput>telnet localhost 61613</userinput>
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
 <userinput>CONNECT                    <co xml:id="co.ex_stomp_ack_subscribe_client_1"/>
 accept-version:1.2
 
@@ -766,6 +773,10 @@ A new telnet client will subscribe to the destination with a different subscript
 ====
 ++++
 <screen>
+$ <userinput>telnet localhost 61613</userinput>
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
 <userinput>CONNECT
 accept-version:1.2
 
@@ -841,13 +852,227 @@ these frames whose value is a transaction identifier (as explained below in <<ch
 [[ch_stomp_transaction]]
 === Transaction
 
-use case
+STOMP has basic support for transactions.
 
-tx begin
-send message with tx + receipt
-=> no receipt?
-tx commit
-=> get receipt?
+Sending (with +SEND+ frames) or acknowledging (with +ACK+ or +NACK+ frames) messages can be performed inside a transaction.
+This means that the messages and acknowledgements are not processed by the broker when it receives the corresponding frames but when the transaction completes.
+
+If the client does not complete the transaction, the broker will not process the frames that it received during the transaction and will discard them.
+
+To illustrate this, we will open a new telnet client and subscribe to the destination.
+
+[[ex_stomp_tx_subscribe]]
+.Connect to a STOMP broker and subscribe to a destination
+====
+++++
+<screen>
+$ <userinput>telnet localhost 61613</userinput>
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+<userinput>CONNECT                    <co xml:id="co.ex_stomp_tx_subscribe_1"/>
+accept-version:1.2
+
+</userinput>^@
+CONNECTED                  <co xml:id="co.ex_stomp_tx_subscribe_2"/>
+heart-beat:0,0
+session:ID:retsina.local-49965-1378989016784-2:2
+server:ActiveMQ/5.8.0
+version:1.2
+
+<userinput>SUBSCRIBE                  <co xml:id="co.ex_stomp_tx_subscribe_3"/>
+destination:/queue/myqueue <co xml:id="co.ex_stomp_tx_subscribe_4"/>
+id:mysub
+
+</userinput>^@
+</screen>
+<calloutlist>
+  <callout arearefs="co.ex_stomp_tx_subscribe_1">
+    <para>The <literal>CONNECT</literal> frame is sent to connect to the STOMP broker.</para>
+  </callout>
+  <callout arearefs="co.ex_stomp_tx_subscribe_2">
+    <para>The <literal>CONNECTED</literal> frame sent by the broker confirms that the client is successfully connected.</para>
+  </callout>
+  <callout arearefs="co.ex_stomp_tx_subscribe_3 co.ex_stomp_tx_subscribe_4">
+    <para>The client subscribes to the <literal>/queue/myqueue</literal> destination with the subscription identifier <literal>mysub</literal>.</para>
+  </callout>
+</calloutlist>
+++++
+====
+
+A transaction is started by the client by sending a +BEGIN+ frame to the broker. This frame must have a +transaction+ header whose value is a transaction identifier
+_that must be unique within a STOMP connection_.
+
+Sending and acknowledging messages can then be part of this transaction by adding a +transaction+ header to their frames with the same transaction identifier.
+
+[[ex_stomp_tx_begin_send]]
+.Begin a transaction and send a message inside it
+====
+++++
+<screen>
+<userinput>BEGIN              <co xml:id="co.ex_stomp_tx_begin_send_1"/>
+transaction:mytx1  <co xml:id="co.ex_stomp_tx_begin_send_2"/>
+
+</userinput>^@
+
+<userinput>MESSAGE            <co xml:id="co.ex_stomp_tx_begin_send_3"/>
+destination:/queue/myqueue
+transaction:mytx1  <co xml:id="co.ex_stomp_tx_begin_send_4"/>
+
+Message in a transaction</userinput>^@
+</screen>
+<calloutlist>
+  <callout arearefs="co.ex_stomp_tx_begin_send_1 co.ex_stomp_tx_begin_send_2">
+    <para>The client begins a transaction by sending a <literal>BEGIN</literal> frame with a <literal>transaction</literal> header
+set to <literal>mytx1</literal>.</para>
+  </callout>
+  <callout arearefs="co.ex_stomp_tx_begin_send_3 co.ex_stomp_tx_begin_send_4">
+    <para>The client sends a <literal>MESSAGE</literal> frame inside the transaction by adding a <literal>transaction</literal> header
+with the same value than in the <literal>BEGIN</literal> frame.</para>
+  </callout>
+</calloutlist>
+++++
+====
+
+At this point, the +MESSAGE+ frame has been received by the broker. However the broker has not processed it and deliver the message to the client's subcription created in <<ex_stomp_tx_subscribe>>.
+
+To complete this active transaction and allows the broker to process it, the client must send a +COMMIT+ frame with the same
++transaction+ header.
+
+[[ex_stomp_tx_commit]]
+.Commit a transaction and receives the message after the transaction is completed
+====
+++++
+<screen>
+<userinput>COMMIT             <co xml:id="co.ex_stomp_tx_commit_1"/>
+transaction:mytx1  <co xml:id="co.ex_stomp_tx_commit_2"/>
+
+</userinput>^@
+MESSAGE            <co xml:id="co.ex_stomp_tx_commit_3"/>
+message-id:ID\cretsina.local-49965-1378989016784-2\c4\c-1\c1\c1
+destination:/queue/myqueue
+timestamp:1378994631546
+expires:0
+subscription:mysub
+priority:4
+
+Message in a transaction
+</screen>
+<calloutlist>
+  <callout arearefs="co.ex_stomp_tx_commit_1 co.ex_stomp_tx_commit_2">
+    <para>The client completes the transaction by sending a <literal>COMMIT</literal> frame with the same <literal>transaction</literal> header
+than  in the <literal>BEGIN</literal> frame.</para>
+  </callout>
+  <callout arearefs="co.ex_stomp_tx_commit_3">
+    <para>The client finally receives the message sent inside the transaction in <xref linkend="ex_stomp_tx_begin_send"/>.</para>
+  </callout>
+</calloutlist>
+++++
+====
+
+To roll back a transaction and discard any messages or acknowledgements sent inside it, the client can send an +ABORT+ frame with the same +transaction+ header than in 
+the corresponding +BEGIN+ frame that started the transaction:
+
+[[ex_stomp_tx_abort]]
+.Abort a transaction
+====
+++++
+<screen>
+<userinput>ABORT              <co xml:id="co.ex_stomp_tx_abort_1"/>
+transaction:mytx1  <co xml:id="co.ex_stomp_tx_abort_2"/>
+
+</userinput>^@
+</screen>
+<calloutlist>
+  <callout arearefs="co.ex_stomp_tx_abort_1 co.ex_stomp_tx_abort_2">
+    <para>The client rolls back the transaction by sending an <literal>ABORT</literal> frame with the same <literal>transaction</literal> header
+than in the <literal>BEGIN</literal> frame.</para>
+  </callout>
+</calloutlist>
+++++
+====
+
+STOMP does not provide a transaction timeout that would abort the transaction if it is not completed in a timely fashion.
+The transaction lifecycle (controlled by +BEGIN+ and +COMMIT+/+ABORT+ frames) is the responsibility of the client.
+However the broker will automatically abort any active transaction if the client send a +DISCONNECT+ frame or if the underlying TCP
+connection fails.
+
+==== Transaction and Receipt
+
+In <<ch_stomp_receipt>>, we saw that the client can receive a +RECEIPT+ frame when the broker has received the frame and pointed out it does mean that the broker _processed_ it.
+
+We can confirm this behaviour by sending a message inside a transaction and ask for a receipt:
+
+[[ex_stomp_tx_receipt]]
+.Ask a receipt for a message sent inside a transaction
+====
+++++
+<screen>
+<userinput>BEGIN             <co xml:id="co.ex_stomp_tx_receipt_1"/>
+transaction:mytx2 <co xml:id="co.ex_stomp_tx_receipt_2"/>
+
+</userinput>
+^@
+
+<userinput>
+SEND <co xml:id="co.ex_stomp_tx_receipt_3"/>
+destination:/queue/myqueue
+transaction:mytx2 <co xml:id="co.ex_stomp_tx_receipt_4"/>
+receipt:myreceipt1 <co xml:id="co.ex_stomp_tx_receipt_5"/>
+
+Another message in a transaction</userinput>^@
+RECEIPT <co xml:id="co.ex_stomp_tx_receipt_6"/>
+receipt-id:myreceipt1
+</screen>
+<calloutlist>
+  <callout arearefs="co.ex_stomp_tx_receipt_1 co.ex_stomp_tx_receipt_2">
+    <para>The client begins a transaction named <literal>mytx2</literal>.</para>
+  </callout>
+  <callout arearefs="co.ex_stomp_tx_receipt_3 co.ex_stomp_tx_receipt_4 co.ex_stomp_tx_receipt_5">
+    <para>The client sends a message inside this transaction and asks for a receipt.</para>
+  </callout>
+  <callout arearefs="co.ex_stomp_tx_receipt_6">
+    <para>As soon as the broker receives the <literal>MESSAGE</literal>, it sends a <literal>RECEIPT</literal> to the client
+to confirm the message has been received. However the message has not be processed yet. It will be processed only when the transaction is commited.</para>
+  </callout>
+</calloutlist>
+++++
+====
+
+We see above that the broker confirmed that it received the +MESSAGE+ but it has not processed it.
+
+Only when the client commits the transaction, the client will process the message and deliver it to the client's subscription:
+
+[[ex_stomp_tx_receipt_commit]]
+.The message is processed by the broker only when the transaction is committed
+====
+++++
+<screen>
+<userinput>COMMIT             <co xml:id="co.ex_stomp_tx_receipt_commit_1"/>
+transaction:mytx2  <co xml:id="co.ex_stomp_tx_receipt_commit_2"/>
+
+</userinput>^@
+MESSAGE            <co xml:id="co.ex_stomp_tx_receipt_commit_3"/>
+message-id:ID\cretsina.local-49965-1378989016784-2\c4\c-1\c1\c2
+destination:/queue/myqueue
+timestamp:1378996600008
+expires:0
+subscription:mysub
+priority:4
+
+Another message in a transaction
+</screen>
+<calloutlist>
+  <callout arearefs="co.ex_stomp_tx_receipt_commit_1 co.ex_stomp_tx_receipt_commit_2">
+    <para>The client commits the transaction named <literal>mytx2</literal>.</para>
+  </callout>
+  <callout arearefs="co.ex_stomp_tx_receipt_commit_3">
+    <para>When the transaction is commited, the broker finally process the <literal>SEND</literal> frame sent in <xref linkend="ex_stomp_tx_receipt"/> and
+deliver it to the client's subscription.</para>
+  </callout>
+</calloutlist>
+++++
+====
 
 === Authentication
 
