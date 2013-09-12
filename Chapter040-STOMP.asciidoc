@@ -73,7 +73,7 @@ Some headers are defined in the specification and are mandatory for a given fram
 For example, a +SEND+ frame must have a +destination+ header to indicate the destination of the messages.
 
 Other headers are optional.
-For example, if a +SEND+ frame contains a payload, it should also include both +content-type+ and +content-length+ headers.
+For example, a +SEND+ frame can be sent inside a transaction by addin a +transaction+ header.
 
 ==== Payload
 
@@ -88,12 +88,49 @@ The +ERROR+ frame may contain a payload with detailed information about the prob
 
 Finally, a STOMP frame is always terminated by a NULL octet (+^@+).
 
+===== Payload content
+
+If a frame contains a payload, it should have a +content-length+ header corresponding to the size of the payload (its number of octets).
+
+It is also advised to set a +content-type+ with the MIME type of the payload. Otherwise, it is considered as a binary blob.
+
+For example, we want to send a message with a JSON string:
+
+----
+{
+  name: 'foo',
+  value: 'bar'
+}
+----
+
+The corresponding +SEND+ frame should have both the +content-length+ and +content-type+ headers set:
+
+[[ex_stomp_payload]]
+.Payload with a JSON string
+====
+----
+SEND
+destination:/queue/myqueue    <1>
+content-length:33             <2>
+content-type:application/json <3>
+
+{
+  name: 'foo',
+  value: 'bar'
+}^@                           <4>
+----
+<1> A +SEND+ frame must contain a +destination+ header.
+<2> The length of the JSON string is 33 octets.
+<3> The MIME type for JSON is +application/json+.
+<4> The frame must be ended by a NULL octet (represented by +^@+ in ASCII) even when the +content-length+ header is set.
+====
+
 === Connection
 
 .Install and configure a messaging broker
 [NOTE]
 ====
-Before using a STOMP client, a messaging broker must be installed and 
+Before using a STOMP client, a messaging broker must be installed and
 configured to be able to exchange messages.
 
 In the book, we use Apache ActiveMQ as the messaging broker. The <<appendix_activemq>>
@@ -102,7 +139,7 @@ appendix shows how to install and configure ActiveMQ with STOMP.
 Once ActiveMQ is started, it accepts STOMP connections on +localhost:61613+.
 ====
 
-Since STOMP is text-based, we can send and receive message from the command 
+Since STOMP is text-based, we can send and receive message from the command
 line using a +telnet+ client.
 
 [[ex_stomp_telnet]]
@@ -127,14 +164,14 @@ It must also establish a STOMP connection by sending a +CONNECT+ frame:
 ++++
 <screen>
 <userinput>CONNECT
-accept-version: 1.2 <co xml:id="co.ex_stomp_connect_1"/>
+accept-version:1.2 <co xml:id="co.ex_stomp_connect_1"/>
 
 </userinput>^@
 </screen>
 <calloutlist>
   <callout arearefs="co.ex_stomp_connect_1">
-    <para>The <literal>accept-version</literal> indicates we want to communicate
-with the broker using the version 1.2 of the protocol</para>
+    <para>The <literal>accept-version</literal> indicates the client wants to communicate
+with the broker using the version 1.2 of the protocol.</para>
   </callout>
 </calloutlist>
 ++++
@@ -211,7 +248,7 @@ Other brokers may behave differently and require to create the destination befor
 ++++
 <screen>
 <userinput>SEND
-destination: /queue/myqueue <co xml:id="co.ex_stomp_send_1"/>
+destination:/queue/myqueue <co xml:id="co.ex_stomp_send_1"/>
 
 Hello, STOMP!</userinput>^@
 </screen>
@@ -250,8 +287,8 @@ To receive a confirmation that a message is handled by the STOMP broker, a frame
 ++++
 <screen>
 <userinput>SEND
-destination: /queue/myqueue
-receipt: 123 <co xml:id="co.ex_stomp_send_with_receipt_1"/>
+destination:/queue/myqueue
+receipt:123 <co xml:id="co.ex_stomp_send_with_receipt_1"/>
 
 Hello, STOMP with a receipt!</userinput>^@
 </screen>
@@ -272,7 +309,7 @@ When this +SEND+ frame is received by the broker and succesfully handled, the br
 ++++
 <screen>
 RECEIPT
-receipt-id: 123 <co xml:id="co.ex_stomp_receipt_1"/>
+receipt-id:123 <co xml:id="co.ex_stomp_receipt_1"/>
 
 </screen>
 <calloutlist>
@@ -283,7 +320,7 @@ receipt-id: 123 <co xml:id="co.ex_stomp_receipt_1"/>
 ++++
 ====
 
-This +RECEIPT+ lets the client know that the broker has *received* the message but it does not mean that the message has been processed yet (or will be processed at all).
+This +RECEIPT+ lets the client know that the broker has _received_ the message but it does not mean that the message has been processed yet (or will be processed at all).
 
 ==== Error frame
 
@@ -327,12 +364,12 @@ org.apache.activemq.transport.stomp.ProtocolException: SEND received without a D
 </screen>
 <calloutlist>
   <callout arearefs="ex_stomp_error_1">
-    <para>This <literal>ERROR</literal> frame has a <literal>content-type</literal> header that let the client know the payload is in plain text (encoded in UTF-8 by default)</para>
+    <para>This <literal>ERROR</literal> frame has a <literal>content-type</literal> header that let the client know the payload is in plain text (encoded in UTF-8 by default).</para>
   </callout>
-  <callout arearefs="ex_stomp_error_1">
+  <callout arearefs="ex_stomp_error_2">
     <para>A <literal>ERROR</literal> frame contains a <literal>message</literal> header with a short description of the problem encountered by the broker.</para>
   </callout>
-  <callout arearefs="ex_stomp_error_1">
+  <callout arearefs="ex_stomp_error_3">
     <para>It also contains a text payload with more information on the problem.</para>
     </callout>
 </calloutlist>
@@ -345,7 +382,7 @@ So far, the telnet client has acted as a STOMP _producer_ and sent messages.
 
 It will now also become a STOMP _consumer_ to receive messages.
 
-To receive messages, a STOMP client must send a +SUBSCRIBE+ with a +destination+ header.
+To receive messages, a STOMP client must send a +SUBSCRIBE+ frame with a +destination+ header.
 
 [[ex_stomp_subscribe]]
 .Subscribe to a destination
@@ -353,8 +390,8 @@ To receive messages, a STOMP client must send a +SUBSCRIBE+ with a +destination+
 ++++
 <screen>
 <userinput>SUBSCRIBE
-destination: /queue/myqueue <co xml:id="co.ex_stomp_subscribe_1"/>
-id: mysub                   <co xml:id="co.ex_stomp_subscribe_2"/>
+destination:/queue/myqueue <co xml:id="co.ex_stomp_subscribe_1"/>
+id:mysub                   <co xml:id="co.ex_stomp_subscribe_2"/>
 
 </userinput>^@
 </screen>
@@ -404,13 +441,13 @@ Hello, STOMP with a receipt!
     <para>Each received message is contained in a <literal>MESSAGE</literal> frame.</para>
   </callout>
   <callout arearefs="co.ex_stomp_receive2_2">
-    <para>An unique <literal>message-id</literal> can be used to identify uniquely a message.</para>
+    <para>A <literal>message-id</literal> header uniquely identifies the message.</para>
   </callout>
   <callout arearefs="co.ex_stomp_receive2_3">
     <para>The <literal>destination</literal> indicates the destination this message was consumed from.</para>
   </callout>
   <callout arearefs="co.ex_stomp_receive2_4">
-    <para>The <literal>subscription</literal> indicates which consumer is receiving the message.</para>
+    <para>The <literal>subscription</literal> indicates which consumer's subscription is receiving the message.</para>
   </callout>
   <callout arearefs="co.ex_stomp_receive2_5 co.ex_stomp_receive2_6 co.ex_stomp_receive2_7">
     <para>A <literal>MESSAGE</literal> frame may contain additional headers (<literal>timestamp</literal>, <literal>expires</literal>,
@@ -460,7 +497,7 @@ with a +id+ header corresponding to the subscription identifier indicated in the
 ++++
 <screen>
 <userinput>UNSUBSCRIBE
-id: mysub <co xml:id="co.ex_stomp_unsubscribe_1"/>
+id:mysub <co xml:id="co.ex_stomp_unsubscribe_1"/>
 
 </userinput>^@
 </screen>
@@ -488,7 +525,7 @@ The client can then safely close the TCP connection to the  broker (if the broke
 ++++
 <screen>
 <userinput>DISCONNECT
-receipt: 456 <co xml:id="co.ex_stomp_disconnect_1"/>
+receipt:mydisconnectreceipt <co xml:id="co.ex_stomp_disconnect_1"/>
 
 </userinput>^@
 </screen>
@@ -508,7 +545,7 @@ When the +DISCONNECT+ frame is sent, the client receives the corresponding +RECE
 ++++
 <screen>
 RECEIPT
-receipt-id: 456 <co xml:id="co.ex_stomp_disconnect_receipt_1"/>
+receipt-id:mydisconnectreceipt <co xml:id="co.ex_stomp_disconnect_receipt_1"/>
 </screen>
 <calloutlist>
   <callout arearefs="co.ex_stomp_disconnect_1">
@@ -518,7 +555,7 @@ receipt-id: 456 <co xml:id="co.ex_stomp_disconnect_receipt_1"/>
 ++++
 ====
 
-The messaging broker then closes its socket and the telnet client is closed:
+The messaging broker then closes the underlying TCP connection and the telnet client is closed:
 
 ++++
 <screen>
@@ -545,7 +582,7 @@ The +heart-beat+ header's value is composed of 2 positive integers:
 . The smallest number of milliseconds between heart-beats that the sender of the frame guarantees (or +0+ if it will not send heart-beats).
 . The desired number of milliseconds between heart-beats that the sender of the frame expects to receive from the other party (or +0+ if it does not want to receive heart-beats).
 
-The sender of +CONNECT+ frame is a STOMP client, the sender of a +CONNECTED+ frame is a STOMP broker.
+The sender of +CONNECT+ frame is a STOMP _client_, the sender of a +CONNECTED+ frame is a STOMP _broker_.
 
 A +CONNECTED+ frame with a +heart-beat:0,0+ header indicates that:
 
@@ -568,14 +605,14 @@ Trying 127.0.0.1...
 Connected to localhost.
 Escape character is '^]'.
 <userinput>CONNECT
-accept-version: 1.2
-heart-beat: 10000,2000 <co xml:id="co.ex_stomp_hb_connect_1"/>
+accept-version:1.2
+heart-beat:10000,2000 <co xml:id="co.ex_stomp_hb_connect_1"/>
 
 </userinput>^@
 </screen>
 <calloutlist>
   <callout arearefs="co.ex_stomp_hb_connect_1">
-    <para>the client guarantees to send a heart-beat every 10 seconds (10000ms) and expect to receive heart-beats from the broker every 2 seconds (2000ms).</para>
+    <para>The client guarantees to send a heart-beat every 10 seconds (10000ms) and expect to receive heart-beats from the broker every 2 seconds (2000ms).</para>
   </callout>
 </calloutlist>
 ++++
@@ -589,7 +626,7 @@ The broker replies with a +CONNECTED+ frame but the value of the +heart-beat+ he
 ++++
 <screen>
 <userinput>CONNECTED
-heart-beat:2000,10000  <co xml:id="co.ex_stomp_hb_connected_with_hb_1"/>
+heart-beat:2000,10000 <co xml:id="co.ex_stomp_hb_connected_with_hb_1"/>
 session:ID:retsina.local-60200-1378476149103-2:2
 server:ActiveMQ/5.8.0
 version:1.2
@@ -598,7 +635,7 @@ version:1.2
 </screen>
 <calloutlist>
   <callout arearefs="co.ex_stomp_hb_connected_with_hb_1">
-    <para>The broker replied that it guarantees to send heart-beat every 2 seconds and expect to receive heart-beats from the client every 10 seconds.</para>
+    <para>The broker replied that it guarantees to send heart-beats every 2 seconds and expect to receive heart-beats from the client every 10 seconds.</para>
   </callout>
 </calloutlist>
 ++++
@@ -627,7 +664,7 @@ What is a heart-beat? A heart-beat is *any data send over the network*.
 If the client does not send any STOMP frame, it must send an end-of-line (EOL) as a heart-beat.
 
 To simulate this, open a new telnet client and send the same +CONNECT+ frame than in <<ex_stomp_hb_connect>> and send a EOL every 10 seconds by typing +Enter+.
-You will also notice that a new line that appears every 2 seconds. This corresponds to the EOL sent by the broker as an heart-beat.
+You will also notice that a new line appears every 2 seconds. This corresponds to the EOL sent by the broker as an heart-beat.
 
 This client will remain open as long as you send EOL in the imparted time. Note that if you stop sending heart-beats, it may take more that 10 seconds for the broker to closed the connection.
 It is considered good practice to leave an error of margin with the heart-beats because of timing inaccuracies (some broker may wait more than twice the heart-beat time before closing the connection).
@@ -711,24 +748,13 @@ The client will now send a message to the destination and receives it through th
 ====
 ++++
 <screen>
-<userinput>SEND
+<userinput>SEND                                           <co xml:id="co.ex_stomp_ack_send_1"/>
 destination: /queue/myqueue
 
 another message
 </userinput>^@
-</screen>
-++++
-====
-
-As soon as the message is sent by the client, it is delivered to its subscription:
-
-[[ex_stomp_ack_message]]
-.Delivery of message with explicit acknowledgement
-====
-++++
-<screen>
-MESSAGE
-ack:ID\cretsina.local-49965-1378989016784-4\c1 <co xml:id="co.ex_stomp_ack_message_1"/>
+MESSAGE                                        <co xml:id="co.ex_stomp_ack_send_2"/>
+ack:ID\cretsina.local-49965-1378989016784-4\c1 <co xml:id="co.ex_stomp_ack_send_3"/>
 message-id:ID\cretsina.local-49965-1378989016784-2\c2\c-1\c1\c1
 destination:/queue/myqueue
 timestamp:1378989622992
@@ -739,14 +765,17 @@ priority:4
 another message
 </screen>
 <calloutlist>
-  <callout arearefs="co.ex_stomp_ack_message_1">
-    <para>The message has a <literal>ack</literal> header whose value is an opaque identifier.</para>
+  <callout arearefs="co.ex_stomp_ack_send_1">
+    <para>The client sends a message to the broker.</para>
+  </callout>
+  <callout arearefs="co.ex_stomp_ack_send_2 ex_stomp_ack_send_3">
+    <para>The message is processed by the broker and delivered to the client. It contains a <literal>ack</literal> header whose value is an opaque identifier.</para>
   </callout>
 </calloutlist>
 ++++
 ====
 
-At this point, the client has received the message but has not acknowledged it. The broker keeps a reference on the message until the client acknowledges it explicitly.
+At this point, the client has received the message but has not acknowledged it. The broker will keep it as a reference until the client acknowledges it explicitly.
 
 To illustrate that, the client will disconnect _without acknowledging the message_.
 
@@ -766,7 +795,7 @@ Connection closed by foreign host.
 The broker will notice that the delivered message was not acknowledged by the client before it disconnected and will
 take again responsibility for it and be ready to deliver it to any other subscribers on the destination.
 
-A new telnet client will subscribe to the destination with a different subscription identifiert to receive this message:
+A new telnet client will subscribe to the destination with a different subscription identifier to receive this message:
 
 [[ex_stomp_ack_subscribe_client_2]]
 .Subscribe to a STOMP broker with a +client+ acknowledgement
@@ -837,7 +866,7 @@ id:ID\cretsina.local-49965-1378989016784-5\c1 <co xml:id="co.ex_stomp_ack_ack_1"
 </screen>
 <calloutlist>
   <callout arearefs="co.ex_stomp_ack_ack_1">
-    <para>The value of the <literal>id</literal> must match the value of the <literal>ack</literal> header 
+    <para>The value of the <literal>id</literal> must match the value of the <literal>ack</literal> header
 from the <literal>MESSAGE</literal> received in <xref linkend="ex_stomp_ack_subscribe_client_2"/>.</para>
   </callout>
 </calloutlist>
@@ -845,9 +874,11 @@ from the <literal>MESSAGE</literal> received in <xref linkend="ex_stomp_ack_subs
 ====
 
 .Transactional Acknowlegement
-
-Acknowledgement using +ACK+ or +NACK+ can be part of a transaction by adding a +transaction+ header to
-these frames whose value is a transaction identifier (as explained below in <<ch_stomp_transaction>>).
+[NOTE]
+====
+Acknowledgements using +ACK+ or +NACK+ frame can be part of a transaction by adding a +transaction+ header to
+these frames (as explained below in <<ch_stomp_transaction>>).
+====
 
 [[ch_stomp_transaction]]
 === Transaction
@@ -970,7 +1001,7 @@ than  in the <literal>BEGIN</literal> frame.</para>
 ++++
 ====
 
-To roll back a transaction and discard any messages or acknowledgements sent inside it, the client can send an +ABORT+ frame with the same +transaction+ header than in 
+To roll back a transaction and discard any messages or acknowledgements sent inside it, the client can send an +ABORT+ frame with the same +transaction+ header than in
 the corresponding +BEGIN+ frame that started the transaction:
 
 [[ex_stomp_tx_abort]]
