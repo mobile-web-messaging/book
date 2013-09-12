@@ -424,7 +424,7 @@ The telnet client is now a consumer of the +/queue/myqueue+ destination.
 If another message is sent to this destination, it will receive this message immediately:
 
 [[ex_stomp_send_receive]]
-. Send a message and receive it
+.Send a message and receive it
 ====
 ++++
 <screen>
@@ -572,7 +572,7 @@ heart-beat: 10000,2000 <co xml:id="co.ex_stomp_hb_connect_1"/>
 </screen>
 <calloutlist>
   <callout arearefs="co.ex_stomp_hb_connect_1">
-    <para>the client guarantee to send a heart-beat every 10 seconds (10000ms) and expect to receive heart-beats from the broker every 2 seconds (2000ms).</para>
+    <para>the client guarantees to send a heart-beat every 10 seconds (10000ms) and expect to receive heart-beats from the broker every 2 seconds (2000ms).</para>
   </callout>
 </calloutlist>
 ++++
@@ -631,8 +631,214 @@ It is considered good practice to leave an error of margin with the heart-beats 
 
 === Message acknowledgement
 
-TODO
+When a broker delivers a message to a client for consumption, the client must _acknowledge_ the message to inform the broker that it takes responsibility for the message.
+With this acknowledgement, the broker can forget everything about the message, it is now under the client's responsibility. As long as the broker has not received such an acknowledgement, it must keep the message
+to be able to eventually redeliver it.
 
+.When does this acknowledgement takes place?
+
+The first step happens when the client sends a +SUBSCRIBE+ frame to the broker. The +SUBSCRIBE+ frame takes an optional +ack+ header that accepts three valid values:
+
+* +auto+ (if the +SUBSCRIBE+ frame does not contain a +ack+ header, it defaults to +auto+)
+* +client+
+* +client-individual+
+
+When the +ack+ header is set to +auto+, the broker will consider the message _automatically_ acknowledged as soon as it is delivered to the client. The client does not need to acknowledge
+the message at all. This mode may result in message loss if the client fails *after* the message was delivered but *before* it was processed.
+
+When the client requires more control on the message acknowledgement, it can use either the +client+ or +client-individual+ values.
+In both case, the client must send an +ACK+ frame to the broker for the message that it processes.
+The +client+ value means the message acknowledgement is _cumulative_, it will acknowledge the specified message _and all the messages received before_. With +client-individual+, only the specified message is acknowledged.
+
+If a client does not process a message it has received, it should send a +NACK+ frame (a negative acknowledgement) to the let the broker know that it refused to take responsibility for the specified message.
+The broker can then deliver the message to another consumer.
+
+The +ACK+ and +NACK+ frames require a +id+ header whose value must match the value of the +ack+ header from the +MESSAGE+ frame to acknowledge (or nack).
+The +MESSAGE+ frame contains the +ack+ header only when the client specified explicit acknowledgement (+client+ or +client-individual+) in the +SUBSCRIBE+ frame.
+
+We will open a telnet client and subscribe to the destination with an explicit +client+ acknowledgement:
+
+[[ex_stomp_ack_subscribe_client]]
+.Subscribe to a STOMP broker with a +client+ acknowledgement
+====
+++++
+<screen>
+<userinput>CONNECT                    <co xml:id="co.ex_stomp_ack_subscribe_client_1"/>
+accept-version:1.2
+
+</userinput>^@
+CONNECTED                  <co xml:id="co.ex_stomp_ack_subscribe_client_2"/>
+heart-beat:0,0
+session:ID:retsina.local-49965-1378989016784-2:2
+server:ActiveMQ/5.8.0
+version:1.2
+
+<userinput>SUBSCRIBE                  <co xml:id="co.ex_stomp_ack_subscribe_client_3"/>
+destination:/queue/myqueue <co xml:id="co.ex_stomp_ack_subscribe_client_4"/>
+id:mysub                   <co xml:id="co.ex_stomp_ack_subscribe_client_5"/>
+ack:client                 <co xml:id="co.ex_stomp_ack_subscribe_client_6"/>
+
+</userinput>^@
+</screen>
+<calloutlist>
+  <callout arearefs="co.ex_stomp_ack_subscribe_client_1">
+    <para>The <literal>CONNECT</literal> frame is sent to connect to the STOMP broker.</para>
+  </callout>
+  <callout arearefs="co.ex_stomp_ack_subscribe_client_2">
+    <para>The <literal>CONNECTED</literal> frame sent by the broker confirms that the client is successfully connected.</para>
+  </callout>
+  <callout arearefs="co.ex_stomp_ack_subscribe_client_3 co.ex_stomp_ack_subscribe_client_4 co.ex_stomp_ack_subscribe_client_5">
+    <para>The client subscribes to the <literal>/queue/myqueue</literal> destination with the subscription identifier <literal>mysub</literal>.</para>
+  </callout>
+  <callout arearefs="co.ex_stomp_ack_subscribe_client_6">
+    <para>The client informs the broker that messages received by this subscription will be acknowledged explicitly (and cumulatively).</para>
+  </callout>
+</calloutlist>
+++++
+====
+
+The client will now send a message to the destination and receives it through the subscription that has just been created:
+
+[[ex_stomp_ack_send]]
+.Send a message to the destination
+====
+++++
+<screen>
+<userinput>SEND
+destination: /queue/myqueue
+
+another message
+</userinput>^@
+</screen>
+++++
+====
+
+As soon as the message is sent by the client, it is delivered to its subscription:
+
+[[ex_stomp_ack_message]]
+.Delivery of message with explicit acknowledgement
+====
+++++
+<screen>
+MESSAGE
+ack:ID\cretsina.local-49965-1378989016784-4\c1 <co xml:id="co.ex_stomp_ack_message_1"/>
+message-id:ID\cretsina.local-49965-1378989016784-2\c2\c-1\c1\c1
+destination:/queue/myqueue
+timestamp:1378989622992
+expires:0
+subscription:mysub
+priority:4
+
+another message
+</screen>
+<calloutlist>
+  <callout arearefs="co.ex_stomp_ack_message_1">
+    <para>The message has a <literal>ack</literal> header whose value is an opaque identifier.</para>
+  </callout>
+</calloutlist>
+++++
+====
+
+At this point, the client has received the message but has not acknowledged it. The broker keeps a reference on the message until the client acknowledges it explicitly.
+
+To illustrate that, the client will disconnect _without acknowledging the message_.
+
+[[ex_stomp_ack_disconnect]]
+.Disconnection of the client without acknowledging the message
+====
+++++
+<screen>
+<userinput>DISCONNECT
+
+</userinput>^@
+Connection closed by foreign host.
+</screen>
+++++
+====
+
+The broker will notice that the delivered message was not acknowledged by the client before it disconnected and will
+take again responsibility for it and be ready to deliver it to any other subscribers on the destination.
+
+A new telnet client will subscribe to the destination with a different subscription identifiert to receive this message:
+
+[[ex_stomp_ack_subscribe_client_2]]
+.Subscribe to a STOMP broker with a +client+ acknowledgement
+====
+++++
+<screen>
+<userinput>CONNECT
+accept-version:1.2
+
+</userinput>^@
+CONNECTED
+heart-beat:0,0
+session:ID:retsina.local-49965-1378989016784-2:2
+server:ActiveMQ/5.8.0
+version:1.2
+
+<userinput>SUBSCRIBE            <co xml:id="co.ex_stomp_ack_subscribe_client_2_1"/>
+destination:/queue/myqueue
+id:mynewsub          <co xml:id="co.ex_stomp_ack_subscribe_client_2_2"/>
+ack:client           <co xml:id="co.ex_stomp_ack_subscribe_client_2_3"/>
+
+</userinput>^@
+MESSAGE              <co xml:id="co.ex_stomp_ack_subscribe_client_2_4"/>
+redelivered:true     <co xml:id="co.ex_stomp_ack_subscribe_client_2_5"/>
+ack:ID\cretsina.local-49965-1378989016784-5\c1
+message-id:ID\cretsina.local-49965-1378989016784-2\c2\c-1\c1\c1
+destination:/queue/myqueue
+timestamp:1378989622992
+expires:0
+subscription:mysub2  <co xml:id="co.ex_stomp_ack_subscribe_client_2_6"/>
+priority:4
+
+another message
+</screen>
+<calloutlist>
+  <callout arearefs="co.ex_stomp_ack_subscribe_client_2_1 co.ex_stomp_ack_subscribe_client_2_2">
+    <para>The client subscribes again with a new <literal>mynewsub</literal> subscription identifier.</para>
+  </callout>
+  <callout arearefs="co.ex_stomp_ack_subscribe_client_2_3">
+    <para>This new subscription also require explicit <literal>client</literal> acknowledgement.</para>
+  </callout>
+  <callout arearefs="co.ex_stomp_ack_subscribe_client_2_4">
+    <para>As soon as the client is subscribed, it receives the <literal>MESSAGE</literal> sent in <xref linkend="ex_stomp_ack_message"/></para>
+  </callout>
+  <callout arearefs="co.ex_stomp_ack_subscribe_client_2_5 co.ex_stomp_ack_subscribe_client_2_6">
+    <para>The message is delivered to the <literal>mysub2</literal> subscription and contains an additional <literal>redelivered</literal>
+header set to <literal>true</literal> that informs the client that this message was delivered at least once without success and is redelivered.</para>
+  </callout>
+</calloutlist>
+++++
+====
+
+This time, the client will properly acknowledge the message:
+
+[[ex_stomp_ack_ack]]
+.Acknowledge a message
+====
+++++
+<screen>
+<userinput>ACK
+id:ID\cretsina.local-49965-1378989016784-5\c1 <co xml:id="co.ex_stomp_ack_ack_1"/>
+
+</userinput>^@
+</screen>
+<calloutlist>
+  <callout arearefs="co.ex_stomp_ack_ack_1">
+    <para>The value of the <literal>id</literal> must match the value of the <literal>ack</literal> header 
+from the <literal>MESSAGE</literal> received in <xref linkend="ex_stomp_ack_subscribe_client_2"/>.</para>
+  </callout>
+</calloutlist>
+++++
+====
+
+.Transactional Acknowlegement
+
+Acknowledgement using +ACK+ or +NACK+ can be part of a transaction by adding a +transaction+ header to
+these frames whose value is a transaction identifier (as explained below in <<ch_stomp_transaction>>).
+
+[[ch_stomp_transaction]]
 === Transaction
 
 use case
