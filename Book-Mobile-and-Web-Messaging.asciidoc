@@ -32,8 +32,4 @@ include::Chapter120-MQTT-over-Web-Sockets.asciidoc[]
 
 include::AppendixA-ActiveMQ.asciidoc[]
 
-include::AppendixB-STOMP.asciidoc[]
-
-include::AppendixC-MQTT.asciidoc[]
-
 include::Afterword.asciidoc[]

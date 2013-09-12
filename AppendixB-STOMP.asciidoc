@@ -1,5 +1,0 @@
-[appendix]
-== Appendix: STOMP
-
-[role="lead"]
-In this appendix, we provide a copy of the STOMP 1.2 protocol specification.
