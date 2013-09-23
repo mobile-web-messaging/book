@@ -469,7 +469,8 @@ Hello, STOMP with a receipt!
   </callout>
   <callout arearefs="co.ex_stomp_receive2_5 co.ex_stomp_receive2_6 co.ex_stomp_receive2_7">
     <para>A <literal>MESSAGE</literal> frame may contain additional headers (<literal>timestamp</literal>, <literal>expires</literal>,
- <literal>priority</literal> in this case) not specified by the STOMP protocol corresponding to extensions provided by the broker.</para>
+ <literal>priority</literal> in this case) not specified by the STOMP protocol corresponding to features provided by the broker
+(as described below in <xref linkend="ch_stomp_ext" />).</para>
   </callout>
 </calloutlist>
 ++++
@@ -786,7 +787,7 @@ another message
   <callout arearefs="co.ex_stomp_ack_send_1">
     <para>The client sends a message to the broker.</para>
   </callout>
-  <callout arearefs="co.ex_stomp_ack_send_2 ex_stomp_ack_send_3">
+  <callout arearefs="co.ex_stomp_ack_send_2 co.ex_stomp_ack_send_3">
     <para>The message is processed by the broker and delivered to the client. It contains a <literal>ack</literal> header whose value is an opaque identifier.</para>
   </callout>
 </calloutlist>
@@ -1123,17 +1124,19 @@ deliver it to the client's subscription.</para>
 ++++
 ====
 
+[[ch_stomp_ext]]
 === STOMP extensions
 
-STOMP protocol is very simple with few frames to know to be able to use it.
+STOMP protocol is very simple with few commands to know to be able to use it.
 
-The protocol does not define advanced features that are often provided by messaging brokers. However, it is possible to use them from STOMP
-thanks to the support of non-standard additional headers.
+The protocol does not define advanced features that are often provided by messaging brokers such as persistency or expiration.
 
-In the example <<ex_stomp_receive2>>, the two messages received by the consumers were containing headers that have not been described: 
+However, it is possible to use them from STOMP thanks to the additional /non-standard/ headers.
+
+In the <<ex_stomp_receive2>>, the two messages received by the consumers were containing headers that have not been described yet: 
 +timestamp+, +expires+ and +priority+.
 
-The headers were added by ActiveMQ to provide additional information on the messages.
+The headers are added by ActiveMQ to provide additional information on the messages.
 
 * +timestamp+ value corresponds to the time the message was handed off to the broker (it is an interval in milliseconds since the UNIX epoch).
 * +expires+ value corresponds to the message expiration time. When a message exipration time is reached and it has not been consumed, the broker discards it.
@@ -1141,15 +1144,15 @@ The headers were added by ActiveMQ to provide additional information on the mess
 * +priority+ value is the priority level of the message (+0+ being the lowest priority and +9+ being the highest). The broker tries
 to deliver higher priority messages ahead of lower priority ones. In the example, the value is +4+ which corresponds to a normal priority.
 
-ActiveMQ defines other headers that can be add to the +SEND+ frame when sending a message (as descrided in (http://activemq.apache.org/stomp.html)[ActiveMQ STOMP page]).
+ActiveMQ defines other headers that can be add to the +SEND+ frame when sending a message (as described in (http://activemq.apache.org/stomp.html[ActiveMQ STOMP page]).
 
-[TODO]
+[NOTE]
 ====
-Cross-reference with message persistence concept.
+TODO: Cross-reference with message persistence concept.
 ====
 
 One of the most important is the +persistent+ header. By default, STOMP does not define whether messages are _persistent_ or not.
-Most STOMP brokers (including ActiveMQ) defaults to _non-persistent_ messages. To send a persistent message to AcitveMQ broker,
+Most STOMP brokers (including ActiveMQ) defaults to _non-persistent_ messages. To send a persistent message to an ActiveMQ broker,
 the client must add a +persistent+ header whose value is +true+.
 
 [[ex_stomp_ext_persistent]]

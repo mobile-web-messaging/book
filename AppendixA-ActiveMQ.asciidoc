@@ -62,9 +62,15 @@ $ vim ./conf/activemq.xml
     <!-- Configure authentication; Username, passwords and groups -->
     <simpleAuthenticationPlugin>
         <users>
-            <authenticationUser username="system" password="${activemq.password}" groups="users,admins"/>
-            <authenticationUser username="user" password="${guest.password}" groups="users"/>
-            <authenticationUser username="guest" password="${guest.password}" groups="guests"/>
+            <authenticationUser username="system"
+                                password="${activemq.password}"
+                                groups="users,admins"/>
+            <authenticationUser username="user"
+                                password="${guest.password}"
+                                groups="users"/>
+            <authenticationUser username="guest"
+                                password="${guest.password}"
+                                groups="guests"/>
         </users>
     </simpleAuthenticationPlugin>
 
@@ -73,10 +79,18 @@ $ vim ./conf/activemq.xml
       <map>
         <authorizationMap>
           <authorizationEntries>
-            <authorizationEntry queue=">" read="users" write="users" admin="users" />
-            <authorizationEntry topic=">" read="users" write="users" admin="users" />
-      
-            <authorizationEntry topic="ActiveMQ.Advisory.>" read="guests,users" write="guests,users" admin="guests,users"/>
+            <authorizationEntry queue=">"
+                                read="users"
+                                write="users"
+                                admin="users" />
+            <authorizationEntry topic=">"
+                                read="users"
+                                write="users"
+                                admin="users" />
+            <authorizationEntry topic="ActiveMQ.Advisory.>"
+                                read="guests,users"
+                                write="guests,users"
+                                admin="guests,users"/>
           </authorizationEntries>
         </authorizationMap>
       </map>
