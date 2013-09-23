@@ -10,7 +10,7 @@ support STOMP and MQTT protocols.
 
 Apache ActiveMQ latest release can be downloaded for its
 http://activemq.apache.org/activemq-580-release.html[download page] and the
-http://activemq.apache.org/getting-started.html[Getting started] page contains all the information to install it.
+http://activemq.apache.org/getting-started.html[getting started page] contains all the information to install it.
 
 For our setup, ActiveMQ will be installed in the directory +~/mobilewebmsg/mybroker+.
 
@@ -103,8 +103,8 @@ With this setting, only authenticated user identified by the name +user+ and the
 [[app_activemq_stomp]]
 === STOMP Configuration
 
-STOMP protocol can be added to ActiveMQ by adding a transport connector to its configuration (as explained in full details in its
-http://activemq.apache.org/stomp.html[STOMP configuration] page).
+STOMP protocol is enabled in ActiveMQ by adding a transport connector to its configuration (as explained in full details in its
+http://activemq.apache.org/stomp.html[STOMP configuration]).
 
 Edit the +conf/activemq.xml+ file to add a +transport+ connector for STOMP:
 
@@ -120,7 +120,7 @@ $ vim ./conf/activemq.xml
 </transportConnectors>
 ----
 
-When ActiveMQ is restarted, it now accepts connections for the STOMP URL +stomp://localhost:61613+.
+After ActiveMQ is restarted, it accepts STOMP connections at the URL +stomp://localhost:61613+.
 
 [source,sh]
 ----
@@ -138,7 +138,7 @@ $ tail data/activemq.log
 === MQTT Configuration
 
 Like for STOMP, MQTT protocol can be added to ActiveMQ by adding a transport connector to its configuration (as explained in full details in its
-http://activemq.apache.org/mqtt.html[MQTT configuration] page).
+http://activemq.apache.org/mqtt.html[MQTT configuration]).
 
 [source,sh]
 ----
@@ -155,7 +155,7 @@ $ ./bin/mybroker restart
 ActiveMQ is running (pid '6664')
 ----
 
-When ActiveMQ is restarted, it now accepts connections for the MQTT URL +mqtt://localhost:1883+.
+After ActiveMQ is restarted, it accepts MQTT connections at the URL +mqtt://localhost:1883+.
 
 [source,sh]
 ----
@@ -163,12 +163,11 @@ When ActiveMQ is restarted, it now accepts connections for the MQTT URL +mqtt://
 2013-06-14 19:44:52,800 | INFO  | Connector mqtt Started | org.apache.activemq.broker.TransportConnector | main
 ----
 
-
 [[app_activemq_websockets]]
 === Web Sockets Configuration
 
-
-http://activemq.apache.org/websockets.html[Web Sockets configuration]
+The Web Sockets  protocol is enabled in ActiveMQ by adding a transport connector to its configuration (as explained in full details in its
+http://activemq.apache.org/websockets.html[Web Sockets configuration page]).
 
 [source,sh]
 ----
@@ -181,7 +180,7 @@ $ vim ./conf/activemq.xml
 </transportConnectors>
 ----
 
-When ActiveMQ is restarted, it displays a log that it accepts connections for the Web Sockers URL +ws://0.0.0.0:61614+.
+After ActiveMQ is restarted, it accepts Web Sockets connection at the URL +ws://0.0.0.0:61614+.
 
 [source,sh]
 ----

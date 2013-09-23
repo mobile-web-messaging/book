@@ -1125,4 +1125,53 @@ deliver it to the client's subscription.</para>
 
 === STOMP extensions
 
-TODO
+STOMP protocol is very simple with few frames to know to be able to use it.
+
+The protocol does not define advanced features that are often provided by messaging brokers. However, it is possible to use them from STOMP
+thanks to the support of non-standard additional headers.
+
+In the example <<ex_stomp_receive2>>, the two messages received by the consumers were containing headers that have not been described: 
++timestamp+, +expires+ and +priority+.
+
+The headers were added by ActiveMQ to provide additional information on the messages.
+
+* +timestamp+ value corresponds to the time the message was handed off to the broker (it is an interval in milliseconds since the UNIX epoch).
+* +expires+ value corresponds to the message expiration time. When a message exipration time is reached and it has not been consumed, the broker discards it.
+  In the example, the +expires+ value is +0+ which mean that the messages _never_ expires.
+* +priority+ value is the priority level of the message (+0+ being the lowest priority and +9+ being the highest). The broker tries
+to deliver higher priority messages ahead of lower priority ones. In the example, the value is +4+ which corresponds to a normal priority.
+
+ActiveMQ defines other headers that can be add to the +SEND+ frame when sending a message (as descrided in (http://activemq.apache.org/stomp.html)[ActiveMQ STOMP page]).
+
+[TODO]
+====
+Cross-reference with message persistence concept.
+====
+
+One of the most important is the +persistent+ header. By default, STOMP does not define whether messages are _persistent_ or not.
+Most STOMP brokers (including ActiveMQ) defaults to _non-persistent_ messages. To send a persistent message to AcitveMQ broker,
+the client must add a +persistent+ header whose value is +true+.
+
+[[ex_stomp_ext_persistent]]
+.Send a peristent message
+====
+++++
+<screen>
+<userinput>SEND
+destination:/queue/myqueue
+persistent:true<co xml:id="co.ex_stomp_ext_persistent_1"/>
+
+This message is persisted!^@
+</userinput>^@
+</screen>
+<calloutlist>
+  <callout arearefs="co.ex_stomp_ext_persistent_1">
+    <para>The message will be persisted by the broker and will be available if the server crashes or stops.</para>
+  </callout>
+</calloutlist>
+++++
+====
+
+If the message is not consumed when the broker goes offline, the broker will load it when it restarts and consumers will be able to receive it.
+
+Each STOMP brokers may define its own set of headers and you have to consult their documentation to know which additional features are supported.
