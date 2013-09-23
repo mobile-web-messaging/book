@@ -29,11 +29,11 @@ Each frame is composed of 3 elements:
 .STOMP Frame Structure
 ====
 ----
-COMMAND        <1>
-header1:value1 <2>
+COMMAND<1>
+header1:value1<2>
 header2:value2
-               <3>
-payload^@      <4>
+<3>
+payload^@<4>
 ----
 <1> A frame starts with a command string followed by an end-of-line (EOL)
 <2> Header entries followed the format +<key>:<value>+ and is ended by EOL
@@ -115,14 +115,14 @@ The corresponding +SEND+ frame should have both the +content-length+ and +conten
 ====
 ----
 SEND
-destination:/queue/myqueue    <1>
-content-length:33             <2>
-content-type:application/json <3>
+destination:/queue/myqueue<1>
+content-length:33<2>
+content-type:application/json<3>
 
 {
   name: 'foo',
   value: 'bar'
-}^@                           <4>
+}^@<4>
 ----
 <1> A +SEND+ frame must contain a +destination+ header.
 <2> The length of the JSON string is 33 octets.
@@ -172,9 +172,9 @@ It must also establish a STOMP connection by sending a +CONNECT+ frame:
 ++++
 <screen>
 <userinput>CONNECT
-accept-version:1.2 <co xml:id="co.ex_stomp_connect_1"/>
-login:user         <co xml:id="co.ex_stomp_connect_2"/>
-passcode:password  <co xml:id="co.ex_stomp_connect_3"/>
+accept-version:1.2<co xml:id="co.ex_stomp_connect_1"/>
+login:user<co xml:id="co.ex_stomp_connect_2"/>
+passcode:password<co xml:id="co.ex_stomp_connect_3"/>
 
 </userinput>^@
 </screen>
@@ -210,11 +210,11 @@ and reply with a +CONNECTED+ frame:
 ====
 ++++
 <screen>
-CONNECTED                                         <co xml:id="co.ex_stomp_connected_1"/>
-heart-beat:0,0                                    <co xml:id="co.ex_stomp_connected_2"/>
-session:ID:retsina.local-64904-1378366884467-2:1  <co xml:id="co.ex_stomp_connected_3"/>
-server:ActiveMQ/5.8.0                             <co xml:id="co.ex_stomp_connected_4"/>
-version:1.2                                       <co xml:id="co.ex_stomp_connected_5"/>
+CONNECTED<co xml:id="co.ex_stomp_connected_1"/>
+heart-beat:0,0<co xml:id="co.ex_stomp_connected_2"/>
+session:ID:retsina.local-64904-1378366884467-2:1<co xml:id="co.ex_stomp_connected_3"/>
+server:ActiveMQ/5.8.0<co xml:id="co.ex_stomp_connected_4"/>
+version:1.2<co xml:id="co.ex_stomp_connected_5"/>
 </screen>
 <calloutlist>
   <callout arearefs="co.ex_stomp_connected_1">
@@ -265,7 +265,7 @@ Other brokers may behave differently and require to create the destination befor
 ++++
 <screen>
 <userinput>SEND
-destination:/queue/myqueue <co xml:id="co.ex_stomp_send_1"/>
+destination:/queue/myqueue<co xml:id="co.ex_stomp_send_1"/>
 
 Hello, STOMP!</userinput>^@
 </screen>
@@ -305,7 +305,7 @@ To receive a confirmation that a message is handled by the STOMP broker, a frame
 <screen>
 <userinput>SEND
 destination:/queue/myqueue
-receipt:123 <co xml:id="co.ex_stomp_send_with_receipt_1"/>
+receipt:123<co xml:id="co.ex_stomp_send_with_receipt_1"/>
 
 Hello, STOMP with a receipt!</userinput>^@
 </screen>
@@ -326,7 +326,7 @@ When this +SEND+ frame is received by the broker and succesfully handled, the br
 ++++
 <screen>
 RECEIPT
-receipt-id:123 <co xml:id="co.ex_stomp_receipt_1"/>
+receipt-id:123<co xml:id="co.ex_stomp_receipt_1"/>
 
 </screen>
 <calloutlist>
@@ -372,8 +372,8 @@ Once the message is sent, the client receives an +ERROR+ frame:
 ++++
 <screen>
 ERROR
-content-type:text/plain                                <co xml:id="ex_stomp_error_1"/>
-message:SEND received without a Destination specified! <co xml:id="ex_stomp_error_2"/>
+content-type:text/plain<co xml:id="ex_stomp_error_1"/>
+message:SEND received without a Destination specified!<co xml:id="ex_stomp_error_2"/>
 
 org.apache.activemq.transport.stomp.ProtocolException: SEND received without a Destination specified! <co xml:id="ex_stomp_error_3"/>
         at org.apache.activemq.transport.stomp.ProtocolConverter.onStompSend(ProtocolConverter.java:299)
@@ -408,8 +408,8 @@ To receive messages, a STOMP client must send a +SUBSCRIBE+ frame with a +destin
 ++++
 <screen>
 <userinput>SUBSCRIBE
-destination:/queue/myqueue <co xml:id="co.ex_stomp_subscribe_1"/>
-id:mysub                   <co xml:id="co.ex_stomp_subscribe_2"/>
+destination:/queue/myqueue<co xml:id="co.ex_stomp_subscribe_1"/>
+id:mysub<co xml:id="co.ex_stomp_subscribe_2"/>
 
 </userinput>^@
 </screen>
@@ -435,21 +435,21 @@ it starts to send to the client some +MESSAGE+ frames corresponding to the messa
 ====
 ++++
 <screen>
-MESSAGE                                                         <co xml:id="co.ex_stomp_receive2_1"/>
-message-id:ID\cretsina.local-64904-1378366884467-2\c1\c-1\c1\c1 <co xml:id="co.ex_stomp_receive2_2"/>
-destination:/queue/myqueue                                      <co xml:id="co.ex_stomp_receive2_3"/>
-subscription: mysub                                             <co xml:id="co.ex_stomp_receive2_4"/>
-timestamp:1378367602698                                         <co xml:id="co.ex_stomp_receive2_5"/>
-expires:0                                                       <co xml:id="co.ex_stomp_receive2_6"/>
-priority:4                                                      <co xml:id="co.ex_stomp_receive2_7"/>
+MESSAGE<co xml:id="co.ex_stomp_receive2_1"/>
+message-id:ID\cretsina.local-64904-1378366884467-2\c1\c-1\c1\c1<co xml:id="co.ex_stomp_receive2_2"/>
+destination:/queue/myqueue<co xml:id="co.ex_stomp_receive2_3"/>
+subscription:mysub<co xml:id="co.ex_stomp_receive2_4"/>
+timestamp:1378367602698<co xml:id="co.ex_stomp_receive2_5"/>
+expires:0<co xml:id="co.ex_stomp_receive2_6"/>
+priority:4<co xml:id="co.ex_stomp_receive2_7"/>
 
 Hello, STOMP!
-MESSAGE                                                         <co xml:id="co.ex_stomp_receive2_8"/>
+MESSAGE<co xml:id="co.ex_stomp_receive2_8"/>
 message-id:ID\cretsina.local-64904-1378366884467-2\c1\c-1\c1\c2
 destination:/queue/myqueue
 timestamp:1378368275375
 expires:0
-subscription: mysub
+subscription:mysub
 priority:4
 
 Hello, STOMP with a receipt!
@@ -496,7 +496,7 @@ message-id:ID\cretsina.local-64904-1378366884467-2\c3\c-1\c1\c3
 destination:/queue/myqueue
 timestamp:1378369910799
 expires:0
-subscription: mysub
+subscription:mysub
 priority:4
 
 another message
@@ -515,7 +515,7 @@ with a +id+ header corresponding to the subscription identifier indicated in the
 ++++
 <screen>
 <userinput>UNSUBSCRIBE
-id:mysub <co xml:id="co.ex_stomp_unsubscribe_1"/>
+id:mysub<co xml:id="co.ex_stomp_unsubscribe_1"/>
 
 </userinput>^@
 </screen>
@@ -543,7 +543,7 @@ The client can then safely close the TCP connection to the  broker (if the broke
 ++++
 <screen>
 <userinput>DISCONNECT
-receipt:mydisconnectreceipt <co xml:id="co.ex_stomp_disconnect_1"/>
+receipt:456<co xml:id="co.ex_stomp_disconnect_1"/>
 
 </userinput>^@
 </screen>
@@ -563,7 +563,7 @@ When the +DISCONNECT+ frame is sent, the client receives the corresponding +RECE
 ++++
 <screen>
 RECEIPT
-receipt-id:mydisconnectreceipt <co xml:id="co.ex_stomp_disconnect_receipt_1"/>
+receipt-id:456<co xml:id="co.ex_stomp_disconnect_receipt_1"/>
 </screen>
 <calloutlist>
   <callout arearefs="co.ex_stomp_disconnect_1">
@@ -624,7 +624,7 @@ Connected to localhost.
 Escape character is '^]'.
 <userinput>CONNECT
 accept-version:1.2
-heart-beat:10000,2000 <co xml:id="co.ex_stomp_hb_connect_1"/>
+heart-beat:10000,2000<co xml:id="co.ex_stomp_hb_connect_1"/>
 
 </userinput>^@
 </screen>
@@ -644,7 +644,7 @@ The broker replies with a +CONNECTED+ frame but the value of the +heart-beat+ he
 ++++
 <screen>
 <userinput>CONNECTED
-heart-beat:2000,10000 <co xml:id="co.ex_stomp_hb_connected_with_hb_1"/>
+heart-beat:2000,10000<co xml:id="co.ex_stomp_hb_connected_with_hb_1"/>
 session:ID:retsina.local-60200-1378476149103-2:2
 server:ActiveMQ/5.8.0
 version:1.2
@@ -725,20 +725,20 @@ $ <userinput>telnet localhost 61613</userinput>
 Trying 127.0.0.1...
 Connected to localhost.
 Escape character is '^]'.
-<userinput>CONNECT                    <co xml:id="co.ex_stomp_ack_subscribe_client_1"/>
+<userinput>CONNECT<co xml:id="co.ex_stomp_ack_subscribe_client_1"/>
 accept-version:1.2
 
 </userinput>^@
-CONNECTED                  <co xml:id="co.ex_stomp_ack_subscribe_client_2"/>
+CONNECTED<co xml:id="co.ex_stomp_ack_subscribe_client_2"/>
 heart-beat:0,0
 session:ID:retsina.local-49965-1378989016784-2:2
 server:ActiveMQ/5.8.0
 version:1.2
 
-<userinput>SUBSCRIBE                  <co xml:id="co.ex_stomp_ack_subscribe_client_3"/>
-destination:/queue/myqueue <co xml:id="co.ex_stomp_ack_subscribe_client_4"/>
-id:mysub                   <co xml:id="co.ex_stomp_ack_subscribe_client_5"/>
-ack:client                 <co xml:id="co.ex_stomp_ack_subscribe_client_6"/>
+<userinput>SUBSCRIBE<co xml:id="co.ex_stomp_ack_subscribe_client_3"/>
+destination:/queue/myqueue<co xml:id="co.ex_stomp_ack_subscribe_client_4"/>
+id:mysub<co xml:id="co.ex_stomp_ack_subscribe_client_5"/>
+ack:client<co xml:id="co.ex_stomp_ack_subscribe_client_6"/>
 
 </userinput>^@
 </screen>
@@ -766,13 +766,13 @@ The client will now send a message to the destination and receives it through th
 ====
 ++++
 <screen>
-<userinput>SEND                                           <co xml:id="co.ex_stomp_ack_send_1"/>
+<userinput>SEND<co xml:id="co.ex_stomp_ack_send_1"/>
 destination: /queue/myqueue
 
 another message
 </userinput>^@
-MESSAGE                                        <co xml:id="co.ex_stomp_ack_send_2"/>
-ack:ID\cretsina.local-49965-1378989016784-4\c1 <co xml:id="co.ex_stomp_ack_send_3"/>
+MESSAGE<co xml:id="co.ex_stomp_ack_send_2"/>
+ack:ID\cretsina.local-49965-1378989016784-4\c1<co xml:id="co.ex_stomp_ack_send_3"/>
 message-id:ID\cretsina.local-49965-1378989016784-2\c2\c-1\c1\c1
 destination:/queue/myqueue
 timestamp:1378989622992
@@ -834,20 +834,20 @@ session:ID:retsina.local-49965-1378989016784-2:2
 server:ActiveMQ/5.8.0
 version:1.2
 
-<userinput>SUBSCRIBE            <co xml:id="co.ex_stomp_ack_subscribe_client_2_1"/>
+<userinput>SUBSCRIBE<co xml:id="co.ex_stomp_ack_subscribe_client_2_1"/>
 destination:/queue/myqueue
-id:mynewsub          <co xml:id="co.ex_stomp_ack_subscribe_client_2_2"/>
-ack:client           <co xml:id="co.ex_stomp_ack_subscribe_client_2_3"/>
+id:mynewsub<co xml:id="co.ex_stomp_ack_subscribe_client_2_2"/>
+ack:client<co xml:id="co.ex_stomp_ack_subscribe_client_2_3"/>
 
 </userinput>^@
-MESSAGE              <co xml:id="co.ex_stomp_ack_subscribe_client_2_4"/>
-redelivered:true     <co xml:id="co.ex_stomp_ack_subscribe_client_2_5"/>
+MESSAGE<co xml:id="co.ex_stomp_ack_subscribe_client_2_4"/>
+redelivered:true<co xml:id="co.ex_stomp_ack_subscribe_client_2_5"/>
 ack:ID\cretsina.local-49965-1378989016784-5\c1
 message-id:ID\cretsina.local-49965-1378989016784-2\c2\c-1\c1\c1
 destination:/queue/myqueue
 timestamp:1378989622992
 expires:0
-subscription:mysub2  <co xml:id="co.ex_stomp_ack_subscribe_client_2_6"/>
+subscription:mysub2<co xml:id="co.ex_stomp_ack_subscribe_client_2_6"/>
 priority:4
 
 another message
@@ -878,7 +878,7 @@ This time, the client will properly acknowledge the message:
 ++++
 <screen>
 <userinput>ACK
-id:ID\cretsina.local-49965-1378989016784-5\c1 <co xml:id="co.ex_stomp_ack_ack_1"/>
+id:ID\cretsina.local-49965-1378989016784-5\c1<co xml:id="co.ex_stomp_ack_ack_1"/>
 
 </userinput>^@
 </screen>
@@ -919,18 +919,18 @@ $ <userinput>telnet localhost 61613</userinput>
 Trying 127.0.0.1...
 Connected to localhost.
 Escape character is '^]'.
-<userinput>CONNECT                    <co xml:id="co.ex_stomp_tx_subscribe_1"/>
+<userinput>CONNECT<co xml:id="co.ex_stomp_tx_subscribe_1"/>
 accept-version:1.2
 
 </userinput>^@
-CONNECTED                  <co xml:id="co.ex_stomp_tx_subscribe_2"/>
+CONNECTED<co xml:id="co.ex_stomp_tx_subscribe_2"/>
 heart-beat:0,0
 session:ID:retsina.local-49965-1378989016784-2:2
 server:ActiveMQ/5.8.0
 version:1.2
 
-<userinput>SUBSCRIBE                  <co xml:id="co.ex_stomp_tx_subscribe_3"/>
-destination:/queue/myqueue <co xml:id="co.ex_stomp_tx_subscribe_4"/>
+<userinput>SUBSCRIBE<co xml:id="co.ex_stomp_tx_subscribe_3"/>
+destination:/queue/myqueue<co xml:id="co.ex_stomp_tx_subscribe_4"/>
 id:mysub
 
 </userinput>^@
@@ -959,14 +959,14 @@ Sending and acknowledging messages can then be part of this transaction by addin
 ====
 ++++
 <screen>
-<userinput>BEGIN              <co xml:id="co.ex_stomp_tx_begin_send_1"/>
-transaction:mytx1  <co xml:id="co.ex_stomp_tx_begin_send_2"/>
+<userinput>BEGIN<co xml:id="co.ex_stomp_tx_begin_send_1"/>
+transaction:mytx1<co xml:id="co.ex_stomp_tx_begin_send_2"/>
 
 </userinput>^@
 
-<userinput>MESSAGE            <co xml:id="co.ex_stomp_tx_begin_send_3"/>
+<userinput>MESSAGE<co xml:id="co.ex_stomp_tx_begin_send_3"/>
 destination:/queue/myqueue
-transaction:mytx1  <co xml:id="co.ex_stomp_tx_begin_send_4"/>
+transaction:mytx1<co xml:id="co.ex_stomp_tx_begin_send_4"/>
 
 Message in a transaction</userinput>^@
 </screen>
@@ -993,11 +993,11 @@ To complete this active transaction and allows the broker to process it, the cli
 ====
 ++++
 <screen>
-<userinput>COMMIT             <co xml:id="co.ex_stomp_tx_commit_1"/>
-transaction:mytx1  <co xml:id="co.ex_stomp_tx_commit_2"/>
+<userinput>COMMIT<co xml:id="co.ex_stomp_tx_commit_1"/>
+transaction:mytx1<co xml:id="co.ex_stomp_tx_commit_2"/>
 
 </userinput>^@
-MESSAGE            <co xml:id="co.ex_stomp_tx_commit_3"/>
+MESSAGE<co xml:id="co.ex_stomp_tx_commit_3"/>
 message-id:ID\cretsina.local-49965-1378989016784-2\c4\c-1\c1\c1
 destination:/queue/myqueue
 timestamp:1378994631546
@@ -1027,8 +1027,8 @@ the corresponding +BEGIN+ frame that started the transaction:
 ====
 ++++
 <screen>
-<userinput>ABORT              <co xml:id="co.ex_stomp_tx_abort_1"/>
-transaction:mytx1  <co xml:id="co.ex_stomp_tx_abort_2"/>
+<userinput>ABORT<co xml:id="co.ex_stomp_tx_abort_1"/>
+transaction:mytx1<co xml:id="co.ex_stomp_tx_abort_2"/>
 
 </userinput>^@
 </screen>
@@ -1057,20 +1057,20 @@ We can confirm this behaviour by sending a message inside a transaction and ask 
 ====
 ++++
 <screen>
-<userinput>BEGIN             <co xml:id="co.ex_stomp_tx_receipt_1"/>
-transaction:mytx2 <co xml:id="co.ex_stomp_tx_receipt_2"/>
+<userinput>BEGIN<co xml:id="co.ex_stomp_tx_receipt_1"/>
+transaction:mytx2<co xml:id="co.ex_stomp_tx_receipt_2"/>
 
 </userinput>
 ^@
 
 <userinput>
-SEND <co xml:id="co.ex_stomp_tx_receipt_3"/>
+SEND<co xml:id="co.ex_stomp_tx_receipt_3"/>
 destination:/queue/myqueue
-transaction:mytx2 <co xml:id="co.ex_stomp_tx_receipt_4"/>
-receipt:myreceipt1 <co xml:id="co.ex_stomp_tx_receipt_5"/>
+transaction:mytx2<co xml:id="co.ex_stomp_tx_receipt_4"/>
+receipt:myreceipt1<co xml:id="co.ex_stomp_tx_receipt_5"/>
 
 Another message in a transaction</userinput>^@
-RECEIPT <co xml:id="co.ex_stomp_tx_receipt_6"/>
+RECEIPT<co xml:id="co.ex_stomp_tx_receipt_6"/>
 receipt-id:myreceipt1
 </screen>
 <calloutlist>
@@ -1097,11 +1097,11 @@ Only when the client commits the transaction, the client will process the messag
 ====
 ++++
 <screen>
-<userinput>COMMIT             <co xml:id="co.ex_stomp_tx_receipt_commit_1"/>
-transaction:mytx2  <co xml:id="co.ex_stomp_tx_receipt_commit_2"/>
+<userinput>COMMIT<co xml:id="co.ex_stomp_tx_receipt_commit_1"/>
+transaction:mytx2<co xml:id="co.ex_stomp_tx_receipt_commit_2"/>
 
 </userinput>^@
-MESSAGE            <co xml:id="co.ex_stomp_tx_receipt_commit_3"/>
+MESSAGE<co xml:id="co.ex_stomp_tx_receipt_commit_3"/>
 message-id:ID\cretsina.local-49965-1378989016784-2\c4\c-1\c1\c2
 destination:/queue/myqueue
 timestamp:1378996600008
