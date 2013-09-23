@@ -11,6 +11,11 @@ The simplicity of the protocol ensures that it's straightforward to have interop
 This chapter covers the latest released version of the protocol:
 http://stomp.github.io/stomp-specification-1.2.html[STOMP 1.2]
 
+[NOTE]
+====
+TODO: add section about STOMP development model (no organization/company, OSS...)
+====
+
 === Anatomy of a STOMP Frame
 
 STOMP is modelled on HTTP and based on _frames_.
@@ -134,7 +139,10 @@ Before using a STOMP client, a messaging broker must be installed and
 configured to be able to exchange messages.
 
 In the book, we use Apache ActiveMQ as the messaging broker. The <<appendix_activemq>>
-appendix shows how to install and configure ActiveMQ with STOMP.
+ shows how to install and configure ActiveMQ.
+
+This chapter expects that ActiveMQ is configured with STOMP (as explained in <<app_activemq_stomp>>) and the security is enabled
+(as explained in <<app_activemq_security>>).
 
 Once ActiveMQ is started, it accepts STOMP connections on +localhost:61613+.
 ====
@@ -165,6 +173,8 @@ It must also establish a STOMP connection by sending a +CONNECT+ frame:
 <screen>
 <userinput>CONNECT
 accept-version:1.2 <co xml:id="co.ex_stomp_connect_1"/>
+login:user         <co xml:id="co.ex_stomp_connect_2"/>
+passcode:password  <co xml:id="co.ex_stomp_connect_3"/>
 
 </userinput>^@
 </screen>
@@ -172,6 +182,10 @@ accept-version:1.2 <co xml:id="co.ex_stomp_connect_1"/>
   <callout arearefs="co.ex_stomp_connect_1">
     <para>The <literal>accept-version</literal> indicates the client wants to communicate
 with the broker using the version 1.2 of the protocol.</para>
+  </callout>
+  <callout arearefs="co.ex_stomp_connect_2 co.ex_stomp_connect_3">
+    <para>The client authenticates by passing the username and password with the <literal>login</literal> 
+and <literal>passcode</literal> headers.</para>
   </callout>
 </calloutlist>
 ++++
@@ -224,6 +238,9 @@ version:1.2                                       <co xml:id="co.ex_stomp_connec
 ====
 
 The STOMP connection is now established and the telnet client can now exchange messages with the broker.
+
+If the authentication credentials provided by the client are not correct, the broker will return an +ERROR+ frame instead of the
++CONNECTED+ frame (as described in <<ch_stomp_error>>).
 
 === Send a Message
 
@@ -322,6 +339,7 @@ receipt-id:123 <co xml:id="co.ex_stomp_receipt_1"/>
 
 This +RECEIPT+ lets the client know that the broker has _received_ the message but it does not mean that the message has been processed yet (or will be processed at all).
 
+[[ch_stomp_error]]
 ==== Error frame
 
 If a message is sent with an invalid format, the messaging broker will reply immediately with an +ERROR+ frame.
@@ -1105,8 +1123,6 @@ deliver it to the client's subscription.</para>
 ++++
 ====
 
-=== Authentication
+=== STOMP extensions
 
 TODO
-
-=== STOMP extensions

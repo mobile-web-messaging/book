@@ -4,78 +4,186 @@
 
 [role="lead"]
 In this appendix, we describe how to install and configure Apache ActiveMQ to
-support STOMP and MQTT protocols
+support STOMP and MQTT protocols.
 
 === Download and Installation
 
-http://activemq.apache.org/activemq-580-release.html[ActiveMQ 5.8.0 Download page]
-http://activemq.apache.org/getting-started.html[Getting started]
+Apache ActiveMQ latest release can be downloaded for its
+http://activemq.apache.org/activemq-580-release.html[download page] and the
+http://activemq.apache.org/getting-started.html[Getting started] page contains all the information to install it.
 
-    $ tar zxvf apache-activemq-5.8.0-bin.tar.gz
-    $ cd apache-activemq-5.8.0
-    $ ./bin/activemq create ~/Work/mybroker
-    $ cd ~/Work/mybroker
-    $ ./bin/mybroker start
-    $ tail data/activemq.log
-    ...
-    2013-06-14 19:44:52,801 | INFO  | Apache ActiveMQ 5.8.0 (mybroker, ID:retsina.local-53410-1371231892651-0:1) started | org.apache.activemq.broker.BrokerService | main
-    ...
+For our setup, ActiveMQ will be installed in the directory +~/mobilewebmsg/mybroker+.
 
-Stop the broker to update its configuration to accepts STOMP and MQTT connections.
+Once you have download the archive for ActiveMQ, it can be installed and started by running the commands:
 
-    $ ./bin/mybroker stop
-    ...
-    Stopping broker: mybroker
-    .... FINISHED
+[source,sh]
+----
+$ tar zxvf apache-activemq-5.8.0-bin.tar.gz
+$ cd apache-activemq-5.8.0
+$ mkdir ~/mobilewebmsg/
+$ ./bin/activemq create ~/mobilewebmsg/mybroker
+...
+$ cd ~/mobilewebmsg/mybroker
+$ ./bin/mybroker start
+...
+$ tail data/activemq.log
+...
+2013-06-14 19:44:52,801 | INFO  | Apache ActiveMQ 5.8.0 (mybroker, ID:retsina.local-53410-1371231892651-0:1) started | org.apache.activemq.broker.BrokerService | main
+...
+----
 
+To stop he broker, run the following command:
+
+[source,sh]
+----
+$ ./bin/mybroker stop
+...
+Stopping broker: mybroker
+.... FINISHED
+----
+
+[[app_activemq_security]]
+=== Security Configuration
+
+Out of the box, ActiveMQ does not provide any security authentication on its connections. While it makes it simple to test it, this is not a good practice
+and we will activate a very simple authentication mechanism.
+
+Edit the +conf/activemq.xml+ file to add a +plugins+ element after the +managemementContext+ element:
+
+[source,sh]
+----
+$ cd ~/mobilewebmsg/mybroker
+$ vim ./conf/activemq.xml
+...
+<managementContext>
+   ...
+</managementContext>
+<plugins>
+    <!-- Configure authentication; Username, passwords and groups -->
+    <simpleAuthenticationPlugin>
+        <users>
+            <authenticationUser username="system" password="${activemq.password}" groups="users,admins"/>
+            <authenticationUser username="user" password="${guest.password}" groups="users"/>
+            <authenticationUser username="guest" password="${guest.password}" groups="guests"/>
+        </users>
+    </simpleAuthenticationPlugin>
+
+    <!--  Lets configure a destination based authorization mechanism -->
+    <authorizationPlugin>
+      <map>
+        <authorizationMap>
+          <authorizationEntries>
+            <authorizationEntry queue=">" read="users" write="users" admin="users" />
+            <authorizationEntry topic=">" read="users" write="users" admin="users" />
+      
+            <authorizationEntry topic="ActiveMQ.Advisory.>" read="guests,users" write="guests,users" admin="guests,users"/>
+          </authorizationEntries>
+        </authorizationMap>
+      </map>
+    </authorizationPlugin>
+
+    <!-- This plugin allows to use / as a destination path separator -->
+    <destinationPathSeparatorPlugin />
+</plugins>
+...
+----
+
+We restart the broker to update its configuration
+
+[source,sh]
+----
+$ ./bin/mybroker restart
+...
+
+ActiveMQ is running (pid '6664')
+----
+
+With this setting, only authenticated user identified by the name +user+ and the password +password+ will be able to connect to ActiveMQ.
+
+[[app_activemq_stomp]]
 === STOMP Configuration
 
-http://activemq.apache.org/stomp.html[STOMP configuration]
+STOMP protocol can be added to ActiveMQ by adding a transport connector to its configuration (as explained in full details in its
+http://activemq.apache.org/stomp.html[STOMP configuration] page).
 
-    $ vim ./conf/activemq.xml
-    ...
-    <transportConnectors>
-       ...
-       <transportConnector name="stomp" uri="stomp://localhost:61613"/>
-       ...
-    </transportConnectors>
+Edit the +conf/activemq.xml+ file to add a +transport+ connector for STOMP:
 
-When ActiveMQ is restarted, it displays a log that it accepts connections for the STOMP URL +stomp://localhost:61613+.
+[source,sh]
+----
+$ cd ~/mobilewebmsg/mybroker
+$ vim ./conf/activemq.xml
+...
+<transportConnectors>
+   ...
+   <transportConnector name="stomp" uri="stomp://localhost:61613"/>
+   ...
+</transportConnectors>
+----
 
-    2013-06-14 19:44:52,797 | INFO  | Listening for connections at: stomp://localhost:61613 | org.apache.activemq.transport.TransportServerThreadSupport | main
-    2013-06-14 19:44:52,797 | INFO  | Connector stomp Started | org.apache.activemq.broker.TransportConnector | main
+When ActiveMQ is restarted, it now accepts connections for the STOMP URL +stomp://localhost:61613+.
 
+[source,sh]
+----
+$ ./bin/mybroker restart
+...
+ActiveMQ is running (pid '6664')
+$ tail data/activemq.log
+...
+2013-06-14 19:44:52,797 | INFO  | Listening for connections at: stomp://localhost:61613 | org.apache.activemq.transport.TransportServerThreadSupport | main
+2013-06-14 19:44:52,797 | INFO  | Connector stomp Started | org.apache.activemq.broker.TransportConnector | main
+...
+----
 
+[[app_activemq_mqtt]]
 === MQTT Configuration
 
-http://activemq.apache.org/mqtt.html[MQTT configuration]
+Like for STOMP, MQTT protocol can be added to ActiveMQ by adding a transport connector to its configuration (as explained in full details in its
+http://activemq.apache.org/mqtt.html[MQTT configuration] page).
 
-    $ vim ./conf/activemq.xml
+[source,sh]
+----
+$ cd ~/mobilewebmsg/mybroker
+$ vim ./conf/activemq.xml
+...
+<transportConnectors>
     ...
-    <transportConnectors>
-        ...
-        <transportConnector name="mqtt" uri="mqtt://localhost:1883"/>
-        ...
-    </transportConnectors>
+    <transportConnector name="mqtt" uri="mqtt://localhost:1883"/>
+    ...
+</transportConnectors>
+$ ./bin/mybroker restart
+...
+ActiveMQ is running (pid '6664')
+----
 
-When ActiveMQ is restarted, it displays a log that it accepts connections for the MQTT URL +mqtt://localhost:1883+.
+When ActiveMQ is restarted, it now accepts connections for the MQTT URL +mqtt://localhost:1883+.
 
-    2013-06-14 19:44:52,799 | INFO  | Listening for connections at: mqtt://localhost:1883 | org.apache.activemq.transport.TransportServerThreadSupport | main
-    2013-06-14 19:44:52,800 | INFO  | Connector mqtt Started | org.apache.activemq.broker.TransportConnector | main
+[source,sh]
+----
+2013-06-14 19:44:52,799 | INFO  | Listening for connections at: mqtt://localhost:1883 | org.apache.activemq.transport.TransportServerThreadSupport | main
+2013-06-14 19:44:52,800 | INFO  | Connector mqtt Started | org.apache.activemq.broker.TransportConnector | main
+----
 
 
+[[app_activemq_websockets]]
 === Web Sockets Configuration
+
 
 http://activemq.apache.org/websockets.html[Web Sockets configuration]
 
-    $ vim ./conf/activemq.xml
-    ...
-    <transportConnectors>
-       ...
-       <transportConnector name="websocket" uri="ws://0.0.0.0:61614"/>
-       ...
-    </transportConnectors>
+[source,sh]
+----
+$ vim ./conf/activemq.xml
+...
+<transportConnectors>
+   ...
+   <transportConnector name="websocket" uri="ws://0.0.0.0:61614"/>
+   ...
+</transportConnectors>
+----
 
 When ActiveMQ is restarted, it displays a log that it accepts connections for the Web Sockers URL +ws://0.0.0.0:61614+.
 
-    2013-06-14 19:55:01,490 | INFO  | Connector websocket Started | org.apache.activemq.broker.TransportConnector | main
+[source,sh]
+----
+2013-06-14 19:55:01,490 | INFO  | Connector websocket Started | org.apache.activemq.broker.TransportConnector | main
+----
