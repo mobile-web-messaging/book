@@ -8,3 +8,24 @@ the device and displays orders.
 === Truck Tracker iOS app
 
 TODO
+
+CONNECT
+accept-version:1.2
+login:user
+passcode:password
+
+SUBSCRIBE
+destination:/topic/truck.*.data
+id:mysub
+
+
+SEND
+destination: /topic/truck.AAA.data
+
+AAA data
+
+SEND
+destination: /topic/truck.BBB.data
+
+BBB data
+

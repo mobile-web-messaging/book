@@ -3,28 +3,32 @@
 
 [role="lead"]
 In this chapter, we present the application that will be built all along the book, the _Truck Tracker_.
++
+To illustrate the use of messaging protocols on mobile and Web platforms, we will build an application with 2 parts: one will
+run in a mobile devices, the other inside a Web browsers and they will communicate using messages.
 
-Let's take the example of a company like UPS that manages a fleet of trucks. Each truck is responsible for the delivery of packages.
+Let's take the example of a delivery company like UPS that manages a fleet of trucks.
+Each truck is responsible for the delivery of packages.
 
-They take orders to:
+They receive orders to:
 
 * fetch packages at the company's warehouses
 * deliver packages to the customer's addresses
 
-To manage efficiently all the trucks, the company head quarters want to monitor the truck moves and be able to send them orders on the go.
+To manage efficiently all the trucks, the company head quarters want to monitor the truck's positions and be able to send them orders on-the-go.
 
-Each truck will use a mobile application, the _Truck App_, to broadcast its geolocation data (using the GPS sensor of the mobile device).
-This application will also let them receive orders.
+Each truck will use a mobile application, the _Truck App_, to broadcast its geolocation data (using the GPS sensor of the mobile device runnig the application).
+This application will also let them receive orders from the control center.
 
 The company's head quarter will use a Web application, the _Control Center_, that displays the position of all the trucks on a map.
 This Web application will also be used to send orders to a given truck.
+There will be many _Control Center_ applications running at the same time: one for each administrator managing the fleets.
 
 This application will be composed all along the book after each chapter introduced the corresponding messaging features
 required to write the application's parts.
 
-In <<ch_stomp_example>>, we will write the _Truck App_ as an iOS application using the STOMP protocol to send GPS data and receive orders from an iOS device.
-
-In <<ch_stomp_ws_example>>, we will write the Web _control center_ using STOMP protocol over Web Sockets to receive GPS data
+. In <<ch_stomp_example>>, we will write the _Truck App_ as an iOS application using the STOMP protocol to send GPS data and receive orders from an iOS device.
+. In <<ch_stomp_ws_example>>, we will write the Web _control center_ using STOMP protocol over Web Sockets to receive GPS data
 in a Web browser and send orders to the trucks.
 
 === Messaging Topology
