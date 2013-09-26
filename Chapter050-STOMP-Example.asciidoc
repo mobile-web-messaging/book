@@ -1,3 +1,4 @@
+[[ch_stomp_example]]
 == STOMP Example
 
 [role="lead"]

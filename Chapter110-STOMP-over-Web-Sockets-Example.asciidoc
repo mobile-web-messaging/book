@@ -1,3 +1,4 @@
+[[ch_stomp_ws_example]]
 == STOMP Over Web Sockets Example
 
 [role="lead"]
