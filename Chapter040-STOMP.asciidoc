@@ -260,6 +260,8 @@ Other brokers may behave differently and require to create the destination befor
 <screen>
 <userinput>SEND
 destination:/queue/myqueue<co xml:id="co.ex_stomp_send_1"/>
+content-type:text/plain
+content-length:13
 
 Hello, STOMP!</userinput>^@
 </screen>
@@ -300,6 +302,8 @@ To receive a confirmation that a message is handled by the STOMP broker, a frame
 <userinput>SEND
 destination:/queue/myqueue
 receipt:123<co xml:id="co.ex_stomp_send_with_receipt_1"/>
+content-type:text/plain
+content-length:28
 
 Hello, STOMP with a receipt!</userinput>^@
 </screen>
@@ -430,21 +434,26 @@ it starts to send to the client some +MESSAGE+ frames corresponding to the messa
 ++++
 <screen>
 MESSAGE<co xml:id="co.ex_stomp_receive2_1"/>
+content-type:text/plain
 message-id:ID\cretsina.local-64904-1378366884467-2\c1\c-1\c1\c1<co xml:id="co.ex_stomp_receive2_2"/>
 destination:/queue/myqueue<co xml:id="co.ex_stomp_receive2_3"/>
 subscription:mysub<co xml:id="co.ex_stomp_receive2_4"/>
 timestamp:1378367602698<co xml:id="co.ex_stomp_receive2_5"/>
 expires:0<co xml:id="co.ex_stomp_receive2_6"/>
+content-length:13
 priority:4<co xml:id="co.ex_stomp_receive2_7"/>
 
 Hello, STOMP!
 MESSAGE<co xml:id="co.ex_stomp_receive2_8"/>
+content-type:text/plain
 message-id:ID\cretsina.local-64904-1378366884467-2\c1\c-1\c1\c2
 destination:/queue/myqueue
 timestamp:1378368275375
 expires:0
 subscription:mysub
+content-length:28
 priority:4
+content-type:text/plain
 
 Hello, STOMP with a receipt!
 </screen>
@@ -483,15 +492,19 @@ If another message is sent to this destination, it will receive this message imm
 <screen>
 <userinput>SEND
 destination:/queue/myqueue
+content-type:text/plain
+content-length:15
 
 another message</userinput>^@
 
 MESSAGE
+content-type:text/plain
 message-id:ID\cretsina.local-64904-1378366884467-2\c3\c-1\c1\c3
 destination:/queue/myqueue
 timestamp:1378369910799
 expires:0
 subscription:mysub
+content-length:15
 priority:4
 
 another message
@@ -763,16 +776,20 @@ The client will now send a message to the destination and receives it through th
 <screen>
 <userinput>SEND<co xml:id="co.ex_stomp_ack_send_1"/>
 destination: /queue/myqueue
+content-type:text/plain
+content-length:15
 
 another message
 </userinput>^@
 MESSAGE<co xml:id="co.ex_stomp_ack_send_2"/>
+content-type:text/plain
 ack:ID\cretsina.local-49965-1378989016784-4\c1<co xml:id="co.ex_stomp_ack_send_3"/>
 message-id:ID\cretsina.local-49965-1378989016784-2\c2\c-1\c1\c1
 destination:/queue/myqueue
 timestamp:1378989622992
 expires:0
 subscription:mysub
+content-length:15
 priority:4
 
 another message
@@ -836,6 +853,7 @@ ack:client<co xml:id="co.ex_stomp_ack_subscribe_client_2_3"/>
 
 </userinput>^@
 MESSAGE<co xml:id="co.ex_stomp_ack_subscribe_client_2_4"/>
+content-type:text/plain
 redelivered:true<co xml:id="co.ex_stomp_ack_subscribe_client_2_5"/>
 ack:ID\cretsina.local-49965-1378989016784-5\c1
 message-id:ID\cretsina.local-49965-1378989016784-2\c2\c-1\c1\c1
@@ -843,6 +861,7 @@ destination:/queue/myqueue
 timestamp:1378989622992
 expires:0
 subscription:mysub2<co xml:id="co.ex_stomp_ack_subscribe_client_2_6"/>
+content-length:15
 priority:4
 
 another message
@@ -959,8 +978,10 @@ transaction:mytx1<co xml:id="co.ex_stomp_tx_begin_send_2"/>
 
 </userinput>^@
 
-<userinput>MESSAGE<co xml:id="co.ex_stomp_tx_begin_send_3"/>
+<userinput>SEND<co xml:id="co.ex_stomp_tx_begin_send_3"/>
 destination:/queue/myqueue
+content-type:text/plain
+content-length:24
 transaction:mytx1<co xml:id="co.ex_stomp_tx_begin_send_4"/>
 
 Message in a transaction</userinput>^@
@@ -971,7 +992,7 @@ Message in a transaction</userinput>^@
 set to <literal>mytx1</literal>.</para>
   </callout>
   <callout arearefs="co.ex_stomp_tx_begin_send_3 co.ex_stomp_tx_begin_send_4">
-    <para>The client sends a <literal>MESSAGE</literal> frame inside the transaction by adding a <literal>transaction</literal> header
+    <para>The client sends a <literal>SEND</literal> frame inside the transaction by adding a <literal>transaction</literal> header
 with the same value than in the <literal>BEGIN</literal> frame.</para>
   </callout>
 </calloutlist>
@@ -993,11 +1014,13 @@ transaction:mytx1<co xml:id="co.ex_stomp_tx_commit_2"/>
 
 </userinput>^@
 MESSAGE<co xml:id="co.ex_stomp_tx_commit_3"/>
+content-type:text/plain
 message-id:ID\cretsina.local-49965-1378989016784-2\c4\c-1\c1\c1
 destination:/queue/myqueue
 timestamp:1378994631546
 expires:0
 subscription:mysub
+content-length:24
 priority:4
 
 Message in a transaction
@@ -1061,6 +1084,8 @@ transaction:mytx2<co xml:id="co.ex_stomp_tx_receipt_2"/>
 <userinput>
 SEND<co xml:id="co.ex_stomp_tx_receipt_3"/>
 destination:/queue/myqueue
+content-type:text/plain
+content-length:32
 transaction:mytx2<co xml:id="co.ex_stomp_tx_receipt_4"/>
 receipt:myreceipt1<co xml:id="co.ex_stomp_tx_receipt_5"/>
 
@@ -1097,11 +1122,13 @@ transaction:mytx2<co xml:id="co.ex_stomp_tx_receipt_commit_2"/>
 
 </userinput>^@
 MESSAGE<co xml:id="co.ex_stomp_tx_receipt_commit_3"/>
+content-type:text/plain
 message-id:ID\cretsina.local-49965-1378989016784-2\c4\c-1\c1\c2
 destination:/queue/myqueue
 timestamp:1378996600008
 expires:0
 subscription:mysub
+content-length:32
 priority:4
 
 Another message in a transaction
@@ -1156,6 +1183,8 @@ the client must add a +persistent+ header whose value is +true+.
 <screen>
 <userinput>SEND
 destination:/queue/myqueue
+content-type:text/plain
+content-length:26
 persistent:true<co xml:id="co.ex_stomp_ext_persistent_1"/>
 
 This message is persisted!^@
