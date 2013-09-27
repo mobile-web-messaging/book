@@ -34,6 +34,7 @@ image::images/mobilewebmsg_app_diagram_1.png["Diagram of the Truck Tracker appli
 
 Before introducing the messaging protocols that will be used by the application, we can already define 
 We can already define the application's messaging topology: how the different parts of the application will exchange messages 
+
 === Messaging Topology
 
 Each truck will be associated to 2 destinations:
@@ -55,10 +56,6 @@ Conversely, the +Control Center+ Web application will be:
 
 * a consumer of messages from all the topics +/topic/truck/XXX/data+
 * a producer of message from the queues +/queue/truck/XXX/orders+
-
-[[img_example_app]]
-.The +Truck Tracker+ application with two trucks, +AAA+ and +BBB+
-image::images/mobilewebmsg_app_diagram_1.png["Diagram of the Truck fleet application"]
 
 === Message Representation
 
@@ -99,6 +96,7 @@ To keep things simple, the order messages will be represented as simple text wit
 ----
 ====
 
+With the messaging topology and data representation known, we can already refine the application diagram.
 
 [[img_example_app_1]]
 .The +Truck Tracker+ application's data workflow.
