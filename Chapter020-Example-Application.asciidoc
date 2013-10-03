@@ -33,7 +33,7 @@ in a Web browser and send orders to the trucks.
 image::images/mobilewebmsg_app_diagram_1.png["Diagram of the Truck Tracker application"]
 
 Before introducing the messaging protocols that will be used by the application, we can already define 
-We can already define the application's messaging topology: how the different parts of the application will exchange messages 
+the application's messaging topology and how the different parts of the application will exchange messages.
 
 [[ch_example_app_topology]]
 === Messaging Topology
@@ -41,22 +41,22 @@ We can already define the application's messaging topology: how the different pa
 Each truck will be associated to 2 destinations:
 
 * a topic to broadcast its GPS data: +truck.XXX.data+ where +XXX+ is the truck identifier
-* a queue to receive destinations: +truck.XXX.orders+
+* a queue to receive orders (where to go, which package to pick, etc.): +truck.XXX.orders+
 
 A topic is used to send the GPS data as this allows potentially many consumers to receive the information.
 
-However a queue is used to handle the truck's order as only one single truck will consume messages from this destination.
+However a queue is used to handle the truck's orders as only one single truck will consume messages from this destination.
 It does not make sense for any other consumers to receive it.
 
 Each +Truck App+ will be:
 
-* a producer of messages to the topic +truck.XXX.data+
-* a consumer of messages from the queue +truck.XXX.orders+
+* a _producer_ of messages to the topic +truck.XXX.data+
+* a _consumer_ of messages from the queue +truck.XXX.orders+
 
 Conversely, the +Control Center+ Web application will be:
 
-* a consumer of messages from all the topics +truck.XXX.data+
-* a producer of message from the queues +truck.XXX.orders+
+* a _consumer_ of messages from all the topics +truck.XXX.data+
+* a _producer_ of message from the queues +truck.XXX.orders+
 
 === Message Representation
 
@@ -65,7 +65,7 @@ There will be two types of exchanged messages:
 * one to represent GPS data (sent to the topics +truck.XXX.data+)
 * one to represent orders (sent to the queues +truck.XXX.orders+)
 
-.Geolocation messages
+==== Geolocation messages
 The Truck app will send the GPS data using a JSON representation:
 
 [[ex_example_gps_data]]
@@ -85,7 +85,7 @@ The Truck app will send the GPS data using a JSON representation:
 <4> +ts+ is a string representing the time when the position was taken (using the http://en.wikipedia.org/wiki/ISO_8601[ISO 8601] format)
 ====
 
-.Order messages
+==== Order messages
 The order messages will be also be represented using JSON with a single +order+ attribute:
 
 [[ex_example_order]]

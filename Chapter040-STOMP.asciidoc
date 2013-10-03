@@ -236,6 +236,7 @@ The STOMP connection is now established and the telnet client can now exchange m
 If the authentication credentials provided by the client are not correct, the broker will return an +ERROR+ frame instead of the
 +CONNECTED+ frame (as described in <<ch_stomp_error>>).
 
+[[ch_stomp_send_message]]
 === Send a Message
 
 Now that the telnet client is connected to the messaging broker, it can send a message to a _destination_ on the broker.
@@ -244,7 +245,6 @@ _Destinations_ are opaque strings specific to each messaging broker implementati
 
 STOMP itself has no notion of delivery semantics (whether a destination is a queue, a topic or another exchange type) and you have to consult the messaging broker documentation to check how to name the destination for STOMP.
 
-[[note_stomp_activemq]]
 [NOTE]
 ====
 ActiveMQ convention is to prefix the destination by +/queue/+ to send to a queue.
@@ -916,7 +916,7 @@ from the <literal>MESSAGE</literal> received in <xref linkend="ex_stomp_ack_subs
 [NOTE]
 ====
 Acknowledgements using +ACK+ or +NACK+ frame can be part of a transaction by adding a +transaction+ header to
-these frames (as explained below in <<ch_stomp_transaction>>).
+these frames as explained below in <<ch_stomp_transaction>>.
 ====
 
 [[ch_stomp_transaction]]
@@ -1155,7 +1155,7 @@ deliver it to the client's subscription.</para>
 ====
 
 [[ch_stomp_ext]]
-=== STOMP extensions
+=== STOMP Extensions
 
 STOMP protocol is very simple with few commands to know to be able to use it.
 

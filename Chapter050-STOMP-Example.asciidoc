@@ -5,16 +5,16 @@
 In this chapter, we develop a mobile app on iOS that will send the GPS data of
 the device and displays orders.
 
-=== Write a Message Consumer
+=== Wildcard Subscription
 
 Before we start writing the iOS app that will send the GPS data, we can create a simple message consumer using +telnet+ that will
 consume the message sent by the app.
 
-As descibed in <<ch_example_app_topology>>, each app will sent its GPS data on a topic named +truck/XXX/data+ where +XXX+ is the truck identifier.
+As descibed in <<ch_example_app_topology>>, each app will sent its GPS data on a topic named +truck.XXX.data+ where +XXX+ is the truck identifier.
 
-We want to write a client that consume messages for _any_ truck without having to list them explicitly.
+We want to write a client that consume messages for _any_ truck without having to list all of them explicitly.
 
-STOMP leaves the semantic of the +destination+ header to the STOMP broker implementations and it turns out that most of them
+STOMP leaves the semantic of the destination to the STOMP broker implementations and it turns out that most of them
 support _wildcards_.
 
 For example, ActiveMQ supports  http://activemq.apache.org/wildcards.html[wildcards]:
@@ -23,15 +23,15 @@ For example, ActiveMQ supports  http://activemq.apache.org/wildcards.html[wildca
 * +$$*$$+ is used to match any name in a path
 * +>+ is used to recursively match any destination starting from this name
 
-With our example using ActiveMQ, we can use their http://activemq.apache.org/wildcards.html[wildcard notations] to listen for any 
+With our example using ActiveMQ, we can use this notation to listen for any
 truck GPS data by subscribing to the +truck.$$*$$.data+ topic (where +$$*$$+ stands for _any truck identifier_).
-Note that using the wildcard +truck.>+ would have not been correct since it would subscribe us to any destination starting
-with +truck.+ such as the queue used by the truck to receive orders (for example +truck.AAA.order+).
+Note that using the wildcard +truck.>+ would have not been correct since it would subscribe to any destination starting
+with +truck.+ such as the queue used by the truck to receive orders (for example +truck.AAA.orders+).
 This client is only interested by GPS data and not by any other destination related to the truck. Using the +truck.$$*$$.data+ wildcard matches
 exactly this constraint.
 
 [[ex_stomp_example_telnet]]
-.Consumer for all +/topic/truck/$$*$$/data+ topic
+.Subscribe to the widlcard destination +/topic/truck.$$*$$.data+
 ====
 ++++
 <screen>
@@ -65,17 +65,18 @@ id:sub1
   </callout>
   <callout arearefs="co.ex_stomp_example_telnet_2">
     <para>We subscribe to the wildcard destination <literal>/topic/truck.*.data</literal>. Note that we must prefix the topic name
-by <literal>/topic/</literal> to follow ActiveMQ convention (as described in <xref linkend="note_stomp_activemq" /></para>
+<literal>truck.*.data</literal> by <literal>/topic/</literal> to follow ActiveMQ convention (as described in the note in <xref linkend="ch_stomp_send_message" />)</para>
   </callout>
 </calloutlist>
 ++++
 ====
 
-The +telnet+ client will not consume any messages sent to a destination of the form +/topic/truck.$$*$$.data+.
+The +telnet+ client can now consume any messages sent to a destination of the form +/topic/truck.$$*$$.data+.
 
-To verify this, let's open a _second_ telnet client that will simulate a position message sent by the truck +AAA+.
+To verify this, let's open a _second_ telnet client that will send a message corresponding to the position of the
++AAA+ truck.
 
-The message payload will be the JSON string:
+As shown in <<ex_example_gps_data>>, the message payload will be a JSON string:
 
 ----
 {
@@ -87,7 +88,7 @@ The message payload will be the JSON string:
 ----
 
 [[ex_stomp_example_telnet_sender]]
-.Send a message to the +/topic/truck.AAA.data+ topic
+.Send a message to the +truck.AAA.data+ topic
 ====
 ++++
 <screen>
@@ -118,7 +119,7 @@ content-length:67
 </screen>
 <calloutlist>
   <callout arearefs="co.ex_stomp_example_telnet_sender_1">
-    <para>The message is sent to the topic <literal>/topic/truck.AAA.data</literal></para>
+    <para>The message is sent to the topic <literal>truck.AAA.data</literal></para>
   </callout>
 </calloutlist>
 ++++
@@ -152,6 +153,30 @@ the different destinations matching the wildcard subscription.</para>
 ++++
 ====
 
-We can leave the first +telnet+ client opened to check that our iOS app will properly send the data messages.
+We can leave the first +telnet+ client open to check that our iOS app will properly send the data messages.
 
 === Truck Tracker iOS app
+
+TODO
+
+==== create Xcode project
+
+TODO
+
+==== Project template
+
+TODO
+
+view + controllers + UI
+
+==== add STOMP library
+
+TODO
+
+==== write STOMP connection
+
+TODO
+
+==== Send GPS data
+
+TODO
