@@ -40,8 +40,8 @@ We can already define the application's messaging topology: how the different pa
 
 Each truck will be associated to 2 destinations:
 
-* a topic to broadcast its GPS data: +/topic/truck/XXX/data+ where +XXX+ is the truck identifier
-* a queue to receive destinations: +/queue/truck/XXX/orders+
+* a topic to broadcast its GPS data: +truck.XXX.data+ where +XXX+ is the truck identifier
+* a queue to receive destinations: +truck.XXX.orders+
 
 A topic is used to send the GPS data as this allows potentially many consumers to receive the information.
 
@@ -50,20 +50,20 @@ It does not make sense for any other consumers to receive it.
 
 Each +Truck App+ will be:
 
-* a producer of messages to the topic +/topic/truck/XXX/data+
-* a consumer of messages from the queue +/queue/truck/XXX/orders+
+* a producer of messages to the topic +truck.XXX.data+
+* a consumer of messages from the queue +truck.XXX.orders+
 
 Conversely, the +Control Center+ Web application will be:
 
-* a consumer of messages from all the topics +/topic/truck/XXX/data+
-* a producer of message from the queues +/queue/truck/XXX/orders+
+* a consumer of messages from all the topics +truck.XXX.data+
+* a producer of message from the queues +truck.XXX.orders+
 
 === Message Representation
 
 There will be two types of exchanged messages:
 
-* one to represent GPS data (sent to the topics +/topic/truck/XXX/data+)
-* one to represent orders (sent to the queues +/queue/truck/XXX/orders+)
+* one to represent GPS data (sent to the topics +truck.XXX.data+)
+* one to represent orders (sent to the queues +truck.XXX.orders+)
 
 .Geolocation messages
 The Truck app will send the GPS data using a JSON representation:

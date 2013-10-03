@@ -10,7 +10,7 @@ the device and displays orders.
 Before we start writing the iOS app that will send the GPS data, we can create a simple message consumer using +telnet+ that will
 consume the message sent by the app.
 
-As descibed in <<ch_example_app_topology>>, each app will sent its GPS data on a topic named +/topic/truck/XXX/data+ where +XXX+ is the truck identifier.
+As descibed in <<ch_example_app_topology>>, each app will sent its GPS data on a topic named +truck/XXX/data+ where +XXX+ is the truck identifier.
 
 We want to write a client that consume messages for _any_ truck without having to list them explicitly.
 
@@ -24,12 +24,14 @@ For example, ActiveMQ supports  http://activemq.apache.org/wildcards.html[wildca
 * +>+ is used to recursively match any destination starting from this name
 
 With our example using ActiveMQ, we can use their http://activemq.apache.org/wildcards.html[wildcard notations] to listen for any 
-truck GPS data by subscribing to the +/topic/truck/$$*$$/data+ (where +$$*$$+ stands for _any truck identifier_).
-Note that using the wildcard +/topic/truck.>+ would have not been correct since it would subscribe us to any destination starting
-with /topic/truck. This client is only interested by GPS data and not by any other destination related to the truck.
+truck GPS data by subscribing to the +truck.$$*$$.data+ topic (where +$$*$$+ stands for _any truck identifier_).
+Note that using the wildcard +truck.>+ would have not been correct since it would subscribe us to any destination starting
+with +truck.+ such as the queue used by the truck to receive orders (for example +truck.AAA.order+).
+This client is only interested by GPS data and not by any other destination related to the truck. Using the +truck.$$*$$.data+ wildcard matches
+exactly this constraint.
 
 [[ex_stomp_example_telnet]]
-.Consumer for all +/topic/truck/*/data+ topic
+.Consumer for all +/topic/truck/$$*$$/data+ topic
 ====
 ++++
 <screen>
@@ -62,7 +64,8 @@ id:sub1
     <para>Heart-beat is disabled so that the telnet client can remain open without sending periodical heart-beats to the broker</para>
   </callout>
   <callout arearefs="co.ex_stomp_example_telnet_2">
-    <para>We subscribe to the wildcard destination <literal>/topic/truck.*.data</literal></para>
+    <para>We subscribe to the wildcard destination <literal>/topic/truck.*.data</literal>. Note that we must prefix the topic name
+by <literal>/topic/</literal> to follow ActiveMQ convention (as described in <xref linkend="note_stomp_activemq" /></para>
   </callout>
 </calloutlist>
 ++++

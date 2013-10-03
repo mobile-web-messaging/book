@@ -244,6 +244,7 @@ _Destinations_ are opaque strings specific to each messaging broker implementati
 
 STOMP itself has no notion of delivery semantics (whether a destination is a queue, a topic or another exchange type) and you have to consult the messaging broker documentation to check how to name the destination for STOMP.
 
+[[note_stomp_activemq]]
 [NOTE]
 ====
 ActiveMQ convention is to prefix the destination by +/queue/+ to send to a queue.
