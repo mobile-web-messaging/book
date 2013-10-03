@@ -35,6 +35,7 @@ image::images/mobilewebmsg_app_diagram_1.png["Diagram of the Truck Tracker appli
 Before introducing the messaging protocols that will be used by the application, we can already define 
 We can already define the application's messaging topology: how the different parts of the application will exchange messages 
 
+[[ch_example_app_topology]]
 === Messaging Topology
 
 Each truck will be associated to 2 destinations:
@@ -85,16 +86,20 @@ The Truck app will send the GPS data using a JSON representation:
 ====
 
 .Order messages
-To keep things simple, the order messages will be represented as simple text with natural language:
+The order messages will be also be represented using JSON with a single +order+ attribute:
 
 [[ex_example_order]]
 .Order data representation
 ====
 ----
-"go to warehouse #1"
-"deliver package #1234 to customer at the address XXX"
+{
+  "order": "Go to warehouse #1"<1>
+}
 ----
 ====
+
+A more realistic representation of this message would also contain the position of the destination address but this
+format is enough to provide a first version.
 
 With the messaging topology and data representation known, we can already refine the application diagram.
 

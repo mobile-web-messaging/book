@@ -633,6 +633,8 @@ Escape character is '^]'.
 <userinput>CONNECT
 accept-version:1.2
 heart-beat:10000,2000<co xml:id="co.ex_stomp_hb_connect_1"/>
+login:user
+passcode:password
 
 </userinput>^@
 </screen>
@@ -735,6 +737,8 @@ Connected to localhost.
 Escape character is '^]'.
 <userinput>CONNECT<co xml:id="co.ex_stomp_ack_subscribe_client_1"/>
 accept-version:1.2
+login:user
+passcode:password
 
 </userinput>^@
 CONNECTED<co xml:id="co.ex_stomp_ack_subscribe_client_2"/>
@@ -838,6 +842,8 @@ Connected to localhost.
 Escape character is '^]'.
 <userinput>CONNECT
 accept-version:1.2
+login:user
+passcode:password
 
 </userinput>^@
 CONNECTED
@@ -935,6 +941,8 @@ Connected to localhost.
 Escape character is '^]'.
 <userinput>CONNECT<co xml:id="co.ex_stomp_tx_subscribe_1"/>
 accept-version:1.2
+login:user
+passcode:password
 
 </userinput>^@
 CONNECTED<co xml:id="co.ex_stomp_tx_subscribe_2"/>

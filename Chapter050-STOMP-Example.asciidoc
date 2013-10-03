@@ -5,27 +5,150 @@
 In this chapter, we develop a mobile app on iOS that will send the GPS data of
 the device and displays orders.
 
-=== Truck Tracker iOS app
+=== Write a Message Consumer
 
-TODO
+Before we start writing the iOS app that will send the GPS data, we can create a simple message consumer using +telnet+ that will
+consume the message sent by the app.
 
-CONNECT
+As descibed in <<ch_example_app_topology>>, each app will sent its GPS data on a topic named +/topic/truck/XXX/data+ where +XXX+ is the truck identifier.
+
+We want to write a client that consume messages for _any_ truck without having to list them explicitly.
+
+STOMP leaves the semantic of the +destination+ header to the STOMP broker implementations and it turns out that most of them
+support _wildcards_.
+
+For example, ActiveMQ supports  http://activemq.apache.org/wildcards.html[wildcards]:
+
+* +.+ is used to separate names in a path
+* +$$*$$+ is used to match any name in a path
+* +>+ is used to recursively match any destination starting from this name
+
+With our example using ActiveMQ, we can use their http://activemq.apache.org/wildcards.html[wildcard notations] to listen for any 
+truck GPS data by subscribing to the +/topic/truck/$$*$$/data+ (where +$$*$$+ stands for _any truck identifier_).
+Note that using the wildcard +/topic/truck.>+ would have not been correct since it would subscribe us to any destination starting
+with /topic/truck. This client is only interested by GPS data and not by any other destination related to the truck.
+
+[[ex_stomp_example_telnet]]
+.Consumer for all +/topic/truck/*/data+ topic
+====
+++++
+<screen>
+$ <userinput>telnet localhost 61613</userinput>
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+<userinput>CONNECT
 accept-version:1.2
+heart-beat:0,0<co xml:id="co.ex_stomp_example_telnet_1"/>
 login:user
 passcode:password
 
-SUBSCRIBE
-destination:/topic/truck.*.data
-id:mysub
+</userinput>^@
 
+CONNECTED
+heart-beat:0,0
+session:ID:retsina.local-61690-1380810104254-2:4
+server:ActiveMQ/5.8.0
+version:1.2
 
-SEND
-destination: /topic/truck.AAA.data
+<userinput>SUBSCRIBE
+destination:/topic/truck.*.data<co xml:id="co.ex_stomp_example_telnet_2"/>
+id:sub1
 
-AAA data
+</userinput>^@
+</screen>
+<calloutlist>
+  <callout arearefs="co.ex_stomp_example_telnet_1">
+    <para>Heart-beat is disabled so that the telnet client can remain open without sending periodical heart-beats to the broker</para>
+  </callout>
+  <callout arearefs="co.ex_stomp_example_telnet_2">
+    <para>We subscribe to the wildcard destination <literal>/topic/truck.*.data</literal></para>
+  </callout>
+</calloutlist>
+++++
+====
 
-SEND
-destination: /topic/truck.BBB.data
+The +telnet+ client will not consume any messages sent to a destination of the form +/topic/truck.$$*$$.data+.
 
-BBB data
+To verify this, let's open a _second_ telnet client that will simulate a position message sent by the truck +AAA+.
 
+The message payload will be the JSON string:
+
+----
+{
+  "truck":"AAA",
+  "lat":48.8581,
+  "lng":2.2946,
+  "ts":"2013-09-23T08:43Z"
+}
+----
+
+[[ex_stomp_example_telnet_sender]]
+.Send a message to the +/topic/truck.AAA.data+ topic
+====
+++++
+<screen>
+$ <userinput>telnet localhost 61613</userinput>
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+<userinput>CONNECT
+accept-version:1.2
+heart-beat:0,0
+login:user
+passcode:password
+
+</userinput>^@
+
+CONNECTED
+heart-beat:0,0
+session:ID:retsina.local-61690-1380810104254-2:4
+server:ActiveMQ/5.8.0
+version:1.2
+
+<userinput>SEND
+content-type:application/json
+destination:/topic/truck.AAA.data<co xml:id="co.ex_stomp_example_telnet_sender_1"/>
+content-length:67
+
+{"truck":"AAA","lat":48.8581,"lng":2.2946,"ts":"2013-09-23T08:43Z"}</userinput>^@
+</screen>
+<calloutlist>
+  <callout arearefs="co.ex_stomp_example_telnet_sender_1">
+    <para>The message is sent to the topic <literal>/topic/truck.AAA.data</literal></para>
+  </callout>
+</calloutlist>
+++++
+====
+
+Once this message is sent, we can see that the first +telnet+ client has received it:
+
+[[ex_stomp_example_telnet_receiver]]
+.Receive a message from a wildcard subscription
+====
+++++
+<screen>
+MESSAGE
+content-type:application/json
+message-id:ID\cretsina.local-61690-1380810104254-2\c6\c-1\c1\c9
+destination:/topic/truck.AAA.data<co xml:id="co.ex_stomp_example_telnet_receiver_1"/>
+timestamp:1380815240205
+expires:0
+subscription:sub1
+content-length:67
+priority:4
+
+{"truck":"AAA","lat":48.8581,"lng":2.2946,"ts":"2013-09-23T08:43Z"}
+</screen>
+<calloutlist>
+  <callout arearefs="co.ex_stomp_example_telnet_receiver_1">
+    <para>The <literal>destination</literal> header corresponds to the actual destination. It can be used to distinguish
+the different destinations matching the wildcard subscription.</para>
+  </callout>
+</calloutlist>
+++++
+====
+
+We can leave the first +telnet+ client opened to check that our iOS app will properly send the data messages.
+
+=== Truck Tracker iOS app
