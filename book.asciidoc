@@ -1,4 +1,4 @@
-:bookseries: basic
+:bookseries: animal
 
 = Mobile and Web Messaging
 
