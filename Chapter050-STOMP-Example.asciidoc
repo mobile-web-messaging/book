@@ -167,13 +167,19 @@ TODO
 
 TODO
 
+==== TTViewController
+
 view + controllers + UI
 
-==== add STOMP library
+==== CoreLocation Framework
 
 TODO
 
-==== write STOMP connection
+==== add StompKit library
+
+TODO
+
+==== write StompKit connection
 
 TODO
 
