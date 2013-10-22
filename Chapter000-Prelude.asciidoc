@@ -1,4 +1,71 @@
 [[ch_prelude]]
 == Prelude
 
-TODO
+=== What's in This Book
+
+Chapter 1, Messaging concepts::
+In this chapter, I introduce the concepts of messaging protocols, how they differ from request/reply protocols such as HTTP.
+
+Chapter 2, Example Application::
+In this chapter, we present the application that will be built all along the book, the _Truck Tracker_. +
+To illustrate the use of messaging protocols on mobile and Web platforms, we will build an application with 2 parts: one will
+run in mobile devices, the other inside a Web browser and they will communicate using messages. This chapter explains the overall design of this application.
+
+Chapter 3, Mobile Messaging::
+We introduce the use of messaging protocols for mobile platforms, how they are well suited to adapt to the mobile constraints.
+
+Chapter 4, STOMP::
+In this chapter, we introduce STOMP, a simple text-based messaging protocols and present the protocol features using telnet clients to send and receive messages.
+
+Chapter 5, STOMP Example::
+We write the mobile part of the example application on iOS. We introduce StompKit, an Objective-C client for STOMP that will be used to send geolocation data and receives
+data.
+
+Chapter 6, MQTT::
+In this chapter, we introduce MQTT, a binary messaging protocols well suited to broadcast data from mobile or embedded devices.
+
+Chapter 7, MQTT Example::
+We write a simple MQTT application.
+
+Chapter 8, Web Messaging::
+In this chapter, we present the challenges that the Web face to build reactive applications and how the messaging protocols can help build them thanks to recent developments
+in the Web Browsers space.
+
+Chapter 9, HTML5 Web Sockets::
+We present the Web Sockets protocol and API that allows bidirectional communication between a Web browser and a Web server. The Web Sockets are the foundation that allows
+to use messaging protocols from the Web browser.
+
+Chapter 10, STOMP Over Web Sockets::
+In this chapter, we introduce stomp.js, a JavaScript client for STOMP, that allows to send and receive messages from a Web browser.
+
+Chapter 11, STOMP Over Web Sockets Example::
+We will write a Web application that uses stomp.js to receive the geolocation data sent by the mobile application from Chapter 5 and send orders to them.
+
+Chapter 12, MQTT Over Web Sockets::
+In this chapter, we write a simple Web application that sends and receives messages using MQTT.
+
+Appendix A, ActiveMQ::
+In this appendix, we explain how to install and configure the messaging broker, Apache ActiveMQ, that is used all along the book to run the examples.
+
+.What Should I Read?
+[NOTE]
+====
+The book is organized to be read in the order but some chapters can be skipped depending on your experience.
+We suggest to start with the Chapter 1 that introduces all the conceptes discussed throughout the book.
+
+If you are interested to write mobile applications, you can focus on Chapters 3, 4, 5, and 6.
+If you are writing Web applictaions, the Chapters 8, 0, 10, 11, and 12 are the most relevant.
+
+If you want to compare different messaging protocols, you might read the Chapters 4 and 6 first.
+====
+
+=== Adminstrative Notes
+
+This book is an introduction to the messaging protocols and assumes to prior experience with them.
+This books explains in details the messaging protocols. Each platform's clients may provide a different API to deal with the protocol but the underlying concepts
+will remain the same.
+
+Basic programming skills are required. The examples in the book runs on different platforms and we used the programming language that made the most sense for each of them.
+To build a mobile application on iOS, we wrote the example using Objective-C. The Web application uses the JavaScript language.
+
+The examples can all be downloaded from the https://github.com/mobile-web-messaging/book/[book's GitHub repository].
