@@ -163,23 +163,21 @@ TODO
 
 TODO
 
+==== Create the Podfile
+
+TODO
+
 ==== Project template
 
 TODO
 
-==== TTViewController
-
 view + controllers + UI
 
-==== CoreLocation Framework
+==== add STOMP library
 
 TODO
 
-==== add StompKit library
-
-TODO
-
-==== write StompKit connection
+==== write STOMP connection
 
 TODO
 
