@@ -2,5 +2,5 @@
 == Bibliography
 
 [bibliography]
-.Articles
 - [[[rfc6202]]] http://tools.ietf.org/html/rfc6202[RFC6202 - Known Issues and Best Practices for the Use of Long Polling and Streaming in Bidirectional HTTP]. 2011
+- [[[stomp1.2]]] http://stomp.github.io/stomp-specification-1.2.html[STOMP Protocol Specification, Version 1.2]. 2012

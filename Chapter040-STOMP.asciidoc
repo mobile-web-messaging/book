@@ -18,6 +18,8 @@ TODO: add section about STOMP development model (no organization/company, OSS...
 
 === Anatomy of a STOMP Frame
 
+((("STOMP Frames")))
+
 STOMP is modelled on HTTP and based on _frames_.
 Each frame is composed of 3 elements:
 
@@ -59,6 +61,8 @@ Messages are *pushed* to STOMP clients. The protocol does not offer any command 
 
 ==== Command
 
+((("STOMP", "Command")))
+
 A STOMP frame starts with a command string terminated by an end-of-line (EOL).
 
 +SEND+, +SUBSCRIBE+, +MESSAGE+, along with +CONNECT+ (resp. +DISCONNECT+) used to connect (resp. disconnect) to the broker, are the principal commands.
@@ -68,6 +72,8 @@ Other commands correspond to additional features (message acknowledgement, trans
 This chapter describes all the commands supported by STOMP 1.2.
 
 ==== Headers
+
+((("STOMP", "Headers")))
 
 Following the command string, a STOMP frame accepts an optional set of headers.
 A header follows the format +<key>:<value>+ and is terminated by an EOL.
@@ -81,6 +87,8 @@ Other headers are optional.
 For example, a +SEND+ frame can be sent inside a transaction by addin a +transaction+ header.
 
 ==== Payload
+
+((("STOMP", "Payload")))
 
 After the headers, a STOMP frame may contain a payload.
 
@@ -611,7 +619,7 @@ Connection closed by foreign host.
 [[ch_stomp_heartbeat]]
 === Heart-beat
 
-((("STOMP Heart-beating")))
+((("STOMP", "Heart-beating")))
 
 STOMP offers a mechanism to test the healthiness of a connection between a STOMP client and a broker
 
@@ -1215,7 +1223,7 @@ Most STOMP brokers (including ActiveMQ) defaults to _non-persistent_ messages. T
 the client must add a +persistent+ header whose value is +true+.
 
 [[ex_stomp_ext_persistent]]
-.Send a peristent message
+.Send a persistent message
 ====
 ++++
 <screen>

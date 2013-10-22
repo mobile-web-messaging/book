@@ -7,6 +7,8 @@ the device and displays orders.
 
 === Wildcard Subscription
 
+((("Subscription", "Wildcard")))
+
 Before we start writing the iOS app that will send the GPS data, we can create a simple message consumer using +telnet+ that will
 consume the message sent by the app.
 
