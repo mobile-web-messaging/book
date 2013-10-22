@@ -238,8 +238,9 @@ If the authentication credentials provided by the client are not correct, the br
 
 [[ch_stomp_send_message]]
 === Send a Message
+((("STOMP Frames", "SEND")))
 
-Now that the telnet client is connected to the messaging broker, it can send a message to a _destination_ on the broker.
+Now that the telnet client is connected to the messaging broker, it can send a message to a _destination_ on the broker using the +SEND+ frame.
 
 _Destinations_ are opaque strings specific to each messaging broker implementation.
 

@@ -35,3 +35,5 @@ include::AppendixA-ActiveMQ.asciidoc[]
 include::Afterword.asciidoc[]
 
 include::Bibliography.asciidoc[]
+
+include::index.asciidoc[]
