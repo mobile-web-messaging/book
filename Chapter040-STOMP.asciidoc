@@ -157,6 +157,8 @@ Escape character is '^]'.
 ++++
 ====
 
+((("STOMP Frames", "CONNECT")))
+
 The telnet client is now connected to the broker using a TCP connection.
 It must also establish a STOMP connection by sending a +CONNECT+ frame:
 
@@ -195,6 +197,8 @@ The +^@+ is the ASCII character for NULL octet. Type +ctrl + @+ to enter it.
 Note also that there is a blank line between the +accept-version+ header and the NULL octet.
 The blank line is mandatory to determine the end of the headers and the beginning
 of the optional payload (that is not present in the +CONNECT+ frame).
+
+((("STOMP Frames", "CONNECTED")))
 
 Once you type +ctrl + @+, the messaging broker will process the +CONNECT+ frame
 and reply with a +CONNECTED+ frame:
@@ -238,6 +242,7 @@ If the authentication credentials provided by the client are not correct, the br
 
 [[ch_stomp_send_message]]
 === Send a Message
+
 ((("STOMP Frames", "SEND")))
 
 Now that the telnet client is connected to the messaging broker, it can send a message to a _destination_ on the broker using the +SEND+ frame.
@@ -292,6 +297,8 @@ Once you +ctrl + @+ to enter the NULL octet, the message is processed by the bro
 [[ch_stomp_receipt]]
 ==== Frame Receiption
 
+((("STOMP Frames", "RECEIPT")))
+
 The STOMP broker can sent some feedback to let the client know that a frame has been received. This is a general mechanism available on any frame sent by a client to a broker (and not only on the +SEND+ frame).
 
 To receive a confirmation that a message is handled by the STOMP broker, a frame sent by the client must indicate a +receipt+ header.
@@ -341,6 +348,8 @@ This +RECEIPT+ lets the client know that the broker has _received_ the message b
 
 [[ch_stomp_error]]
 ==== Error frame
+
+((("STOMP Frames", "ERROR")))
 
 If a message is sent with an invalid format, the messaging broker will reply immediately with an +ERROR+ frame.
 
@@ -396,6 +405,8 @@ org.apache.activemq.transport.stomp.ProtocolException: SEND received without a D
 
 === Receive a Message
 
+((("STOMP Frames", "SUBSCRIBE")))
+
 So far, the telnet client has acted as a STOMP _producer_ and sent messages.
 
 It will now also become a STOMP _consumer_ to receive messages.
@@ -426,6 +437,8 @@ id:mysub<co xml:id="co.ex_stomp_subscribe_2"/>
 
 The +id+ header corresponds to the subscription identifier and must be unique among all the subscriptions _inside the same connection_.
 It is the responsibility of the client to choose this subscription identifier.
+
+((("STOMP Frames", "MESSAGE")))
 
 As soon as the messaging broker receives this +SUBSCRIBE+ frame and handle it,
 it starts to send to the client some +MESSAGE+ frames corresponding to the messages sent to this destination.
@@ -516,6 +529,8 @@ another message
 
 === Unsubscription
 
+((("STOMP Frames", "UNSUBSCRIBE")))
+
 To stop consuming messages from a destination, the client must send a +UNSUBSCRIBE+ frame
 with a +id+ header corresponding to the subscription identifier indicated in the +SUBSCRIBE+ frame (+mysub+ in the example above).
 
@@ -540,6 +555,8 @@ id:mysub<co xml:id="co.ex_stomp_unsubscribe_1"/>
 The telnet client can still act as a producer and send messages but it will no longer receive any sent to the +/queue/myqueue+ destination.
 
 === Disconnection
+
+((("STOMP Frames", "DISCONNECT")))
 
 To disconnect from the messaging broker, the client must send a +DISCONNECT+ frame.
 
@@ -593,6 +610,8 @@ Connection closed by foreign host.
 
 [[ch_stomp_heartbeat]]
 === Heart-beat
+
+((("STOMP Heart-beating")))
 
 STOMP offers a mechanism to test the healthiness of a connection between a STOMP client and a broker
 
@@ -700,6 +719,9 @@ This client will remain open as long as you send EOL in the imparted time. Note 
 It is considered good practice to leave an error of margin with the heart-beats because of timing inaccuracies (some broker may wait more than twice the heart-beat time before closing the connection).
 
 === Message acknowledgement
+
+((("STOMP Frames", "ACK")))
+((("STOMP Frames", "NACK")))
 
 When a broker delivers a message to a client for consumption, the client must _acknowledge_ the message to inform the broker that it takes responsibility for the message.
 With this acknowledgement, the broker can forget everything about the message, it is now under the client's responsibility. As long as the broker has not received such an acknowledgement, it must keep the message
@@ -973,6 +995,8 @@ id:mysub
 ++++
 ====
 
+((("STOMP Frames", "BEGIN")))
+
 A transaction is started by the client by sending a +BEGIN+ frame to the broker. This frame must have a +transaction+ header whose value is a transaction identifier
 _that must be unique within a STOMP connection_.
 
@@ -1011,6 +1035,8 @@ with the same value than in the <literal>BEGIN</literal> frame.</para>
 
 At this point, the +MESSAGE+ frame has been received by the broker. However the broker has not processed it and deliver the message to the client's subcription created in <<ex_stomp_tx_subscribe>>.
 
+((("STOMP Frames", "COMMIT")))
+
 To complete this active transaction and allows the broker to process it, the client must send a +COMMIT+ frame with the same
 +transaction+ header.
 
@@ -1046,6 +1072,8 @@ than  in the <literal>BEGIN</literal> frame.</para>
 </calloutlist>
 ++++
 ====
+
+((("STOMP Frames", "ABORT")))
 
 To roll back a transaction and discard any messages or acknowledgements sent inside it, the client can send an +ABORT+ frame with the same +transaction+ header than in
 the corresponding +BEGIN+ frame that started the transaction:
