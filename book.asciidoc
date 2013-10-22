@@ -4,8 +4,6 @@
 
 include::Preface.asciidoc[]
 
-include::Chapter000-Prelude.asciidoc[]
-
 include::Chapter010-Messaging-Concepts.asciidoc[]
 
 include::Chapter020-Example-Application.asciidoc[]
