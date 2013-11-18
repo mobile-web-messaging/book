@@ -1,5 +1,40 @@
 [preface]
 == Preface
+
+I wrote this book to tell you about simple and powerful technology that has been used with success in the enterprise for many years and starts to be used in new environments like the Web and mobile devices.
+This technology is messaging. It has been one of the buildings block that let heterogeneous services and platforms communicate with each other.
+
+=== Messaging is Simple
+
+At its core, the messaging concepts are simple: an application _sends_ a _message_ to a _destination_. Independently, another application subscribes to this destination to
+_consume_ the message.
+
+In two sentences, I introduced the four concepts that are *all* there is to know about messaging:
+
+* a _message_ is the data that are exchanged between applications
+* a _destination_ is the entity that will handle the messages and distribute them
+* a _sender_ is an application that sends _messages_ *to* a _destination_
+* a _consumer_ is an application that consume _messages_ *from* a _destination_
+
+The simplicity of messaging can be deceiving but it's this simplicity that allows to use it in powerful, sometimes complex ways.
+
+=== Enterprise Messaging Is Not So Simple
+
+Entreprise applications have long been using messaging technology.
+
+When companies are acquired or merged, they need  a way to enable communication between their systems. Messaging is one approach to achieve this.
+The systems must agree on the data representation (transmitted by the _message_) and the _destination_ (or the topic of interest shared by the different systems).
+
+One key aspect of messaging is to be loosely-coupled: the sender and consumer know nothing of each other. When one application sends a message, it has no knowledge on
+when or where the message will be consumed and whom will consume it.
+Likewise, when an application consumes a message, it does not know which application sends it.
+
+With its use in entreprise software, messaging technology and their underlying protocols became increasingly complex to adapt to entreprise requirements (high-availability, failover, load-balancing).
+
+=== Mobile Messaging Is Simple Again
+
+With the advent of mobile devices, there are a new set of applications (both native and Web-based)  
+
 === What's in This Book
 
 Chapter 1, Messaging concepts::
