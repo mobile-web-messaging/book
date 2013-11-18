@@ -4,33 +4,21 @@
 
 include::Preface.asciidoc[]
 
-include::Chapter010-Messaging-Concepts.asciidoc[]
+include::Chapter010-Introduction.asciidoc[]
 
-include::Chapter020-Example-Application.asciidoc[]
+include::Chapter020-Mobile-Messaging-STOMP.asciidoc[]
 
-include::Chapter030-Mobile-Messaging.asciidoc[]
+include::Chapter030-Web-Messaging-STOMP.asciidoc[]
 
-include::Chapter040-STOMP.asciidoc[]
+include::Chapter040-Avdanced-STOMP.asciidoc[]
 
-include::Chapter050-STOMP-Example.asciidoc[]
+include::Chapter050-Mobile-Messaging-MQTT.asciidoc[]
 
-include::Chapter060-MQTT.asciidoc[]
+include::Chapter060-Web-Messaging-MQTT.asciidoc[]
 
-include::Chapter070-MQTT-Example.asciidoc[]
-
-include::Chapter080-Web-Messaging.asciidoc[]
-
-include::Chapter090-HTML5-Web-Sockets.asciidoc[]
-
-include::Chapter100-STOMP-over-Web-Sockets.asciidoc[]
-
-include::Chapter110-STOMP-over-Web-Sockets-Example.asciidoc[]
-
-include::Chapter120-MQTT-over-Web-Sockets.asciidoc[]
+include::Chapter070-Advanced-MQTT.asciidoc[]
 
 include::AppendixA-ActiveMQ.asciidoc[]
-
-include::Afterword.asciidoc[]
 
 include::Bibliography.asciidoc[]
 

@@ -1,0 +1,96 @@
+[[ch_mobile_messaging_stomp]]
+== Mobile Messaging With STOMP
+
+[role="lead"]
+TODO
+
+
+We will use https://developer.apple.com/xcode/[Xcode] to create the +TruckTracker+ application.
+
+==== Create Xcode project
+
+Once Xcode is installed and started, we create a new project from its launch screen:
+
+[[img_stomp_example_1]]
+.Select **`Create a new Xcode project" from Xcode launch screen**`.
+image::images/img_stomp_example_1.png["XCode Launch screen"]
+
+The application consists in a single view so we choose the **`Single View Application`** template in iOs > Application from the template screen.
+
+[[img_stomp_example_2]]
+.Select iOs > Application > **`Single View Application`**.
+image::images/img_stomp_example_2.png["XCode template screen"]
+
+We will call the project **`TruckTracker`** and select to build it only for iPhone devices.
+
+[[img_stomp_example_3]]
+.XCode project options screen
+image::images/img_stomp_example_3.png["XCode project options screen"]
+
+Finally we will save it in a folder on our machine.
+
+==== Create the Podfile
+
+To import the library that we will use to send and receive messages, we will setup the project to use _CocoaPods_, an Objective-C Library Manager.
+
+First we need to close Xcode because we will modify the project structure to import our dependencies.
+
+After we have installed CocoaPods using the instructions on http://cocoapods.org[its web site], we create a file at the root of the project (in the same directory than **`TruckTracker.xcodeproj`**) named _Podfile_
+
+[[ex_stomp_example]]
+.TruckTracker's Podfile
+====
+----
+xcodeproj 'TruckTracker.xcodeproj'<1>
+
+pod 'StompKit', :git => 'https://github.com/mobile-web-messaging/StompKit.git'<2>
+
+platform :ios, '5.0'<3>
+----
+<1> _TruckTracker.xcodeproj_ is the directory created by Xcode to store the project.
+<2> StompKit is the Objective-C library that we will used to send and receive STOMP messages
+<3> The application is able to run on iOS 5 and above.
+====
+
+After this file is saved, run the **`pod install command`**
+
+[[ex_stomp_example]]
+.Install TruckTracker dependencies
+====
+----
+$ pod install
+Analyzing dependencies
+Pre-downloading: `StompKit` from `https://github.com/mobile-web-messaging/StompKit.git`
+Downloading dependencies
+Installing CocoaAsyncSocket (7.3.2)
+Installing StompKit (0.1.0)
+Generating Pods project
+Integrating client project
+
+[!] From now on use `TruckTracker.xcworkspace`.
+----
+====
+
+We can now open again Xcode but we must do it using the *worspace* file named **`TruckTracker.xcworkspace`**, not the *project* file **`TruckTracker.xcodeproj`**.
+
+[[img_stomp_example_4]]
+.Open the workspace file
+image::images/img_stomp_example_4.png["Open the workspace file"]
+
+First, let's make sure that the project is setup correctly and that the application can run in the iOS simulator.
+
+We will simulate the latest iPhone devices by selecting **`Product`** > **`Destination`** > **`iPhone Retina (4-inch 64-bit)`** from Xcode menu bar.
+If we run the application by selecting **`Product`** > **`Run`** (or pressing **`⌘R`**), the iOS simulator starts and opens the application which is composed of a blank view.
+
+[[img_stomp_example_5]]
+.TruckTracker Blank View
+image::images/img_stomp_example_5.png["TruckTracker Blank View"]
+
+==== Design the User Interface
+
+TODO
+
+==== integrate StompKit
+
+
+TODO
