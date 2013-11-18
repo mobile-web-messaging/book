@@ -1,0 +1,39 @@
+# Introduction
+
+  * messaging concepts
+  * topology
+  * example application
+
+# Mobile Messaging - STOMP On iOS
+
+  * STOMP introduction
+  * StompKit introduction
+  * TruckTracker app
+    * setup Xcode + CocoaPod
+    * connect to STOMP broker
+    * send GPS data
+    * receive delivery order
+
+# Web Messaging - STOMP Over Web Sockets
+
+  * Introduction of Web Sockets
+  * stomp.js introduction
+  * ControlCenter Web app
+    * connect to STOMP broker
+    * receive GPS data
+    * send delivery order
+
+# Advanced functionalities With STOMP
+
+  * ack
+  * transaction
+  * heart-beating
+  * receipt
+
+# Mobile Messaging - MQTT On iOS
+
+  * MQTT introduction
+
+# Web Messaging - MQTT Over Web Sockets
+
+# Appendix - ActiveMQ
