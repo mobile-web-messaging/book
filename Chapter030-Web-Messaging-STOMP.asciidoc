@@ -2,4 +2,20 @@
 == Web Messaging With STOMP
 
 [role="lead"]
+In this chapter, we will write a Web application that sends and receives messages using the STOMP protocol over HTML5 Web Sockets.
+
+=== Web Browser Communication Model
+
+One-way communication from the browser to the server. The server could not send data to the browser without the browser first initiating the conversation.
+
+=== HTML5 Web Sockets
+
+Thanks to HTML5 Web Sockets, it is now possible to have two-way communication between the browser and the server. The server can now send data to the browser without the client initiating the conversation. This enables to push messages from the Web server to the browser.
+
+We are no longer limited to pull-based messages where the browser need to regularly contact the server to know whether there are any available messages to consume.
+
+=== Stomp.js
+
 TODO
+
+=== Draw the position on a map With Google Maps

@@ -2,12 +2,19 @@
 == Mobile Messaging With STOMP
 
 [role="lead"]
+In this chapter, we will write our first messaging client: an app running on an iPhone. 
+We will use the STOMP protocol to send and receive messages using StompKit, an Objective-C implementation of the protocol.
+
+=== STOMP
+
+TODO
+=== StompKit
+
 TODO
 
+=== Create The +TruckTracker+ project
 
 We will use https://developer.apple.com/xcode/[Xcode] to create the +TruckTracker+ application.
-
-==== Create Xcode project
 
 Once Xcode is installed and started, we create a new project from its launch screen:
 
@@ -29,7 +36,7 @@ image::images/img_stomp_example_3.png["XCode project options screen"]
 
 Finally we will save it in a folder on our machine.
 
-==== Create the Podfile
+=== Create the Podfile
 
 To import the library that we will use to send and receive messages, we will setup the project to use _CocoaPods_, an Objective-C Library Manager.
 
@@ -41,15 +48,12 @@ After we have installed CocoaPods using the instructions on http://cocoapods.org
 .TruckTracker's Podfile
 ====
 ----
-xcodeproj 'TruckTracker.xcodeproj'<1>
+xcodeproj 'TruckTracker.xcodeproj'
 
-pod 'StompKit', :git => 'https://github.com/mobile-web-messaging/StompKit.git'<2>
+pod 'StompKit', :git => 'https://github.com/mobile-web-messaging/StompKit.git'
 
-platform :ios, '5.0'<3>
+platform :ios, '5.0'
 ----
-<1> _TruckTracker.xcodeproj_ is the directory created by Xcode to store the project.
-<2> StompKit is the Objective-C library that we will used to send and receive STOMP messages
-<3> The application is able to run on iOS 5 and above.
 ====
 
 After this file is saved, run the **`pod install command`**
@@ -86,11 +90,467 @@ If we run the application by selecting **`Product`** > **`Run`** (or pressing **
 .TruckTracker Blank View
 image::images/img_stomp_example_5.png["TruckTracker Blank View"]
 
-==== Design the User Interface
+=== Identify the truck
 
-TODO
+The iPhone device is used by the truck driver to broadcast its position. The first thing to do is identify the truck. We will keep this simple and display an alert when the application is started to the the driver enter the truck identifier and display this ID in the user interface.
 
-==== integrate StompKit
+Since the app will run only on iPhone devices, all the user interface will be setup in the **`Main.storyboard`** file.
+
+Click on **`Main.storyboard`** to open it. From the `Object` library, drag a label on the `View`'s window. Make it as wide as the window and change the label to `???` and set the alignment to centered.
+
+[[img_stomp_example_6]]
+.Make the label as wide as the window.
+image::images/img_example_stomp_6.png["Make the label as wide as the window"]
+
+[[img_stomp_example_7]]
+.Set the alignment to centered.
+image::images/img_example_stomp_7.png["Set the alignment to centered"]
+
+We will connect this label to the `MWMViewController`. Add the necessary outlet property in **`MWMViewController.m`** and a NSString to hold the identifier.
+
+[[img_stomp_example_8]]
+.Connect the label to the outlet property.
+image::images/img_example_stomp_8.png["Connect the label to the outlet property"]
 
 
-TODO
+[source,objc]
+----
+@interface MWMViewController ()
+
+@property (weak, nonatomic) IBOutlet UILabel *truckIDLabel;
+
+@property (nonatomic, copy) NSString *truckID;
+
+@end
+----
+
+Open the **`Main.storyboard`** and control-click on +View Controller+ to see its connection panel. Drag from truckIdLabel to the +UILabel+ to connect it.
+
+Open **`MWMViewController**`. When the application starts and the view will appear, we check if the +truckID+ is set. If it is not, we open an alert view to ask the user to identify the truck and store the result in +truckID+.
+
+[source,objc]
+----
+- (void)viewWillAppear:(BOOL)animated {
+    if (self.truckID) {
+        return;
+    }
+
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Truck Identifier"
+                                                    message:@"What is the ID of the truck?"
+                                                   delegate:self
+                                          cancelButtonTitle:nil
+                                          otherButtonTitles:@"OK", nil];
+    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+    [alert show];
+}
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alert clickedButtonAtIndex:(NSInteger)buttonIndex {
+    self.truckID = [alert textFieldAtIndex:0].text;
+    self.truckIDText.text = self.truckID;
+}
+----
+
+If we run the app, the alert view is displayed and once we type the truck identifier (for example; **`AAA`**), it is displayed in the window:
+
+We now have the identifier of the truck. We can already create a STOMP client with this identifier and  connect to the STOMP broker using StompKit.
+
+=== Creation of a STOMP client
+
+In order to use the StompKit library, we must import its header file in **`MWMViewController.m`** and declare a +STOMPClient+ property.
+
+[[ex_mobile_stomp_1]]
+.MWMViewController.m
+====
+[source, objc]
+----
+#import <StompKit.h>
+
+@interface TTViewController ()
+
+...
+
+@property (strong, nonatomic) STOMPClient *client;
+
+@end
+----
+====
+
+The +client+ variable is created when the controller's view is loaded in MWMViewController's +viewDidLoad+ method implementation. To create it, we need to pass the host and port of the STOMP broker to connect to.
+
+
+[[ex_mobile_stomp_2]]
+.MWMViewController.m
+====
+[source, objc]
+----
+#define kHost     @"localhost"
+#define kPort     61613
+
+...
+
+@implementation TTViewController
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    self.client = [[STOMPClient alloc] initWithHost:kHost port:kPort];
+}
+
+@end
+----
+====
+
+When the +client+ object is created, it is not connect to the STOMP broker. To connect, we must call its +connectWitHeaders:completionHandler:+ method.
+
+StompKit uses Grand Central Dispatch and blocks to provide an event-driven API. This means that the client is _not_ connected when the call to its +connectWitHeaders:completionHandler:+ method returns but when the completionHandler block is called.
+
+We can pass a dictionary to +connectWitHeaders:completionHandler:+ to add aditional headers when the +CONNECT+ frame is sent. In our app, we will send a +client-id+ header set to the +truckerID+ to uniquely identify the client against the STOMP broker. This ensures that no two apps will be able to connect using the same identifier. Once a client is connected with a given +client-id+, any subsequent clients that uses the same value will fail to connect to the broker.
+
+Let's encapsulate all this ina +connect+ method in **`MWMViewController.m`**:
+
+[[ex_mobile_stomp_3]]
+.MWMViewController.m continued
+====
+[source, objc]
+----
+@implementation MWMViewController
+
+#pragma mark - Messaging
+
+- (void)connect {
+    NSLog(@"Connecting...");
+    [self.client connectWithHeaders:@{ @"client-id": self.truckID}
+                  completionHandler:^(STOMPFrame *connectedFrame, NSError *error) {
+                      if (error) {
+                          // We have not been able to connect to the broker.
+                          // Let's log the error
+                          NSLog(@"Error during connection: %@", error);
+                      } else {
+                          // we are connected to the STOMP broker without an error
+                          NSLog(@"Connected");
+                      }
+                  }];
+    // when the method returns, we can not assume that the client is connected
+}
+
+@end
+----
+====
+
+Before we call this method, we must have set the +truckID+ property.
+
+The first time, we run the application, the +truckID+ property will be set when the user set the truck identifier in the alert view and the +UIAlertViewDelegate+ method +alertView:clickedButtonAtIndex:+ is called.
+After this, everytime the view reappears, the +truckID+ will be already set when the controller's 
++viewWillAppear:+ method is called and we can connect from this method.
+
+[[ex_mobile_stomp_4]]
+.MWMViewController.m continued
+====
+[source, objc]
+----
+- (void)viewWillAppear:(BOOL)animated {
+    // the truckID is set, we can connect to the STOMP broker
+    if (self.truckID) {
+        [self connect];
+        return;
+    }
+
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Truck Identifier"
+                                                     message:@"What is the ID of the truck"
+                                                    delegate:self
+                                           cancelButtonTitle:nil
+                                           otherButtonTitles:@"OK", nil];
+    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+    [alert show];
+}
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alert clickedButtonAtIndex:(NSInteger)buttonIndex {
+    self.truckID = [alert textFieldAtIndex:0].text;
+    self.truckIDText.text = self.truckID;
+    NSLog(@"TruckID = %@", self.truckID);
+    // the user just entered the truck identifier, let's connect to the STOMP broker
+    [self connect];
+}
+
+----
+====
+
+The STOMPClient disconnects from the broker using its +disconnect:+ method. This method takes a block that will be called when the client is disconnected from the server. The block takes a +NSError+ parameter that is set if there is an error during the disconnection operation.
+
+[[ex_mobile_stomp_5]]
+.MWMViewController.m continued
+====
+[source, objc]
+----
+
+#pragma mark - Messaging
+
+- (void)disconnect {
+    NSLog(@"Disconnecting...");
+    [self.client disconnect:^(NSError *error) {
+        if (error) {
+            NSLog(@"Error during disconnection: %@", error);
+        } else {
+            // the client is disconnected from the broker without any problem
+            NSLog(@"Disconnected");
+        }
+    }];
+    // when the method returns, we can not assume that the client is disconnected
+}
+----
+====
+
+We will disconnect from the broker when the view will disappear:
+
+
+[[ex_mobile_stomp_6]]
+.MWMViewController.m continued
+====
+[source, objc]
+----
+- (void)viewWillDisappear:(BOOL)animated {
+    [self disconnect];
+}
+----
+====
+
+At this stage, we have an application that connect to the STOMP broker when its view is displayed and disconnect when its view disappears.
+
+==== Access the device geolocation data
+
+Next step is to retrieve the geolocation data from the device's GPS sensor and display them.
+
+[[ex_mobile_stomp_6]]
+.MWMViewController.m continued
+====
+[source,objc]
+----
+@interface TTViewController ()
+
+...
+
+@property (nonatomic, strong) IBOutlet UILabel *currentPositionLabel;
+
+@end
+----
+
+iOS provides the +CoreLocation+ framework to access the location data.
+
+We need to add it to the libraries linked by the app. Click on the **`TruckTracker`** project and then the **`TruckTracker`** target. In the +General+ tab, under the +Linked Frameworks and Libraries+ section, click on the +++. In the selection window, type +CoreLocation+, select the +CoreLocation.framework+ and click on the +Add+ button.
+
+We can now use the +CoreLocation+ framework by importing +#import <CoreLocation/CoreLocation.h>+ in **`MWMViewController.m`** and declaring a +CLLocationManager+ property.
+
+[[ex_mobile_stomp_7]]
+.MWMViewController.m continued
+=====
+[source,objc]
+----
+#import <CoreLocation/CoreLocation.h>
+
+interface TTViewController () <CLLocationManagerDelegate>
+
+@property (nonatomic, strong) CLLocationManager *locationManager;
+
+@end
+----
+====
+
+We will define two methods to start and stop updating the current location. When the apps starts updating the current location in +startUpdatingCurrentLocation+, it creates the +locationManager+ if it's not already created and designs the controller as the locationManager's +delegate+. Since the geolocation data will be used to follow a truck, we set the locationManagere's +desiredAccuracy+ to +kCLLocationAccuracyBestForNavigation+.
+
+Then, the app will start listening for the device location by calling locationManager's +startUpdatingLocation+ method.
+
+To stop receiving the device location in +stopUpdatingCurrentLocation+, we simply call locationManager's +stopUpdatingLocation+ method:
+
+[[ex_mobile_stomp_7]]
+.MWMViewController.m continued
+=====
+[source,objc]
+----
+#pragma mark - CoreLocation actions
+
+- (void)startUpdatingCurrentLocation {
+    NSLog(@"startUpdatingCurrentLocation");
+
+    // if location services are restricted do nothing
+    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied ||
+        [CLLocationManager authorizationStatus] == kCLAuthorizationStatusRestricted) {
+        return;
+    }
+    
+    // if locationManager does not currently exist, create it
+    if (!self.locationManager) {
+        self.locationManager = [[CLLocationManager alloc] init];
+        self.locationManager.delegate = self;
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation;
+    }
+    
+    [self.locationManager startUpdatingLocation];
+}
+
+- (void)stopUpdatingCurrentLocation {
+    [self.locationManager stopUpdatingLocation];
+}
+----
+====
+
+The location of the device will be received by the designated +CLLocationManagerDelegate+ (in our case, the +MWMViewController+ implementation).
+
+We need to implement the +locationManager:didUpdateToLocation:fromLocation:+ method and extract the 
+coordinates from the +newLocation+'s +coordinate.
+
+Once we have them, we can update the +currentPositionLabel+'s +text+ to display them.
+
+[[ex_mobile_stomp_8]]
+.MWMViewController.m continued
+=====
+[source,objc]
+----
+#pragma mark - CLLocationManagerDelegate
+
+- (void)locationManager:(CLLocationManager *)manager
+    didUpdateToLocation:(CLLocation *)newLocation
+           fromLocation:(CLLocation *)oldLocation {
+    // if the location is older than 30s ignore
+    if (fabs([newLocation.timestamp timeIntervalSinceDate:[NSDate date]]) > 30) {
+        return;
+    }
+    
+    CLLocationCoordinate2D coord = [newLocation coordinate];
+    self.currentPositionLabel.text = [NSString stringWithFormat:@"φ:%.4F, λ:%.4F", coord.latitude, coord.longitude];
+}
+----
+====
+
+If there are any problem with the locationManager, we want to warn the user about it and stop updating the location. To do so, we implement the +CLLocationManagerDelegate+'s +locationManager:didFailWithError:+ method to display a warning to the user:
+
+[[ex_mobile_stomp_8]]
+.MWMViewController.m continued
+=====
+[source,objc]
+----
+- (void)locationManager:(CLLocationManager *)manager
+       didFailWithError:(NSError *)error {
+    NSLog(@"%@", error);
+
+    // reset the current position label
+    self.currentPositionLabel.text = @"Current position: ???";
+    
+    // show the error alert
+    UIAlertView *alert = [[UIAlertView alloc] init];
+    alert.title = @"Error obtaining location";
+    alert.message = [error localizedDescription];
+    [alert addButtonWithTitle:@"OK"];
+    [alert show];
+}
+----
+====
+
+The first time we will ask the locationManager to start updating the device location, the user will see an alert view accessing him or her the permission to access the device location.
+
+We will call the +startUpdatingCurrentLocation+ method when either the +truckID+ is already set in +viewWillAppear:+ or when the users enters it in +alertView:clickedButtonAtIndex:+
+
+[[ex_mobile_stomp_9]]
+.MWMViewController.m continued
+=====
+[source,objc]
+----
+- (void)viewWillAppear:(BOOL)animated {
+    if (self.truckID) {
+        [self startUpdatingCurrentLocation];
+        return;
+    }
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Truck Identifier"
+                                                    message:@"What is the ID of the truck?"
+                                                   delegate:self
+                                          cancelButtonTitle:nil
+                                          otherButtonTitles:@"OK", nil];
+    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+    [alert show];
+}
+
+- (void)alertView:(UIAlertView *)alert clickedButtonAtIndex:(NSInteger)buttonIndex {
+    self.truckID = [alert textFieldAtIndex:0].text;
+    self.truckIDLabel.text = self.truckID;
+    
+    [self startUpdatingCurrentLocation];
+}
+----
+====
+
+We will stop to update the location when the view disappears in +viewDidDisappear:+
+
+[[ex_mobile_stomp_10]]
+.MWMViewController.m continued
+=====
+[source,objc]
+----
+- (void)viewDidDisappear:(BOOL)animated {
+    [self stopUpdatingCurrentLocation];
+}
+----
+====
+
+=== Send device coordinates to the topic
+
+We now have a connection to the STOMP broker and receive the device's geolocation data. The last thing to do is to send these data to the +/topic/truck.data+ topic.
+
+[[ex_mobile_stomp_10]]
+.MWMViewController.m continued
+=====
+[source,objc]
+----
+- (void)sendLocation:(CLLocation *) location {
+    
+    // build a static NSDateFormatter to display the current date in ISO-8601
+    static NSDateFormatter *dateFormatter = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        dateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter.dateFormat = @"yyyy-MM-d'T'HH:mm:ssZZZZZ";
+    });
+    
+    // build a dictionary containing all the information to send
+    NSDictionary *dict = @{
+                           @"truck": self.truckID,
+                            @"lat": [NSNumber numberWithDouble:location.coordinate.latitude],
+                           @"lng": [NSNumber numberWithDouble:location.coordinate.longitude],
+                           @"ts": [dateFormatter stringFromDate:location.timestamp]
+                         };
+    // create a JSON string from this dictionary
+    NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
+    NSString *body =[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    
+    [self.client sendTo:@"/topic/truck.position" body:body];
+}
+----
+====
+
+We need to call this method every time we receive an updated location in +locationManager:didUpdateToLocation:fromLocation:+
+
+[[ex_mobile_stomp_11]]
+.MWMViewController.m continued
+====
+[source,objc]
+----
+- (void)locationManager:(CLLocationManager *)manager
+    didUpdateToLocation:(CLLocation *)newLocation
+           fromLocation:(CLLocation *)oldLocation {
+    // if the location is older than 30s ignore
+    if (fabs([newLocation.timestamp timeIntervalSinceDate:[NSDate date]]) > 30) {
+        return;
+    }
+    
+    CLLocationCoordinate2D coord = [newLocation coordinate];
+    self.currentPositionLabel.text = [NSString stringWithFormat:@"φ:%.4F, λ:%.4F", coord.latitude, coord.longitude];
+    
+    // send a message with the location data
+    [self sendLocation:newLocation];
+}
+----
+====
