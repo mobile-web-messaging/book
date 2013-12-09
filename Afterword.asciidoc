@@ -1,5 +1,0 @@
-[preface]
-[role="afterword"]
-== Afterword
-
-Afterword text begins here.
