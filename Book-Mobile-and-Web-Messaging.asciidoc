@@ -6,6 +6,8 @@ include::Preface.asciidoc[]
 
 include::Chapter010-Introduction.asciidoc[]
 
+include::Chapter011-Introduction-Example.asciidoc[]
+
 include::Chapter020-Mobile-Messaging-STOMP.asciidoc[]
 
 include::Chapter030-Web-Messaging-STOMP.asciidoc[]

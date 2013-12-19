@@ -14,8 +14,22 @@ Thanks to HTML5 Web Sockets, it is now possible to have two-way communication be
 
 We are no longer limited to pull-based messages where the browser need to regularly contact the server to know whether there are any available messages to consume.
 
-=== Stomp.js
+=== stomp.js, a JavaScript library for STOMP
+
+TODO
+
+=== Create stomp.js Client
+
+TODO
+
+=== Receive Messages with stomp.js
 
 TODO
 
 === Draw the position on a map With Google Maps
+
+TODO
+
+=== Send Messages with stomp.js
+
+TODO

@@ -2,4 +2,32 @@
 == Advanced STOMP
 
 [role="lead"]
+In the two previous chapters, we have used STOMP to send and receive messages from a native iOS app and from a Web applications.
+STOMP provides additional features that we did not use. In this chapter, we will make a tour of all the features provided by STOMP.
+
+STOMP provides an interoperable wire format so that clients can communicate with any message broker.
+The simplicity of the protocol ensures that it's straightforward to have interoperability between any client and brokers.
+
+This chapter covers the latest version of the protocol when this book was written:
+http://stomp.github.io/stomp-specification-1.2.html[STOMP 1.2] that was released on 2012, October 22^nd^.
+
+=== Message Acknowledgement
+
 TODO
+
+=== Transactions
+
+TODO
+
+=== Receipts
+
+TODO
+
+=== Heart-beating
+
+TODO
+
+=== Error handling
+
+TODO
+
