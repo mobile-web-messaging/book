@@ -16,20 +16,100 @@ We are no longer limited to pull-based messages where the browser need to regula
 
 === stomp.js, a JavaScript library for STOMP
 
+stomp.js is a small JavaScript library that implements the STOMP protocol over HTML 5 Web Sockets and allows to send and receive STOMP messages in a Web browser.
+
 TODO
 
 === Create stomp.js Client
 
-TODO
+[[ex_web_stomp_1]]
+====
+[source,js]
+----
+var client = Stomp.client(url);
+----
+====
+
+Once we have the `client` object, we call **`connect`** by passing the credentials (login and password) and a function that will be called back
+once the client has been successfully connected to the STOMP broker.
+
+[[ex_web_stomp_2]]
+====
+[source,js]
+----
+    client.connect(login, passcode, function(frame) {
+        // this function is executed after a successful connection to the STOMP broker.
+    });
+----
+====
+
+If we want to be notified when the connection is *unsuccesful*, we can pass a fourth parameters to the `connect` method which is a call back that is executed in case of problem.
+
+[[ex_web_stomp_3]]
+====
+[source,js]
+----
+    client.connect(login, passcode, function(frame) {
+        // this function is executed after a successful connection to the STOMP broker.
+      }, function(frame) {
+        // this function is executed if the connection to the STOMP broker failed.
+    });
+----
+====
 
 === Receive Messages with stomp.js
 
-TODO
+Once the client is connected successfully to the STOMP broker, he can subscribe to a destination using the **`subscribe`** method which takes two parameters: the name of the destination and a callback that 
+is executed every time a message is pushed from the broker to the client:
+
+[[ex_web_stomp_4]]
+====
+[source,js]
+----
+client.subscribe(destination, function(message) {
+  // this function is executed every time a message is received
+});
+----
+====
+
+The `message` parameter that is passed to the subscription callback is an object that has 3 properties:
+
+* **`command`** - the command of the STOMP frame (when a message is receives, it will always be `MESSAGE`)
+* **`headers`** - a JavaScript object containing all the frame headers. It can be empty if the message has no headers
+* **`body`** - a string representing the message's payload. It can be `null` if the message has no payload.
 
 === Draw the position on a map With Google Maps
 
 TODO
 
 === Send Messages with stomp.js
+
+The STOMP client can send messages to the broker by calling the **`send`** method which takes three parameters:
+
+* **`destination`** - the name of the destination
+* **`headers`** - a JavaScript object containing any additional headers
+* **`body`** - a string corresponding to the message payload.
+
+[[ex_web_stomp_4]]
+====
+[source,js]
+----
+client.send("/topic/mytopic", { priority: 9}, "Hello, STOMP");
+});
+----
+====
+
+Both `headers` and `body` are optional and can be omitted. However if you want to set the message payload, you must also specify the headers (using an empty
+JavaScript literal if you have no header to set).
+
+[[ex_web_stomp_4]]
+====
+[source,js]
+----
+client.send("/topic/mytopic", {}, "This message has a payload and no headers");
+});
+----
+====
+
 
 TODO

@@ -11,6 +11,16 @@ The simplicity of the protocol ensures that it's straightforward to have interop
 This chapter covers the latest version of the protocol when this book was written:
 http://stomp.github.io/stomp-specification-1.2.html[STOMP 1.2] that was released on 2012, October 22^nd^.
 
+=== Frame representation
+
+TODO
+
+==== Headers
+
+STOMP defines only a handful of headers for its different frames. It is also possible to add other headers when sending a message
+with the `MESSAGE` frame.
+
+
 === Message Acknowledgement
 
 TODO
