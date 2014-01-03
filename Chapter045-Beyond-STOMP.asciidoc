@@ -1,0 +1,35 @@
+[[ch_beyond_stomp]]
+== Beyond STOMP
+
+[role="lead"]
+STOMP provides a simple yet powerful messaging protocol.
+It also offers an extensible way for brokers to provide additional features beyond the one specified in the protocol.
+
+In this chapter, we will show how to leverage broker features with STOMP headers. Until this chapter, all STOMP brokers could be used to send and receive messages
+from our applications but in this chapter, you will have to check your broker documentation to see if it provides these features (or others not covered by this chapter).
+
+=== Message Persistence
+
+Some STOMP brokers support **persistent** messages
+to ensure that if a message is held by the broker when it crashes, the message will be persisted (that means stored on a durable support) so that the broker can
+fetch it when it restarts and handle it again. This prevents any data loss (at the cost of performance since the broker must ensure that the message is effectively
+written on the storage support).
+To use persistent messages, most STOMP brokers (including ActiveMQ) require that the message must be sent with a `persistent` header set to `true`:
+
+[[ex_adv_stomp_2]]
+.TODO
+====
+----
+SEND
+destination:/topic/truck.position
+persistent:true
+
+1234
+----
+====
+
+When the broker handles the message, it will check the persistent header and persist the message if it is true.
+
+=== Filtered subscriber
+
+TODO

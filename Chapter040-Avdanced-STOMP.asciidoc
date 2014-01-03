@@ -13,13 +13,88 @@ http://stomp.github.io/stomp-specification-1.2.html[STOMP 1.2] that was released
 
 === Frame representation
 
-TODO
+STOMP is modelled on HTTP and based on _frames_.
+Each frame is composed of 3 elements:
+
+* a _command_
+* an (optional) set of _headers_
+* an (optional) _payload_
+
+[[ex_stomp_frame]]
+.STOMP Frame Structure
+====
+----
+COMMAND<1>
+header1:value1<2>
+header2:value2
+<3>
+payload^@<4>
+----
+<1> A frame starts with a command string followed by an end-of-line (EOL)
+<2> Header entries followed the format +<key>:<value>+ and is ended by EOL
+<3> A blank line separates the set of headers from the payload
+<4> A frame is ended by a NULL octet (represented by +^@+ in ASCII)
+====
+
+STOMP is based on text (using UTF-8 for its default encoding)
+but it can also transmit binary data in its payload by specifying an alternative encoding.
+
+In the two previous chapters, we were sending JSON data in the messages. We were setting the string representation of the JSON structure in the message body and
+setting the `content-type` header to `application/json`.
+
+The result of calling 
+
+[[ex_adv_stomp_1]]
+.TODO
+====
+[source,objc]
+----
+    // build a dictionary containing all the information to send
+    NSDictionary *dict = @{
+                           @"truck": self.truckID,
+                            @"lat": [NSNumber numberWithDouble:location.coordinate.latitude],
+                           @"lng": [NSNumber numberWithDouble:location.coordinate.longitude],
+                           @"ts": [dateFormatter stringFromDate:location.timestamp]
+                         };
+    // create a JSON string from this dictionary
+    NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
+    [self.client sendTo:@"/topic/truck.position" 
+                headers:@"content-type": @"application/json"
+                   body:[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]];
+    }
+----
+====
+
+was to send a STOMP frame:
+
+[[ex_adv_stomp_2]]
+.TODO
+====
+----
+SEND
+destination:/topic/truck.position<1>
+content-length:28<2>
+content-type:application/json<3>
+
+{"truck":"xyzfoo","lat":xxx,lng:yyy,"ts":@"yyymmdd"}^@<4>
+----
+<1> A +SEND+ frame must contains +destination+ header.
+<2> The length of the JSON string is 28 octets.
+<3> The MIME type for JSON is +application/json+.
+<4> The frame must be ended by a NULL octet (represented by +^@+ in ASCII) even when the +content-length+ header is set.
+====
+
 
 ==== Headers
 
-STOMP defines only a handful of headers for its different frames. It is also possible to add other headers when sending a message
-with the `MESSAGE` frame.
+STOMP defines only a handful of headers for its different frames.
 
+It is also possible to add other headers when sending a message with the `SEND` frame as long as it does not collide with the headers used by STOMP.
+
+Why would we use headers to pass information instead of putting it in the message payload? There is an fundamental difference between headers and payload.
+Headers are read by the STOMP brokers and can be used by them. Payload is opaque and the brokers never look at it (it is considered an black box).
+
+We will cover some use cases for adding headers in the next chapter.
 
 === Message Acknowledgement
 

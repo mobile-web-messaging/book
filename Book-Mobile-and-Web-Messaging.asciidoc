@@ -14,6 +14,8 @@ include::Chapter030-Web-Messaging-STOMP.asciidoc[]
 
 include::Chapter040-Avdanced-STOMP.asciidoc[]
 
+include::Chapter045-Beyond-STOMP.asciidoc[]
+
 include::Chapter050-Mobile-Messaging-MQTT.asciidoc[]
 
 include::Chapter060-Web-Messaging-MQTT.asciidoc[]
