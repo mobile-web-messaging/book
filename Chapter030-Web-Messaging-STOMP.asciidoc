@@ -20,13 +20,75 @@ stomp.js is a small JavaScript library that implements the STOMP protocol over H
 
 TODO
 
+=== Write the Control Center Web App
+
+As we explained in the first chapter, the _Control Center_ Web will be use to follow the position of all the trucks in the fleet 
+and send them orders.
+
+It will be a very simple one-page Web application that can be run from a Web server serving static pages. It does not require
+any server-side runtime as all the code will be executed inside the Web browser using JavaScript.
+
+Let's bootstrap the Web application by creating a *__control.html__* page.
+
+[[ex_web_stomp_1]]
+====
+[source,html]
+----
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Chat Example Using STOMP Over WebSockets</title>
+
+
+    <style type="text/css">
+      body { padding-top: 40px; }
+      </style>
+  </head>
+
+  <body>
+    
+    <!-- Form to connect/disconnect from the broker -->
+    <div id="connect"></div>
+    
+    <!-- Div block to display a map using Google Maps will all the position received from the trucks -->
+    <div id="map-canvas"></div>
+
+    <!-- Load all the JavaScripts required by the application:
+           * jQuery to simplify the JavaScript and DOM manipulation
+           * Google Maps to display a map and all the trucks' positions
+     -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+    <!-- We also link to a local copy of the stomp.js JavaScript library -->
+    <script src="./stomp.js"></script>
+    <script>
+    $(document).ready(function() {
+
+      // We will put all the JavaScript code in this block that is called
+      // when the document is ready
+
+    }
+    </script>
+  </body>
+</html>
+----
+====
+
 === Create stomp.js Client
 
 [[ex_web_stomp_1]]
 ====
 [source,js]
 ----
-var client = Stomp.client(url);
+    $(document).ready(function() {
+
+      var client; // keep a reference on the Stomp client that we will create
+
+
+    }
+
 ----
 ====
 

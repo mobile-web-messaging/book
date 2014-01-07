@@ -14,22 +14,74 @@ Some STOMP brokers support **persistent** messages
 to ensure that if a message is held by the broker when it crashes, the message will be persisted (that means stored on a durable support) so that the broker can
 fetch it when it restarts and handle it again. This prevents any data loss (at the cost of performance since the broker must ensure that the message is effectively
 written on the storage support).
-To use persistent messages, most STOMP brokers (including ActiveMQ) require that the message must be sent with a `persistent` header set to `true`:
+To use persistent messages, most STOMP brokers (including ActiveMQ) require that the message must be sent with a `persistent` header set to `true`.
 
-[[ex_adv_stomp_2]]
+In the truck tracker app, we send two types of messages: truck position and orders for truck.
+
+The truck position message does need to be persisted and survive a broker crash. It has minimal consequences if we lose the position of the trucks while the
+broker was crashed. Once it is online again, the truck will send updated position.
+
+However for the orders sent to the truck, we want to make sure that an order sent by the control center will not be lost before the truck had a chance to receive it.
+We could flag these messages as persistent to ensure that they survive a broker crash:
+
+
+[[ex_beyond_stomp_1]]
 .TODO
 ====
+[source,js]
 ----
-SEND
-destination:/topic/truck.position
-persistent:true
-
-1234
+var order = "XXX";
+client.send("/topic/mytopic", { persistent: true}, order);
+});
 ----
 ====
 
 When the broker handles the message, it will check the persistent header and persist the message if it is true.
 
-=== Filtered subscriber
+=== Filtered Subscriber
 
-TODO
+There are cases where a consumers may be interested only by a subset of all messages delivered to a destination.
+Every time a message is delivered to it, the consumer will filter out the message to take into account only the *interesting* ones.
+However, this is inefficient since it will still be receiving all messages and potentially discard many of them.
+
+Depending on your applications, you may use a hierarchy of destinations to filter out messages. We did that in the truck tracker app by sending messages on different
+destinations for each truck (the truck +XYZ+ is sending its position on the destination +/topic/truck.XYZ.data+).
+If we were only interested by following this truck, we just have to subscribe to the +/topic/truck.XYZ.data+ instead of the +/topic/truck.*.data+ wildcard destinations.
+
+But sometimes, it is not possible to filter out *interesting* messages based on their destination. Some STOMP brokers allows to specify a *filter* (or *selector*) when
+a consumer subscribes to a destination. The STOMP broker will check whether a message sent to this destination *matches* the filter before delivering it to the consumer.
+
+What can be specified in a selector? As we wrote in <<ch_adv_stomp_frame>> a message payload is always opaque and will not be read by the broker. This leaves
+only messages header to be specified in the selector. It turns out that this can be quite powerful since STOMP allows to add any user-specified header.
+If we want to filter out messages like that, we need to move the *interesting* data from the message payload to its headers (or duplicate them).
+
+
+
+=== Priority
+
+Messages sent to a destinations are usually delivered to a consumer in the order of their arrival. That means that if a
+producer sent messages A, B, and C in that order, a single consumer will receive the messages in the same order: A, B, and C.
+
+However, there are cases where a producer wants to send a more _urgent_ messages that should take precedence over messages that it already sent.
+
+Some STOMP brokers provides a way to achieve this using message _priority_. When a producer sends a message, it can sets a +priority+ header to change the
+message priority. The usual semantics for the priority value is copied from JMS API which defines ten levels of priority value, with 0 as the lowest priority and 9 as the highest (and 4 as
+the default priority).
+
+A broker will often try to deliver expedited messages before messages of lower priority but this is not a strong requirement. To ensure a _fair_ delivery of messages,
+it may deliver lower priority messages so that a single producer sending messages with the highest priority does not prevent the consumption of messages of lower
+priority from other producers.
+
+In the Truck Tracker application, we have not an use case where changing the priority of a message would make sense since we use different channels for tracking GPS data
+and sending orders to the trucks. If we were using a single channel for both kind of messages, we could give the order messages a higher priority so that they
+may be deliver ahead of messages with normal priority. 
+
+[[ex_beyond_stomp_4]]
+====
+[source,js]
+----
+var order = "XXX";
+client.send("/topic/mytopic", { priority: 7 }, order);
+----
+====
+

@@ -11,6 +11,7 @@ The simplicity of the protocol ensures that it's straightforward to have interop
 This chapter covers the latest version of the protocol when this book was written:
 http://stomp.github.io/stomp-specification-1.2.html[STOMP 1.2] that was released on 2012, October 22^nd^.
 
+[[ch_adv_stomp_frame]]
 === Frame representation
 
 STOMP is modelled on HTTP and based on _frames_.
