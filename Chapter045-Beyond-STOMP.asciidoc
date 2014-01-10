@@ -56,7 +56,6 @@ only messages header to be specified in the selector. It turns out that this can
 If we want to filter out messages like that, we need to move the *interesting* data from the message payload to its headers (or duplicate them).
 
 
-
 === Priority
 
 Messages sent to a destinations are usually delivered to a consumer in the order of their arrival. That means that if a
@@ -73,7 +72,7 @@ it may deliver lower priority messages so that a single producer sending message
 priority from other producers.
 
 In the Truck Tracker application, we have not an use case where changing the priority of a message would make sense since we use different channels for tracking GPS data
-and sending orders to the trucks. If we were using a single channel for both kind of messages, we could give the order messages a higher priority so that they
+and sending orders to the trucks. If we were using a single channel for both kind of messages, we could give the order messages a higher priority (for example 7) so that they
 may be deliver ahead of messages with normal priority. 
 
 [[ex_beyond_stomp_4]]
