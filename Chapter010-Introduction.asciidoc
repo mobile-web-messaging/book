@@ -5,3 +5,7 @@
 In this chapter, I'll present the main concepts of messaging.
 To illustrate them, I'll write an application to track a fleet of trucks. The application will be composed of two parts: an app running on mobile devices that broadcasts the geolocation data of the device and receive orders and a Web app that displays all the devices on a map and send them orders.
 
+
+=== Request/reply protocol
+
+HTTP hits the sweet spot between simplicity and efficiency. It has few disadvantages but one of the main one is that it follows a request/reply pattern where the client must _initiate_ a request to get a _reply_ from the server. In other words, the server can not send data to the HTTP client if this one does not send a request first. There are workarounds to overcome this challenges but they bring additional issues when they are used. Messaging protocol are well suited for this kind of use cases.

@@ -8,9 +8,7 @@ With the advent of mobile devices and the Web, it now appears that some of the s
 
 Nowadays, HTTP has emerged as the mainstream transport protocol and is extensively used to communicate betwen any clients (on the desktop, in mobile apps, obviously from Web browser) and Web servers. It has replaced almost all proprietary or non standard protocols and is the de facto choice if your application needs to communicate with something else.
 
-In this book, I will present messaging protocols as *complements* to HTTP and shows cases where using a messaging protocol is better suited than using HTTP (or any other request/reply transport protocol).
-
-HTTP hit the sweet spot between simplicity and efficiency. It has few disadvantages but one of the main one is that it follows a request/reply pattern where the client must _initiate_ a request to get a _reply_ from the server. In other words, the server can not send data to the HTTP client if this one does not send a request first. There are workarounds to overcome this challenges but they bring additional issues when they are used. Messaging protocol are well suited for this kind of use cases.
+Messaging protocols _complement_ HTTP and this book will show cases where using a messaging protocol is better suited than using HTTP (or any other request/reply transport protocol).
 
 === Messaging is Simple
 
@@ -19,23 +17,26 @@ At its core, the messaging concepts are simple: an application _sends_ a _messag
 In two sentences, I introduced the five concepts that are (almost) all there is to know about messaging:
 
 * a _message_ is the data that are exchanged between applications
-* a _destination_ is the entity that will handle the messages and distribute them
+* a _destination_ is a type of address that is used to exchange messages
 * a _sender_ is an application that sends _messages_ *to* a _destination_
 * a _consumer_ is an application that consume _messages_ *from* a _destination_
-* a _broker_ is the server that will handle messages from producers and route them to the consumers according to the destinations.
+* a _broker_ is the server entity that will handle messages from producers and distributed them to the consumers according to their destinations.
+
+[[img_preface_1]]
+.Messaging Concepts
+image::images/messaging_concepts.png["Diagram of the messaging concepts"]
 
 The simplicity of messaging can be deceiving but it is this simplicity that allows to use it in powerful, sometimes complex ways.
 
-One key aspect of messaging is that it couples very loosely its participants. The sender and consumer know nothing of each other. When one application sends a message, it has no knowledge on
-when or where the message will be consumed and who will consume it. It also possible that the message will not be consumed at all if nobody has any interest for it.
+One key aspect of messaging is that it couples very loosely its participants. The sender and consumer know nothing of each other. When one application sends a message, it has no knowledge on when or where the message will be consumed and how many consumers will consume it. It also possible that the message will not be consumed at all if nobody has any interest for it.
 
 Likewise, when an application consumes a message, it does not know which application sent it.
 
-Senders and consumers do not even need to be online at the same time. The sender can send a message and exit. The message will be held by the broker until a consumer subscribes to the destination it was sent to. At this moment, the broker will deliver the message to the consumer.
+Senders and consumers do not even need to be online at the same time. The sender can send a message and exit. The message will be held by the broker until a consumer subscribes to the same destination. At that moment, the broker will deliver the message to the consumer.
 
-Senders and consupers need to know about the broker to connect to it but they may even not connect to the same broker. A set of brokers can constitute a cluster and messages would flow from one to another before it is finally delivered to a consumer.
+Senders and consumers need to know about the broker to connect to it but they may even not connect to the same broker. A set of brokers can constitute a cluster and messages would flow from one to another before it is finally delivered to a consumer.
 
-Messaging protocol is a simple idea. Most of the complexity of using it is figuring out the best suited _topology_ for your applications (the type of destinations to use). This book will show the two topologies that are most commonly used to build messaging applications. 
+Messaging protocol is a simple idea. Most of the complexity of using it is figuring out the best suited _topology_ for your applications (the type of destinations to use). This book will show the two topologies that are most commonly used to build messaging applications: _queues_ and _topics_.
 
 === Enterprise Messaging Is Not So Simple
 
