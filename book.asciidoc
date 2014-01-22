@@ -14,13 +14,13 @@ include::Chapter030-Web-Messaging-STOMP.asciidoc[]
 
 include::Chapter040-Avdanced-STOMP.asciidoc[]
 
-include::Chapter045-Beyond-STOMP.asciidoc[]
+include::Chapter050-Beyond-STOMP.asciidoc[]
 
-include::Chapter050-Mobile-Messaging-MQTT.asciidoc[]
+include::Chapter060-Mobile-Messaging-MQTT.asciidoc[]
 
-include::Chapter060-Web-Messaging-MQTT.asciidoc[]
+include::Chapter070-Web-Messaging-MQTT.asciidoc[]
 
-include::Chapter070-Advanced-MQTT.asciidoc[]
+include::Chapter080-Advanced-MQTT.asciidoc[]
 
 include::AppendixA-ActiveMQ.asciidoc[]
 

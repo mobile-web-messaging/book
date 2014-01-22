@@ -1,14 +1,16 @@
 [preface]
 == Preface
 
-I wrote this book to tell you about a simple and powerful technology that has been used with success in the enterprise for many years and starts to be used in other environments like the Web and mobile devices.
-This technology is messaging. It has been one of the buildings block that let heterogeneous services and platforms communicate with each other.
+This is a book about _messaging_ protocols and how software developers can use them to build more responsive, resilient applications running on mobile devices and Web browsers.
 
-Nowadays, HTTP has "won" as the mainstream transport protocol and is extensively used to communicate betwen any clients (on the desktop, in mobile apps, obviously from Web browser) and Web servers. It has replaced almost all proprietary or non standard protocols and is the de facto choice if your application needs to communicate with something else.
-HTTP hit the sweet spot between simplicity and efficiency. It has few disadvantages but one of the main one is that it follows a request/reply pattern where the client must _initiate_ a request to get a _reply_ from the server. In other words, the server can not send data to the HTTP client if this one does not send a request first. There are workarounds to overcome this challenges but they bring additional issues when they are used.
+Messaging protocols are nothing new. This simple and powerful technology has been used with success in the enterprise software for many years. It has been one of the buildings block that let heterogeneous services and platforms communicate with each other.
+With the advent of mobile devices and the Web, it now appears that some of the strength of messaging protocols make them ideally suited for these platforms for a certain class of applications.
+
+Nowadays, HTTP has emerged as the mainstream transport protocol and is extensively used to communicate betwen any clients (on the desktop, in mobile apps, obviously from Web browser) and Web servers. It has replaced almost all proprietary or non standard protocols and is the de facto choice if your application needs to communicate with something else.
 
 In this book, I will present messaging protocols as *complements* to HTTP and shows cases where using a messaging protocol is better suited than using HTTP (or any other request/reply transport protocol).
-I don't intend to show that messaging protocol is *the* best transport protocol but instead that it's a _great_ complement that you can add to your tool box.
+
+HTTP hit the sweet spot between simplicity and efficiency. It has few disadvantages but one of the main one is that it follows a request/reply pattern where the client must _initiate_ a request to get a _reply_ from the server. In other words, the server can not send data to the HTTP client if this one does not send a request first. There are workarounds to overcome this challenges but they bring additional issues when they are used. Messaging protocol are well suited for this kind of use cases.
 
 === Messaging is Simple
 
@@ -20,16 +22,20 @@ In two sentences, I introduced the five concepts that are (almost) all there is 
 * a _destination_ is the entity that will handle the messages and distribute them
 * a _sender_ is an application that sends _messages_ *to* a _destination_
 * a _consumer_ is an application that consume _messages_ *from* a _destination_
-* a _consumer_ is an application that consume _messages_ *from* a _destination_
-* a _broker_ is the server entity that will handle messages from producers and route them to the consumers.
+* a _broker_ is the server that will handle messages from producers and route them to the consumers according to the destinations.
 
 The simplicity of messaging can be deceiving but it is this simplicity that allows to use it in powerful, sometimes complex ways.
 
 One key aspect of messaging is that it couples very loosely its participants. The sender and consumer know nothing of each other. When one application sends a message, it has no knowledge on
-when or where the message will be consumed and who will consume it.
+when or where the message will be consumed and who will consume it. It also possible that the message will not be consumed at all if nobody has any interest for it.
+
 Likewise, when an application consumes a message, it does not know which application sent it.
-Senders and consumers do not even need to be online at the same time. The sender can send a message and exit. The message will be held by the destination until a consumer subscribes to the destination. At this moment, the destination will deliver the message to the consumer.
-They need to know about the broker to connect to it but they may even not connect to the same broker. A set of brokers can constitute a cluster and messages would flow from one to another before it is finally delivered to a consumer.
+
+Senders and consumers do not even need to be online at the same time. The sender can send a message and exit. The message will be held by the broker until a consumer subscribes to the destination it was sent to. At this moment, the broker will deliver the message to the consumer.
+
+Senders and consupers need to know about the broker to connect to it but they may even not connect to the same broker. A set of brokers can constitute a cluster and messages would flow from one to another before it is finally delivered to a consumer.
+
+Messaging protocol is a simple idea. Most of the complexity of using it is figuring out the best suited _topology_ for your applications (the type of destinations to use). This book will show the two topologies that are most commonly used to build messaging applications. 
 
 === Enterprise Messaging Is Not So Simple
 
@@ -38,40 +44,43 @@ The systems must agree on the data representation (transmitted by the _message_)
 
 With its use in entreprise software, messaging technology and their underlying protocols became increasingly complex to meet entreprise requirements (high-availability, failover, load-balancing, etc.).
 
-Besides, the integrated applications must often agreed on a messaging system to use throughout the company. In the Java world, the specification that deals with messaging is called JMS (Java Message Service). It defines a set of interfaces that a Java application can use to send and receive messages. However, JMS does not define any protocol (how the bytes are sent over the wire) and leave this implementation detail to the JMS brokers that implement the API. This also means that JMS implementations are not interoperable: one must use the broker's client implementation to send a message to the broker. If applications were using different brokers, they had interoperability issues and must use *bridges* to transfer messages from one broker to another. This lack of interoperability brings complexity.
+Besides, the integrated applications must often agreed on a messaging system to use throughout the company. In the Java world, the specification that deals with messaging is called JMS (Java Message Service). It defines a set of interfaces that a Java application can use to send and receive messages. However, JMS does not define any protocol (how the bytes are sent over the wire) and leave this implementation detail to the JMS brokers that implement the API. This means that JMS implementations are not interoperable: one must use the broker's client implementation to send a message to the broker. If applications were using different brokers, they had interoperability issues and must use *bridges* to transfer messages from one broker to another. This lack of interoperability brings complexity as you need to add servers to host the bridges, make them redundant for high-availability, etc.
 
 Over time, we have seen the appearances of entreprise messaging protocols such as AMQP (Advanced Message Queuing Protocol) that handles enterprise features and interoperability. This leads to complex protocols that are difficult to implement and whose interoperability is subjective (backwards compatibility is not guaranteed, different implementations may not implement the whole specification leading to interoperability issues).
 
 === Mobile Messaging Is Simple Again
 
-Meanwhile, we have also watched the advent of messaging protocols which more constrained goals that turns out to be simpler and more efficient to use.
+Meanwhile, we have also watched the advent of messaging protocols with more constrained goals that turns out to be simpler and more efficient to use.
+
+While these protocols does not provide all the features offered by enterprise-class messaging protocol, they can still be very useful for most cases. 
 
 In this book, I will talk about two of them, STOMP and MQTT.
 
-While these protocols does not provide all the features offered by enterprise messaging, they can still be very useful for most cases. 
+STOMP really shines for its simplicity if you need to send one text message from any system (operation system, virtual machines, web browsers) to another.
+It is simple enough that a telnet client *is* a STOMP client.
 
-STOMP really shines for its simplicity if you need to send one text message from any system (operation system, virtual machines, web browsers) to another. It is simple enough that a telnet client *is* a STOMP client.
+MQTT stands for MQ Telemetry Transport and was created to broadcast data from small devices with low power usage and constrained memory resources. It is well suited for mobile devices since it will preserve battery life and memory.
 
-MQTT stands for MQ Telemetry Transport and really was created to broadcast data from small devices with low power usage and constrained memory resources.
-
-Since these protocols are often simple, Messaging brokers often provide both of them. This allows to send a message using STOMP from an application and consume the same message from another application using MQTT. The applications are free to use the best messaging protocols for their needs and rely on the broker implementations for the interoperability.
-Since these protocols are also interoperable, messages can also flow from one broker implementation to another without the need for any additional components such as bridges.
+The protocols are simple to understand and implement. Messaging brokers often provide both of them. This allows to send a message using STOMP from an application and consume the same message from another application using MQTT. The applications are free to use the best messaging protocols for their needs 
+and rely on the broker implementations for the interoperability.
 
 With the advent of mobile devices, there are a new set of applications (both native and Web-based) that can use these simple messaging protocols to create applications.
 
+If the messaging broker also supports enterprise-class messaging API (such as JMS) or protocols (e.g. AMQP), we can leverage this existing infrastructure using these simpler protocols to build mobile and Web applications in a short time.
+
 === What's in This Book
 
-In this book, I'll make a tour of messaging protocols for mobile devices and Web applications.
+In this book, I will make a tour of messaging protocols for mobile devices and Web applications.
 
 Chapter 1, Introduction::
 In this chapter, I introduce the concepts of messaging protocols, how they differ from request/reply protocols such as HTTP.
 To illustrate the use of messaging protocols on mobile and Web platforms, we will build an application with two parts: one will run on mobile devices, the other inside a Web browser and they will communicate using messages. This chapter explains the overall design of this application.
 
 Chapter 2, Mobile Messaging With STOMP on iOS::
-In this chapter, I present STOMP, a simple text-based messaging protocol. I use StompKit, an iOS client for STOMP, to build an app that sends GPS data from the device and receives messages.
+In this chapter, I present STOMP, a simple text-based messaging protocol. I use StompKit, an iOS library for STOMP, to build an app that sends GPS data from the device and receives messages.
 
 Chapter 3, Web Messaging With STOMP::
-In this chapter, we introduce stomp.js, a JavaScript client for STOMP, and write a Web application that receives messages with the GPS from the iOS devices and display them on a map. This Web application will also send messages to the mobile app.
+In this chapter, we introduce stomp.js, a JavaScript library for STOMP, and write a Web application that receives messages with the GPS from the iOS devices and display them on a map. This Web application will also send messages to the mobile app.
 
 Chapter 4, Advanced STOMP::
 In this chapter, we present the advanced features of STOMP that we did not use in the previous chapters. These advanced features are not always used by messaging applications but they are useful as the applications grow in complexity. 
@@ -83,11 +92,11 @@ Chapter 6, Mobile Messaging With MQTT::
 In this chapter, we introduce MQTT, a binary messaging protocol well suited to broadcast data from mobile or embedded devices.
 We write a mobile app on iOS that uses MQTT to broadcast information.
 
-Chapter 6, Web Messaging With MQTT::
+Chapter 7, Web Messaging With MQTT::
 In this chapter, we use MQTT over Web Socket to write a Web application that sends and receives MQTT messages from a Web browser.
 
-Chapter 7, Advanced MQTT::
-In this chapter, I present the advanced features of MQTT that we did not use in the previous chapters.
+Chapter 8, Advanced MQTT::
+In this chapter, I present the advanced features of MQTT that we did not use in the previous chapters but that you may encounter as you use it.
 
 Appendix A, ActiveMQ::
 In this appendix, we explain how to install and configure the messaging broker, Apache ActiveMQ, that is used all along the book to run the examples.
@@ -98,10 +107,10 @@ In this appendix, we explain how to install and configure the messaging broker, 
 The book is organized to be read in the order but some chapters can be skipped depending on your experience.
 We suggest to start with the Chapter 1 that introduces all the concepts discussed throughout the book.
 
-If you are interested to write mobile applications, you can focus on Chapters 2 and 5 that present two different messaging protocols for mobile devices.
-If you are writing Web applications, the Chapters 3, and 6 are the most relevant.
+If you are interested to write mobile applications, you can focus on Chapters 2 and 6 that present two different messaging protocols for mobile devices.
+If you are writing Web applications, the Chapters 3 and 7 are the most relevant.
 
-If you are interested to use the STOMP protocol, the Chapters 2, 3, and 4 and the most relevant. If you are interested by MQTT instead, you can read the Chapters 5, 6, and 7 instead.
+If you are interested to use the STOMP protocol, the Chapters 2, 3, 4, and 5 and the most relevant. If you are interested by MQTT instead, you can read the Chapters 6, 7, and 8 instead.
 ====
 
 === Administrative Notes
