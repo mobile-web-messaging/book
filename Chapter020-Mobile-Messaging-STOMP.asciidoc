@@ -1,17 +1,24 @@
-[[ch_mobile_messaging_stomp]]
+[[ch_mobile_stomp]]
 == Mobile Messaging With STOMP
 
 [role="lead"]
-In this chapter, we will write our first messaging client: an app running on an iPhone. 
+In this chapter, we will write our first messaging client: an native application running on an iPhone. 
 We will use the STOMP protocol to send and receive messages using StompKit, an Objective-C implementation of the protocol.
 
 === STOMP
 
-TODO
+For the next four chapters, we will use the STOMP protocol to build our applications.
+
+STOMP is a simple text-based messaging protocol that is well suited to build lightweight messaging applications on any platforms.
+
+STOMP provides an interoperable wire format so that clients can communicate with any message broker.
+The simplicity of the protocol ensures that it's straightforward to have interoperability between any client and brokers.
+
+This book covers the latest released version of the protocol at the time of this writing: http://stomp.github.io/stomp-specification-1.2.html[STOMP 1.2].
 
 === StompKit
 
-TODO
+To use STOMP on iOS, we will use the StompKit library that implements the STOMP protocol in a modern event-driven way using ARC, Grand Central Dispatch and blocks.
 
 === Create The +TruckTracker+ project With Xcode
 
@@ -19,21 +26,21 @@ We will use https://developer.apple.com/xcode/[Xcode] to create the +TruckTracke
 
 Once Xcode is installed and started, we create a new project from its launch screen:
 
-[[img_stomp_example_1]]
+[[img_mobile_stomp_1]]
 .Select **`Create a new Xcode project" from Xcode launch screen**`.
-image::images/img_stomp_example_1.png["XCode Launch screen"]
+image::images/Chapter020/xcode_launch_screen.png["XCode Launch screen"]
 
 The application consists in a single view so we choose the **`Single View Application`** template in iOs > Application from the template screen.
 
-[[img_stomp_example_2]]
+[[img_mobile_stomp_2]]
 .Select iOs > Application > **`Single View Application`**.
-image::images/img_stomp_example_2.png["XCode template screen"]
+image::images/Chapter020/template_screen.png["XCode template screen"]
 
 We will call the project **`TruckTracker`** and select to build it only for iPhone devices.
 
-[[img_stomp_example_3]]
+[[img_mobile_stomp_3]]
 .XCode project options screen
-image::images/img_stomp_example_3.png["XCode project options screen"]
+image::images/Chapter020/project_options_screen.png["XCode project options screen"]
 
 Finally we will save it in a folder on our machine.
 
@@ -43,9 +50,9 @@ To import the library that we will use to send and receive messages, we will set
 
 First we need to close Xcode because we will modify the project structure to import our dependencies.
 
-After we have installed CocoaPods using the instructions on http://cocoapods.org[its web site], we create a file at the root of the project (in the same directory than **`TruckTracker.xcodeproj`**) named _Podfile_
+After we have installed CocoaPods using the instructions on http://cocoapods.org[its web site], we create a file at the root of the project (in the same directory than **`TruckTracker.xcodeproj`**) named _Podfile_.
 
-[[ex_stomp_example]]
+[[ex_mobile_stomp_1]]
 .TruckTracker's Podfile
 ====
 ----
@@ -57,9 +64,9 @@ platform :ios, '5.0'
 ----
 ====
 
-After this file is saved, run the **`pod install command`**
+After this file is saved, run the **`pod install`** command.
 
-[[ex_stomp_example]]
+[[ex_mobile_stomp_2]]
 .Install TruckTracker dependencies
 ====
 ----
@@ -68,7 +75,7 @@ Analyzing dependencies
 Pre-downloading: `StompKit` from `https://github.com/mobile-web-messaging/StompKit.git`
 Downloading dependencies
 Installing CocoaAsyncSocket (7.3.2)
-Installing StompKit (0.1.0)
+Installing StompKit (0.1.1)
 Generating Pods project
 Integrating client project
 
@@ -78,41 +85,42 @@ Integrating client project
 
 We can now open again Xcode but we must do it using the *worspace* file named **`TruckTracker.xcworkspace`**, not the *project* file **`TruckTracker.xcodeproj`**.
 
-[[img_stomp_example_4]]
+[[img_mobile_stomp_4]]
 .Open the workspace file
-image::images/img_stomp_example_4.png["Open the workspace file"]
+image::images/Chapter020/open_worskpace.png["Open the workspace file"]
 
 First, let's make sure that the project is setup correctly and that the application can run in the iOS simulator.
 
 We will simulate the latest iPhone devices by selecting **`Product`** > **`Destination`** > **`iPhone Retina (4-inch 64-bit)`** from Xcode menu bar.
 If we run the application by selecting **`Product`** > **`Run`** (or pressing **`⌘R`**), the iOS simulator starts and opens the application which is composed of a blank view.
 
-[[img_stomp_example_5]]
+[[img_mobile_stomp_5]]
 .TruckTracker Blank View
-image::images/img_stomp_example_5.png["TruckTracker Blank View"]
+image::images/Chapter020/blank_view.png["TruckTracker Blank View"]
+
+Nothing is displayed but it confirms that the project and its dependencies can be successfully compiled and executed.
 
 === Identify the truck
 
-The iPhone device is used by the truck driver to broadcast its position. The first thing to do is identify the truck. We will keep this simple and display an alert when the application is started to the the driver enter the truck identifier and display this ID in the user interface.
+The iPhone device is used by the truck driver to broadcast its position. The first thing to do is identify the truck. To keep the example simple, we will use a _universal unique identifier_ (or UUID) as the truck identity and display it in the view.
 
 Since the app will run only on iPhone devices, all the user interface will be setup in the **`Main.storyboard`** file.
 
-Click on **`Main.storyboard`** to open it. From the `Object` library, drag a label on the `View`'s window. Make it as wide as the window and change the label to `???` and set the alignment to centered.
+Click on **`Main.storyboard`** to open it. From the `Object` library, drag a label on the `View`'s window. Place it at the top of the view and change the label to `Truck ID`. Make it as wide as possible.
 
-[[img_stomp_example_6]]
+[[img_mobile_stomp_6]]
 .Make the label as wide as the window.
-image::images/img_example_stomp_6.png["Make the label as wide as the window"]
+image::images/Chapter020/truckID_label_wide.png["Make the label as wide as the window"]
 
-[[img_stomp_example_7]]
+We will change its appearance by setting its **`Font`** to **`System 13.0`** and its **`Alignment`** to centered.
+
+[[img_mobile_stomp_7]]
 .Set the alignment to centered.
-image::images/img_example_stomp_7.png["Set the alignment to centered"]
+image::images/Chapter020/truckID_Label_options.png["Set the alignment to centered"]
 
-We will connect this label to the `MWMViewController`. Add the necessary outlet property in **`MWMViewController.m`** and a NSString to hold the identifier.
+We will connect this label to the `MWMViewController` object.
 
-[[img_stomp_example_8]]
-.Connect the label to the outlet property.
-image::images/img_example_stomp_8.png["Connect the label to the outlet property"]
-
+Add the necessary outlet property in **`MWMViewController.m`** and a NSString to hold the identifier.
 
 [source,objc]
 ----
@@ -120,82 +128,118 @@ image::images/img_example_stomp_8.png["Connect the label to the outlet property"
 
 @property (weak, nonatomic) IBOutlet UILabel *truckIDLabel;
 
-@property (nonatomic, copy) NSString *truckID;
+@property (copy, nonatomic) NSString *truckID;
 
 @end
 ----
 
-Open the **`Main.storyboard`** and control-click on +View Controller+ to see its connection panel. Drag from truckIdLabel to the +UILabel+ to connect it.
+Open the **`Main.storyboard`** and control-click on +View Controller+ to see its connection panel. Drag from +truckIdLabel+ to the +UILabel+ to connect it.
 
-Open **`MWMViewController**`. When the application starts and the view will appear, we check if the +truckID+ is set. If it is not, we open an alert view to ask the user to identify the truck and store the result in +truckID+.
+[[img_mobile_stomp_8]]
+.Connect the label to the outlet property.
+image::images/Chapter020/truckID_label_connection.png["Connect the label to the outlet property"]
+
+Now that the outlet property is connected to the label, we need to generate a UUUID for the application and display it when the view appears.
+
+Open **`MWMViewController.m`** to add code to the **`MWMViewController`** _implementation_. When the application starts and the view is loaded in **`viewDidLoad`**, we set the +truckID+ using a UUID.
 
 [source,objc]
 ----
-- (void)viewWillAppear:(BOOL)animated {
-    if (self.truckID) {
-        return;
-    }
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
 
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Truck Identifier"
-                                                    message:@"What is the ID of the truck?"
-                                                   delegate:self
-                                          cancelButtonTitle:nil
-                                          otherButtonTitles:@"OK", nil];
-    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
-    [alert show];
-}
-
-#pragma mark - UIAlertViewDelegate
-
-- (void)alertView:(UIAlertView *)alert clickedButtonAtIndex:(NSInteger)buttonIndex {
-    self.truckID = [alert textFieldAtIndex:0].text;
-    self.truckIDText.text = self.truckID;
+    self.truckID = [UIDevice currentDevice].identifierForVendor.UUIDString;
 }
 ----
 
-If we run the app, the alert view is displayed and once we type the truck identifier (for example; **`AAA`**), it is displayed in the window:
-
-We now have the identifier of the truck. Before sending messages with STOMP, we first need to retrieve the geolocation data from the device using the **`CoreLocation`** framework.
-
-=== Access The Device Geolocation Data with CoreLocation Framework
-
-Next step is to retrieve the geolocation data from the device's GPS sensor and display them.
-
-[[ex_mobile_stomp_6]]
-.MWMViewController.m continued
+.About Unique Identifier
+[NOTE]
 ====
+The **`identifierForVendor`** property will uniquely identify the device for the application's vendor (that we set to **`net.mobile-web-messaging`** when we create the project). That is enough for the purpose of our example but in a real application, the truck driver would likely have to login and authenticate himself when the application is started and fetch its truck ID from the company's servers.
+====
+
+We also need to set the label to this ID when the view will appear.
+
 [source,objc]
 ----
-@interface TTViewController ()
-
-...
-
-@property (nonatomic, strong) IBOutlet UILabel *currentPositionLabel;
-
-@end
+- (void)viewWillAppear:(BOOL)animated
+{
+    self.truckIDLabel.text = self.truckID;
+}
 ----
-====
+
+If we run the application, we will see the truck ID displayed instead of +Truck ID+ in the view.
+
+[[img_mobile_stomp_9]]
+.Display the truck ID.
+image::images/Chapter020/view_with_truckID.png["Display the truck ID"]
+
+Now that we have the identifier of the truck, the next step is to retrieve the geolocation data from the device using the **`CoreLocation`** framework so that we can send them in a STOMP message
+
+=== Display the truck position
+
+To display the geolocation data from the device's GPS sensor, we will add a +UILabel+ to the view, make it as wide as possible and change its label to  +Current position: ???+
+
+[[img_mobile_stomp_10]]
+.TruckTracker View with a to display the current position
+image::images/Chapter020/currentPosition_label_wide.png["TruckTracker View with a to display the current position"]
+
+We will change its appearance to match the **`truckID`** label by setting its **`Font`** to **`System 13.0`** and its **`Alignment`** to centered.
+
+[[img_mobile_stomp_11]]
+.Set the alignment to centered.
+image::images/Chapter020/truckID_Label_options.png["Set the alignment to centered"]
+
+Open the **MWMViewController.m`** file and add a property to the **MWMViewController`** _interface.
+
+[source,objc]
+----
+@property (weak, nonatomic) IBOutlet UILabel *currentPositionLabel;
+----
+
+We then we bind this property to the label. Open the **`Main.storyboard`** and control-click on +View Controller+ to see its connection panel. Drag from +currentPositionLabel+ to the label to connect it.
+
+[[img_mobile_stomp_12]]
+.Connect the label to the outlet property.
+image::images/Chapter020/currentPosition_label_connection.png["Connect the label to the outlet property"]
+
+The label is now connected to the property. The next step is to retrieve the geolocation data from the device to update the property and send a message with them.
+
+=== Access The Device Geolocation Data with +CoreLocation+ Framework
 
 iOS provides the +CoreLocation+ framework to access the location data.
 
-We need to add it to the libraries linked by the app. Click on the **`TruckTracker`** project and then the **`TruckTracker`** target. In the +General+ tab, under the +Linked Frameworks and Libraries+ section, click on the +++. In the selection window, type +CoreLocation+, select the +CoreLocation.framework+ and click on the +Add+ button.
+We need to add it to the libraries linked by the app. Click on the +TruckTracker+ project and then the +TruckTracker+ target. In the +General+ tab, under the +Linked Frameworks and Libraries+ section, click on the +++ button. In the selection window, type **`CoreLocation`**, select the +CoreLocation.framework+ and click on the +Add+ button.
 
-We can now use the +CoreLocation+ framework by importing +#import <CoreLocation/CoreLocation.h>+ in **`MWMViewController.m`** and declaring a +CLLocationManager+ property.
+[[img_mobile_stomp_13]]
+.Add the CoreLocation framework.
+image::images/Chapter020/CoreLocation_framework.png["Add the CoreLocation framework"]
 
-[[ex_mobile_stomp_7]]
-.MWMViewController.m continued
-====
+We can now use the +CoreLocation+ framework by importing **`<CoreLocation/CoreLocation.h>`** in  **`MWMViewController.m`** file.
+
+We will make the +MWMViewController+ interface conform to the +CLLocationManagerDelegate+ protocol and declare a +CLLocationManager+ property named +locationManager+.
+
 [source,objc]
 ----
 #import <CoreLocation/CoreLocation.h>
 
-interface TTViewController () <CLLocationManagerDelegate>
+interface MWMViewController () <CLLocationManagerDelegate>
 
-@property (nonatomic, strong) CLLocationManager *locationManager;
+@property (strong, nonatomic) CLLocationManager *locationManager;
 
 @end
 ----
-====
+
+
+
+
+
+
+
+
+
+
 
 We will define two methods to start and stop updating the current location. When the apps starts updating the current location in +startUpdatingCurrentLocation+, it creates the +locationManager+ if it's not already created and designs the controller as the locationManager's +delegate+. Since the geolocation data will be used to follow a truck, we set the locationManagere's +desiredAccuracy+ to +kCLLocationAccuracyBestForNavigation+.
 
