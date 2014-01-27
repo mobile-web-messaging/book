@@ -177,6 +177,11 @@ image::images/Chapter020/view_with_truckID.png["Display the truck ID"]
 
 Now that we have the identifier of the truck, the next step is to retrieve the geolocation data from the device using the **`CoreLocation`** framework so that we can send them in a STOMP message
 
+[NOTE]
+====
+The next sections deal with setting up the framework and writing code to retrieve the GPS data from the device. This is unrelated to messaging and you can skip them if you only want to read how to send and receive messages. Still, we thought the messaging code would be more meaningful if it was using real data instead of generating random data that could not be exploited. By using GPS data instead, we will be able to build a mobile app that display these data in the next chapter.
+====
+
 === Display the truck position
 
 To display the geolocation data from the device's GPS sensor, we will add a +UILabel+ to the view, make it as wide as possible and change its label to  +Current position: ???+
