@@ -16,6 +16,17 @@ The simplicity of the protocol ensures that it's straightforward to have interop
 
 This book covers the latest released version of the protocol at the time of this writing: http://stomp.github.io/stomp-specification-1.2.html[STOMP 1.2].
 
+.Install and configure a messaging broker
+[NOTE]
+====
+Before using a STOMP client, a messaging broker must be installed and
+configured to be able to exchange messages.
+
+In this book, we use Apache ActiveMQ as the messaging broker. The <<appendix_activemq>> shows how to install and configure ActiveMQ.
+
+Once ActiveMQ is started, it accepts STOMP connections on the +61613+ port.
+====
+
 === StompKit
 
 To use STOMP on iOS, we will use the StompKit library that implements the STOMP protocol in a modern event-driven way using ARC, Grand Central Dispatch and blocks.
@@ -179,7 +190,7 @@ Now that we have the identifier of the truck, the next step is to retrieve the g
 
 [NOTE]
 ====
-The next sections deal with setting up the framework and writing code to retrieve the GPS data from the device. This is unrelated to messaging and you can skip them if you only want to read how to send and receive messages. Still, we thought the messaging code would be more meaningful if it was using real data instead of generating random data that could not be exploited. By using GPS data instead, we will be able to build a mobile app that display these data in the next chapter.
+The next sections deal with setting up the framework and writing code to retrieve the GPS data from the device and display them. This is unrelated to messaging and you can skip them if you only want to read how to send and receive messages. Still, we thought the messaging code would be more meaningful if it was using real data instead of generating random data that could not be exploited. By using GPS data instead, we will be able to build a mobile app that display these data in the next chapter.
 ====
 
 === Display the truck position
@@ -398,22 +409,26 @@ We must import its header file in **`MWMViewController.m`** and add a +STOMPClie
 The +client+ property will be used to communicate with the STOMP broker after it is created and connected.
 
 The +client+ variable is created when the controller's view is loaded in MWMViewController's +viewDidLoad+ method implementation. To create it, we need to pass the host and port of the STOMP broker to connect to.
-These information depends on the broker you are using. If you have configured ActiveMQ as described in the appendix on your machine, we can connect to it using **`localhost`** as its host and **`61613`** as its port.
+These information depends on the broker you are using. If you have configured ActiveMQ as described in the appendix on your machine, we can connect to it using **`61613`** as its port.
+
+The host will depend on your network configuration. On my local network, my server has the IP address **`192.168.1.25`**. I will use this value for the examples but you might replace this by your own server address to run the applications.
 
 ====
 [source, objc]
 ----
-#define kHost     @"localhost"
+#define kHost     @"192.168.1.25"
 #define kPort     61613
 
 ...
 
-@implementation TTViewController
+@implementation MWMViewController
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
+    self.truckID = [UIDevice currentDevice].identifierForVendor.UUIDString;
+
     self.client = [[STOMPClient alloc] initWithHost:kHost port:kPort];
 }
 
@@ -530,13 +545,11 @@ We now have a connection to the STOMP broker and we receive the device's geoloca
 
 TODO
 
-[[ex_mobile_stomp_10]]
-.MWMViewController.m continued
 ====
 [source,objc]
 ----
-- (void)sendLocation:(CLLocation *) location {
-    
+- (void)sendLocation:(CLLocation *)location
+{
     // build a static NSDateFormatter to display the current date in ISO-8601
     static NSDateFormatter *dateFormatter = nil;
     static dispatch_once_t onceToken;
@@ -547,38 +560,40 @@ TODO
     
     // build a dictionary containing all the information to send
     NSDictionary *dict = @{
-                           @"truck": self.truckID,
-                            @"lat": [NSNumber numberWithDouble:location.coordinate.latitude],
-                           @"lng": [NSNumber numberWithDouble:location.coordinate.longitude],
-                           @"ts": [dateFormatter stringFromDate:location.timestamp]
-                         };
+        @"truck": self.truckID,
+        @"lat": [NSNumber numberWithDouble:location.coordinate.latitude],
+        @"lng": [NSNumber numberWithDouble:location.coordinate.longitude],
+        @"ts": [dateFormatter stringFromDate:location.timestamp]
+    };
     // create a JSON string from this dictionary
     NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
     NSString *body =[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    
-    [self.client sendTo:@"/topic/truck.position" body:body];
+
+    // send the message to the truck's topic
+    NSString *destination = [NSString stringWithFormat:@"/topic/truck.%@.position", self.truckID];
+    [self.client sendTo:destination
+                   body:body];
 }
 ----
 ====
 
 We need to call this method every time we receive an updated location in +locationManager:didUpdateToLocation:fromLocation:+
 
-[[ex_mobile_stomp_11]]
-.MWMViewController.m continued
 ====
 [source,objc]
 ----
 - (void)locationManager:(CLLocationManager *)manager
     didUpdateToLocation:(CLLocation *)newLocation
-           fromLocation:(CLLocation *)oldLocation {
-    // if the location is older than 30s ignore
+           fromLocation:(CLLocation *)oldLocation
+{
+    // ignore if the location is older than 30s
     if (fabs([newLocation.timestamp timeIntervalSinceDate:[NSDate date]]) > 30) {
         return;
     }
     
     CLLocationCoordinate2D coord = [newLocation coordinate];
     self.currentPositionLabel.text = [NSString stringWithFormat:@"φ:%.4F, λ:%.4F", coord.latitude, coord.longitude];
-    
+
     // send a message with the location data
     [self sendLocation:newLocation];
 }
