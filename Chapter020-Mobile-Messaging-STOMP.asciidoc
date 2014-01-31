@@ -540,10 +540,52 @@ If we run the application, we see logs in Xcode that shows the connection proces
 
 We now have a connection to the STOMP broker and we receive the device's geolocation data from the location manager. The last step to do is to send these data to the topic associated to the truck ID.
 
+As we described in <<ch_introduction_example>>, each truck's device will send its location on a topic destination named after the truck ID.
+
+[source,objc]
+----
+NSString *destination = [NSString stringWithFormat:@"/topic/truck.%@.position", self.truckID];
+----
+
+The message representation is a JSON string that contains the location coordinates, the timestamp and the truck ID.
+We build a NSDictionary from these data and serialize it as a JSON string:
+
+[source,objc]
+----
+NSDictionary *dict = @{
+    @"truck": self.truckID,
+    @"lat": [NSNumber numberWithDouble:location.coordinate.latitude],
+    @"lng": [NSNumber numberWithDouble:location.coordinate.longitude],
+    @"ts": [dateFormatter stringFromDate:location.timestamp]
+};
+NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
+NSString *body =[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+----
+
+This body follows the JSON format. We will add a +content-type+ header in the STOMP message and set it to +application/json; charset=utf-8+ to let the STOMP brokers and the eventual consumers know that this message's body can be read as JSON string encoded with UTF-8.
+Without such a +content-type+, the consumers would not necessarily know how to _read_ the data in the body and interpret them.
 
 
+[source,objc]
+----
+NSDictionary *headers = @{
+    @"content-type": @"application/json; charset=utf-8"
+};
+----
 
-TODO
+We now have the +destination+, +headers+, and +body+ to send in the message.
+Last step is to use the +client+'s +sendTo:headers:body+ method to do this:
+
+[source,objc]
+----
+// send the message
+[self.client sendTo:destination
+            headers:headers
+               body:body];
+----
+
+We will put all these different steps in a single method name +sendLocation:+
+that takes a +CLLocation+ object:
 
 ====
 [source,objc]
@@ -557,7 +599,10 @@ TODO
         dateFormatter = [[NSDateFormatter alloc] init];
         dateFormatter.dateFormat = @"yyyy-MM-d'T'HH:mm:ssZZZZZ";
     });
-    
+
+    // send the message to the truck's topic
+    NSString *destination = [NSString stringWithFormat:@"/topic/truck.%@.position", self.truckID];
+
     // build a dictionary containing all the information to send
     NSDictionary *dict = @{
         @"truck": self.truckID,
@@ -569,13 +614,18 @@ TODO
     NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
     NSString *body =[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 
-    // send the message to the truck's topic
-    NSString *destination = [NSString stringWithFormat:@"/topic/truck.%@.position", self.truckID];
+    NSDictionary *headers = @{
+        @"content-type": @"application/json; charset=utf-8"
+    };
+    
+    // send the message
     [self.client sendTo:destination
+                headers:headers
                    body:body];
 }
 ----
 ====
+
 
 We need to call this method every time we receive an updated location in +locationManager:didUpdateToLocation:fromLocation:+
 
@@ -599,6 +649,93 @@ We need to call this method every time we receive an updated location in +locati
 }
 ----
 ====
+
+If we run the application, a STOMP message will be sent every time the location manager updates the device's location.
+
+How can we check that messages are effectively sent?
+
+We will confirm it at three different stages:
+
+* display debug log on the device to check that messages are sent
+* use ActiveMQ consoles to check that it effectively handled the sent messages
+* write the simplest STOMP consumer that can receive these messages.
+
+#### Display StompKit debug log.
+
+Every time the StompKit library sends a message to a STOMP broker, it logs the STOMP frame that is sent.
+
+To display them in the console, edit the file named +StompKit.m+ in Xcode that is under the +Pods+ project (its full path is +Pods+ > +Pods+ > +StompKit+ > +StompKit.m+ in the Project Navigator view) and change the macro to activate logs by replacing the +0+ by **`1`**.
+
+[source,objc]
+----
+#if 1 // set to 1 to enable logs
+----
+
+If we restart the application, we now see debug statements in Xcode's Debug console:
+
+----
+2014-01-31 10:48:56.750 TruckTracker[2460:70b] >>> SEND
+destination:/topic/truck.66284AB0-C266-4A4D-9443-FEFB5774FA3C.position
+content-type:application/json; charset=utf-8
+content-length:118
+
+{"lng":-122.0307334,"lat":37.33154242,"ts":"2014-01-31T10:48:56+01:00","truck":"
+66284AB0-C266-4A4D-9443-FEFB5774FA3C"}
+...
+----
+
+This confirms that STOMP messages are effectively sent by the application.
+
+#### ActiveMQ admin console
+
+#### A Simple STOMP consumer
+
+When I presented STOMP, I wrote that the protocol is so simple that a +telnet+ client _is_ a STOMP client.
+
+Let's prove that by writing the simplest STOMP client that will consume the messages sent by the application.
+
+----
+CONNECT
+accept-version:1.2
+
+^@
+
+CONNECTED
+heart-beat:0,0
+session:ID:retsina.local-64018-1390843083020-2:7
+server:ActiveMQ/5.9.0
+version:1.2
+
+SUBSCRIBE
+destination:/topic/truck.66284AB0-C266-4A4D-9443-FEFB5774FA3C.position
+id:mysub
+
+^@
+----
+
+As soon as we sent this command to the STOMP broker, we will receive +MESSAGE+ frames that corresponds to the messages sent by the application:
+
+----
+MESSAGE
+content-type:application/json; charset=utf-8
+message-id:ID\cretsina.local-64018-1390843083020-2\c6\c-1\c1\c356
+destination:/topic/truck.66284AB0-C266-4A4D-9443-FEFB5774FA3C.position
+timestamp:1391162082774
+expires:0
+subscription:mysub
+content-length:119
+priority:4
+
+{"lng":-122.02859586,"lat":37.33770217,"ts":"2014-01-31T10:54:42+01:00","truck":"66284AB0-C266-4A4D-9443-FEFB5774FA3C"}
+----
+
+[NOTE]
+====
+We can see that there are more headers in the consumed messages that in the messages we sent (which only had +content-type+ and +content-lenght+).
+These headers are added by the STOMP broker and provides additional metadata about the messages. We will explore some of them later in the <<ch_advanced_stomp>> and <<ch_beyond_stomp>> chapters.
+====
+
+
 
 === Create the orders table
 
