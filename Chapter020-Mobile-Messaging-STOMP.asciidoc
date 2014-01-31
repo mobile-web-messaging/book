@@ -732,7 +732,7 @@ priority:4
 [NOTE]
 ====
 We can see that there are more headers in the consumed messages that in the messages we sent (which only had +content-type+ and +content-lenght+).
-These headers are added by the STOMP broker and provides additional metadata about the messages. We will explore some of them later in the <<ch_advanced_stomp>> and <<ch_beyond_stomp>> chapters.
+These headers are added by the STOMP broker and provides additional metadata about the messages. We will explore some of them later in <<ch_advanced_stomp>> and <<ch_beyond_stomp>>.
 ====
 
 

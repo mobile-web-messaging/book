@@ -8,8 +8,8 @@ support STOMP and MQTT protocols.
 
 === Download and Installation
 
-Apache ActiveMQ latest release can be downloaded for its
-http://activemq.apache.org/activemq-580-release.html[download page] and the
+Apache ActiveMQ latest release at the time of writing this book is 5.9.0.It  can be downloaded for its
+http://activemq.apache.org/activemq-590-release.html[download page] and the
 http://activemq.apache.org/getting-started.html[getting started page] contains all the information to install it.
 
 For our setup, ActiveMQ will be installed in the directory +~/mobilewebmsg/mybroker+.
@@ -18,8 +18,8 @@ Once you have download the archive for ActiveMQ, it can be installed and started
 
 [source,sh]
 ----
-$ tar zxvf apache-activemq-5.8.0-bin.tar.gz
-$ cd apache-activemq-5.8.0
+$ tar zxvf apache-activemq-5.9.0-bin.tar.gz
+$ cd apache-activemq-5.9.0
 $ mkdir ~/mobilewebmsg/
 $ ./bin/activemq create ~/mobilewebmsg/mybroker
 ...
@@ -41,6 +41,49 @@ $ ./bin/mybroker stop
 Stopping broker: mybroker
 .... FINISHED
 ----
+
+=== Administration Web Console
+
+When the broker is started, it can be administrated and managed using its Web console running at http://localhost:8161/hawtio[http://localhost:8161/hawtio]. Out of the box, you can log into the admin console using the **`admin`** / **`admin`** credentials.
+
+Once you are logged in, you can check the +mybroker+ resource in the ActiveMQ tree.
+
+[[img_app_activemq_1]]
+.The mybroker Resource in ActiveMQ Web Console
+image::images/AppendixA/ActiveMQ_console.png["The mybroker resource in ActiveMQ Web console"]
+
+One interesting attribute is +transportConnectors+. If you click on the attribute value, a pop up screen opens and display all the protocols supported by ActiveMQ out of the box.
+
+[[img_app_activemq_2]]
+.ActiveMQ Default Transport Connectors.
+image::images/AppendixA/transport_connectors.png["ActiveMQ Default Transport Connectors"]
+
+For this book, the important ones are:
+
+* Stomp: +stomp://jeff.local:61613+
+* Mqtt: +mqtt://jeff.local:1883+
+* Ws: +ws://jeff.local:61614+
+
+They means that to connect to ActiveMQ using the STOMP protocol we must connect to the +jeff.local+ host - this is the name of my machine on my local network, your ActiveMQ installation will have another value - on the port +61613+.
+
+Likewise, to connect to ActiveMQ using the MQTT protocol, we must use again the +jeff.local+ host but on the port +1883+ this time.
+
+Finally, there is also the Web Socket connector that must be used to connect from a Web browser, _regardless_ of the messaging protocol that we use.
+We will use to connect to the +61614+ port from the Web browser for our Web applications that are using either STOMP or MQTT.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 [[app_activemq_security]]
 === Security Configuration
@@ -113,90 +156,3 @@ ActiveMQ is running (pid '6664')
 ----
 
 With this setting, only authenticated user identified by the name +user+ and the password +password+ will be able to connect to ActiveMQ.
-
-[[app_activemq_stomp]]
-=== STOMP Configuration
-
-STOMP protocol is enabled in ActiveMQ by adding a transport connector to its configuration (as explained in full details in its
-http://activemq.apache.org/stomp.html[STOMP configuration]).
-
-Edit the +conf/activemq.xml+ file to add a +transport+ connector for STOMP:
-
-[source,sh]
-----
-$ cd ~/mobilewebmsg/mybroker
-$ vim ./conf/activemq.xml
-...
-<transportConnectors>
-   ...
-   <transportConnector name="stomp" uri="stomp://localhost:61613"/>
-   ...
-</transportConnectors>
-----
-
-After ActiveMQ is restarted, it accepts STOMP connections at the URL +stomp://localhost:61613+.
-
-[source,sh]
-----
-$ ./bin/mybroker restart
-...
-ActiveMQ is running (pid '6664')
-$ tail data/activemq.log
-...
-2013-06-14 19:44:52,797 | INFO  | Listening for connections at: stomp://localhost:61613 | org.apache.activemq.transport.TransportServerThreadSupport | main
-2013-06-14 19:44:52,797 | INFO  | Connector stomp Started | org.apache.activemq.broker.TransportConnector | main
-...
-----
-
-[[app_activemq_mqtt]]
-=== MQTT Configuration
-
-Like for STOMP, MQTT protocol can be added to ActiveMQ by adding a transport connector to its configuration (as explained in full details in its
-http://activemq.apache.org/mqtt.html[MQTT configuration]).
-
-[source,sh]
-----
-$ cd ~/mobilewebmsg/mybroker
-$ vim ./conf/activemq.xml
-...
-<transportConnectors>
-    ...
-    <transportConnector name="mqtt" uri="mqtt://localhost:1883"/>
-    ...
-</transportConnectors>
-$ ./bin/mybroker restart
-...
-ActiveMQ is running (pid '6664')
-----
-
-After ActiveMQ is restarted, it accepts MQTT connections at the URL +mqtt://localhost:1883+.
-
-[source,sh]
-----
-2013-06-14 19:44:52,799 | INFO  | Listening for connections at: mqtt://localhost:1883 | org.apache.activemq.transport.TransportServerThreadSupport | main
-2013-06-14 19:44:52,800 | INFO  | Connector mqtt Started | org.apache.activemq.broker.TransportConnector | main
-----
-
-[[app_activemq_websockets]]
-=== Web Sockets Configuration
-
-The Web Sockets  protocol is enabled in ActiveMQ by adding a transport connector to its configuration (as explained in full details in its
-http://activemq.apache.org/websockets.html[Web Sockets configuration page]).
-
-[source,sh]
-----
-$ vim ./conf/activemq.xml
-...
-<transportConnectors>
-   ...
-   <transportConnector name="websocket" uri="ws://0.0.0.0:61614"/>
-   ...
-</transportConnectors>
-----
-
-After ActiveMQ is restarted, it accepts Web Sockets connection at the URL +ws://0.0.0.0:61614+.
-
-[source,sh]
-----
-2013-06-14 19:55:01,490 | INFO  | Connector websocket Started | org.apache.activemq.broker.TransportConnector | main
-----
