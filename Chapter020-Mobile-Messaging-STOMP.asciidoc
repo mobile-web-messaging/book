@@ -903,3 +903,194 @@ With these methods implemented, the table will displayed all the orders that are
 
 Now that we are ready to display the orders in the table, next step is to subscribe to the truck's order destination to consume STOMP messages containing the orders and put them in the +orders+ array.
 
+To consume messages, a STOMP client must:
+
+. connect to the broker 
+. subscribe to the destination it wants to consume messages from.
+
+
+==== Subscribe to a STOMP destination
+
+We already took care of step (1) by calling +STOMPClient+'s +connectWithHeaders:completionHandler:+ in +MWMViewController+'s +connect+ method.
+
+Step (2) is handled in STOMPKit by calling +STOMPClient+'s +subscribeTo:headers:messageHandler:+ method.
+
+This method takes 3 parameters:
+
+* the +destination+ that the client wants to consume from. In our case it is the destination for the truck's orders.
+* a dictionary of +headers+ to pass additional metadata to the subscription. Since we do not have any such header for the time being, we will pass a empty dictionary
+* a +STOMPMessageHandler+ block with a +STOMPMessage+ parameter that will be called every time the broker sends a messages to the client to consume it. In our case, we will have to create a dictionary from the JSON string contained in the message body and add the order to the +orders+ array.
+
+We will add a method named +subscribe+ to the +MWMViewController+ implementation:
+
+[source, objc]
+----
+    // susbscribes to the truck's orders queue:
+    NSString *destination = [NSString stringWithFormat:@"/queue/truck.%@.orders", self.truckID];
+    
+    NSLog(@"subscribing to %@", destination);
+    subscription = [self.client subscribeTo:destination
+                                    headers:@{}
+                             messageHandler:^(STOMPMessage *message) {
+        // called every time a message is consumed from the orders destination
+        NSLog(@"received message %@", message);
+        NSData *data = [message.body dataUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data
+                                                             options:NSJSONReadingMutableContainers
+                                                               error:nil];
+        NSString *order = dict[@"order"];
+        NSLog(@"adding order = %@", order);
+        [orders addObject:order];
+        // TODO reload the table
+    }];
+}
+----
+
++subscription+ is a object returned by the +subscribe+ method that identifies the STOMP subscription and can be used to _unsubscribe_.
+
+We declare this object in the +MWMViewController+'s implementation.
+
+[source,objc]
+----
+@implementation MWMViewController
+
+STOMPSubscription *subscription;
+----
+
+When do we call this +subscribe+ method? As soon as we are connected to the STOMP broker. We need to call it in the +connect+ method from the +completionHandler+ block that will be called when the client is _successfully_ connected to the STOMP broker:
+
+[source,objc]
+----
+#pragma mark - Messaging
+
+- (void)connect
+{
+    NSLog(@"Connecting...");
+    [self.client connectWithHeaders:@{ @"client-id": self.truckID}
+                  completionHandler:^(STOMPFrame *connectedFrame, NSError *error) {
+                      if (error) {
+                          // We have not been able to connect to the broker.
+                          // Let's log the error
+                          NSLog(@"Error during connection: %@", error);
+                      } else {
+                          // we are connected to the STOMP broker without an error. Now we can subscribe to the destination
+                          NSLog(@"Connected");
+                          [self subscribe];
+                      }
+                  }];
+    // when the method returns, we can not assume that the client is connected
+}
+----
+
+==== Unsubscribe from the destination
+
+The application will consume messages from the destination as long as it remains connected to the STOMP broker.
+
+We do not need to explicitly unsubscribe from the destination when we disconnect from the broker but it is a good practice to do so. To unsubscribe, we just need to call the +unsubscribe+ method on the +subscription+ object that was created when we subscribed. We will unsubscribe just prior to disconnecting from the broker in the +viewDidDisappear:+ method.
+
+
+[source,objc]
+----
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [self stopUpdatingCurrentLocation];
+    [subscription unsubscribe];
+    [self disconnect];
+}
+----
+
+The application is now ready to consume messages. Let's start it and check that it is working.
+
+Run the application in the iOS simulator or on your device.
+
+Go to the ActiveMQ admin console and browse to the truck order's queue. In my case, its name is +truck.4A42547A-CED5-4F0B-9504-BD1496F69C25.orders+.
+
+Fill the text area with a JSON String that conforms to the message representation we decided in <<ch_introduction_example_message>>.
+
+----
+{
+  "order": "Go to warehouse #1"
+}
+----
+
+[[img_mobile_stomp_21]]
+.Send a Message using ActiveMQ Admin Console.
+image::images/Chapter020/activemq_admin_send_message.png["Send a Message using ActiveMQ Admin Console"]
+
+Click on the +Send Message+ button to send the message on the destination.
+
+We see in the application log that a STOMP message has been received and that the +order+ was extracted from the message's body.
+
+----
+2014-02-04 17:41:38.062 TruckTracker[81867:3a03] received message MESSAGE
+priority:0
+destination:/queue/truck.4A42547A-CED5-4F0B-9504-BD1496F69C25.orders
+timestamp:1391532089574
+message-id:ID\cjeff.local-63055-1391518653216-62\c1\c1\c1\c1
+expires:0
+subscription:sub-0
+
+{  "order": "Go to warehouse #1"}
+2014-02-04 17:41:38.063 TruckTracker[81867:3a03] adding order = Go to warehouse #1
+----
+
+However, nothing is displayed in the application. We forgot to reload the table to display the received orders.
+
+Let's fix that by calling +reloadData+ on the +orderTables+ property from the +STOMPMessageHandler+ block.
+
+[source,objc]
+----
+- (void)subscribe
+{
+    // susbscribes to the truck's orders queue:
+    NSString *destination = [NSString stringWithFormat:@"/queue/truck.%@.orders", self.truckID];
+    
+    NSLog(@"subscribing to %@", destination);
+    subscription = [self.client subscribeTo:destination
+                                    headers:@{}
+                             messageHandler:^(STOMPMessage *message) {
+        // called every time a message is consumed from the orders destination
+        NSLog(@"received message %@", message);
+        NSData *data = [message.body dataUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data
+                                                             options:NSJSONReadingMutableContainers
+                                                               error:nil];
+        NSString *order = dict[@"order"];
+        NSLog(@"adding order = %@", order);
+        [orders addObject:order];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.orderTables reloadData];
+        });
+    }];
+}
+----
+
+Note that we did not call directly +[self.orderTables reloadData];+ from the +STOMPMessageHandler+ block.
+
+STOMPKit uses Grand-Central Dispatch global queue to handle the communication between the client and the STOMP brokers. The +STOMPMessageHandler+ block is called on that queue. However any code that deals with UIKit (such as reloading the +orderTables+) _must_ be executed on the queue bound to the main thread. This is why we must wrap the +reloadData+ call into a block executed on the main queue.
+
+If we restart the application and send another message on the truck's order queue with ActiveMQ admin console, the table will display the order as soon as it is received.
+
+[[img_mobile_stomp_22]]
+.The Received Order is Displayed in the Table.
+image::images/Chapter020/received_message.png["The Received Order is Displayed in the Table"]
+
+=== Summary
+
+In this chapter, we learn to use +StompKit+ to send and receive STOMP messages from an iOS application.
+
+To send a message, the application must:
+
+. connect to the STOMP broker
+. send the message to the destination
+
+To consume a message, the application must
+
+. connect to the STOMP broker
+. subscribe to the destination and pass a block that is called every time a message is received. The block is executed on GCD global queue. If there are any code that changes the user interface, it must be wrapped in a block executed by the main queue instead.
+
+
+
+
+
+
