@@ -810,19 +810,19 @@ Open the MWMViewController.m` file, make the +MWMViewController+ interface confo
 ----
 @interface MWMViewController () <CLLocationManagerDelegate, UITableViewDataSource, UITableViewDelegate>
 
-@property (weak, nonatomic) IBOutlet UITableView *orderTables;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 @end
 ----
 ====
 
-We then bind this property to the table. Open the **`Main.storyboard`** and control-click on +View Controller+ to see its connection panel. Drag from +orderTables+ to the table to connect it.
+We then bind this property to the table. Open the **`Main.storyboard`** and control-click on +View Controller+ to see its connection panel. Drag from +tableView+ to the table to connect it.
 
 [[img_mobile_stomp_18]]
 .Connect the table view to the outlet property.
 image::images/Chapter020/table_view_connection.png["Connect the table view to the outlet property."]
 
-The table is now connected to the +orderTables+ property. 
+The table is now connected to the +tableView+ property. 
 
 We also need to connect the +View Controller+ to the +Table View+ and declare it as it +dataSource+ and +delegate+.
 
@@ -856,6 +856,7 @@ The controller is also the +dataSource+ of the table. We will keep a list of the
 ----
 @implementation MWMViewController
 
+// the orders are stored in an array of NSString.
 NSMutableArray *orders;
 
 - (void)viewDidLoad
@@ -1036,7 +1037,7 @@ subscription:sub-0
 
 However, nothing is displayed in the application. We forgot to reload the table to display the received orders.
 
-Let's fix that by calling +reloadData+ on the +orderTables+ property from the +STOMPMessageHandler+ block.
+Let's fix that by calling +reloadData+ on the +tableView+ property from the +STOMPMessageHandler+ block.
 
 [source,objc]
 ----
@@ -1059,15 +1060,15 @@ Let's fix that by calling +reloadData+ on the +orderTables+ property from the +S
         NSLog(@"adding order = %@", order);
         [orders addObject:order];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.orderTables reloadData];
+            [self.tableView reloadData];
         });
     }];
 }
 ----
 
-Note that we did not call directly +[self.orderTables reloadData];+ from the +STOMPMessageHandler+ block.
+Note that we did not call directly +[self.tableView reloadData];+ from the +STOMPMessageHandler+ block.
 
-STOMPKit uses Grand-Central Dispatch global queue to handle the communication between the client and the STOMP brokers. The +STOMPMessageHandler+ block is called on that queue. However any code that deals with UIKit (such as reloading the +orderTables+) _must_ be executed on the queue bound to the main thread. This is why we must wrap the +reloadData+ call into a block executed on the main queue.
+STOMPKit uses Grand-Central Dispatch global queue to handle the communication between the client and the STOMP brokers. The +STOMPMessageHandler+ block is called on that queue. However any code that deals with UIKit (such as reloading the +tableView+) _must_ be executed on the queue bound to the main thread. This is why we must wrap the +reloadData+ call into a block executed on the main queue.
 
 If we restart the application and send another message on the truck's order queue with ActiveMQ admin console, the table will display the order as soon as it is received.
 
