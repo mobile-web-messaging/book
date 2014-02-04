@@ -216,7 +216,7 @@ Open the **MWMViewController.m`** file and add a property to the **MWMViewContro
 @property (weak, nonatomic) IBOutlet UILabel *currentPositionLabel;
 ----
 
-We then we bind this property to the label. Open the **`Main.storyboard`** and control-click on +View Controller+ to see its connection panel. Drag from +currentPositionLabel+ to the label to connect it.
+We then bind this property to the label. Open the **`Main.storyboard`** and control-click on +View Controller+ to see its connection panel. Drag from +currentPositionLabel+ to the label to connect it.
 
 [[img_mobile_stomp_12]]
 .Connect the label to the outlet property.
@@ -626,8 +626,7 @@ that takes a +CLLocation+ object:
 ----
 ====
 
-
-We need to call this method every time we receive an updated location in +locationManager:didUpdateToLocation:fromLocation:+
+Next step is to call this method every time we receive an updated location in the +locationManager:didUpdateToLocation:fromLocation:+ method.
 
 ====
 [source,objc]
@@ -650,7 +649,7 @@ We need to call this method every time we receive an updated location in +locati
 ----
 ====
 
-If we run the application, a STOMP message will be sent every time the location manager updates the device's location.
+When we run the application, a STOMP message will be sent every time the location manager updates the device's location.
 
 How can we check that messages are effectively sent?
 
@@ -694,21 +693,64 @@ When I presented STOMP, I wrote that the protocol is so simple that a +telnet+ c
 
 Let's prove that by writing the simplest STOMP client that will consume the messages sent by the application.
 
-----
-CONNECT
-accept-version:1.2
+We need to open a +telnet+ client to connect to the broker host on the +61613+ port. Since I am on the same machine than the broker, I will simply connect to +localhost+:
 
-^@
+.Connection with a telnet client
+====
+++++
+<screen>
+$ <userinput>telnet localhost 61613</userinput>
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+</screen>
+++++
+====
 
+Once the client is connected, we must connect to the broker to open a STOMP connection (as we did in the application using +STOMPClient+'s +connectWithHeaders:completionHandler:+ method).
+
+.Connect to a STOMP broker
+====
+++++
+<screen>
+<userinput>CONNECT
+
+</userinput>^@
+</screen>
+++++
+====
+
+[CAUTION]
+====
+A STOMP frame must be ended by a NULL octet.
+
+The +^@+ is the ASCII character for NULL octet. Type +ctrl + @+ to enter it.
+====
+
+Note also that there is a blank line between the +CONNECT+ line and the NULL octet. This blank line is mandatory to separate the command name and the headers from the beginning of the optional payload (that is not present in the +CONNECT+ frame).
+
+Once you type +ctrl + @+, the messaging broker will process the +CONNECT+ frame
+and reply with a +CONNECTED+ frame:
+
+.Receive a connection confirmation
+====
+++++
+<screen>
 CONNECTED
 heart-beat:0,0
-session:ID:retsina.local-64018-1390843083020-2:7
+session:ID:jeff.local-63055-1391518653216-2:23
 server:ActiveMQ/5.9.0
 version:1.2
+</screen>
+++++
+====
 
+The STOMP connection is now established and the telnet client can now exchange messages with the broker. We are only interested to consume messages sent by the application on the truck's position topic. 
+The Truck ID is displayed on the application screen. You will have to adapt the command to use your own truck ID to receive its message.
+
+----
 SUBSCRIBE
 destination:/topic/truck.66284AB0-C266-4A4D-9443-FEFB5774FA3C.position
-id:mysub
 
 ^@
 ----
@@ -735,12 +777,129 @@ We can see that there are more headers in the consumed messages that in the mess
 These headers are added by the STOMP broker and provides additional metadata about the messages. We will explore some of them later in <<ch_advanced_stomp>> and <<ch_beyond_stomp>>.
 ====
 
-
+At this stage, we have a mobile application that is broadcasting its position by sending messages to a STOMP destination.
 
 === Create the orders table
 
-TODO
+We will now code the second part of the mobile applications that will receive orders for the truck and display them in a table.
+
+Let's write the graphical part first by adding a +UITable+ to the user interface.
+
+Click on +Main.storyboard+ to open it. From the +Object+ library, drag a +Table View+ on the View's window. Place it below the +currentPositionLable+ and make it as wide as possible.
+
+[[img_mobile_stomp_16]]
+.Add a Table View
+image::images/Chapter020/table_view.png["Add a Table View"]
+
+From the +Object+ library, drag a +Table View Cell+ inside the +Table View+.
+
+[[img_mobile_stomp_17]]
+.Add a Table View Cell
+image::images/Chapter020/table_view_cell.png["Add a Table View Cell"]
+
+We will change the +Table View Cell+ properties by setting its +Style+ to +Basic+ and its +Identifier+ to +TruckOrderCell+.
+
+[[img_mobile_stomp_18]]
+.Edit the Table View Cell Properties
+image::images/Chapter020/table_view_cell_properties.png["Edit the Table View Cell Properties"]
+
+Open the MWMViewController.m` file, make the +MWMViewController+ interface conform to the +UITableViewDataSource+ and +UITableViewDelegate+ protocols and add a property to bind the table.
+
+====
+[source, objc]
+----
+@interface MWMViewController () <CLLocationManagerDelegate, UITableViewDataSource, UITableViewDelegate>
+
+@property (weak, nonatomic) IBOutlet UITableView *orderTables;
+
+@end
+----
+====
+
+We then bind this property to the table. Open the **`Main.storyboard`** and control-click on +View Controller+ to see its connection panel. Drag from +orderTables+ to the table to connect it.
+
+[[img_mobile_stomp_18]]
+.Connect the table view to the outlet property.
+image::images/Chapter020/table_view_connection.png["Connect the table view to the outlet property."]
+
+The table is now connected to the +orderTables+ property. 
+
+We also need to connect the +View Controller+ to the +Table View+ and declare it as it +dataSource+ and +delegate+.
+
+Open the **`Main.storyboard`** and control-click on +Table View+ to see its connection panel. Drag from +dataSource+ to the +View Controller+ to connect it.
+
+[[img_mobile_stomp_19]]
+.Connect the view controller to the table view's dataSource.
+image::images/Chapter020/table_view_dataSource_connection.png["Connect the view controller to the table view's dataSource"]
+
+We also connect the +View Controller+ to the +Table View+'s +delegate+ property.
+
+[[img_mobile_stomp_20]]
+.Connect the view controller to the table view's dataSource.
+image::images/Chapter020/table_view_delegate_connection.png["Connect the view controller to the table view's dataSource"]
+
+The graphical objects are now bound to the properties. Next step is to make the +MWMViewController+ comply to the +UITableViewDataSource+ and +UITableViewDelegate+ protocols. 
+
+The table will only display the orders. As there is no interaction with the table, we do not need to add any methods from the +UITableViewDelegate+ 
+protocol. Let's just add a comment to the +MWMViewController+ implementation to remember it
+
+[source, objc]
+----
+#pragma mark - UITableViewDelegate
+
+// no delegate actions
+----
+
+The controller is also the +dataSource+ of the table. We will keep a list of the orders in memory in an array. Let's add a +orders+ array to the +MWMViewController+ implementation and instatiate it in its +viewDidLoad+ method.
+
+[source, objc]
+----
+@implementation MWMViewController
+
+NSMutableArray *orders;
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+
+    self.truckID = [UIDevice currentDevice].identifierForVendor.UUIDString;
+
+    self.client = [[STOMPClient alloc] initWithHost:kHost port:kPort];
+    
+    orders = [[NSMutableArray alloc] init];
+}
+
+----
+
+This +orders+ array will be used as the source of data for the table.
+Let's implement the required +UITableViewDataSource+ methods.
+
+[source, objc]
+----
+#pragma mark - UITableViewDataSource
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return [orders count];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView
+         cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // this identifier must be the same that was set in the
+    // Table View Cell properties in the story board.
+    static NSString *CellIdentifier = @"TruckOrderCell";
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    
+    cell.textLabel.text = [orders objectAtIndex:indexPath.row];
+    return cell;
+}
+----
+
+With these methods implemented, the table will displayed all the orders that are stored in the +orders+ array.
 
 === Receive Messages With STOMP
 
-TODO
+Now that we are ready to display the orders in the table, next step is to subscribe to the truck's order destination to consume STOMP messages containing the orders and put them in the +orders+ array.
+
