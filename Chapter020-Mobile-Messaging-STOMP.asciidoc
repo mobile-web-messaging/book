@@ -659,7 +659,7 @@ We will confirm it at three different stages:
 * use ActiveMQ consoles to check that it effectively handled the sent messages
 * write the simplest STOMP consumer that can receive these messages.
 
-#### Display StompKit debug log.
+==== Display StompKit debug log.
 
 Every time the StompKit library sends a message to a STOMP broker, it logs the STOMP frame that is sent.
 
@@ -685,9 +685,9 @@ content-length:118
 
 This confirms that STOMP messages are effectively sent by the application.
 
-#### ActiveMQ admin console
+==== ActiveMQ admin console
 
-#### A Simple STOMP consumer
+==== A Simple STOMP consumer
 
 When I presented STOMP, I wrote that the protocol is so simple that a +telnet+ client _is_ a STOMP client.
 
