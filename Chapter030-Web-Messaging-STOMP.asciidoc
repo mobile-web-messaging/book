@@ -236,7 +236,7 @@ The subscription code becomes simpler:
 
 [NOTE]
 ====
-Since the semantic of STOMP destinations are specific to the STOMP broker, you have to check with its documentation to know if they support wildcard destinations or similar concepts. If it does not, you have to revert to the first idea to fetch the list of trucks and subscribe to each of the destination... or you another STOMP broker that support this feature.
+Since the semantic of STOMP destinations are specific to the STOMP broker, you have to check with its documentation to know if they support wildcard destinations or similar concepts. If it does not, you have to revert to the first idea to fetch the list of trucks and subscribe to each of the destination... or use another STOMP broker that supports this feature.
 ====
 
 Since we no longer know _a priori_ which truck position we are receiving, how do we determine that.
