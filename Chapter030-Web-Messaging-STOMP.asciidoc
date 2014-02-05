@@ -1,4 +1,4 @@
-[[ch_web_messaging_stomp]]
+[[ch_web_stomp]]
 == Web Messaging With STOMP
 
 [role="lead"]
@@ -37,39 +37,47 @@ Let's bootstrap the Web application by creating a *__control.html__* page.
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta content="width=device-width" name="viewport">
     <meta charset="utf-8">
-    <title>Chat Example Using STOMP Over WebSockets</title>
-
-
-    <style type="text/css">
-      body { padding-top: 40px; }
-      </style>
+    <title>Truck Tracker Control Center</title>
   </head>
-
   <body>
-    
-    <!-- Form to connect/disconnect from the broker -->
-    <div id="connect"></div>
-    
-    <!-- Div block to display a map using Google Maps will all the position received from the trucks -->
-    <div id="map-canvas"></div>
+    <h1>Truck Tracker Control Center</h1>
+      <form id='connect_form'>
+        <fieldset>
+          <label>WebSocket URL</label>
+          <input name=url id='connect_url' value='ws://localhost:61614' type="text">
+          <button id='connect_button' type="submit">Connect</button>
+          <button type="button" id='disconnect_button' disabled>Disconnect</button>
+        </fieldset>
+      </form>
+      <form id="order_form" style="display: none;">
+        <fieldset>
+          <legend>Send order to a truck</legend>
+          Truck: <select id="truckID"></select>
+          <br>
+          Order: <input id='order' size=64 placeholder="type the order to sent to the truck" type="text">
+          <br>
+          <button id='order_submit' type="submit">Send</button>
+        </fieldset>
+      </form>
+      <hr>
+      
+      <div id="map-canvas" style="height:512px; width:100%; padding:0; margin:0">
+      </div>
 
-    <!-- Load all the JavaScripts required by the application:
-           * jQuery to simplify the JavaScript and DOM manipulation
-           * Google Maps to display a map and all the trucks' positions
-     -->
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
-    <!-- We also link to a local copy of the stomp.js JavaScript library -->
-    <script src="./stomp.js"></script>
-    <script>
-    $(document).ready(function() {
 
-      // We will put all the JavaScript code in this block that is called
-      // when the document is ready
+      <!-- Scripts placed at the end of the document so the pages load faster -->
+      <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+      <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+      <script src="https://raw.github.com/jmesnil/stomp-websocket/v2.3.0/lib/stomp.min.js"></script>
+      <script>
+$(document).ready(function() {
 
-    }
+// We will put all the JavaScript code in this block that is called
+// when the document is ready
+
+}
     </script>
   </body>
 </html>
@@ -78,21 +86,24 @@ Let's bootstrap the Web application by creating a *__control.html__* page.
 
 === Create stomp.js Client
 
+The STOMP client will be used for both consuming messages (from the trucks' position destination) and producing them (to the truck's orders queue).
+
+We will declare the +client+ variable to use it throughout our script.
+
 [[ex_web_stomp_1]]
 ====
 [source,js]
 ----
-    $(document).ready(function() {
+$(document).ready(function() {
 
-      var client; // keep a reference on the Stomp client that we will create
+  var client; // keep a reference on the Stomp client that we will create
 
-
-    }
+}
 
 ----
 ====
 
-Once we have the `client` object, we call **`connect`** by passing the credentials (login and password) and a function that will be called back
+Once we have the +client+ object, we call **`connect`** by passing the credentials (login and password) and a function that will be called back
 once the client has been successfully connected to the STOMP broker.
 
 [[ex_web_stomp_2]]
@@ -104,6 +115,31 @@ once the client has been successfully connected to the STOMP broker.
     });
 ----
 ====
+
+The Web page has a button with the id +connect_button+ to connect to the STOMP broker that is handled using jQuery. When the user clicks this button, we will create the +client+ object and connect to the STOMP broker Web Socket URL.
+
+[source,js]
+----
+  // Connection to the STOMP broker
+  $('#connect_form').submit(function() {
+    var url = $("#connect_url").val();
+
+    // create the STOMP client
+    client = Stomp.client(url);
+
+    client.connect("", "", function(frame) {
+      client.debug("connected to Stomp");
+      // TODO once the client is connected, subscribe to the truck's position destinations.
+    });
+    // disable the connect button
+    $("#connect_button").prop("disabled",true);
+    // enable the disconnect button
+    $("#disconnect_button").prop("disabled",false);
+    // show the form to send orders to the trucks
+    $("#order_form").show();
+    return false;
+  });
+----
 
 If we want to be notified when the connection is *unsuccesful*, we can pass a fourth parameters to the `connect` method which is a call back that is executed in case of problem.
 
@@ -119,9 +155,11 @@ If we want to be notified when the connection is *unsuccesful*, we can pass a fo
 ----
 ====
 
+Note that we passed empty strings to the +connect+ method's first and second parameters as we have not configured any security authentication in our STOMP broker.
+
 === Receive Messages with stomp.js
 
-Once the client is connected successfully to the STOMP broker, he can subscribe to a destination using the **`subscribe`** method which takes two parameters: the name of the destination and a callback that 
+Once the client is connected successfully to the STOMP broker, it can subscribe to a destination using the **`subscribe`** method which takes two parameters: the name of the destination and a callback method that 
 is executed every time a message is pushed from the broker to the client:
 
 [[ex_web_stomp_4]]
@@ -134,11 +172,97 @@ client.subscribe(destination, function(message) {
 ----
 ====
 
-The `message` parameter that is passed to the subscription callback is an object that has 3 properties:
+The `message` parameter that is passed to the subscription callback corresponds to a STOMP message and has 3 properties:
 
 * **`command`** - the command of the STOMP frame (when a message is receives, it will always be `MESSAGE`)
 * **`headers`** - a JavaScript object containing all the frame headers. It can be empty if the message has no headers
 * **`body`** - a string representing the message's payload. It can be `null` if the message has no payload.
+
+=== Subscribe to a wildcard destination
+
+This Web application is interested to receive the position of _any_ truck that broadcasts it.
+This means that we must subscribe to the +/topic/truck.XXX.position+ for every trucks in the company where XXX is replaced by the truck ID.
+
+There are two different ways to achieve this. The first way is to know beforehands all the truck IDs in the company and subscribe to their topics one after the other. We can use the same subscription callback for all of them.
+However, that implies that the Web application must now have a way to know this list. For example, it could be a Web service that returns such a list.
+
+
+The pseudo code for it would look like:
+
+----
+var truckListURL = "...";
+var truckIDs = fetch(truckListURL);
+var callback = function(message) {
+  // we use the same callback for every subscription
+}
+for (truck in truckIDs) {
+  var destination = "/topic/truck." + truckID + ".position";
+  client.subscribe(destination, callback);
+}
+----
+
+But what happens if another truck is added _after_ the Web application fetched the list of truck IDs? The Web application will not subscribe to its topic and will never display it on the map.
+We have to periodically fetch the list of truck IDs and check whether there are new ones or if some trucks have been removed. This starts to be quite complex to write for a simple intent.
+
+Fortunately, the flexibility of STOMP protocol comes handy to manage this in a simpler fashion. STOMP defines very loosely the destination
+
+[quote, STOMP 1.2 Protocol]
+____
+A STOMP server is modelled as a set of destinations to which messages can be sent. The STOMP protocol treats destinations as opaque string and their syntax is server implementation specific. Additionally STOMP does not define what the delivery semantics of destinations should be. The delivery, or “message exchange”, semantics of destinations can vary from server to server and even from destination to destination. This allows servers to be creative with the semantics that they can support with STOMP. 
+____
+
+Until now, we have use _simple_ destinations such as +/topic/truck.66284AB0-C266-4A4D-9443-FEFB5774FA3C.position+ or +/queue/truck.66284AB0-C266-4A4D-9443-FEFB5774FA3C.orders+ that are straightforward to understand.
+
+We will now use a feature from our STOMP broker, ActiveMQ, that allows to use http://activemq.apache.org/wildcards.html[_wildcard_ destinations].
+
+* +.+ is used to separate names in a path
+* +$$*$$+ is used to match any name in a path
+* +>+ is used to recursively match any destination starting from this name
+
+With our example using ActiveMQ, we can use this notation to subscribe to any
+truck position topic by using the +/topic/truck.$$*$$.position+ widlcard destination (where +$$*$$+ stands for _any truck identifier_).
+
+The subscription code becomes simpler:
+
+[source,js]
+----
+      // we use a wildcard destination to register to any
+      // destination that matches this pattern.
+      var destination = "/topic/truck.*.position";
+      client.subscribe(destination, function(message) {
+        // this function is called every time a message is received
+      });
+----
+
+Since we no longer know _a priori_ which truck position we are receiving, how do we determine that.
+There are 2 pieces of information we can use. When a consumer receives a STOMP message, the message always have a +destination+ header that corresponds to the _actual_ destination that we consume from. If we are subscribing to the wildcard address +/topic/truck.$$*$$.position+ and receives a message, we can look at the +message.headers["destination"]+ to get the actual destination (+/topic/truck.66284AB0-C266-4A4D-9443-FEFB5774FA3C.position+ in my case).
+
+However, we would then have to parse this +destination+ to extract the truck ID from it.
+
+If you look back at <<ch_introduction_example_message>>, the message representation for the truck position also contains the truck ID in the +truck+ property:
+
+[source,js]
+----
+{
+  "truck": "66284AB0-C266-4A4D-9443-FEFB5774FA3C",
+  "lat": 48.8581,
+  "lng": 2.2946,
+  "ts": "2013-09-23T08:43Z"<4>
+}
+----
+
+The message is _self-contained_ and gives all the interesting information that a consumer may need. When we receive a truck position message, we know which truck is sending it by simply looking at the +truck+ property from the JSON object created by parsing the message body.
+
+[source,js]
+----
+      var destination = "/topic/truck.*.position";
+      client.subscribe(destination, function(message) {
+        // this function is called every time a message is received
+        // create an object from the JSON string contained in the message body
+        var payload = JSON.parse(message.body);
+        var truckID = payload.truck;
+----
+
 
 === Draw the position on a map With Google Maps
 

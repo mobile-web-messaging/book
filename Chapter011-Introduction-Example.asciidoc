@@ -19,8 +19,8 @@ There will be many _Control Center_ applications running at the same time: one f
 
 This application will be composed all along the book after each chapter that introduces the required information to write the application.
 
-. In <<ch_mobile_messaging_stomp>>, we will write the _Truck App_ as an iOS application using the STOMP protocol to send GPS data and receive orders from an iOS device.
-. In <<ch_web_messaging_stomp>>, we will write the Web _Control Center_ using STOMP protocol over Web Sockets to receive GPS data in a Web browser and send orders to the trucks.
+. In <<ch_mobile_stomp>>, we will write the _Truck App_ as an iOS application using the STOMP protocol to send GPS data and receive orders from an iOS device.
+. In <<ch_web_stomp>>, we will write the Web _Control Center_ using STOMP protocol over Web Sockets to receive GPS data in a Web browser and send orders to the trucks.
 
 [[img_example_app_1]]
 .The +Truck Tracker+ application with two trucks, +AAA+ and +BBB+ and one +Control Center+.
