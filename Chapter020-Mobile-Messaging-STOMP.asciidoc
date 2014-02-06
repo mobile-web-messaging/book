@@ -194,6 +194,7 @@ Now that we have the identifier of the truck, the next step is to retrieve the g
 The next sections deal with setting up the framework and writing code to retrieve the GPS data from the device and display them. This is unrelated to messaging and you can skip them if you only want to read how to send and receive messages. Still, we thought the messaging code would be more meaningful if it was using real data instead of generating random data that could not be exploited. By using GPS data instead, we will be able to build a mobile app that display these data in the next chapter.
 ====
 
+[[ch_mobile_stomp_display_truck_position]]
 === Display the truck position
 
 We will retrieve the geolocation data from the device's GPS sensor to send them using STOMP messages. However, we also want to have some graphical feedback to show that the data changes over the time as we move with our device.
@@ -380,6 +381,9 @@ If the user clicks **`OK`**, the +locationManager+ will start update the device 
 [[img_mobile_stomp_15]]
 .Display the geolocation position.
 image::images/Chapter020/current_position.png["Display the geolocation position"]
+
+[[ch_mobile_stomp_location_simulator]]
+==== Simulate a Location With iOS Simulator
 
 If you are running the application on an iPhone device, the real geolocation data from the device will be used.
 If you run the application using the +iOS Simulator+, you can simulate different location in the **`Debug`** > **`Location`** menu. For example, the **`Freeway Drive`** will simulate a car driving on a freeway between Palo Alto and San Francisco.
@@ -925,6 +929,7 @@ To consume messages, a STOMP client must:
 . subscribe to the destination it wants to consume messages from.
 
 
+[[ch_mobile_stomp_subscribe]]
 ==== Subscribe to a STOMP destination
 
 We already took care of step (1) by calling +STOMPClient+'s +connectWithHeaders:completionHandler:+ in +MWMViewController+'s +connect+ method.
@@ -1003,7 +1008,6 @@ When do we call this +subscribe+ method? As soon as we are connected to the STOM
 The application will consume messages from the destination as long as it remains connected to the STOMP broker.
 
 We do not need to explicitly unsubscribe from the destination when we disconnect from the broker but it is a good practice to do so. To unsubscribe, we just need to call the +unsubscribe+ method on the +subscription+ object that was created when we subscribed. We will unsubscribe just prior to disconnecting from the broker in the +viewDidDisappear:+ method.
-
 
 [source,objc]
 ----

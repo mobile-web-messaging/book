@@ -186,7 +186,6 @@ This means that we must subscribe to the +/topic/truck.XXX.position+ for every t
 There are two different ways to achieve this. The first way is to know beforehands all the truck IDs in the company and subscribe to their topics one after the other. We can use the same subscription callback for all of them.
 However, that implies that the Web application must now have a way to know this list. For example, it could be a Web service that returns such a list.
 
-
 The pseudo code for it would look like:
 
 ----
@@ -267,39 +266,160 @@ The message is _self-contained_ and gives all the interesting information that a
         var truckID = payload.truck;
 ----
 
+When we receive the position of a truck, the last step we need to make is to display its position on a map. We will wrap this code in a +show+ method that is called from the subscription callback with the truck identifier and its latitute and longitude.
+
+The whole code to connect to the STOMP broker, subscribes to the wildcard destination is shown below.
+
+[source,js]
+----
+// Connection to the STOMP broker
+// and subscription to the trucker's position destinations.
+$('#connect_form').submit(function() {
+  var url = $("#connect_url").val();
+
+  // create the STOMP client
+  client = Stomp.client(url);
+
+  client.connect("", "", function(frame) {
+    client.debug("connected to Stomp");
+    // once the client is connected, subscribe to the truck's position destinations.
+
+    // we use a wildcard destination to register to any
+    // destination that matches this pattern.
+    var destination = "/topic/truck.*.position";
+    client.subscribe(destination, function(message) {
+      // this function is called every time a message is received
+      // create an object from the JSON string contained in the message body
+      var payload = JSON.parse(message.body);
+
+      var truckID = payload.truck;
+      if (!$("#truckID option[value='" + truckID + "']").length) {
+        // if the truck ID is not already in the list of trucks we can send orders to, we add it.
+        $('#truckID').append($('<option>', {value:truckID}).text(truckID));                
+      }
+      // show the truck position on the map
+      show(truckID, payload.lat, payload.lng);
+    });
+  });
+  // disable the connect button
+  $("#connect_button").prop("disabled",true);
+  // enable the disconnect button
+  $("#disconnect_button").prop("disabled",false);
+  // show the form to send orders to the trucks
+  $("#order_form").show();
+  return false;
+});
+----
 
 === Draw the position on a map With Google Maps
 
-TODO
+The Web application is now receiving the GPS coordinates of any trucks that send them. We could just display them as text like we did for the mobile application in <<ch_mobile_stomp_display_truck_position>> but let's make it pretty by drawing them on a map instead by using Google Maps API.
+
+In <<ex_web_stomp_1>> template, we already added the scripts to use Google Maps API. We now need to create the map and initialize it.
+
+[source,js]
+----
+$(document).ready(function() {
+
+  // Google map and the trackers to follow the trucks
+  var map, trackers = {};
+
+  function initialize() {
+    var mapOptions = {
+      zoom: 2,
+      center: new google.maps.LatLng(30,0),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    map = new google.maps.Map($("#map-canvas").get(0), mapOptions);
+  }
+
+  // initialize the Google map.
+  google.maps.event.addDomListener(window, 'load', initialize);
+----
+
+With this initialization code, the map will be drawn in the +map_canvas+ +div+ element and we can reference it using the +map+ variable.
+
+The +trackers+ variable is a map whose key are the truck identifiers and the values is a tracker with the latest location of the truck on the map.
+
+We have called a +show()+ method in the subscription handler. Let's code it now to display the truck on the map using its coordinates.
+
+[source,js]
+----
+  // show the truckID at the given latitude and longitude
+  function show(truckID, lat, lng) {
+    var position = new google.maps.LatLng(lat, lng);
+    // lazy instantiation of the map
+    if (!map) {
+      create_map(position);
+    }
+    // if there is no tracker for this truck
+    if (!trackers[truckID]) {
+      // create a marker for it
+      var marker = new google.maps.Marker({
+        position: position,
+        map: map,
+        title: truckID + " is here"});
+      var infowindow = new google.maps.InfoWindow({
+        content: "Truck " + truckID
+      });
+      var tracker = {
+        marker: marker
+      };
+      // add it to the trackers
+      trackers[truckID] = tracker;
+      google.maps.event.addListener(marker, 'click', function() {
+        infowindow.open(map, marker);
+      });
+    } else {
+      // the tracker is know, we just need to update its position
+      trackers[truckID].marker.setPosition(position);
+    }
+  }
+----
+
+If we open now this +control.html+ file in a Web browser, we will see a map of the whole world displayed.
+
+[[img_web_stomp_1]]
+.The Control Center Web application.
+image::images/Chapter021/control_center.png["The Control Center Web application"]
+
+If we click on the +Connect+ button, markers will appear on the map for each truck that sents its coordinates. 
+
+In my case, I am using the iOS simulator to run the mobile application developed in the previous chapter and use its +Location+ tool to simulate a freeway drive (as explained in <<ch_mobile_stomp_location_simulator>>).
+
+[[img_web_stomp_2]]
+.Following a truck on a freeway drive.
+image::images/Chapter021/truck_freeway_drive.png["Following a truck on a freeway drive"]
+
+The position of the truck is updated every time the Web application receives a STOMP message from the truck's position destination and you will see it move on the map.
+
+At this stage, the Web application receives STOMP messages to display the position of the trucks. We now need to write the code to send orders to the trucks.
 
 === Send Messages with stomp.js
 
 The STOMP client can send messages to the broker by calling the **`send`** method which takes three parameters:
 
-* **`destination`** - the name of the destination
-* **`headers`** - a JavaScript object containing any additional headers
-* **`body`** - a string corresponding to the message payload.
-
-[[ex_web_stomp_4]]
-====
-[source,js]
-----
-client.send("/topic/mytopic", { priority: 9}, "Hello, STOMP");
-});
-----
-====
+* +destination+ - the name of the destination
+* +headers+ - a JavaScript object containing any additional headers
+* +body+ - a string corresponding to the message payload.
 
 Both `headers` and `body` are optional and can be omitted. However if you want to set the message payload, you must also specify the headers (using an empty
 JavaScript literal if you have no header to set).
 
-[[ex_web_stomp_4]]
-====
 [source,js]
 ----
-client.send("/topic/mytopic", {}, "This message has a payload and no headers");
-});
+client.send(destination, {}, body);
 ----
-====
 
+As we described in <<ch_introduction_example_topology>>, we use a queue to send orders to a given truck and the destination for this is named +/queue/truck.XXX.orders+
 
-TODO
+The order is sent in the STOMP message body as a JSON string with a +order+ key.
+
+[source,js]
+----
+{
+  "order": "Go to warehouse #1"
+}
+----
+
+We must respect this message format as it is the format expected by the mobile application to handle the orders and display them (we wrote this code in <<ch_mobile_stomp_subscribe>>).
