@@ -2,14 +2,13 @@
 == Advanced STOMP
 
 [role="lead"]
-In the two previous chapters, we have used STOMP to send and receive messages from a native iOS app and from a Web applications.
-STOMP provides additional features that we did not use. In this chapter, we will make a tour of all the features provided by STOMP.
-
-STOMP provides an interoperable wire format so that clients can communicate with any message broker.
-The simplicity of the protocol ensures that it's straightforward to have interoperability between any client and brokers.
+In the two previous chapters, we have used STOMP to send and receive messages from a native iOS application and from a Web application.
+STOMP provides additional features that we did not use to write these applications. In this chapter, we will make a tour of all the features provided by STOMP.
 
 This chapter covers the latest version of the protocol when this book was written:
 http://stomp.github.io/stomp-specification-1.2.html[STOMP 1.2] that was released on 2012, October 22^nd^.
+
+As we present these features, we will show how to use them from either +StompKit+ or +stomp.js+. The API may vary depending on the platform and language but the concept remains the same. If you have ever to use STOMP from another language or platform, you will have to adapt to the library API but the underlying concept will still apply.
 
 [[ch_adv_stomp_frame]]
 === Frame representation
@@ -40,57 +39,15 @@ payload^@<4>
 STOMP is based on text (using UTF-8 for its default encoding)
 but it can also transmit binary data in its payload by specifying an alternative encoding.
 
-In the two previous chapters, we were sending JSON data in the messages. We were setting the string representation of the JSON structure in the message body and
-setting the `content-type` header to `application/json`.
+In the two previous chapters, we were sending JSON data in the messages. We were setting the string representation of the JSON structure in the message body and setting the `content-type` header to `application/json; charset=utf-8`.
 
-The result of calling 
-
-[[ex_adv_stomp_1]]
-.TODO
-====
-[source,objc]
-----
-    // build a dictionary containing all the information to send
-    NSDictionary *dict = @{
-                           @"truck": self.truckID,
-                            @"lat": [NSNumber numberWithDouble:location.coordinate.latitude],
-                           @"lng": [NSNumber numberWithDouble:location.coordinate.longitude],
-                           @"ts": [dateFormatter stringFromDate:location.timestamp]
-                         };
-    // create a JSON string from this dictionary
-    NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
-    [self.client sendTo:@"/topic/truck.position" 
-                headers:@"content-type": @"application/json"
-                   body:[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]];
-    }
-----
-====
-
-was to send a STOMP frame:
-
-[[ex_adv_stomp_2]]
-.TODO
-====
-----
-SEND
-destination:/topic/truck.position<1>
-content-length:28<2>
-content-type:application/json<3>
-
-{"truck":"xyzfoo","lat":xxx,lng:yyy,"ts":@"yyymmdd"}^@<4>
-----
-<1> A +SEND+ frame must contains +destination+ header.
-<2> The length of the JSON string is 28 octets.
-<3> The MIME type for JSON is +application/json+.
-<4> The frame must be ended by a NULL octet (represented by +^@+ in ASCII) even when the +content-length+ header is set.
-====
-
+STOMP uses frames not only to send messages (with the +SEND+ command) and receive them (with the +MESSAGE+ command) but also for all its operation comands (such as +CONNECT+, +DISCONNECT+, +SUBSCRIBE+, etc.)
 
 ==== Headers
 
 STOMP defines only a handful of headers for its different frames.
 
-It is also possible to add other headers when sending a message with the `SEND` frame as long as it does not collide with the headers used by STOMP.
+It is also possible to add other headers when sending a frame as long as it does not collide with the headers already specified in the STOMP protocol.
 
 Why would we use headers to pass information instead of putting it in the message payload? There is an fundamental difference between headers and payload.
 Headers are read by the STOMP brokers and can be used by them. Payload is opaque and the brokers never look at it (it is considered an black box).
@@ -99,7 +56,73 @@ We will cover some use cases for adding headers in the next chapter.
 
 === Message Acknowledgement
 
-TODO
+Message acknowledgement is a feature available to STOMP _consumers_.
+
+When the broker delivers a message to a consumer, there is an change of responsibility between the broker and the consumer to determine which is the _owner_ of the message. The consumer becomes responsible of the message by _ackonwledging_ the message.
+
+By default, the STOMP broker will consider that the consumer automatically acknowledged the message when it receives it. 
+
+However there are cases where the consumer may prefer to acknowledge explicity the message. It leaves it a window of opportunity to determine whether it can handle the message or not.
+For example, if the client needs to write to a data store when it receives a message but is not able to open a connection to the data store, it may _nack_ the message (explicitly refuse to take ownership of it). When the STOMP broker is informed of this negatively acknowledgement, it may then decide to deliver the message to another consumer or try again some time later depending on its configuration.
+
+The consumer specifies the type of acknowledgement it will use when subscribing to a destination.
+STOMP supports 3 types of acknowledgements:
+
+* +auto+ (by default)
+* +client+
+* +client-individual+
+
+If the client does not specify any type of acknowledgement or use +default+, it does not need to send any acknowledgement, the STOMP broker will consider the message acknowledged as soon as it is delivered to the client.
+
+If +client+ or +client-individual+ is used, the consumer must send acknowledgements to the server with the +message-id+ that is acknowledged. The difference between +client+ and +client-individual+ is that +client+ will acknowledged the message *and all other messages delivered to the consumer before*. Using +client-individual+ will only acknowledge the message and no other messages.
+
+If +client+ and +client-individual+ is used, the consumer may explicitly refuse to process the message by sending a +NACK+, a negative acknowledgement.
+
+==== Examples
+
+Using +StompKit+:
+
+[source,objc]
+----
+// kHeaderAck and kAckClient constants are defined in StompKit.h
+[self.client subscribeTo:destination
+                 headers:@{kHeaderAck: kAckClient}
+          messageHandler:^(STOMPMessage *message) {
+    // process the message
+    ...
+
+    // acknowledge it
+    [message ack];
+    // or you can nack it by calling [message nack] instead.
+}];
+----
+
+Using +stomp.js+:
+
+[source,js]
+----
+client.subscribe(destination, 
+  function(message) {
+    // process the message
+    ...
+
+    // acknowledge it
+    message.ack();
+    // or you can nack it by calling message.nack() instead.
+  },
+  {"ack": "client"}
+);
+----
+
+There are many use cases where it is not necessary to use explicit acknowledgement.
+
+For example, in our Web application, we do not need to acknowledge every message that we receive from the truck's position destinations. At worst, there may be a problem to display the position but we know there are other messages that will come later to update the truck positions. Besides, acknowledging every message would have a performance cost. Sending the acknowledgement back to the broker would involve an additional network trip for every message.
+
+The mobile application is also receiving messages from the truck's order queue.
+These messages may be more important to acknowledge them explicitly. We could enhance the application by letting the truck driver confirms or rejects any order its receives. If the driver confirms the order, we would acknowledge the corresponding message. If it rejects it, we would nack it instead.
+
+Note that using explicit acknowledgement also means that some order messages could go back to the STOMP broker. What should the broker do with these _rejected_ orders. Depending on the broker you use, it may provide additional features to handle these cases. A common feature is to use a "dead letter queue" where messages that are nacked multiple times from a destination are sent to a dead letter queue. An administrator can then inspect this dead letter queue to determine what to do with these messages. For example, send them to another driver, send alerts about the truck that rejected them, etc.
+
 
 === Transactions
 
