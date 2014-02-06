@@ -423,3 +423,68 @@ The order is sent in the STOMP message body as a JSON string with a +order+ key.
 ----
 
 We must respect this message format as it is the format expected by the mobile application to handle the orders and display them (we wrote this code in <<ch_mobile_stomp_subscribe>>).
+
+We added a HTML +<form>+ element with the id +order_form+ to send an order. The truck identifier is taken from the selected option in the +<select>+ element identified by +truckID+. The order text is taken from the +<input>+ element identified by +order+.
+
+Once we know the +truckID+ and the +order+, we have all we need to send an order to this truck. The destination for the order will be built using the +truckID+. Since the message payload will be a JSON string, we add a +content-type+ header set to +application/json; charset=utf-8+.
+
+The message payload itself will the string obtained by _stringifying_ the order object.
+
+Piecing everything together, the code to send a STOMP message looks like:
+
+[source,js]
+----
+  // Send an order to a truck
+  $('#order_form').submit(function() {
+    var truckID = $("#truckID").val();
+    var order = $("#order").val();
+      
+    // sue the truck's queue orders as the destination
+    var destination = "/queue/truck." + truckID + ".orders";
+    // declare the message body as a JSON string
+    var headers = {
+      "content-type": "application/json; charset=utf-8"
+    };
+    var body = JSON.stringify({
+      "order": order
+    })    
+    client.send(destination, headers, body);
+    // reset the order input field
+    $("#order").val("");
+    return false;
+  });
+----
+
+If we reload the +control.html+ file after adding this code, we can now send an order to the truck by selecting it in the list in the +Send order to a truck+ form.
+
+Let's type an order such as +Go to office depot #2+ and click on the +Send+ button.
+
+[[img_web_stomp_3]]
+.Send an order to a truck.
+image::images/Chapter021/send_order.png["Send an order to a truck"]
+
+The message is sent when you click on the +Send+ button. Since the mobile application is subscribed to this destination, it will receive the message and display it in its table.
+
+[[img_web_stomp_4]]
+.The mobile application received the order.
+image::images/Chapter021/mobile_app_received_order.png["The mobile application received the order"]
+
+=== Summary
+
+In this chapter, we learn to use +stomp.js+ to send and receive STOMP messages from a Web application.
+
+Regardless of using StompKit for mobile applications or stomp.js for Web applications, the steps are always the same.
+
+To send a message, the application must:
+
+. connect to the STOMP broker
+. send the message to the destination
+
+To consume a message, the application must
+
+. connect to the STOMP broker
+. subscribe to the destination and pass a callback that is called every time a message is received.
+
+At the end of this chapter, we have a very simple application that works. If you have access to several iPhone devices, you can see that the Web application will display the position of all the devices running the mobile application.
+
+In the next chapter, we will learn about more advanced features of STOMP. We did not present them as they were not required to write this simple application. However, it is likely that you may need some of these features if your applications are more complex.
