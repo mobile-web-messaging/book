@@ -161,6 +161,7 @@ Open **`MWMViewController.m`** to add code to the **`MWMViewController`** _imple
     [super viewDidLoad];
 
     self.truckID = [UIDevice currentDevice].identifierForVendor.UUIDString;
+    NSLog(@"Truck identifier is %@", self.truckID);
 }
 ----
 
@@ -687,11 +688,25 @@ This confirms that STOMP messages are effectively sent by the application.
 
 ==== ActiveMQ admin console
 
+In <<app_activemq_admin_console>>, we have used the ActiveMQ admin console to check the broker configuration. We can also use this console to check the destinations and their associated metrics.
+
+Go to the ActiveMQ admin console in your Web browser at http://localhost:8161/hawtio[http://localhost:8161/hawtio] and navigate the ActiveMQ tree down to the postion topic in +mybroker > Topic > truck.66284AB0-C266-4A4D-9443-FEFB5774FA3C.position+. 
+
+In the right side panel, select +Attributes+ in the top menu to display all the attributes associated to this topic.
+
+To check whether the broker is receiving the messages on this destination, the attribute to check is +Enqueue count+. It corresponds to the messages that has been _enqueued_ (or in other word, _sent_) to the destination. We see that this value is growing over time (it is at +515+ when the screenshot below was taken). This confirms that the broker is actually receiving the messages sent by the mobule application.
+
+[[img_mobile_stomp_16]]
+.Check the number of messages sent to a destination in ActiveMQ admin console
+image::images/Chapter020/activemq_admin_console_topic_enqueue_count.png["Check the number of messages sent to a destination in ActiveMQ admin console"]
+
+Another interesting attribute is +Dequeue count+. It corresponds to the messages removed from the topic and sent to consumers. In our case, it stays at +0+ because there is no consumer that are subscribed to this destination.
+
 ==== A Simple STOMP consumer
 
 When I presented STOMP, I wrote that the protocol is so simple that a +telnet+ client _is_ a STOMP client.
 
-Let's prove that by writing the simplest STOMP client that will consume the messages sent by the application.
+Let's prove that by writing the simplest STOMP client that will consume the messages sent by the application to the destination.
 
 We need to open a +telnet+ client to connect to the broker host on the +61613+ port. Since I am on the same machine than the broker, I will simply connect to +localhost+:
 

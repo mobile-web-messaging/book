@@ -42,6 +42,7 @@ Stopping broker: mybroker
 .... FINISHED
 ----
 
+[[app_activemq_admin_console]]
 === Administration Web Console
 
 When the broker is started, it can be administrated and managed using its Web console running at http://localhost:8161/hawtio[http://localhost:8161/hawtio]. Out of the box, you can log into the admin console using the **`admin`** / **`admin`** credentials.
