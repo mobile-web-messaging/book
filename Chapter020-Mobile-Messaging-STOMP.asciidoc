@@ -31,7 +31,7 @@ Once ActiveMQ is started, it accepts STOMP connections on the +61613+ port.
 
 To use STOMP on iOS, we will use the StompKit library that implements the STOMP protocol in a modern event-driven way using ARC, Grand Central Dispatch and blocks.
 
-=== Create The +TruckTracker+ project With Xcode
+=== Create the +TruckTracker+ Project With Xcode
 
 We will use https://developer.apple.com/xcode/[Xcode] to create the +TruckTracker+ application.
 
@@ -111,7 +111,7 @@ image::images/Chapter020/blank_view.png["TruckTracker Blank View"]
 
 Nothing is displayed but it confirms that the project and its dependencies can be successfully compiled and executed.
 
-=== Identify the truck
+=== Identify the Truck
 
 The iPhone device is used by the truck driver to broadcast its position. The first thing to do is identify the truck. To keep the example simple, we will use a _universal unique identifier_ (or UUID) as the truck identity and display it in the view.
 
@@ -195,7 +195,7 @@ The next sections deal with setting up the framework and writing code to retriev
 ====
 
 [[ch_mobile_stomp_display_truck_position]]
-=== Display the truck position
+=== Display the Truck Position
 
 We will retrieve the geolocation data from the device's GPS sensor to send them using STOMP messages. However, we also want to have some graphical feedback to show that the data changes over the time as we move with our device.
 
@@ -226,7 +226,7 @@ image::images/Chapter020/currentPosition_label_connection.png["Connect the label
 
 The label is now connected to the property. The next step is to retrieve the geolocation data from the device to update the property and send a message with them.
 
-=== Access The Device Geolocation Data with +CoreLocation+ Framework
+=== Access the Device Geolocation Data with +CoreLocation+ Framework
 
 iOS provides the +CoreLocation+ framework to access the location data.
 
@@ -392,7 +392,7 @@ Whether you are running the application on a device or in the simulator, you sho
 
 We now display the geolocation data. Next step is to send them using STOMP.
 
-=== Create a STOMP client with StompKit
+=== Create a STOMP Client With StompKit
 
 Before sending any messages, we must first import the StompKit library that we add to our _Podfile_ file at the beginning of this chapter.
 
@@ -441,7 +441,7 @@ The host will depend on your network configuration. On my local network, my serv
 ----
 ====
 
-=== Connect to a STOMP broker
+=== Connect to a STOMP Broker
 
 When the +client+ object is created, it is not connect to the STOMP broker yet. To connect, we must call its +connectWitHeaders:completionHandler:+ method.
 
@@ -494,7 +494,7 @@ We then only need to call this +connect+ method when the view appears in +viewWi
 ----
 ====
 
-=== Disconnect from a STOMP broker.
+=== Disconnect From a STOMP Broker.
 
 The STOMPClient disconnects from the broker using its +disconnect:+ method. This method takes a block that will be called when the client is disconnected from the server. The block takes a +NSError+ parameter that is set if there is an error during the disconnection operation.
 
@@ -541,11 +541,11 @@ If we run the application, we see logs in Xcode that shows the connection proces
 2014-01-27 18:18:12.181 TruckTracker[14578:1303] Connected
 ----
 
-=== Send messages
+=== Send STOMP Messages
 
 We now have a connection to the STOMP broker and we receive the device's geolocation data from the location manager. The last step to do is to send these data to the topic associated to the truck ID.
 
-As we described in <<ch_introduction_example>>, each truck's device will send its location on a topic destination named after the truck ID.
+As we described in <<ch_introduction_stomp_example>>, each truck's device will send its location on a topic destination named after the truck ID.
 
 [source,objc]
 ----
@@ -690,7 +690,7 @@ content-length:118
 
 This confirms that STOMP messages are effectively sent by the application.
 
-==== ActiveMQ admin console
+==== ActiveMQ Admin Console
 
 In <<app_activemq_admin_console>>, we have used the ActiveMQ admin console to check the broker configuration. We can also use this console to check the destinations and their associated metrics.
 
@@ -706,7 +706,7 @@ image::images/Chapter020/activemq_admin_console_topic_enqueue_count.png["Check t
 
 Another interesting attribute is +Dequeue count+. It corresponds to the messages removed from the topic and sent to consumers. In our case, it stays at +0+ because there is no consumer that are subscribed to this destination.
 
-==== A Simple STOMP consumer
+==== A Simple STOMP Consumer
 
 When I presented STOMP, I wrote that the protocol is so simple that a +telnet+ client _is_ a STOMP client.
 
@@ -798,7 +798,7 @@ These headers are added by the STOMP broker and provides additional metadata abo
 
 At this stage, we have a mobile application that is broadcasting its position by sending messages to a STOMP destination.
 
-=== Create the orders table
+=== Display the Orders
 
 We will now code the second part of the mobile applications that will receive orders for the truck and display them in a table.
 
@@ -919,7 +919,7 @@ Let's implement the required +UITableViewDataSource+ methods.
 
 With these methods implemented, the table will displayed all the orders that are stored in the +orders+ array.
 
-=== Receive Messages With STOMP
+=== Receive STOMP Messages
 
 Now that we are ready to display the orders in the table, next step is to subscribe to the truck's order destination to consume STOMP messages containing the orders and put them in the +orders+ array.
 
@@ -1003,7 +1003,7 @@ When do we call this +subscribe+ method? As soon as we are connected to the STOM
 }
 ----
 
-==== Unsubscribe from the destination
+=== Unsubscribe From the Destination
 
 The application will consume messages from the destination as long as it remains connected to the STOMP broker.
 
@@ -1019,13 +1019,15 @@ We do not need to explicitly unsubscribe from the destination when we disconnect
 }
 ----
 
+=== Finish the Application
+
 The application is now ready to consume messages. Let's start it and check that it is working.
 
 Run the application in the iOS simulator or on your device.
 
 Go to the ActiveMQ admin console and browse to the truck order's queue. In my case, its name is +truck.4A42547A-CED5-4F0B-9504-BD1496F69C25.orders+.
 
-Fill the text area with a JSON String that conforms to the message representation we decided in <<ch_introduction_example_message>>.
+Fill the text area with a JSON String that conforms to the message representation we decided in <<ch_introduction_stomp_example_message>>.
 
 ----
 {

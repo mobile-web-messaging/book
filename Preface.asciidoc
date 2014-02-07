@@ -76,9 +76,10 @@ In this book, I will make a tour of messaging protocols for mobile devices and W
 
 Chapter 1, Introduction::
 In this chapter, I introduce the concepts of messaging protocols, how they differ from request/reply protocols such as HTTP.
-To illustrate the use of messaging protocols on mobile and Web platforms, we will build an application with two parts: one will run on mobile devices, the other inside a Web browser and they will communicate using messages. This chapter explains the overall design of this example application.
+To illustrate the use of messaging protocols on mobile and Web platforms, we will build 2 applications (one using STOMP and the other using MQTT).
+Both applications will come in two parts: one will run on mobile devices, the other inside a Web browser and they will communicate using messages. This chapter explains the overall design of these two example applications.
 
-Chapter 2, Mobile Messaging With STOMP on iOS::
+Chapter 2, Mobile Messaging With STOMP::
 In this chapter, I present STOMP, a simple text-based messaging protocol. I use StompKit, an iOS library for STOMP, to build an app that sends GPS data from the device and receives messages.
 
 Chapter 3, Web Messaging With STOMP::
@@ -92,7 +93,7 @@ In this chapter, we present features that are not part of STOMP but available fr
 
 Chapter 6, Mobile Messaging With MQTT::
 In this chapter, we introduce MQTT, a binary messaging protocol well suited to broadcast data from mobile or embedded devices.
-We write a mobile app on iOS that uses MQTT to broadcast information.
+We write a mobile app on iOS that uses MQTT to broadcast information using the MQTTKit libary.
 
 Chapter 7, Web Messaging With MQTT::
 In this chapter, we use MQTT over Web Socket to write a Web application that sends and receives MQTT messages from a Web browser.
@@ -101,7 +102,7 @@ Chapter 8, Advanced MQTT::
 In this chapter, I present the advanced features of MQTT that we did not use in the previous chapters but that you may encounter as you use it more extensively.
 
 Appendix A, ActiveMQ::
-In this appendix, we explain how to install and configure the messaging broker, Apache ActiveMQ, that is used all along the book to run the examples.
+In this appendix, we explain how to install and configure the messaging broker, Apache ActiveMQ, that is used in the book to run the STOMP examples.
 
 .What Should I Read?
 [NOTE]
@@ -122,9 +123,13 @@ This books explains in details the messaging protocols. Each platform's clients 
 For both protocols, we will see two different libraries: an Objective-C library for iOS and a JavacScript library for Web applications.
 
 Basic programming skills are required. The examples in the book runs on different platforms and we used the programming language that made the most sense for each of them.
-To build a mobile application on iOS, we wrote the examples using Objective-C. The Web applications use the JavaScript language.
 
-The examples can all be downloaded from the https://github.com/mobile-web-messaging/book/[book's GitHub repository].
+To build a mobile application on iOS, we wrote the examples using Objective-C.
+The graphical application requires minimal knowledge of Xcode and Interface Builder but all the changes are described step by step in the book.
+
+The Web applications use the JavaScript language. We leverage http://jquery.com[jQuery] to make the Web applications interactive and manipulate the page elements but the messaging code is independent of any JavaScript frameworks.
+
+The examples can all be downloaded from the https://github.com/mobile-web-messaging/code/[book's GitHub repository].
 
 === Conventions Used in This Book
 
@@ -137,7 +142,6 @@ _Italic_:: Indicates new terms, URLs, email addresses, filenames, and file exten
 **`Constant width bold`**:: Shows commands or other text that should be typed literally by the user.
 
 _++Constant width italic++_:: Shows text that should be replaced with user-supplied values or by values determined by context.
-
 
 [TIP]
 ====

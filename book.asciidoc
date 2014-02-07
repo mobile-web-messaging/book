@@ -6,7 +6,9 @@ include::Preface.asciidoc[]
 
 include::Chapter010-Introduction.asciidoc[]
 
-include::Chapter011-Introduction-Example.asciidoc[]
+include::Chapter011-Introduction-STOMP-Example.asciidoc[]
+
+include::Chapter012-Introduction-MQTT-Example.asciidoc[]
 
 include::Chapter020-Mobile-Messaging-STOMP.asciidoc[]
 

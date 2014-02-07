@@ -1,5 +1,5 @@
-[[ch_introduction_example]]
-=== Truck Tracker Application
+[[ch_introduction_stomp_example]]
+=== Truck Tracker Application Using STOMP
 
 Let's take the example of a delivery company like UPS that manages a fleet of trucks.
 Each truck is responsible for the delivery of packages.
@@ -19,8 +19,8 @@ There will be many _Control Center_ applications running at the same time: one f
 
 This application will be composed all along the book after each chapter that introduces the required information to write the application.
 
-. In <<ch_mobile_stomp>>, we will write the _Truck App_ as an iOS application using the STOMP protocol to send GPS data and receive orders from an iOS device.
-. In <<ch_web_stomp>>, we will write the Web _Control Center_ using STOMP protocol over Web Sockets to receive GPS data in a Web browser and send orders to the trucks.
+. In <<ch_mobile_stomp>>, we will write the +TruckRacker+ iOS application using the STOMP protocol to send GPS data and receive orders from an iOS device.
+. In <<ch_web_stomp>>, we will write a Web application using STOMP protocol over Web Sockets to receive GPS data in a Web browser and send orders to the trucks.
 
 [[img_example_app_1]]
 .The +Truck Tracker+ application with two trucks, +AAA+ and +BBB+ and one +Control Center+.
@@ -29,7 +29,7 @@ image::images/Chapter011/example_diagram_1.png["Diagram of the Truck Tracker app
 Before introducing the messaging protocols that will be used by the application, we can already define 
 the application's messaging topology and how the different parts of the application will exchange messages.
 
-[[ch_introduction_example_topology]]
+[[ch_introduction_stomp_example_topology]]
 ==== Messaging Topology
 
 Each truck will be associated to 2 destinations:
@@ -52,7 +52,7 @@ Conversely, the +Control Center+ Web application will be:
 * a _consumer_ of messages from all the topics +truck.XXX.data+
 * a _producer_ of message from the queues +truck.XXX.orders+
 
-[[ch_introduction_example_message]]
+[[ch_introduction_stomp_example_message]]
 ==== Message Representation
 
 There will be two types of exchanged messages:

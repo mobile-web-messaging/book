@@ -14,13 +14,13 @@ Thanks to HTML5 Web Sockets, it is now possible to have two-way communication be
 
 We are no longer limited to pull-based messages where the browser need to regularly contact the server to know whether there are any available messages to consume.
 
-=== stomp.js, a JavaScript library for STOMP
+=== stomp.js, STOMP Over Web Sockets
 
 stomp.js is a small JavaScript library that implements the STOMP protocol over HTML 5 Web Sockets and allows to send and receive STOMP messages in a Web browser.
 
 TODO
 
-=== Write the Control Center Web App
+=== Bootstrap the Control Center Web Application
 
 As we explained in the first chapter, the _Control Center_ Web will be use to follow the position of all the trucks in the fleet 
 and send them orders.
@@ -84,7 +84,7 @@ $(document).ready(function() {
 ----
 ====
 
-=== Create stomp.js Client
+=== Create a STOMP Client With stomp.js
 
 The STOMP client will be used for both consuming messages (from the trucks' position destination) and producing them (to the truck's orders queue).
 
@@ -157,7 +157,7 @@ If we want to be notified when the connection is *unsuccesful*, we can pass a fo
 
 Note that we passed empty strings to the +connect+ method's first and second parameters as we have not configured any security authentication in our STOMP broker.
 
-=== Receive Messages with stomp.js
+=== Receive STOMP Messages
 
 Once the client is connected successfully to the STOMP broker, it can subscribe to a destination using the **`subscribe`** method which takes two parameters: the name of the destination and a callback method that 
 is executed every time a message is pushed from the broker to the client:
@@ -178,7 +178,7 @@ The `message` parameter that is passed to the subscription callback corresponds 
 * **`headers`** - a JavaScript object containing all the frame headers. It can be empty if the message has no headers
 * **`body`** - a string representing the message's payload. It can be `null` if the message has no payload.
 
-=== Subscribe to a wildcard destination
+==== Subscribe to a Wildcard Destination
 
 This Web application is interested to receive the position of _any_ truck that broadcasts it.
 This means that we must subscribe to the +/topic/truck.XXX.position+ for every trucks in the company where XXX is replaced by the truck ID.
@@ -242,7 +242,7 @@ Since we no longer know _a priori_ which truck position we are receiving, how do
 There are 2 pieces of information we can use. When a consumer receives a STOMP message, the message always have a +destination+ header that corresponds to the _actual_ destination that we consume from. If we are subscribing to the wildcard address +/topic/truck.$$*$$.position+ and receives a message, we can look at the +message.headers["destination"]+ to get the actual destination (+/topic/truck.66284AB0-C266-4A4D-9443-FEFB5774FA3C.position+ in my case).
 However, we would then have to parse this +destination+ to extract the truck ID from it and write brittle code for that.
 
-If you look back at <<ch_introduction_example_message>>, the message representation for the truck position also contains the truck ID in the +truck+ property:
+If you look back at <<ch_introduction_stomp_example_message>>, the message representation for the truck position also contains the truck ID in the +truck+ property:
 
 [source,js]
 ----
@@ -311,7 +311,7 @@ $('#connect_form').submit(function() {
 });
 ----
 
-=== Draw the position on a map With Google Maps
+=== Draw the Truck Positions on a Map
 
 The Web application is now receiving the GPS coordinates of any trucks that send them. We could just display them as text like we did for the mobile application in <<ch_mobile_stomp_display_truck_position>> but let's make it pretty by drawing them on a map instead by using Google Maps API.
 
@@ -395,7 +395,7 @@ The position of the truck is updated every time the Web application receives a S
 
 At this stage, the Web application receives STOMP messages to display the position of the trucks. We now need to write the code to send orders to the trucks.
 
-=== Send Messages with stomp.js
+=== Send STOMP Messages
 
 The STOMP client can send messages to the broker by calling the **`send`** method which takes three parameters:
 
@@ -411,7 +411,7 @@ JavaScript literal if you have no header to set).
 client.send(destination, {}, body);
 ----
 
-As we described in <<ch_introduction_example_topology>>, we use a queue to send orders to a given truck and the destination for this is named +/queue/truck.XXX.orders+
+As we described in <<ch_introduction_stomp_example_topology>>, we use a queue to send orders to a given truck and the destination for this is named +/queue/truck.XXX.orders+
 
 The order is sent in the STOMP message body as a JSON string with a +order+ key.
 
