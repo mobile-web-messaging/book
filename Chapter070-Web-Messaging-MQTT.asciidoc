@@ -12,6 +12,12 @@ TODO
 
 TODO
 
+=== About the Code
+
+All along the chapter, we will show all the code required to run the application.
+
+The whole application code can be retrieved from the https://github.com/mobile-web-messaging/code[GitHub repository] in the +mqtt/web/+ directory.
+
 === Bootstrap the HeartBeat Web Application
 
 TODO
@@ -28,7 +34,7 @@ TODO
 
 TODO
 
-==== Send MQTT Messages
+=== Send MQTT Messages
 
 TODO
 

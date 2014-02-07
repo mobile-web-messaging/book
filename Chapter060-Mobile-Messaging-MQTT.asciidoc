@@ -13,7 +13,13 @@ TODO
 
 TODO
 
-=== Create the HeartBeat project With Xcode
+=== About the Code
+
+All along the chapter, we will show all the code required to run the application.
+
+The whole application code can be retrieved from the https://github.com/mobile-web-messaging/code[GitHub repository] in the +mqtt/ios/+ directory.
+
+=== Create the +HeartBeat+ project With Xcode
 
 TODO
 

@@ -20,6 +20,12 @@ stomp.js is a small JavaScript library that implements the STOMP protocol over H
 
 TODO
 
+=== About the Code
+
+All along the chapter, we will show all the code required to run the application.
+
+The whole application code can be retrieved from the https://github.com/mobile-web-messaging/code[GitHub repository] in the +stomp/web/+ directory.
+
 === Bootstrap the Control Center Web Application
 
 As we explained in the first chapter, the _Control Center_ Web will be use to follow the position of all the trucks in the fleet 

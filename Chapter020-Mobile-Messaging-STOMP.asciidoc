@@ -31,6 +31,12 @@ Once ActiveMQ is started, it accepts STOMP connections on the +61613+ port.
 
 To use STOMP on iOS, we will use the StompKit library that implements the STOMP protocol in a modern event-driven way using ARC, Grand Central Dispatch and blocks.
 
+=== About the Code
+
+All along the chapter, we will show all the code required to run the application.
+
+The whole application code can be retrieved from the https://github.com/mobile-web-messaging/code[GitHub repository] in the +stomp/ios/+ directory.
+
 === Create the +TruckTracker+ Project With Xcode
 
 We will use https://developer.apple.com/xcode/[Xcode] to create the +TruckTracker+ application.
