@@ -96,8 +96,6 @@ The STOMP client will be used for both consuming messages (from the trucks' posi
 
 We will declare the +client+ variable to use it throughout our script.
 
-[[ex_web_stomp_1]]
-====
 [source,js]
 ----
 $(document).ready(function() {
@@ -107,7 +105,20 @@ $(document).ready(function() {
 }
 
 ----
-====
+
+This +client+ object will be created when the user click on the +Connect+ button by calling +Stomp.client+ with the URL retrieved from the +connect_url+ input element.
+
+[source,js]
+----
+  // Connection to the STOMP broker
+  $('#connect_form').submit(function() {
+    var url = $("#connect_url").val();
+
+    // create the STOMP client
+    client = Stomp.client(url);
+---
+
+=== Connect to a STOMP Broker
 
 Once we have the +client+ object, we call **`connect`** by passing the credentials (login and password) and a function that will be called back
 once the client has been successfully connected to the STOMP broker.

@@ -6,6 +6,10 @@ TODO
 . In <<ch_mobile_mqtt>>, we will write the +HeartBeat+ iOS application using the MQTT protocol to send a _simulated_ heartbeat rate and receive alerts if there is a problem with this rate.
 . In <<ch_web_mqtt>>, we will write a Web application using MQTT protocol over Web Sockets to receive all the heartbeats rate and send alerts for any of the clients that send them.
 
+[[img_mqtt_example_app_1]]
+.The +HeartBeat+ application with two clients, +AAA+ and +BBB+ and two Web applications monitoring them.
+image::images/Chapter012/heartbeat_app_diagram.png["Diagram of the HeartBeat application"]
+
 [[ch_introduction_mqtt_example_topology]]
 ==== Messaging Topology
 
