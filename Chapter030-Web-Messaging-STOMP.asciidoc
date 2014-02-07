@@ -103,7 +103,6 @@ $(document).ready(function() {
   var client; // keep a reference on the Stomp client that we will create
 
 }
-
 ----
 
 This +client+ object will be created when the user click on the +Connect+ button by calling +Stomp.client+ with the URL retrieved from the +connect_url+ input element.
@@ -116,7 +115,7 @@ This +client+ object will be created when the user click on the +Connect+ button
 
     // create the STOMP client
     client = Stomp.client(url);
----
+----
 
 === Connect to a STOMP Broker
 
