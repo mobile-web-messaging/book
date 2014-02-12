@@ -3,3 +3,19 @@
 
 [role="lead"]
 TODO
+
+=== Last Will
+
+TODO
+
+=== Retain
+
+TODO
+
+=== Quality of Service
+
+TODO
+
+=== Summary
+
+TODO

@@ -76,14 +76,14 @@ In this book, I will make a tour of messaging protocols for mobile devices and W
 
 Chapter 1, Introduction::
 In this chapter, I introduce the concepts of messaging protocols, how they differ from request/reply protocols such as HTTP.
-To illustrate the use of messaging protocols on mobile and Web platforms, we will build 2 applications (one using STOMP and the other using MQTT).
+To illustrate the use of messaging protocols on mobile and Web platforms, we will build 2 applications (one named +Locations+ will use STOMP and the other named +Motions+ will use MQTT).
 Both applications will come in two parts: one will run on mobile devices, the other inside a Web browser and they will communicate using messages. This chapter explains the overall design of these two example applications.
 
 Chapter 2, Mobile Messaging With STOMP::
-In this chapter, I present STOMP, a simple text-based messaging protocol. I use StompKit, an iOS library for STOMP, to build an app that sends GPS data from the device and receives messages.
+In this chapter, I present STOMP, a simple text-based messaging protocol. I use StompKit, an iOS library for STOMP, to build the +Locations+ app that sends GPS data from the device and receives text messages.
 
 Chapter 3, Web Messaging With STOMP::
-In this chapter, we introduce stomp.js, a JavaScript library for STOMP, and write a Web application that receives messages with the GPS from the iOS devices and display them on a map. This Web application will also send messages to the mobile app.
+In this chapter, we introduce stomp.js, a JavaScript library for STOMP, and write a Web application that receives messages with the GPS from the +Locations+ applicaiton on iOS devices and display them on a map. This Web application will also send messages to the mobile app.
 
 Chapter 4, Advanced STOMP::
 In this chapter, we present the advanced features of STOMP that we did not use in the previous chapters to build our applications. These advanced features are not always used by messaging applications but they may prove useful as the applications grow in complexity. 
@@ -93,10 +93,11 @@ In this chapter, we present features that are not part of STOMP but available fr
 
 Chapter 6, Mobile Messaging With MQTT::
 In this chapter, we introduce MQTT, a binary messaging protocol well suited to broadcast data from mobile or embedded devices.
-We write a mobile app on iOS that uses MQTT to broadcast information using the MQTTKit libary.
+We write a mobile app, +Motions+, on iOS that uses MQTT to broadcast data about the device motions using the MQTTKit libary and listen for alerts to change the color of the application.
 
 Chapter 7, Web Messaging With MQTT::
-In this chapter, we use MQTT over Web Socket to write a Web application that sends and receives MQTT messages from a Web browser.
+In this chapter, we use MQTT over Web Socket to write a Web application that
+receives the device motions' data sent by the +Motions+ application to display them and sends alerts to the devices to change their color.
 
 Chapter 8, Advanced MQTT::
 In this chapter, I present the advanced features of MQTT that we did not use in the previous chapters but that you may encounter as you use it more extensively.

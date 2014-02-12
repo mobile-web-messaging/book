@@ -84,3 +84,7 @@ client.send("/topic/mytopic", { priority: 7 }, order);
 ----
 ====
 
+=== Summary
+
+TODO
+
