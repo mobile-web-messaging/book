@@ -1,5 +1,5 @@
 [[ch_introduction_stomp_example]]
-=== Truck Tracker Application Using STOMP
+=== +Locations+ Application Using STOMP
 
 Let's take the example of a delivery company like UPS that manages a fleet of trucks.
 Each truck is responsible for the delivery of packages.
@@ -10,55 +10,51 @@ They receive orders from their headquarter to:
 
 To manage efficiently all the trucks, the company head quarters want to monitor the truck's positions and be able to send them orders on-the-go.
 
-Each truck will use a mobile application, the _Truck App_, to broadcast its geolocation data (using the GPS sensor of the mobile device runnig the application).
-This application will also let them receive orders from the headquarter.
+We will build a very simple iOS application named +Locations+ that looks similar to this example. This application will broadcast the device's geolocation data (using is GPS sensor).
+It will also display text messages that it receives from a destination.
 
-The company's headquarter will use a Web application, the _Control Center_, that displays the position of all the trucks on a map.
-This Web application will also be used to send orders to a given truck.
-There will be many _Control Center_ applications running at the same time: one for each administrator managing the fleets.
+The pending Web application will display the locations of all the devices on a map. it will also be used to send text messages to a given devices.
 
-This application will be composed all along the book after each chapter that introduces the required information to write the application.
-
-. In <<ch_mobile_stomp>>, we will write the +TruckRacker+ iOS application using the STOMP protocol to send GPS data and receive orders from an iOS device.
-. In <<ch_web_stomp>>, we will write a Web application using STOMP protocol over Web Sockets to receive GPS data in a Web browser and send orders to the trucks.
+. In <<ch_mobile_stomp>>, we will write the +Locations+ iOS application using the STOMP protocol to send GPS data and receive text from an iOS device.
+. In <<ch_web_stomp>>, we will write a Web application using STOMP protocol over Web Sockets to receive GPS data in a Web browser and send text to the devices.
 
 [[img_example_app_1]]
-.The +Truck Tracker+ application with two trucks, +AAA+ and +BBB+ and one +Control Center+.
-image::images/Chapter011/example_diagram_1.png["Diagram of the Truck Tracker application"]
+.The +Locations+ application with two devices, +AAA+ and +BBB+ and one Web application.
+image::images/Chapter011/stomp_app_diagram_1.png["Diagram of the Locations application"]
 
-Before introducing the messaging protocols that will be used by the application, we can already define 
+Before introducing the messaging protocol that will be used by the application, we can already define 
 the application's messaging topology and how the different parts of the application will exchange messages.
 
 [[ch_introduction_stomp_example_topology]]
 ==== Messaging Topology
 
-Each truck will be associated to 2 destinations:
+Each device will be associated to 2 destinations:
 
-* a topic to broadcast its GPS data: +truck.XXX.data+ where +XXX+ is the truck identifier
-* a queue to receive orders (where to go, which package to pick, etc.): +truck.XXX.orders+
+* a topic to broadcast its GPS geolocation data: +device.XXX.location+ where +XXX+ is the device identifier
+* a queue to receive simple text message : +device.XXX.text+
 
 A topic is used to send the GPS data as this allows potentially many consumers to receive the information.
 
-However a queue is used to handle the truck's orders as only one single truck will consume messages from this destination.
+However a queue is used to handle the device's text as only one single device will consume messages from this destination.
 It does not make sense for any other consumers to receive it.
 
-Each +Truck App+ will be:
+Each device running the +Locations+ application will be:
 
-* a _producer_ of messages to the topic +truck.XXX.data+
-* a _consumer_ of messages from the queue +truck.XXX.orders+
+* a _producer_ of messages to the topic +device.XXX.location+
+* a _consumer_ of messages from the queue +device.XXX.text+
 
-Conversely, the +Control Center+ Web application will be:
+Conversely, the Web application will be:
 
-* a _consumer_ of messages from all the topics +truck.XXX.data+
-* a _producer_ of message from the queues +truck.XXX.orders+
+* a _consumer_ of messages from all the topics +device.XXX.location+
+* a _producer_ of message from the queues +device.XXX.text+
 
 [[ch_introduction_stomp_example_message]]
 ==== Message Representation
 
 There will be two types of exchanged messages:
 
-* one to represent GPS data (sent to the topics +truck.XXX.data+)
-* one to represent orders (sent to the queues +truck.XXX.orders+)
+* one to represent GPS data (sent to the topics +device.XXX.location+)
+* one to represent orders (sent to the queues +device.XXX.text+)
 
 ===== Geolocation messages
 The Truck app will send the GPS data using a JSON representation:
@@ -68,37 +64,34 @@ The Truck app will send the GPS data using a JSON representation:
 ====
 ----
 {
-  "truck": "BBB",<1>
+  "deviceID": "BBB",<1>
   "lat": 48.8581,<2>
   "lng": 2.2946,<3>
   "ts": "2013-09-23T08:43Z"<4>
 }
 ----
-<1> +truck+ is the identifier of the truck that sends its position
+<1> +deviceID+ is the identifier of the device that sends its position
 <2> +lat+ is a number representing the position's _latitude_
 <3> +lng+ is a number representing the position's _longitude_
 <4> +ts+ is a string representing the time when the position was taken (using the http://en.wikipedia.org/wiki/ISO_8601[ISO 8601] format)
 ====
 
-===== Order messages
-The order messages will be also be represented using JSON with a single +order+ attribute:
+===== Text messages
+The text messages that will be consumed by the +Locations+ iOP app will
+be represented as a simple plain text string.
 
-[[ex_example_order]]
-.Order data representation
-====
+[[ex_example_text]]
+.Text data representation
 ----
-{
-  "order": "Go to warehouse #1"<1>
-}
+"Where are you heading to?"
 ----
-====
 
-A more realistic representation of this message would also contain the position of the destination address but this
+A more realistic representation of this message would also contain the name of the person sending the message, etc. We are using a plain text version as this
 format is enough to provide a first version.
 
 With the messaging topology and data representation known, we can already refine the application diagram.
 
 [[img_example_app_2]]
-.The +Truck Tracker+ application's data workflow.
-image::images/Chapter011/example_diagram_2.png["Diagram of the Truck Tracker application data worflow"]
+.The +Locations+ application's data workflow.
+image::images/Chapter011/stomp_app_diagram_2.png["Diagram of the Locations application data worflow"]
 

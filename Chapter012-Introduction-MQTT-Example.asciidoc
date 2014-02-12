@@ -1,14 +1,14 @@
 [[ch_introduction_mqtt_example]]
-=== HeartBeat Tracker Application Using MQTT
+=== +Motions+ Application Using MQTT
 
 TODO
 
-. In <<ch_mobile_mqtt>>, we will write the +HeartBeat+ iOS application using the MQTT protocol to send a _simulated_ heartbeat rate and receive alerts if there is a problem with this rate.
-. In <<ch_web_mqtt>>, we will write a Web application using MQTT protocol over Web Sockets to receive all the heartbeats rate and send alerts for any of the clients that send them.
+. In <<ch_mobile_mqtt>>, we will write the +Motions+ iOS application using the MQTT protocol to send data about the device motions and receive alerts.
+. In <<ch_web_mqtt>>, we will write a Web application using MQTT protocol over Web Sockets to receive all the device motions data and display them. The Web application will also be able to send alert messages to any devices sending its motions data.
 
 [[img_mqtt_example_app_1]]
-.The +HeartBeat+ application with two clients, +AAA+ and +BBB+ and two Web applications monitoring them.
-image::images/Chapter012/heartbeat_app_diagram.png["Diagram of the HeartBeat application"]
+.The +Motions+ application with two clients, +AAA+ and +BBB+ and two Web applications monitoring them.
+image::images/Chapter012/mqtt_app_diagram_1.png["Diagram of the +Motions+ application"]
 
 [[ch_introduction_mqtt_example_topology]]
 ==== Messaging Topology
@@ -19,3 +19,7 @@ TODO
 ==== Message Representation
 
 TODO
+
+[[img_mqtt_example_app_2]]
+.The +Motions+ application with two clients, +AAA+ and +BBB+ and two Web applications monitoring them.
+image::images/Chapter012/mqtt_app_diagram_2.png["Diagram of the +Motions+ application"]
