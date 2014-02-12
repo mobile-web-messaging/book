@@ -18,7 +18,23 @@ TODO
 [[ch_introduction_mqtt_example_message]]
 ==== Message Representation
 
-TODO
+[[ex_example_motion_data]]
+.Device motion data representation
+====
+----
+<< 1.6 -0.1 0.8 >> <1>
+----
+<1> The message is composed of three 64-bit float
+====
+
+[[ex_example_alert_data]]
+.Alert representation
+====
+----
+"red" <1>
+----
+<1> The message is composed of a string containing the name of a simple color. 
+====
 
 [[img_mqtt_example_app_2]]
 .The +Motions+ application with two clients, +AAA+ and +BBB+ and two Web applications monitoring them.

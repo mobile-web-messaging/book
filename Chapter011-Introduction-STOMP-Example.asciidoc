@@ -82,9 +82,11 @@ be represented as a simple plain text string.
 
 [[ex_example_text]]
 .Text data representation
+====
 ----
 "Where are you heading to?"
 ----
+====
 
 A more realistic representation of this message would also contain the name of the person sending the message, etc. We are using a plain text version as this
 format is enough to provide a first version.
