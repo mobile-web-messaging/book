@@ -13,6 +13,21 @@ image::images/Chapter012/mqtt_app_diagram_1.png["Diagram of the +Motions+ applic
 [[ch_introduction_mqtt_example_topology]]
 ==== Messaging Topology
 
+Each device will be associated to two destinations:
+
+* a topic to broadcast its motion data: +/mwm/XXX/motion+ where +XXX+ is the device identifier
+* a topic to receive alert message : +/mwm/XXX/alert+
+
+Each device running the +Motions+ application will be:
+
+* a _producer_ of messages to the topic +/mwm/XXX/motion+
+* a _consumer_ of messages from the topic +/mwm/XXX/alert+
+
+Conversely, the Web application will be:
+
+* a _consumer_ of messages from all the topics +/mwm/XXX/motion+
+* a _producer_ of message from the queues +/mwm/XXX/alert+
+
 TODO
 
 [[ch_introduction_mqtt_example_message]]

@@ -28,7 +28,7 @@ the application's messaging topology and how the different parts of the applicat
 [[ch_introduction_stomp_example_topology]]
 ==== Messaging Topology
 
-Each device will be associated to 2 destinations:
+Each device will be associated to two destinations:
 
 * a topic to broadcast its GPS geolocation data: +device.XXX.location+ where +XXX+ is the device identifier
 * a queue to receive simple text message : +device.XXX.text+
