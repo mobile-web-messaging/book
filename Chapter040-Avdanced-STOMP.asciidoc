@@ -54,6 +54,10 @@ Headers are read by the STOMP brokers and can be used by them. Payload is opaque
 
 We will cover some use cases for adding headers in the next chapter.
 
+=== Authentication
+
+TODO
+
 === Message Acknowledgement
 
 Message acknowledgement is a feature available to STOMP _consumers_.

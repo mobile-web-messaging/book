@@ -1117,6 +1117,11 @@ To consume a message, the application must
 . connect to the STOMP broker
 . subscribe to the destination and pass a block that is called every time a message is received. This block is executed on GCD global queue. If there are any code that changes the user interface, it must be wrapped in a block executed on the main queue instead.
 
+We use two different types of message payloads:
+
+* a JSON payload by using its string representation for the message body and specifying +application/json; charset=utf-8+ in its +content-type+ header
+* a simple plain text payload using a string in its payload without any +content-type+ header.
+
 Sending and consuming messages are only possible once the client is _successfully_ connected to the STOMP broker. Due to the event-driven design of StompKit, this is the case when the completionHandler block is executed without an error in +connectWithHeaders:completionHandler:+. 
 
 

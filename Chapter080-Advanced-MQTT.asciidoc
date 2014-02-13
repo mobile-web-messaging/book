@@ -4,15 +4,47 @@
 [role="lead"]
 TODO
 
+=== Connection Options
+
+TODO 
+
+=== Heart-beat
+
+* Keep Alive timer
+
 === Last Will
 
 TODO
 
-=== Retain
+=== Message Retry
+
+TODO
+
+=== Clean Session
+
+TODO
+
+=== Topic Wildcards
+
+TODO
+
+=== Retained Message
 
 TODO
 
 === Quality of Service
+
+TODO
+
+==== QoS level 0: At most once delivery
+
+TODO
+
+==== QoS level 1: At least once delivery
+
+TODO
+
+==== QoS level 2: Exactly once delivery
 
 TODO
 
