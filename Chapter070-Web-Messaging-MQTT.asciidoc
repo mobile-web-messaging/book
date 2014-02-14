@@ -18,23 +18,206 @@ The whole application code can be retrieved from the https://github.com/mobile-w
 
 TODO
 
+[[ex_web_stomp_1]]
+====
+[source,html]
+----
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content="width=device-width" name="viewport">
+  <meta charset="utf-8">
+  <title>Motions - MQTT Example</title>
+  <link rel="stylesheet" type="text/css" href="http://bgrins.github.com/spectrum/spectrum.css">
+</head>
+<body>
+  <h1>Motions - MQTT Example</h1>
+  
+  <h2>Devices</h2>
+  <ul id="devices">
+  </ul>
+
+  <footer>&copy; 2014 <a href="http://mobile-web-messaging.net">Mobile &amp; Web Messaging</a></footer>
+
+  <script src='mqttws31.js'></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+  <script src="http://omnipotent.net/jquery.sparkline/2.1.2/jquery.sparkline.min.js"></script>
+  <script>
+$(document).ready(function() {
+
+// We will put all the JavaScript code in this block that is called
+// when the document is ready
+
+});
+  </script>
+</body>
+</html>
+----
+====
+
+TODO
+
 === Create a MQTT Client with mqttws31.js
 
 TODO
 
+[source,js]
+----
+$(document).ready(function() {
+
+  var host = "iot.eclipse.org";
+  var port = 80;
+  var clientID = Math.random().toString(12);
+
+  var devices = {};
+
+  var client = new Messaging.Client(host, Number(port), clientID);
+}
+----
+
 === Connect to the MQTT Broker
 
+TODO
+
+[source,js]
+----
+  client.onConnectionLost = function(response) {
+    if (response.errorCode !== 0) {
+      alert(response.errorMessage + "\nclientID = " + client.clientID + " [" + response.errorCode + "]\n");
+    }
+  };            
+  client.connect({onSuccess: function(frame) {
+    // this function is executed after a successful connection to the MQTT broker.
+  },
+    onFailure: function(failure) {
+      alert(failure.errorMessage);
+    }
+  }); 
+----
 TODO
 
 === Receive MQTT Messages
 
 TODO
 
+[source,js]
+----
+  client.connect({onSuccess: function(frame) {
+    // once the client is successfully connected,
+    // subscribe to all the motions topics
+    client.subscribe("/mwm/+/motion");
+  },
+    onFailure: function(failure) {
+      alert(failure.errorMessage);
+    }
+  });
+----
+
+TODO
+
+[source,js]
+----
+// subscription callback
+client.onMessageArrived = function(message) {
+  // get the device's id from the message's destination
+  var deviceID = message.destinationName.split("/")[2];
+
+  // get the device data from the message payload as a byte array
+  var data = message.payloadBytes;
+  // use a DataView on the data buffer to get the 3 motions values as double (aka Float64)
+  var values = new DataView(data.buffer);
+  var pitch = values.getFloat64(data.byteOffset);
+  var roll = values.getFloat64(data.byteOffset + Float64Array.BYTES_PER_ELEMENT);
+  var yaw = values.getFloat64(data.byteOffset + 2 * Float64Array.BYTES_PER_ELEMENT );
+
+  updateSparklines(deviceID, pitch, roll, yaw);
+};
+----
+
 === Draw Sparklines
 
 TODO
 
+[source,js]
+----
+function updateSparklines(deviceID, pitch, yaw, roll) {
+  var values = devices[deviceID];
+  // if the device is not known, create the UI for it
+  if (!values) {
+    var item = $('#devices').append(
+      $('<li>').attr("id", deviceID).append(
+        $('<label>').text(deviceID),
+        $('<button>').text("Alert!").click(function() { sendAlert(deviceID); }),
+        $('<br>'),
+        $('<div>').attr('class', 'rate')
+      )
+    );
+    // create an empty array to hold its values
+    values = {
+      "pitch" : [],
+      "roll" : [],
+      "yaw" : [],        
+    };
+  }    
+  // add the new value at the end of the array
+  values.pitch.push(pitch);
+  values.roll.push(roll);
+  values.yaw.push(yaw);
+  // keep only the 50 more recent values
+  if (values.pitch.length > 50) {
+    values.pitch.splice(0,1); 
+    values.roll.splice(0,1); 
+    values.yaw.splice(0,1); 
+  }
+  // put back the updated values in the clients map
+  devices[deviceID] = values;
+  // display the values as a sparkline
+  $('#'+ deviceID + ' .rate').sparkline(values.pitch, {
+    width: values.pitch.length * 5,
+    tooltipPrefix: "pitch:",
+    lineColor: 'red',
+    fillColor: false,
+    chartRangeMin: -3,
+    chartRangeMax: 3,
+    height: '36px'
+  });
+  $('#'+ deviceID + ' .rate').sparkline(values.roll, {
+    tooltipPrefix: "roll:",
+    lineColor: 'green',
+    composite: true,
+    fillColor: false,
+    chartRangeMin: -3,
+    chartRangeMax: 3
+  });
+  $('#'+ deviceID + ' .rate').sparkline(values.yaw, {
+    tooltipPrefix: "yaw:",
+    lineColor: 'blue',
+    composite: true,
+    fillColor: false,
+    chartRangeMin: -3,
+    chartRangeMax: 3
+  });
+}
+----
+
+TODO
+
+[[img_web_mqtt_1]]
+.Two +Motions+ app are publishing their device motions.
+image::images/Chapter070/motions_web_app.png["Two +Motions+ app are publishing their device motions."]
+
+
 === Send MQTT Messages
+
+[source,js]
+----
+function sendAlert(deviceID) {
+  // create a message with an empty payload
+  var message = new Messaging.Message("red");
+  message.destinationName = "/mwm/" + deviceID + "/alert";
+  client.send(message);
+}
+----
 
 TODO
 
