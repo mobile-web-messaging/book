@@ -13,9 +13,9 @@ TODO
 
 TODO
 
-[source]
+[source,sh]
 ----
-mosquitto_pub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/alert -m yellow
+$ mosquitto_pub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/alert -m yellow
 ----
 
 TODO
@@ -24,9 +24,9 @@ TODO
 
 TODO
 
-[source]
+[source,sh]
 ----
-mosquitto_sub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/motion | hexdump
+$ mosquitto_sub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/motion | hexdump
 ----
 
 TODO
