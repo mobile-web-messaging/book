@@ -26,6 +26,8 @@ include::Chapter080-Advanced-MQTT.asciidoc[]
 
 include::AppendixA-ActiveMQ.asciidoc[]
 
+include::AppendixB-Mosquitto.asciidoc[]
+
 include::Bibliography.asciidoc[]
 
 include::index.asciidoc[]

@@ -3,7 +3,7 @@
 == Mosquitto
 
 [role="lead"]
-In this appendix, we describe how to install and configure Mosquitto, an Open Source MQTT v3.1 Broker
+In this appendix, we describe how to install and configure Mosquitto, an Open Source MQTT v3.1 Broker.
 
 === Download and Installation
 
