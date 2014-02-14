@@ -41,6 +41,36 @@ TODO
 
 TODO
 
+[[ex_mobile_mqtt_1]]
+.Motions's Podfile
+====
+----
+xcodepxcodeproj 'Motions.xcodeproj'
+
+pod 'MQTTKit', :git => 'https://github.com/jmesnil/MQTTKit.git'
+
+platform :ios, '5.0'
+----
+====
+
+TODO
+
+[[ex_mobile_mqtt_2]]
+.Install Motions dependencies
+====
+----
+$ pod install
+Analyzing dependencies
+Pre-downloading: `MQTTKit` from `https://github.com/jmesnil/MQTTKit.git`
+Downloading dependencies
+Installing MQTTKit (0.1.0)
+Generating Pods project
+Integrating client project
+
+[!] From now on use `Motions.xcworkspace`.
+----
+====
+
 [[img_mobile_mqtt_3]]
 .Open the workspace file
 image::images/Chapter060/open_workspace.png["Open the workspace file"]
@@ -57,9 +87,36 @@ image::images/Chapter060/deviceID_label.png["Add a label to display the device I
 
 TODO
 
+[source,objc]
+----
+@interface MWMViewController ()
+
+@property (weak, nonatomic) IBOutlet UILabel *deviceIDLabel;
+
+@property (strong, nonatomic) NSString *deviceID;
+
+@end
+----
+
+TODO
+
 [[img_mobile_mqtt_5]]
 .Connect the label to the outlet property.
 image::images/Chapter060/deviceIDLabel_connection.png["Connect the label to the outlet property"]
+
+TODO
+
+[source,objc]
+----
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    self.deviceID = [UIDevice currentDevice].identifierForVendor.UUIDString;
+    NSLog(@"Device identifier is %@", self.deviceID);
+    self.deviceIDLabel.text = self.deviceID;
+}
+----
 
 TODO
 
@@ -73,6 +130,14 @@ image::images/Chapter060/motions_labels.png["Add 3 labels to display the device'
 
 TODO
 
+[source,objc]
+----
+@property (weak, nonatomic) IBOutlet UILabel *pitchLabel;
+@property (weak, nonatomic) IBOutlet UILabel *rollLabel;
+@property (weak, nonatomic) IBOutlet UILabel *yawLabel;
+----
+TODO
+
 [[img_mobile_mqtt_7]]
 .Connect the label to the outlet property.
 image::images/Chapter060/pitchLabel_connection.png["Connect the label to the outlet property"]
@@ -82,6 +147,55 @@ TODO
 === Capture the device motions with +CoreMotion+
 
 TODO
+
+[source,objc]
+----
+#import <CoreMotion/CoreMotion.h>
+
+@interface MWMViewController ()
+
+@property (strong, nonatomic) CMMotionManager *motionManager;
+
+@end
+----
+
+TODO
+
+[source,objc]
+----
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    self.deviceID = [UIDevice currentDevice].identifierForVendor.UUIDString;
+    NSLog(@"Device identifier is %@", self.deviceID);
+    self.deviceIDLabel.text = self.deviceID;
+    
+    self.motionManager = [[CMMotionManager alloc] init];
+    // use a frequency of circa 10Hz to get the device motion updates
+    self.motionManager.deviceMotionUpdateInterval = 0.1;
+    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    [self.motionManager startDeviceMotionUpdatesToQueue:queue withHandler:^(CMDeviceMotion *motion, NSError *error) {
+        if(!error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.pitchLabel.text = [NSString stringWithFormat:@"pitch: %.1f", motion.attitude.pitch];
+                self.rollLabel.text = [NSString stringWithFormat:@"roll: %.1f", motion.attitude.roll];
+                self.yawLabel.text = [NSString stringWithFormat:@"yaw: %.1f", motion.attitude.yaw];
+            });
+        }
+    }];
+}
+----
+
+TODO
+
+[source,objc]
+----
+- (void)dealloc
+{
+    [self.motionManager stopDeviceMotionUpdates];
+}
+----
 
 [[img_mobile_mqtt_8]]
 .The motion values change when the device moves.
@@ -93,25 +207,252 @@ TODO
 
 TODO
 
+[source,objc]
+----
+#import <MQTTKit/MQTTKit.h>
+
+#define kMqttHost @"iot.eclipse.org"
+
+@interface MWMViewController () <MQTTClientDelegate>
+
+@property (strong, nonatomic) MQTTClient *mqttClient;
+
+@end
+----
+
+TODO
+
+[source,objc]
+----
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    // self.deviceID = [UIDevice currentDevice].identifierForVendor.UUIDString;
+    self.deviceID = @"C0962483-7DD9-43CC-B1A0-2E7FBFC05060";
+    NSLog(@"Device identifier is %@", self.deviceID);
+
+    ...
+
+    self.mqttClient = [[MQTTClient alloc] initWithClientId:self.deviceID];
+    // Override point for customization after application launch.
+    self.mqttClient.delegate = self;
+}
+----
+
+TODO
+
+[source,objc]
+----
+#pragma mark - MQTTClientDelegate
+
+- (void)client:(MQTTClient *)client
+    didConnect:(NSUInteger)code
+{
+    // do nothing for the moment
+}
+----
+
 === Connect to a MQTT Broker
 
 TODO
+
+[source,objc]
+----
+#pragma mark - MQTT actions
+
+- (void)connect
+{
+    [self.mqttClient connectToHost:kMqttHost];
+}
+----
+
+TODO
+
+[source,objc]
+----
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    ...
+
+    self.mqttClient = [[MQTTClient alloc] initWithClientId:self.deviceID];
+    // Override point for customization after application launch.
+    self.mqttClient.delegate = self;
+
+    [self connect];
+}
+----
 
 === Disconnect from a MQTT Broker
 
 TODO
 
-=== Send MQTT Messages
+[source,objc]
+----
+- (void)disconnect
+{
+    [self.mqttClient disconnect];
+}
+----
 
 TODO
+
+[source,objc]
+----
+- (void)dealloc
+{
+    [self.motionManager stopDeviceMotionUpdates];
+    [self disconnect];
+}
+----
+
+=== Send MQTT Messages
+
+[source,objc]
+----
+- (void)send:(CMAttitude *)attitude
+{
+    uint64_t values[3] = {
+        CFConvertDoubleHostToSwapped(attitude.pitch).v,
+        CFConvertDoubleHostToSwapped(attitude.roll).v,
+        CFConvertDoubleHostToSwapped(attitude.yaw).v
+    };
+    NSData *data = [NSData dataWithBytes:&values length:sizeof(values)];
+    [self.mqttClient publishData:data
+                         toTopic:[NSString stringWithFormat:kMotionTopic, self.deviceID]
+                         withQos:0
+                          retain:NO];
+
+}
+----
+
+[source,objc]
+----
+- (void)viewDidLoad
+{
+    ...
+    [self.motionManager startDeviceMotionUpdatesToQueue:queue withHandler:^(CMDeviceMotion *motion, NSError *error) {
+        if(!error) {
+            [self send:motion.attitude];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.pitchLabel.text = [NSString stringWithFormat:@"pitch: %.1f", motion.attitude.pitch];
+                self.rollLabel.text = [NSString stringWithFormat:@"roll: %.1f", motion.attitude.roll];
+                self.yawLabel.text = [NSString stringWithFormat:@"yaw: %.1f", motion.attitude.yaw];
+            });
+        }
+    }];
+    ...
+}
+----
 
 === Receive MQTT Messages
 
+[source,objc]
+----
+#pragma mark - MQTTClientDelegate
+
+- (void)client:(MQTTClient *)client didReceiveMessage:(MQTTMessage *)message
+{
+    NSString *alertTopic = [NSString stringWithFormat:kAlertTopic, self.deviceID];
+    if ([alertTopic isEqualToString:message.topic]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self warnUser:message.payloadString];
+        });
+    }
+}
+----
+
 TODO
+
+[source,objc]
+----
+# pragma mark - UI Actions
+
+// Warn the user by changing the view's background color to red for 2 seconds
+- (void)warnUser:(NSString *)colorStr
+{
+    // keep a reference to the original color
+    UIColor *originalColor = self.view.backgroundColor;
+    
+    [UIView animateWithDuration:0.5
+                          delay:0.0
+                        options:0
+                     animations:^{
+                         // change it to the color passed in parameter
+                         SEL sel = NSSelectorFromString([NSString stringWithFormat:@"%@Color", colorStr]);
+                         UIColor* color = nil;
+                         if ([UIColor respondsToSelector:sel]) {
+                             color  = [UIColor performSelector:sel];
+                         } else {
+                             color = [UIColor redColor];
+                         }
+                         self.view.backgroundColor = color;
+                     }
+                     completion:^(BOOL finished) {
+                         // after a delay of 2 seconds, revert it to the original color
+                         [UIView animateWithDuration:0.5
+                                               delay:2
+                                             options:0
+                                          animations:^{
+                                              self.view.backgroundColor = originalColor;
+                                          }
+                                          completion:nil];
+                     }];
+}
+----
+
+TODO
+
+[source,objc]
+----
+- (void)subscribe
+{
+    NSString *alertTopic = [NSString stringWithFormat:kAlertTopic, self.deviceID];
+    [self.mqttClient subscribe:alertTopic
+                       withQos:0];
+}
+----
+
+TODO
+
+[source,objc]
+----
+#pragma mark - MQTTClientDelegate
+
+- (void)client:(MQTTClient *)client
+    didConnect:(NSUInteger)code
+{
+    // once connect, subscribe to the client's alerts topic
+    [self subscribe];
+}
+----
 
 === Unsubscribe From the Topic
 
 TODO
+
+[source,objc]
+----
+- (void)unsubscribe
+{
+    NSString *alertTopic = [NSString stringWithFormat:kAlertTopic, self.deviceID];
+    [self.mqttClient unsubscribe:alertTopic];
+}
+----
+
+TODO
+
+[source,objc]
+----
+- (void)dealloc
+{
+    [self.motionManager stopDeviceMotionUpdates];
+    [self unsubscribe];
+    [self disconnect];
+}
+----
 
 === Summary
 
