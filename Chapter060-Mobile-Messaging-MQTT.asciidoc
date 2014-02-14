@@ -25,17 +25,67 @@ The whole application code can be retrieved from the https://github.com/mobile-w
 
 === Create the +Motions+ project With Xcode
 
+[[img_mobile_mqtt_1]]
+.Select iOs > Application > **`Single View Application`**.
+image::images/Chapter060/template_screen.png["XCode template screen"]
+
+TODO
+
+[[img_mobile_mqtt_2]]
+.XCode project options screen
+image::images/Chapter060/project_options_screen.png["XCode project options screen"]
+
 TODO
 
 === Create the Podfile
 
 TODO
 
-=== Identify the Client
+[[img_mobile_mqtt_3]]
+.Open the workspace file
+image::images/Chapter060/open_workspace.png["Open the workspace file"]
+
+TODO
+
+=== Identify the Device
+
+TODO
+
+[[img_mobile_mqtt_4]]
+.Add a label to display the device ID.
+image::images/Chapter060/deviceID_label.png["Add a label to display the device ID"]
+
+TODO
+
+[[img_mobile_mqtt_5]]
+.Connect the label to the outlet property.
+image::images/Chapter060/deviceIDLabel_connection.png["Connect the label to the outlet property"]
+
+TODO
+
+=== Display the device motions
+
+TODO
+
+[[img_mobile_mqtt_6]]
+.Add 3 labels to display the device's pitch, roll and yaw values.
+image::images/Chapter060/motions_labels.png["Add 3 labels to display the device's pitch, roll and yaw values."]
+
+TODO
+
+[[img_mobile_mqtt_7]]
+.Connect the label to the outlet property.
+image::images/Chapter060/pitchLabel_connection.png["Connect the label to the outlet property"]
 
 TODO
 
 === Capture the device motions with +CoreMotion+
+
+TODO
+
+[[img_mobile_mqtt_8]]
+.The motion values change when the device moves.
+image::images/Chapter060/app.png["The motion values change when the device moves."]
 
 TODO
 

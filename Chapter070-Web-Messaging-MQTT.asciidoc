@@ -38,6 +38,11 @@ TODO
 
 TODO
 
+[[img_web_mqtt_2]]
+.The +Motions+ application backgrounds becomes red when an alert is sent to its alert topic.
+image::images/Chapter070/app_red.png["The +Motions+ application backgrounds becomes red when an alert is sent to its alert topic."]
+
+
 === Summary
 
 TODO

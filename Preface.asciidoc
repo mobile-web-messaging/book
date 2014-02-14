@@ -105,6 +105,9 @@ In this chapter, I present the advanced features of MQTT that we did not use in 
 Appendix A, ActiveMQ::
 In this appendix, we explain how to install and configure the messaging broker, Apache ActiveMQ, that is used in the book to run the STOMP examples.
 
+Appendix B, Mosquitto::
+In this appendix, we explain how to install and configure the messaging broker, Mosquitto, that is used in the book to send and receive MQTT messages.
+
 .What Should I Read?
 [NOTE]
 ====
