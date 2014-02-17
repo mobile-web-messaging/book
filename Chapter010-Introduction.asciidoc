@@ -30,3 +30,13 @@ image::images/Chapter010/point_to_point.png["Diagram of the Point-to-Point Topol
 [[img_intro_pub_sub]]
 .Diagram of the Publish/Subscribe Topology
 image::images/Chapter010/pub_sub.png["Diagram of the Point-to-Point Topology"]
+
+=== Message Representation
+
+. Destination
+. Headers
+. Payload
+
+[[img_intro_message_representation]]
+.Diagram of a Message
+image::images/Chapter010/message_representation.png["Diagram of a Message"]
