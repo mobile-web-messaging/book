@@ -9,3 +9,24 @@ To illustrate them, I'll write an application to track a fleet of trucks. The ap
 === Request/reply protocol
 
 HTTP hits the sweet spot between simplicity and efficiency. It has few disadvantages but one of the main one is that it follows a request/reply pattern where the client must _initiate_ a request to get a _reply_ from the server. In other words, the server can not send data to the HTTP client if this one does not send a request first. There are workarounds to overcome this challenges but they bring additional issues when they are used. Messaging protocol are well suited for this kind of use cases.
+
+
+=== Messaging Topology
+
+==== Point-to-Point
+
+* Queue
+* _one-to-one_: For one message that is sent by a producer, there is only one consumer that receives it. 
+
+[[img_intro_point_to_point]]
+.Diagram of the Point-to-Point Topology
+image::images/Chapter010/point_to_point.png["Diagram of the Point-to-Point Topology"]
+
+==== Publish/Subscribe
+
+* Topics
+* _one-to-many_: For one message that is sent by a producer, there are many consumer that receives it.
+
+[[img_intro_pub_sub]]
+.Diagram of the Publish/Subscribe Topology
+image::images/Chapter010/pub_sub.png["Diagram of the Point-to-Point Topology"]
