@@ -6,7 +6,7 @@ In this chapter, we will write a Web application that sends and receives message
 
 [[img_web_stomp_1]]
 .Diagram of the +Locations+ Web application
-image::images/Chapter021/stomp_web_app.png["Diagram of the +Locations+ Web application"]
+image::images/Chapter030/stomp_web_app.png["Diagram of the +Locations+ Web application"]
 
 === Web Browser Communication Model
 
@@ -401,7 +401,7 @@ If we open now this +control.html+ file in a Web browser, we will see a map of t
 
 [[img_web_stomp_1]]
 .The Control Center Web application.
-image::images/Chapter021/control_center.png["The Control Center Web application"]
+image::images/Chapter030/control_center.png["The Control Center Web application"]
 
 If we click on the +Connect+ button, markers will appear on the map for each truck that sents its coordinates. 
 
@@ -409,7 +409,7 @@ In my case, I am using the iOS simulator to run the mobile application developed
 
 [[img_web_stomp_2]]
 .Following a truck on a freeway drive.
-image::images/Chapter021/truck_freeway_drive.png["Following a truck on a freeway drive"]
+image::images/Chapter030/truck_freeway_drive.png["Following a truck on a freeway drive"]
 
 The position of the truck is updated every time the Web application receives a STOMP message from the truck's position destination and you will see it move on the map.
 
@@ -481,13 +481,13 @@ Let's type an order such as +Go to office depot #2+ and click on the +Send+ butt
 
 [[img_web_stomp_3]]
 .Send an order to a truck.
-image::images/Chapter021/send_order.png["Send an order to a truck"]
+image::images/Chapter030/send_order.png["Send an order to a truck"]
 
 The message is sent when you click on the +Send+ button. Since the mobile application is subscribed to this destination, it will receive the message and display it in its table.
 
 [[img_web_stomp_4]]
 .The mobile application received the order.
-image::images/Chapter021/mobile_app_received_order.png["The mobile application received the order"]
+image::images/Chapter030/mobile_app_received_order.png["The mobile application received the order"]
 
 === Summary
 
