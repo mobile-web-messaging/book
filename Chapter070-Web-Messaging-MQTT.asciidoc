@@ -4,6 +4,10 @@
 [role="lead"]
 In this chapter, we will write a Web application that sends and receives messages using the MQTT protocol over HTML5 Web Sockets.
 
+[[img_web_mqtt_1]]
+.Diagram of the +Motions+ Web application that displays data for two devices
+image::images/Chapter070/mqtt_web_app.png["The +Motions+ Web application that displays data for two devices."]
+
 === Paho JavaScript client
 
 In <<ch_mobile_mqtt_paho>>, we mentioned http://eclipse.org/paho[Eclipe Paho] as our MQTT applications use the broker hosted by it.
@@ -259,7 +263,7 @@ function updateSparklines(deviceID, pitch, yaw, roll) {
 
 TODO
 
-[[img_web_mqtt_1]]
+[[img_web_mqtt_2]]
 .Two +Motions+ app are publishing their device motions.
 image::images/Chapter070/motions_web_app.png["Two +Motions+ app are publishing their device motions."]
 
@@ -278,7 +282,7 @@ function sendAlert(deviceID) {
 
 TODO
 
-[[img_web_mqtt_2]]
+[[img_web_mqtt_3]]
 .The +Motions+ application backgrounds becomes red when an alert is sent to its alert topic.
 image::images/Chapter070/app_red.png["The +Motions+ application backgrounds becomes red when an alert is sent to its alert topic."]
 

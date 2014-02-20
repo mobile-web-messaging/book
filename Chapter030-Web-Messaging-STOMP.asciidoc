@@ -4,6 +4,10 @@
 [role="lead"]
 In this chapter, we will write a Web application that sends and receives messages using the STOMP protocol over HTML5 Web Sockets.
 
+[[img_web_stomp_1]]
+.Diagram of the +Locations+ Web application
+image::images/Chapter021/stomp_web_app.png["Diagram of the +Locations+ Web application"]
+
 === Web Browser Communication Model
 
 One-way communication from the browser to the server. The server could not send data to the browser without the browser first initiating the conversation.

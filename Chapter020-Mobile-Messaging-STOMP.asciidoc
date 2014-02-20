@@ -5,6 +5,10 @@
 In this chapter, we will write our first messaging client: an native application running on an iPhone. 
 We will use the STOMP protocol to send and receive messages using StompKit, an Objective-C implementation of the protocol.
 
+[[img_mobile_stomp_1]]
+.Diagram of the +Locations+ iOS application
+image::images/Chapter020/stomp_ios_app.png["Diagram of the +Locations+ iOS application"]
+
 === STOMP
 
 For the next four chapters, we will use the STOMP protocol to build our applications.
