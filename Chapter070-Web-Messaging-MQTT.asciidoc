@@ -8,18 +8,18 @@ In this chapter, we will write a Web application that sends and receives message
 .Diagram of the +Motions+ Web application that displays data for two devices
 image::images/Chapter070/mqtt_web_app.png["The +Motions+ Web application that displays data for two devices."]
 
+=== About the Code
+
+All along the chapter, we will show all the code required to run the application.
+
+The whole application code can be retrieved from the https://github.com/mobile-web-messaging/code[GitHub repository] in the +mqtt/web/+ directory.
+
 === Paho JavaScript client
 
 In <<ch_mobile_mqtt_paho>>, we mentioned http://eclipse.org/paho[Eclipe Paho] as our MQTT applications use the broker hosted by it.
 Eclipse Paho provides a variety of MQTT clients for different languages and platforms. In particular, they offer a JavaScript client for Web browser that uses HTML5 Web Sockets.
 
 The source code of the project is hosted in this  http://git.eclipse.org/c/paho/org.eclipse.paho.mqtt.javascript.git/[Git repository].
-
-=== About the Code
-
-All along the chapter, we will show all the code required to run the application.
-
-The whole application code can be retrieved from the https://github.com/mobile-web-messaging/code[GitHub repository] in the +mqtt/web/+ directory.
 
 === Bootstrap the Motions Web Application
 

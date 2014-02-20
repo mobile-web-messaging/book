@@ -9,11 +9,17 @@ communication. Its simplicity and compactness make it ideally suited for mobile 
 .Diagram of the +Motions+ iOS application
 image::images/Chapter060/mqtt_ios_app.png["Diagram of the +Motions+ iOS application"]
 
+=== About the Code
+
+All along the chapter, we will show all the code required to run the application.
+
+The whole application code can be retrieved from the https://github.com/mobile-web-messaging/code[GitHub repository] in the +mqtt/ios/+ directory.
+
 === MQTT
 
 TODO
 
-=== MQTTKit
+=== +MQTTKit+
 
 TODO
 
@@ -21,12 +27,6 @@ TODO
 === Eclipse Paho MQTT Server
 
 TODO
-
-=== About the Code
-
-All along the chapter, we will show all the code required to run the application.
-
-The whole application code can be retrieved from the https://github.com/mobile-web-messaging/code[GitHub repository] in the +mqtt/ios/+ directory.
 
 === Create the +Motions+ project With Xcode
 

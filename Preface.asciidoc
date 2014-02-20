@@ -20,7 +20,7 @@ In two sentences, I introduced the five concepts that are (almost) all there is 
 * a _destination_ is a type of address that is used to exchange messages
 * a _sender_ is an application that sends _messages_ *to* a _destination_
 * a _consumer_ is an application that consumes _messages_ *from* a _destination_
-* a _broker_ is the server entity that will handle messages from producers and distribute them to the consumers according to their destinations.
+* a _broker_ is the server entity that will handle messages from producers and delivers them to the consumers according to their destinations.
 
 [[img_preface_messaging_concepts]]
 .Messaging Concepts

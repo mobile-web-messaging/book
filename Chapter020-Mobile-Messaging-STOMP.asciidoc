@@ -2,12 +2,18 @@
 == Mobile Messaging With STOMP
 
 [role="lead"]
-In this chapter, we will write our first messaging client: an native application running on an iPhone. 
-We will use the STOMP protocol to send and receive messages using StompKit, an Objective-C implementation of the protocol.
+In this chapter, we will present the STOMP messaging protocool and write our first messaging client: an native application running on an iPhone. 
+We will use STOMP to send and receive messages using the Objective-C library StompKit.
 
 [[img_mobile_stomp_1]]
 .Diagram of the +Locations+ iOS application
 image::images/Chapter020/stomp_ios_app.png["Diagram of the +Locations+ iOS application"]
+
+=== About the Code
+
+All along the chapter, we will show all the code required to run the application.
+
+The whole application code can be retrieved from the https://github.com/mobile-web-messaging/code[GitHub repository] in the +stomp/ios/+ directory.
 
 === STOMP
 
@@ -35,11 +41,7 @@ Once ActiveMQ is started, it accepts STOMP connections on the +61613+ port.
 
 To use STOMP on iOS, we will use the StompKit library that implements the STOMP protocol in a modern event-driven way using ARC, Grand Central Dispatch and blocks.
 
-=== About the Code
-
-All along the chapter, we will show all the code required to run the application.
-
-The whole application code can be retrieved from the https://github.com/mobile-web-messaging/code[GitHub repository] in the +stomp/ios/+ directory.
+The source code of this library project is hosted on https://github.com/mobile-web-messaging/StompKit/[GitHub].
 
 === Create the +TruckTracker+ Project With Xcode
 

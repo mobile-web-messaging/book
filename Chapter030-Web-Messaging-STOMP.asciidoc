@@ -8,6 +8,12 @@ In this chapter, we will write a Web application that sends and receives message
 .Diagram of the +Locations+ Web application
 image::images/Chapter030/stomp_web_app.png["Diagram of the +Locations+ Web application"]
 
+=== About the Code
+
+All along the chapter, we will show all the code required to run the application.
+
+The whole application code can be retrieved from the https://github.com/mobile-web-messaging/code[GitHub repository] in the +stomp/web/+ directory.
+
 === Web Browser Communication Model
 
 One-way communication from the browser to the server. The server could not send data to the browser without the browser first initiating the conversation.
@@ -23,12 +29,6 @@ We are no longer limited to pull-based messages where the browser need to regula
 stomp.js is a small JavaScript library that implements the STOMP protocol over HTML 5 Web Sockets and allows to send and receive STOMP messages in a Web browser.
 
 TODO
-
-=== About the Code
-
-All along the chapter, we will show all the code required to run the application.
-
-The whole application code can be retrieved from the https://github.com/mobile-web-messaging/code[GitHub repository] in the +stomp/web/+ directory.
 
 === Bootstrap the Control Center Web Application
 
