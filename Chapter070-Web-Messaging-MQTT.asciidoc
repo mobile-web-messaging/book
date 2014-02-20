@@ -168,7 +168,7 @@ The +message+ object defines two properties to receive its payload content:
 * +payloadBytes+ corresponds to a +ArrayBuffer+ representation of the message payload
 * +payloadString+ corresponds to a UTF-8 string representation of the message payload. This property can only be used if the payload is composed of valid UTF-8 characters.
 
-In <<ch_introduction_mqtt_example_message>>, we decided to send the device motions data as an array of 3 64-bit floats corresponding to the motions pitch, yaw and roll values.
+In <<ch_introduction_mqtt_example_message>>, we decided to send the device motions data as an array of 3 64-bit floats corresponding to the motions pitch, roll, and yaw values.
 
 To be able to get these values, we must use the +payloadBytes+ property and use a +DataView+ to retrieve the three values for this array.
 
@@ -195,7 +195,18 @@ client.onMessageArrived = function(message) {
 
 === Draw Sparklines
 
-TODO
+The +updateSparklines()+ method will store the motions values in the +devices+ object that was created when the page is loaded.
+It will create the HTML elements to display the data and use jQuery Sparklines to display them in a graphic.
+
+The +devices+ object is a map whose keys will the +deviceID+s of the device that are sending the motion data. The values will be composed of three arrays to store the received value for +pitch+, +roll+, +yaw+. We will only keep the 50 most recent values.
+
+We will create three separate sparklines for:
+
+* +pitch+ (displayed in red)
+* +roll+ (diplayed in green)
+* +yaw+ (displayed in blue)
+
+These three sparkline will be composited in a single canvas that is drawn in the +<div class="data">+ elment created inside the +<div>+ element identified by the +deviceID+.
 
 [source,js]
 ----
@@ -208,7 +219,7 @@ function updateSparklines(deviceID, pitch, yaw, roll) {
         $('<label>').text(deviceID),
         $('<button>').text("Alert!").click(function() { sendAlert(deviceID); }),
         $('<br>'),
-        $('<div>').attr('class', 'rate')
+        $('<div>').attr('class', 'data')
       )
     );
     // create an empty array to hold its values
@@ -231,7 +242,7 @@ function updateSparklines(deviceID, pitch, yaw, roll) {
   // put back the updated values in the clients map
   devices[deviceID] = values;
   // display the values as a sparkline
-  $('#'+ deviceID + ' .rate').sparkline(values.pitch, {
+  $('#'+ deviceID + ' .data').sparkline(values.pitch, {
     width: values.pitch.length * 5,
     tooltipPrefix: "pitch:",
     lineColor: 'red',
@@ -240,7 +251,7 @@ function updateSparklines(deviceID, pitch, yaw, roll) {
     chartRangeMax: 3,
     height: '36px'
   });
-  $('#'+ deviceID + ' .rate').sparkline(values.roll, {
+  $('#'+ deviceID + ' .data').sparkline(values.roll, {
     tooltipPrefix: "roll:",
     lineColor: 'green',
     composite: true,
@@ -248,7 +259,7 @@ function updateSparklines(deviceID, pitch, yaw, roll) {
     chartRangeMin: -3,
     chartRangeMax: 3
   });
-  $('#'+ deviceID + ' .rate').sparkline(values.yaw, {
+  $('#'+ deviceID + ' .data').sparkline(values.yaw, {
     tooltipPrefix: "yaw:",
     lineColor: 'blue',
     composite: true,
@@ -259,14 +270,27 @@ function updateSparklines(deviceID, pitch, yaw, roll) {
 }
 ----
 
-TODO
+Note that we also create a button "Alert!" for each devices that calls the +sendAlert()+ method with the +deviceID+ when the button is clicked. We will implement this method in the next section.
+
+At this stage, we can alreay load the application in a Web browser. If there are devices that are running the +Motions+ iOS applications, we will see them appear automatically on the page.
 
 [[img_web_mqtt_2]]
 .Two +Motions+ app are publishing their device motions.
 image::images/Chapter070/motions_web_app.png["Two +Motions+ app are publishing their device motions."]
 
-
 === Send MQTT Messages
+
+We have now create a Web application that receives MQTT messages.
+
+The other feature of this Web application is to _send_ a MQTT message to an alert topic so that the device that subscribes to this topic will change its background color using the message payload.
+
+When the HTML elements for a device were created, we added a +<button>+ that calls +sendAlert(deviceID)+ when the user clicks on it.
+
+In this method, we will create a MQTT message object using the +new Messaging.Message()+ constructor and pass a +"red"+ to it to set its payload.
+
+The message object has a +destinationName+ property that must be set prior to sending the message. We use the +deviceID+ to build the name of the topic corresponding to this device alert: +"/mwm/" $$+$$ deviceID $$+$$ "/alert"+.
+
+Finally last step is to call +client.send()+ and pass it the +message+ to send it to the topic. Note that the +client+ is already connected when the page was loaded.
 
 [source,js]
 ----
@@ -278,13 +302,30 @@ function sendAlert(deviceID) {
 }
 ----
 
-TODO
+If we reload the web application and clicks on an "Alert!" button, the corresponding device will receive the message from its alert topic and the code that we wrote in <<ch_mobile_mqtt_receive>> will be executed to change temporarily the background color of the device.
 
 [[img_web_mqtt_3]]
-.The +Motions+ application backgrounds becomes red when an alert is sent to its alert topic.
-image::images/Chapter070/app_red.png["The +Motions+ application backgrounds becomes red when an alert is sent to its alert topic."]
-
+.The +Motions+ application background becomes red when an alert is received from its alert topic.
+image::images/Chapter070/app_red.png["The +Motions+ application background becomes red when an alert is received from its alert topic."]
 
 === Summary
 
-TODO
+In this chapter, we learn to use MQTT over Web Socket to send and receive MQTT messages from a Web application.
+
+We dealts with two type of message payload:
+
+* a binary payload composed of 3 64-bit floats
+* a String payload
+
+To send a message, the application must:
+
+. connect to the MQTT broker
+. send the message to a topic
+
+To consume a message, the application must
+
+. connect to the STOMP broker
+. subscribe to a (potentially wildcard) topic and set a handler that is called every time a message is received.
+
+In the next chapter, we will learn about more advanced features of MQTT that were not required to write this simple application. However, it is likely that you may need some of these features if your applications are more complex.
+
