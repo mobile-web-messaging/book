@@ -152,9 +152,7 @@ Note that it would not have been a good idea to use the more general wildcard +/
     // subscribe to all the motions topics
     client.subscribe("/mwm/+/motion");
   },
-    onFailure: function(failure) {
-      alert(failure.errorMessage);
-    }
+    ...
   });
 ----
 
