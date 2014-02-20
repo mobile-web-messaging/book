@@ -2,11 +2,14 @@
 == Web Messaging With MQTT
 
 [role="lead"]
-TODO
+In this chapter, we will write a Web application that sends and receives messages using the MQTT protocol over HTML5 Web Sockets.
 
-=== mqtt.js, MQTT Over Web Sockets
+=== Paho JavaScript client
 
-TODO
+In <<ch_mobile_mqtt_paho>>, we mentioned http://eclipse.org/paho[Eclipe Paho] as our MQTT applications use the broker hosted by it.
+Eclipse Paho provides a variety of MQTT clients for different languages and platforms. In particular, they offer a JavaScript client for Web browser that uses HTML5 Web Sockets.
+
+The source code of the project is hosted in this  http://git.eclipse.org/c/paho/org.eclipse.paho.mqtt.javascript.git/[Git repository].
 
 === About the Code
 
@@ -16,9 +19,19 @@ The whole application code can be retrieved from the https://github.com/mobile-w
 
 === Bootstrap the Motions Web Application
 
-TODO
+As we explained in <<ch_introduction_mqtt_example>>, this Web application will display on a Web page the motion data sent by the devices using the +Motions+ iOS application written in the previous chapter.
+Additionnally, the Web application will also be able to send alert messages to the devices.
 
-[[ex_web_stomp_1]]
+It will be a very simple one-page Web application that can be run from a Web server serving static pages. It does not require
+any server-side runtime as all the code will be executed inside the Web browser using JavaScript.
+
+To display the device motions data, we will use http://en.wikipedia.org/wiki/Sparkline[Sparklines]. The Web application use jQuery and a library named http://omnipotent.net/jquery.sparkline(jQuery Sparklines) for this.
+
+Note however that we use jQuery for convenience but the MQTT JavaScript client does not require it at all and can be used with any JavaScript frameworks or libraries.
+ 
+Let's bootstrap the Web application by creating a *motions.html__* page.
+
+[[ex_web_mqtt_1]]
 ====
 [source,html]
 ----
@@ -55,11 +68,14 @@ $(document).ready(function() {
 ----
 ====
 
-TODO
-
 === Create a MQTT Client with mqttws31.js
 
-TODO
+When the browser loads this page, we will cerate a MQTT client using the JavaScript library.
+
+To create the client we must pass the MQTT broker host and port. In our case, it is respectively +iot.eclipse.org+ and +80+. Note than in <<ch_mobile_mqtt_client>>, the +Motions+ iOS application was connecting to +iot.eclipse.org+ on its default port +1883+. This default port expects a TCP socket connection. Since the Web application uses HTML5 Web Sockets, it must connect to the +80+ port that will handle the HTTP Upgrade process from the initial HTTP connection.
+
+We also need to configure a +clientID+ that identifies the MQTT client.
+In our case, we will just use a random String.
 
 [source,js]
 ----
@@ -77,7 +93,13 @@ $(document).ready(function() {
 
 === Connect to the MQTT Broker
 
-TODO
+Once the +client+ is created, the next step is to connect to the MQTT broker.
+There are four steps to achieve that in a proper fashion:
+
+. define a +onConnectionLost+ handler that will be called back if the connection is lost _after the client has been successfully connected_.
+. define a +onSuccess+ handler that will be called if the client is successfully connected
+. define a +onFailure+ handler that will be called if the client fails to connect to the broker.
+. call +client.connect()+ and pass the +onSuccess+ and +onFailure+ handlers in an object parameter.
 
 [source,js]
 ----
@@ -94,11 +116,30 @@ TODO
     }
   }); 
 ----
-TODO
+
+All these handlers are optional and you may omit them. However without them, the Web application may fail to connect or lose connection without any way to let the user be aware of it.
 
 === Receive MQTT Messages
 
-TODO
+Once the client is successfully connected to the MQTT broker (that is to say when the +onSuccess+ handler is called), we can then subscribe to a topic to receive all the device motions.
+
+Since MQTT client does not know the whole list of devices that send their motion data, it can not subscribe to specific MQTT topics.
+
+Fortunately MQTT defines wildcards for topic that is useful for this case.
+There are three characters that have a special meaning when they are used in a MQTT topic.
+
+Topic level separator +/+::
+The forward slash (/) is used to separate each level within a topic tree and provide a hierarchical structure to the topic space. The use of the topic level separator is significant when the two wildcard characters are encountered in topics specified by subscribers.
+
+Multi-level wildcard +#+::
+The number sign (#) is a wildcard character that matches any number of levels within a topic.
+
+Single-level wildcard +$$+$$+::
+The plus sign (+) is a wildcard character that matches only one topic level. 
+
+The Web application is interested to receive any messages sent to topics of the form +/mwm/XXX/motion+ where +XXX+ is the device identifier. It maps to the MQTT wildcard topic +/mwm/$$+$$/motion+.
+
+Note that it would not have been a good idea to use the more general wildcard +/mwm/#+ (using the multi-level wildcard) as it would have matched both +/mwm/XXX/motion+ _and_ +/mwm/XXX/alert+. The Web application is not interested by the alert sent to the devices. It is better to subscribe to the most specific wildcard topic instead of being too general and filters out message later. This also preserve network bandwith and CPU usage that the broker will not deliver messages to the client that would have to process them before discarding them anyhow.
 
 [source,js]
 ----
@@ -113,7 +154,23 @@ TODO
   });
 ----
 
-TODO
+We have subscribed to the +/mwm/$$+$$/motion+ wildcard topic but how do we handle messages that will be delivered by the broker for all the topics that matches?
+
+The +client+ object has a +onMessageArrived+ property that will be called every time a message is delivered to the client. This property must be a function that takes a single +message+ parameter corresponding to the MQTT message that is delivered to the client.
+
+This +message+ object defines several properties representing the MQTT message data. The +destinationName+ property contains the actual name of the topic that
+delivered this message. Since we have chosen to use a meaningful topic names of the form +/mwm/XXX/motion+, we can extract the +deviceID+ from the +destinationName+.
+
+The +message+ object defines two properties to receive its payload content:
+
+* +payloadBytes+ corresponds to a +ArrayBuffer+ representation of the message payload
+* +payloadString+ corresponds to a UTF-8 string representation of the message payload. This property can only be used if the payload is composed of valid UTF-8 characters.
+
+In <<ch_introduction_mqtt_example_message>>, we decided to send the device motions data as an array of 3 64-bit floats corresponding to the motions pitch, yaw and roll values.
+
+To be able to get these values, we must use the +payloadBytes+ property and use a +DataView+ to retrieve the three values for this array.
+
+Once we got these +pitch+, +roll+, and +yaw+ values, we call the +updateSparklines()+ method to udpate the sparkline for the given +deviceID+
 
 [source,js]
 ----

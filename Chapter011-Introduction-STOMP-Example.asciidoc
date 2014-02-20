@@ -26,7 +26,7 @@ Before introducing the messaging protocol that will be used by the application, 
 the application's messaging topology and how the different parts of the application will exchange messages.
 
 [[ch_introduction_stomp_example_topology]]
-==== Messaging Topology
+==== Locations Messaging Topology
 
 Each device will be associated to two destinations:
 
@@ -49,7 +49,7 @@ Conversely, the Web application will be:
 * a _producer_ of message from the queues +device.XXX.text+
 
 [[ch_introduction_stomp_example_message]]
-==== Message Representation
+==== Locations Message Representation
 
 There will be two types of exchanged messages:
 

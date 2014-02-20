@@ -11,7 +11,7 @@ TODO
 image::images/Chapter012/mqtt_app_diagram_1.png["Diagram of the +Motions+ application"]
 
 [[ch_introduction_mqtt_example_topology]]
-==== Messaging Topology
+==== Motions Messaging Topology
 
 Each device will be associated to two destinations:
 
@@ -31,7 +31,7 @@ Conversely, the Web application will be:
 TODO
 
 [[ch_introduction_mqtt_example_message]]
-==== Message Representation
+==== Motions Message Representation
 
 [[ex_example_motion_data]]
 .Device motion data representation
