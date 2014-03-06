@@ -12,13 +12,13 @@ Messaging protocols _complement_ HTTP and this book will show cases where using 
 
 === Messaging is Simple
 
-At its core, the messaging concepts are simple: an application _sends_ a _message_ to a _destination_ on a _broker_. Independently (at another time, on another machine), another application subscribes to this same destination to _consume_ the message.
+At its core, the messaging concepts are simple: an application _produces_ a _message_ to a _destination_ on a _broker_. Independently (at another time, on another machine), another application subscribes to this same destination to _consume_ the message.
 
 In two sentences, I introduced the five concepts that are (almost) all there is to know about messaging:
 
 * a _message_ is the data that are exchanged between applications
 * a _destination_ is a type of address that is used to exchange messages
-* a _sender_ is an application that sends _messages_ *to* a _destination_
+* a _producer_ is an application that sends _messages_ *to* a _destination_
 * a _consumer_ is an application that consumes _messages_ *from* a _destination_
 * a _broker_ is the server entity that will handle messages from producers and delivers them to the consumers according to their destinations.
 
@@ -28,16 +28,24 @@ image::images/Preface/messaging_concepts.png["Diagram of the messaging concepts"
 
 The simplicity of messaging can be deceiving but it is this simplicity that allows to use it in powerful, sometimes complex ways.
 
-One key aspect of messaging is that it couples very loosely its participants. The sender and consumer know nothing of each other. When one application sends a message, it has no knowledge on when or where the message will be consumed.
+.Messaging Terminology
+[NOTE]
+====
+Depending on the messaging protocol or model, the _producer_ is sometimes called _sender_ or _publisher_. Likewise, the _consumer_ may be called _receiver_ or _subscriber_.
+
+In this book, I will always use the general terms of _producer_ and _consumer_.
+====
+
+One key aspect of messaging is that it couples very loosely its participants. The sender and consumer know nothing of each other. When one application produces a message, it has no knowledge on when or where the message will be consumed.
 There may be one or many consumers that will receive the message. It also possible that the message will not be consumed at all if nobody has registered any interest for it.
 
 Likewise, when an application consumes a message, it does not know which application sent it.
 
-Senders and consumers do not even need to be online at the same time. The sender can send a message and exit. The message will be held by the broker until a consumer subscribes to the same destination. At that moment, the broker will deliver the message to the consumer.
+Producers and consumers do not even need to be online at the same time. The producers can send a message and exit. The message will be held by the broker until a consumer subscribes to the same destination. At that moment, the broker will deliver the message to the consumer.
 
-Senders and consumers need to know about the broker to connect to it but they may even not connect to the same broker. A set of brokers can constitute a cluster and messages would flow from one to another before it is finally delivered to a consumer.
+Producers and consumers need to know about the broker to connect to it but they may even not connect to the same broker. A set of brokers can constitute a cluster and messages would flow from one to another before it is finally delivered to a consumer.
 
-Messaging protocol is a simple idea. Most of the complexity of using it is figuring out the best suited _topology_ for your applications (the type of destinations to use). This book will show the two topologies that are most commonly used to build messaging applications: _queues_ and _topics_.
+Messaging protocol is a simple idea. Most of the complexity of using it is figuring out the best suited _model_ for your applications (the type of destinations to use). This book will show the two models that are most commonly used to build messaging applications: _point-to-point_ and _publish/subscribe_.
 
 === Enterprise Messaging Is Not So Simple
 

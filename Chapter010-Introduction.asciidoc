@@ -5,31 +5,49 @@
 In this chapter, I'll present the main concepts of messaging.
 To illustrate them, I'll write an application to track a fleet of trucks. The application will be composed of two parts: an app running on mobile devices that broadcasts the geolocation data of the device and receive orders and a Web app that displays all the devices on a map and send them orders.
 
-
 === Request/reply protocol
 
 HTTP hits the sweet spot between simplicity and efficiency. It has few disadvantages but one of the main one is that it follows a request/reply pattern where the client must _initiate_ a request to get a _reply_ from the server. In other words, the server can not send data to the HTTP client if this one does not send a request first. There are workarounds to overcome this challenges but they bring additional issues when they are used. Messaging protocol are well suited for this kind of use cases.
 
+=== Messaging Models
 
-=== Messaging Topology
+A messaging model describes how the messages will be routed between the producer and consumers.
+
+There are two main messaging models:
+
+* Point-to-Point
+* Publish/Subscribe
 
 ==== Point-to-Point
 
-* Queue
-* _one-to-one_: For one message that is sent by a producer, there is only one consumer that receives it. 
+In a Point-to-Point messaging model, a message sent by a producer will be routed to a single consumer.
+
+The producer sends a message to a destination identified as a _queue_ in that messaging model. There can be none or many consumers subscribed (or _bound_) to this queue and the messaging broker will route incoming messages to only one of these consumers to deliver the message.
 
 [[img_intro_point_to_point]]
 .Diagram of the Point-to-Point Topology
 image::images/Chapter010/point_to_point.png["Diagram of the Point-to-Point Topology"]
 
+This messaging model is also called _one-to-one_: for _one_ message sent by a producer to the queue, there is only _one_ consumer that will receive it.
+
+If there are no consumers bound to the queue, the broker will retain the incoming messages until a consumer subscribes and then deliver the message to it.
+Some messaging brokers also allows to _expire_ messages if they remain in the queue for a certain amount of time. This can be useful to avoid having consumers receive message corresponding to _stale_ data.
+
 ==== Publish/Subscribe
 
-* Topics
-* _one-to-many_: For one message that is sent by a producer, there are many consumer that receives it.
+In a Publish/Subscribe messaging model (often shortened as pub/sub), a message sent by a producer is routed to many consumers.
+
+The producer sends a message to a destination identified as a _topic_ in that messaging model. There can be none or many consumers subscribed to this topic and the messaging broker will route incoming message to _all_ these consumers to deliver the message. If there are no consumers bound to the topic, the broker will _not_ retain the incoming messages.
 
 [[img_intro_pub_sub]]
 .Diagram of the Publish/Subscribe Topology
 image::images/Chapter010/pub_sub.png["Diagram of the Point-to-Point Topology"]
+
+This messaging model is also called _one-to-many_: for _one_ message sent by a producer to a topic, there are _many_ consumers that will receive it.
+
+When a message is sent to a topic in this model, we often say that it is _broadcasted_ to all consumers as they will all receive it.
+
+Some protocols defines the notions of _durable subscribers_. If a consumer subscribes to the topic as a durable subscriber, the broker will retain messages when the consumer is offline and deliver the message when it comes online again.
 
 === Message Representation
 

@@ -17,7 +17,7 @@ The whole application code can be retrieved from the https://github.com/mobile-w
 
 === MQTT
 
-TODO
+MQTT only supports the _Publish/Subscribe_ messaging model. 
 
 === +MQTTKit+
 

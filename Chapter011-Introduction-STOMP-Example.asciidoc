@@ -26,22 +26,20 @@ Before introducing the messaging protocol that will be used by the application, 
 the application's messaging topology and how the different parts of the application will exchange messages.
 
 [[ch_introduction_stomp_example_topology]]
-==== Locations Messaging Topology
+==== +Locations+ Messaging Models
 
-Each device will be associated to two destinations:
+In this application, we will use two destinations, one with a Publish/Subscribe model to broadcast the device GPS data and one with a Point-to-Point model to exchange the text messages:
 
-* a topic to broadcast its GPS geolocation data: +device.XXX.location+ where +XXX+ is the device identifier
-* a queue to receive simple text message : +device.XXX.text+
+* +device.XXX.location+ is the _topic_ to broadcast its GPS geolocation data where +XXX+ is the device identifier (Publish/Subscribe model) 
+* +device.XXX.text+ is the _queue_ to receive simple text message  (Point-to-Point model)
 
 A topic is used to send the GPS data as this allows potentially many consumers to receive the information.
-
 However a queue is used to handle the device's text as only one single device will consume messages from this destination.
-It does not make sense for any other consumers to receive it.
 
 Each device running the +Locations+ application will be:
 
 * a _producer_ of messages to the topic +device.XXX.location+
-* a _consumer_ of messages from the queue +device.XXX.text+
+* the only _consumer_ of messages from the queue +device.XXX.text+
 
 Conversely, the Web application will be:
 
