@@ -5,9 +5,11 @@
 In this chapter, we will present the STOMP messaging protocool and write our first messaging client: an native application running on an iPhone. 
 We will use STOMP to send and receive messages using the Objective-C library StompKit.
 
+In <<ch_introduction_stomp_example>>, we describe the +Locations+ applications. In this chapter, we will write its iOS application that will broadcast the GPS position and receive text message.
+
 [[img_mobile_stomp_1]]
 .Diagram of the +Locations+ iOS application
-image::images/Chapter020/stomp_ios_app.png["Diagram of the +Locations+ iOS application"]
+image::images/Chapter020/stomp_ios_app.png["Diagram of the Locations iOS application"]
 
 === About the Code
 
@@ -19,31 +21,29 @@ The whole application code can be retrieved from the https://github.com/mobile-w
 
 For the next four chapters, we will use the STOMP protocol to build our applications.
 
-STOMP is a simple text-based messaging protocol that is well suited to build lightweight messaging applications on any platforms.
-
-STOMP provides an interoperable wire format so that clients can communicate with any message broker.
-The simplicity of the protocol ensures that it's straightforward to have interoperability between any client and brokers.
-
 This book covers the latest released version of the protocol at the time of this writing: STOMP 1.2 <<stomp1.2>>. 
 
-STOMP does not define the semantic of the destination, they depend on the STOMP Broker you are using.
+STOMP is a simple text-based messaging protocol that is well suited to build lightweight messaging applications on any platforms. It provides an interoperable wire format so that any client can communicate with any message broker.
+The simplicity of the protocol ensures that it is straightforward to have interoperability between client and brokers.
+
+STOMP does not define the semantic of the destination, they depend on the STOMP broker you are using.
 
 There are some conventions shared by STOMP brokers (for example, prefixing a destination by +/queue/+ to use a queue and by +/topic/+ to use a topic) but you need to consult your broker documentation to check which messaging model are supported (including _Point-to-Point_ and _Publish/Subscribe_) and how to use them.
 
 .Install and configure a messaging broker
 [NOTE]
 ====
-Before using a STOMP client, a messaging broker must be installed and
+Before using a STOMP client, a broker must be installed and
 configured to be able to exchange messages.
 
 In this book, we use Apache ActiveMQ as the messaging broker. The <<appendix_activemq>> shows how to install and configure ActiveMQ.
 
-Once ActiveMQ is started, it accepts STOMP connections on the +61613+ port.
+Once ActiveMQ is started, it will accept STOMP connections on the +61613+ port.
 ====
 
 === StompKit
 
-To use STOMP on iOS, we will use the StompKit library that implements the STOMP protocol in a modern event-driven way using ARC, Grand Central Dispatch and blocks.
+To use STOMP on iOS, we will use the +StompKit+ Objective-C library that implements the STOMP protocol in a modern event-driven way using ARC, Grand Central Dispatch and blocks.
 
 The source code of this library project is hosted on https://github.com/mobile-web-messaging/StompKit/[GitHub].
 
@@ -54,16 +54,16 @@ We will use https://developer.apple.com/xcode/[Xcode] to create the +TruckTracke
 Once Xcode is installed and started, we create a new project from its launch screen:
 
 [[img_mobile_stomp_1]]
-.Select **`Create a new Xcode project" from Xcode launch screen**`.
+.Select +Create a new Xcode project+ from Xcode launch screen.
 image::images/Chapter020/xcode_launch_screen.png["XCode Launch screen"]
 
-The application consists in a single view so we choose the **`Single View Application`** template in iOs > Application from the template screen.
+The application consists in a single view so we choose the **`Single View Application`** template in +iOs > Application+ from the template screen.
 
 [[img_mobile_stomp_2]]
-.Select iOs > Application > **`Single View Application`**.
+.Select +Single View Application+ from the template screen
 image::images/Chapter020/template_screen.png["XCode template screen"]
 
-We will call the project **`TruckTracker`** and select to build it only for iPhone devices.
+We will call the project +Locations+ and select to build it only for iPhone devices.
 
 [[img_mobile_stomp_3]]
 .XCode project options screen
@@ -73,102 +73,101 @@ Finally we will save it in a folder on our machine.
 
 === Create the Podfile
 
-To import the library that we will use to send and receive messages, we will setup the project to use _CocoaPods_, an Objective-C Library Manager.
+To import the library that we will use to send and receive messages, we will setup the project to use http://cocoapods.org[CocoaPods], an Objective-C Library Manager.
 
 First we need to close Xcode because we will modify the project structure to import our dependencies.
 
-After we have installed CocoaPods using the instructions on http://cocoapods.org[its web site], we create a file at the root of the project (in the same directory than **`TruckTracker.xcodeproj`**) named _Podfile_.
+After installing CocoaPods by following the instructions on its web site, we create a file at the root of the project (in the same directory than +Locations.xcodeproj+) named **`Podfile`**.
 
 [[ex_mobile_stomp_1]]
-.TruckTracker's Podfile
+.+Locations+' Podfile
 ====
 ----
-xcodeproj 'TruckTracker.xcodeproj'
+xcodeproj 'Locations.xcodeproj'
 
-pod 'StompKit', :git => 'https://github.com/mobile-web-messaging/StompKit.git'
+pod 'StompKit', '~> 0.1'
 
 platform :ios, '5.0'
 ----
 ====
 
-After this file is saved, run the **`pod install`** command.
+After saving this file, run the **`pod install`** command.
 
 [[ex_mobile_stomp_2]]
-.Install TruckTracker dependencies
+.Install +Locations+ dependencies
 ====
 ----
 $ pod install
 Analyzing dependencies
-Pre-downloading: `StompKit` from `https://github.com/mobile-web-messaging/StompKit.git`
 Downloading dependencies
 Installing CocoaAsyncSocket (7.3.2)
-Installing StompKit (0.1.1)
+Installing StompKit (0.1.0)
 Generating Pods project
 Integrating client project
 
-[!] From now on use `TruckTracker.xcworkspace`.
+[!] From now on use `Locations.xcworkspace`.
 ----
 ====
 
-We can now open again Xcode but we must do it using the *worspace* file named **`TruckTracker.xcworkspace`**, not the *project* file **`TruckTracker.xcodeproj`**.
+We can now open again Xcode but we must do it using the _Workspace_ file named +Locations.xcworkspace+, and not the _Project_ file named +Locations.xcodeproj+.
 
 [[img_mobile_stomp_4]]
-.Open the workspace file
-image::images/Chapter020/open_worskpace.png["Open the workspace file"]
+.Open the Workspace file
+image::images/Chapter020/open_worskpace.png["Open the Workspace file"]
 
-First, let's make sure that the project is setup correctly and that the application can run in the iOS simulator.
+First, we will verify that the project is setup correctly and that the application can run in the iOS simulator.
 
-We will simulate the latest iPhone devices by selecting **`Product`** > **`Destination`** > **`iPhone Retina (4-inch 64-bit)`** from Xcode menu bar.
+We will simulate the latest iPhone devices by selecting +Product > Destination > iPhone Retina (4-inch 64-bit)+ from Xcode menu bar.
 If we run the application by selecting **`Product`** > **`Run`** (or pressing **`⌘R`**), the iOS simulator starts and opens the application which is composed of a blank view.
 
 [[img_mobile_stomp_5]]
-.TruckTracker Blank View
-image::images/Chapter020/blank_view.png["TruckTracker Blank View"]
+.+Locations+ Blank View
+image::images/Chapter020/blank_view.png["Locations Blank View"]
 
-Nothing is displayed but it confirms that the project and its dependencies can be successfully compiled and executed.
+Nothing is displayed but it confirms that the project and its dependencies are  successfully compiled and launched.
 
-=== Identify the Truck
+=== Identify The Device
 
-The iPhone device is used by the truck driver to broadcast its position. The first thing to do is identify the truck. To keep the example simple, we will use a _universal unique identifier_ (or UUID) as the truck identity and display it in the view.
+The iPhone device is will broadcast its position. The first thing to do is identify the device. To keep the example simple, we will use a _universal unique identifier_ (or UUID) as the device identifier and display it in the view.
 
-Since the app will run only on iPhone devices, all the user interface will be setup in the **`Main.storyboard`** file.
+Since the application will run only on iPhone devices, all the user interface will be setup in the **`Main.storyboard`** file.
 
-Click on **`Main.storyboard`** to open it. From the `Object` library, drag a label on the `View`'s window. Place it at the top of the view and change the label to `Truck ID`. Make it as wide as possible.
+Click on **`Main.storyboard`** to open it. From the +Object+ library, drag a +Label+ on the +View+'s window. Place it at the top of the view and change the text to +Device ID+.
 
 [[img_mobile_stomp_6]]
-.Make the label as wide as the window.
-image::images/Chapter020/truckID_label_wide.png["Make the label as wide as the window"]
+.Add the Device ID label.
+image::images/Chapter020/deviceID_label.png[Add the Device ID label]
 
-We will change its appearance by setting its **`Font`** to **`System 13.0`** and its **`Alignment`** to centered.
+The UUID that we will generate is quite long so we will change its appearance by setting its +Font+ +System 13.0+ and its +Alignment+ to centered to fit the screen.
 
 [[img_mobile_stomp_7]]
-.Set the alignment to centered.
-image::images/Chapter020/truckID_Label_options.png["Set the alignment to centered"]
+.Change the appearance of the device ID label.
+image::images/Chapter020/deviceID_label_options.png[Change the appearance of the device ID label]
 
-We will connect this label to the `MWMViewController` object.
+We will connect this label to the +MWMViewController+ object.
 
-Add the necessary outlet property in **`MWMViewController.m`** and a NSString to hold the identifier.
+Add the necessary outlet property in +MWMViewController.m+ and a +NSString+ to hold the identifier.
 
 [source,objc]
 ----
 @interface MWMViewController ()
 
-@property (weak, nonatomic) IBOutlet UILabel *truckIDLabel;
+@property (weak, nonatomic) IBOutlet UILabel *deviceIDLabel;
 
-@property (copy, nonatomic) NSString *truckID;
+@property (copy, nonatomic) NSString *deviceID;
 
 @end
 ----
 
-Open the **`Main.storyboard`** and control-click on +View Controller+ to see its connection panel. Drag from +truckIdLabel+ to the +UILabel+ to connect it.
+Open the +Main.storyboard+ and control-click on +View Controller+ to see its connection panel. Drag from +deviceIDLabel+ to the +UILabel+ to connect it.
 
 [[img_mobile_stomp_8]]
-.Connect the label to the outlet property.
-image::images/Chapter020/truckID_label_connection.png["Connect the label to the outlet property"]
+.Connect the +deviceIDLabel+ outlet property to the device ID +UILabel+.
+image::images/Chapter020/deviceIDLabel_connection.png[Connect the deviceIDLabel outlet property to the device ID UILabel]
 
 Now that the outlet property is connected to the label, we need to generate a UUUID for the application and display it when the view appears.
 
-Open **`MWMViewController.m`** to add code to the **`MWMViewController`** _implementation_. When the application starts and the view is loaded in **`viewDidLoad`**, we set the +truckID+ using a UUID.
+Open the +MWMViewController.m+ file to add code to the +MWMViewController+ _implementation_. When the application starts and the view is loaded in +viewDidLoad+, we set the +deviceID+ using a UUID.
 
 [source,objc]
 ----
@@ -176,15 +175,15 @@ Open **`MWMViewController.m`** to add code to the **`MWMViewController`** _imple
 {
     [super viewDidLoad];
 
-    self.truckID = [UIDevice currentDevice].identifierForVendor.UUIDString;
-    NSLog(@"Truck identifier is %@", self.truckID);
+    self.deviceID = [UIDevice currentDevice].identifierForVendor.UUIDString;
+    NSLog(@"Device identifier is %@", self.deviceID);
 }
 ----
 
 .About Unique Identifier
 [NOTE]
 ====
-The **`identifierForVendor`** property will uniquely identify the device for the application's vendor (that we set to **`net.mobile-web-messaging`** when we create the project). That is enough for the purpose of our example but in a real application, the truck driver would likely have to login and authenticate himself when the application is started and fetch its truck ID from the company's servers.
+The +identifierForVendor+ property will uniquely identify the device for the application's vendor (that we set to +net.mobile-web-messaging+ when we created the project).
 ====
 
 We also need to set the label to this ID when the view will appear.
@@ -193,66 +192,66 @@ We also need to set the label to this ID when the view will appear.
 ----
 - (void)viewWillAppear:(BOOL)animated
 {
-    self.truckIDLabel.text = self.truckID;
+    self.deviceIDLabel.text = self.deviceID;
 }
 ----
 
-If we run the application, we will see the truck ID displayed instead of +Truck ID+ in the view.
+If we run the application, we will see the device ID displayed instead of +Device ID+ in the view.
 
 [[img_mobile_stomp_9]]
-.Display the truck ID.
-image::images/Chapter020/view_with_truckID.png["Display the truck ID"]
+.Display the device ID.
+image::images/Chapter020/view_with_deviceID.png[Display the device ID]
 
-Now that we have the identifier of the truck, the next step is to retrieve the geolocation data from the device using the **`CoreLocation`** framework so that we can send them in a STOMP message.
+Now that we have the identifier of the device, the next step is to retrieve its geolocation data using the +CoreLocation+ framework before we can send them in a STOMP message.
 
 [NOTE]
 ====
-The next sections deal with setting up the framework and writing code to retrieve the GPS data from the device and display them. This is unrelated to messaging and you can skip them if you only want to read how to send and receive messages. Still, we thought the messaging code would be more meaningful if it was using real data instead of generating random data that could not be exploited. By using GPS data instead, we will be able to build a mobile app that display these data in the next chapter.
+The next sections deal with setting up the framework and writing code to retrieve the GPS data from the device and display them. This is unrelated to messaging and you can skip them if you only want to read how to send and receive messages. Still, we thought the messaging code would be more meaningful if it was using real data instead of generating random dummy data. By using GPS data instead, we will be able to build a mobile app that display these data on a map in the next chapter.
 ====
 
-[[ch_mobile_stomp_display_truck_position]]
-=== Display the Truck Position
+[[ch_mobile_stomp_display_position]]
+=== Display the Device Position
 
 We will retrieve the geolocation data from the device's GPS sensor to send them using STOMP messages. However, we also want to have some graphical feedback to show that the data changes over the time as we move with our device.
 
-To display the geolocation data, we will add a +UILabel+ to the view, make it as wide as possible and change its label to  +Current position: ???+
+To display the geolocation data, we will add a +UILabel+ to the view and change its text to +Current position: ???+
 
 [[img_mobile_stomp_10]]
-.TruckTracker View with a to display the current position
-image::images/Chapter020/currentPosition_label_wide.png["TruckTracker View with a to display the current position"]
+.Add the current position label
+image::images/Chapter020/currentPosition_label.png[Add the current position label]
 
-We will change its appearance to match the **`truckID`** label by setting its **`Font`** to **`System 13.0`** and its **`Alignment`** to centered.
+We will change its appearance to match the +deviceID+ label by setting its +Font+ to +System 13.0+ and its +Alignment+ to centered.
 
 [[img_mobile_stomp_11]]
-.Set the alignment to centered.
-image::images/Chapter020/truckID_Label_options.png["Set the alignment to centered"]
+.Change the appearance of the current position label.
+image::images/Chapter020/currentPosition_label_options.png[Change the current position label appearance]
 
-Open the **MWMViewController.m`** file and add a property to the **MWMViewController`** _interface.
+Open the +MWMViewController.m+ file and add a property to the +MWMViewController+ _interface.
 
 [source,objc]
 ----
 @property (weak, nonatomic) IBOutlet UILabel *currentPositionLabel;
 ----
 
-We then bind this property to the label. Open the **`Main.storyboard`** and control-click on +View Controller+ to see its connection panel. Drag from +currentPositionLabel+ to the label to connect it.
+We then bind this property to the label. Open the +Main.storyboard+ and control-click on +View Controller+ to see its connection panel. Drag from +currentPositionLabel+ to the label to connect it.
 
 [[img_mobile_stomp_12]]
-.Connect the label to the outlet property.
-image::images/Chapter020/currentPosition_label_connection.png["Connect the label to the outlet property"]
+.Connect the +currentPositionLabel+ outlet property to the current position +UILabel+.
+image::images/Chapter020/currentPositionLabel_connection.png[Connect the currentPositionLabel outlet property to the current position UILabel]
 
-The label is now connected to the property. The next step is to retrieve the geolocation data from the device to update the property and send a message with them.
+The label is now connected to the property. The next step is to retrieve the geolocation data from the device to update this property and send a STOMP message with them.
 
 === Access the Device Geolocation Data with +CoreLocation+ Framework
 
 iOS provides the +CoreLocation+ framework to access the location data.
 
-We need to add it to the libraries linked by the app. Click on the +TruckTracker+ project and then the +TruckTracker+ target. In the +General+ tab, under the +Linked Frameworks and Libraries+ section, click on the +++ button. In the selection window, type **`CoreLocation`**, select the +CoreLocation.framework+ and click on the +Add+ button.
+We need to add it to the libraries linked by the app. Click on the +Locations+ project and then the +Locations+ target. In the +General+ tab, under the +Linked Frameworks and Libraries+ section, click on the +++ button. In the selection window, type **`CoreLocation`**, select the +CoreLocation.framework+ and click on the +Add+ button.
 
 [[img_mobile_stomp_13]]
 .Add the CoreLocation framework.
 image::images/Chapter020/CoreLocation_framework.png["Add the CoreLocation framework"]
 
-We can now use the +CoreLocation+ framework by importing **`<CoreLocation/CoreLocation.h>`** in  **`MWMViewController.m`** file.
+We can now use the +CoreLocation+ framework by importing +<CoreLocation/CoreLocation.h>+ at the top of the +MWMViewController.m+ file.
 
 We will make the +MWMViewController+ interface conform to the +CLLocationManagerDelegate+ protocol and declare a +CLLocationManager+ property named +locationManager+.
 
@@ -267,9 +266,9 @@ interface MWMViewController () <CLLocationManagerDelegate>
 @end
 ----
 
-We will define two methods to start and stop updating the current location. When the apps starts updating the current location in +startUpdatingCurrentLocation+, it creates the +locationManager+ if it's not already created and designs the controller as the locationManager's +delegate+. Since the geolocation data will be used to follow a moving object such as a truck, we set the locationManagere's +desiredAccuracy+ to +kCLLocationAccuracyBestForNavigation+.
+We will define two methods to start and stop updating the current location. When the apps starts updating the current location in +startUpdatingCurrentLocation+, it creates the +locationManager+ if it's not already created and designates the controller as the locationManager's +delegate+. We will also Since the geolocation data will be used to follow the device as it moves, we set the locationManagere's +desiredAccuracy+ to +kCLLocationAccuracyBestForNavigation+.
 
-Then, the app will start listening for the device location by calling locationManager's +startUpdatingLocation+ method.
+Finally, the application will start listening for the device location by calling locationManager's +startUpdatingLocation+ method.
 
 ====
 [source,objc]
@@ -313,7 +312,7 @@ To stop receiving the device location in +stopUpdatingCurrentLocation+, we simpl
 ----
 ====
 
-The location of the device will be received by the designated +CLLocationManagerDelegate+ (in our case, the +MWMViewController+ implementation). We need to implement the +locationManager:didUpdateToLocation:fromLocation:+ method and extract the 
+The location of the device will be received by the designated +CLLocationManagerDelegate+ (in our case, the +MWMViewController+ implementation itself). We need to implement the +locationManager:didUpdateToLocation:fromLocation:+ method and extract the 
 coordinates from the +newLocation+'s +coordinate.
 
 Once we have them, we can update the +currentPositionLabel+'s +text+ to display them.
@@ -321,7 +320,7 @@ Once we have them, we can update the +currentPositionLabel+'s +text+ to display 
 ====
 [source,objc]
 ----
-#pragma mark - CLLocationManagerDelegate
+#pragma mark - CLLocationManagerDelegate protocol
 
 - (void)locationManager:(CLLocationManager *)manager
     didUpdateToLocation:(CLLocation *)newLocation
@@ -359,7 +358,7 @@ If there are any problem with the locationManager, we want to warn the user abou
 ----
 ====
 
-We will call the +startUpdatingCurrentLocation+ method when the view will appear.
+Now that the code related to +CoreLocation+ is in place, we just need to callthe +startUpdatingCurrentLocation+ method when the view will appear.
 
 ====
 [source,objc]
@@ -374,7 +373,7 @@ We will call the +startUpdatingCurrentLocation+ method when the view will appear
 ----
 ====
 
-We will stop to update the location when the view disappears in +viewDidDisappear:+
+We also need to stop updating the location when the view disappears in +viewDidDisappear:+
 
 ====
 [source,objc]
@@ -386,33 +385,33 @@ We will stop to update the location when the view disappears in +viewDidDisappea
 ----
 ====
 
-The first time the app asks the locationManager to start updating the device location, the user will see an alert view accessing him or her the permission to access the device location.
+The first time the app asks the +locationManager+ to start updating the device location, the user will see an alert view accessing him or her the permission to access the device location.
 
 [[img_mobile_stomp_14]]
 .Permission to use the current location.
 image::images/Chapter020/current_location_permission.png["Permission to use the current location"]
 
-If the user clicks **`OK`**, the +locationManager+ will start update the device location and the currentPositionLabel will be updated with the latitude and longitude.
+If the user taps +OK+, the +locationManager+ will start update the device location and the label for its current position will be updated with the latitude and longitude.
 
 [[img_mobile_stomp_15]]
-.Display the geolocation position.
-image::images/Chapter020/current_position.png["Display the geolocation position"]
+.Display the current position of the device.
+image::images/Chapter020/current_position.png["Display the current position of the device"]
 
 [[ch_mobile_stomp_location_simulator]]
 ==== Simulate a Location With iOS Simulator
 
 If you are running the application on an iPhone device, the real geolocation data from the device will be used.
-If you run the application using the +iOS Simulator+, you can simulate different location in the **`Debug`** > **`Location`** menu. For example, the **`Freeway Drive`** will simulate a car driving on a freeway between Palo Alto and San Francisco.
+If you run the application using the +iOS Simulator+, you can simulate different location in the +Debug > Location+ menu. For example, the +Freeway Drive+ will simulate a car driving on a freeway between Palo Alto and San Francisco.
 
-Whether you are running the application on a device or in the simulator, you should see the +currentPositionLabel+ be udpated.
+Whether you are running the application on a device or in the simulator, you should see the +currentPositionLabel+ be udpated. The latitude and longitude numbers are difficult to interpret as such but in the next chapter <<ch_web_stomp>>, we will be able to use them to draw the position on a map to locate the devices.
 
-We now display the geolocation data. Next step is to send them using STOMP.
+Now that the +Locations+ application is handling the device geolocation data, the next step is to send them using STOMP.
 
-=== Create a STOMP Client With StompKit
+=== Create a STOMP Client With +StompKit+
 
-Before sending any messages, we must first import the StompKit library that we add to our _Podfile_ file at the beginning of this chapter.
+Before sending any messages, we must first import the +StompKit+ library that we add to the +Podfile+ file at the beginning of this chapter.
 
-We must import its header file in **`MWMViewController.m`** and add a +STOMPClient+ property name **`client`** to the +MWMViewController+ interface.
+We must import its header file +StompKit.h+ at the top of the +MWMViewController.m+ file and add a +STOMPClient+ property named +client+ to the +MWMViewController+ interface.
 
 ====
 [source, objc]
@@ -429,10 +428,12 @@ We must import its header file in **`MWMViewController.m`** and add a +STOMPClie
 
 The +client+ property will be used to communicate with the STOMP broker after it is created and connected.
 
-The +client+ variable is created when the controller's view is loaded in MWMViewController's +viewDidLoad+ method implementation. To create it, we need to pass the host and port of the STOMP broker to connect to.
-These information depends on the broker you are using. If you have configured ActiveMQ as described in the appendix on your machine, we can connect to it using **`61613`** as its port.
+We do not need to conform to any protocol to use +StompKit+ as its API is based on _blocks_ instead of protocol delegates.
 
-The host will depend on your network configuration. On my local network, my server has the IP address **`192.168.1.25`**. I will use this value for the examples but you might replace this by your own server address to run the applications.
+The +client+ variable is created when the controller's view is loaded in +MWMViewController+'s +viewDidLoad+ method implementation. To create it, we need to pass the host and port of the STOMP broker to connect to.
+These information depends on the broker you are using. If you have configured ActiveMQ on your machine as described in the appendix <<appendix_activemq>>, you will be able to connect on its +61613+ port.
+
+The host will depend on your network configuration. On my local network, my server has the IP address +192.168.1.25+. I will use this value for the example but you will have to replace this by your own server address to run the applications.
 
 ====
 [source, objc]
@@ -447,25 +448,26 @@ The host will depend on your network configuration. On my local network, my serv
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    self.truckID = [UIDevice currentDevice].identifierForVendor.UUIDString;
+    
+    self.deviceID = [UIDevice currentDevice].identifierForVendor.UUIDString;
+    NSLog(@"Device identifier is %@", self.deviceID);
 
     self.client = [[STOMPClient alloc] initWithHost:kHost port:kPort];
 }
-
-@end
 ----
 ====
 
 === Connect to a STOMP Broker
 
-When the +client+ object is created, it is not connect to the STOMP broker yet. To connect, we must call its +connectWitHeaders:completionHandler:+ method.
+When the +client+ object is created, it is not connected to the STOMP broker yet. To connect, we must call its +connectWitHeaders:completionHandler:+ method.
 
 StompKit uses Grand Central Dispatch and blocks to provide an event-driven API. This means that the client is _not_ connected when the call to its +connectWitHeaders:completionHandler:+ method returns but when the completionHandler block is called.
 
-We can pass a dictionary to +connectWitHeaders:completionHandler:+ to add aditional headers when the +CONNECT+ frame is sent. In our app, we will send a +client-id+ header set to the +truckerID+ to uniquely identify the client against the STOMP broker. This ensures that no two apps will be able to connect using the same identifier. Once a client is connected with a given +client-id+, any subsequent clients that uses the same value will fail to connect to the broker.
+We can pass a dictionary to +connectWitHeaders:completionHandler:+ to add aditional headers during the connection to the STOMP broker. In our application, we will send a +client-id+ header set to the +deviceID+ to uniquely identify the client against the STOMP broker.
 
-Let's encapsulate all this in a +connect+ method in **`MWMViewController.m`**:
+This ensures that no two devices will be able to connect using the same identifier. Once a client is connected with a given +client-id+, any subsequent clients that uses the same value will fail to connect to the broker.
+
+We will encapsulate this code in a +connect+ method in +MWMViewController+ implementation.
 
 ====
 [source, objc]
@@ -477,7 +479,7 @@ Let's encapsulate all this in a +connect+ method in **`MWMViewController.m`**:
 - (void)connect
 {
     NSLog(@"Connecting...");
-    [self.client connectWithHeaders:@{ @"client-id": self.truckID}
+    [self.client connectWithHeaders:@{ @"client-id": self.deviceID}
                   completionHandler:^(STOMPFrame *connectedFrame, NSError *error) {
                       if (error) {
                           // We have not been able to connect to the broker.
@@ -495,7 +497,7 @@ Let's encapsulate all this in a +connect+ method in **`MWMViewController.m`**:
 ----
 ====
 
-We then only need to call this +connect+ method when the view appears in +viewWillAppear:+.
+We will call this +connect+ method when the view appears in +viewWillAppear:+.
 
 ====
 [source, objc]
@@ -512,7 +514,7 @@ We then only need to call this +connect+ method when the view appears in +viewWi
 
 === Disconnect From a STOMP Broker.
 
-The STOMPClient disconnects from the broker using its +disconnect:+ method. This method takes a block that will be called when the client is disconnected from the server. The block takes a +NSError+ parameter that is set if there is an error during the disconnection operation.
+The +STOMPClient+ disconnects from the broker using its +disconnect:+ method. This method takes a block that will be called when the client is disconnected from the server. The block takes a +NSError+ parameter that is set if there is an error during the disconnection operation.
 
 ====
 [source, objc]
@@ -553,28 +555,36 @@ At this stage, we have an application that connect to the STOMP broker when its 
 If we run the application, we see logs in Xcode that shows the connection process:
 
 ----
-2014-01-27 18:18:12.097 TruckTracker[14578:70b] Connecting...
-2014-01-27 18:18:12.181 TruckTracker[14578:1303] Connected
+2014-03-13 17:07:21.667 Locations[79069:60b] Connecting...
+2014-03-13 17:07:21.723 Locations[79069:3903] Connected
 ----
 
 === Send STOMP Messages
 
-We now have a connection to the STOMP broker and we receive the device's geolocation data from the location manager. The last step to do is to send these data to the topic associated to the truck ID.
+We now have a connection to the STOMP broker and we receive the device's geolocation data from the +CoreLocation+ framework. The last step to do is to send these data to the topic associated to the device ID.
 
-As we described in <<ch_introduction_stomp_example>>, each truck's device will send its location on a topic destination named after the truck ID.
+As we described in <<ch_introduction_stomp_example_topology>>, each device will send its location on a topic named after its identifier.
 
 [source,objc]
 ----
-NSString *destination = [NSString stringWithFormat:@"/topic/truck.%@.position", self.truckID];
+NSString *destination = [NSString stringWithFormat:@"/topic/device.%@.position", self.deviceID];
 ----
 
-The message representation is a JSON string that contains the location coordinates, the timestamp and the truck ID.
+.ActiveMQ STOMP Destinations Naming Conventions
+[NOTE]
+====
+ActiveMQ convention is to prefix a STOMP destination by +/topic/+ to use a Publish/Subscribe messaging model and by +/queue/+ to use a Point-to-Point model.
+
+Since we designed our application to use a topic for the +device.XXX.position+, we must preprend it with +/topic/+
+====
+
+As we described in <<ch_introduction_stomp_example_message>>, the message representation is a JSON string that contains the location coordinates, the timestamp and the truck ID.
 We build a NSDictionary from these data and serialize it as a JSON string:
 
 [source,objc]
 ----
 NSDictionary *dict = @{
-    @"truck": self.truckID,
+    @"deviceID": self.deviceID,
     @"lat": [NSNumber numberWithDouble:location.coordinate.latitude],
     @"lng": [NSNumber numberWithDouble:location.coordinate.longitude],
     @"ts": [dateFormatter stringFromDate:location.timestamp]
@@ -583,20 +593,18 @@ NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil]
 NSString *body =[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 ----
 
-This body follows the JSON format. We will add a +content-type+ header in the STOMP message and set it to +application/json; charset=utf-8+ to let the STOMP brokers and the eventual consumers know that this message's body can be read as JSON string encoded with UTF-8.
+This body follows the JSON format. We will add a +content-type+ header in the STOMP message and set it to +application/json; charset=utf-8+ to let the STOMP brokers and the eventual consumers know that this message's payload can be read as JSON string encoded with UTF-8.
 Without such a +content-type+, the consumers would not necessarily know how to _read_ the data in the body and interpret them.
-
 
 [source,objc]
 ----
 NSDictionary *headers = @{
-    @"content-type": @"application/json; charset=utf-8"
+    @"content-type": @"application/json;charset=utf-8"
 };
 ----
 
 We now have the +destination+, +headers+, and +body+ to send in the message.
-Last step is to use the +client+'s +sendTo:headers:body+ method to do this:
-
+Last step is to use the +client+'s +sendTo:headers:body+ method to send it: 
 [source,objc]
 ----
 // send the message
@@ -605,8 +613,7 @@ Last step is to use the +client+'s +sendTo:headers:body+ method to do this:
                body:body];
 ----
 
-We will put all these different steps in a single method name +sendLocation:+
-that takes a +CLLocation+ object:
+We will encapsulate all these steps in a +sendLocation:+ method that takes a +CLLocation+ object:
 
 ====
 [source,objc]
@@ -620,13 +627,13 @@ that takes a +CLLocation+ object:
         dateFormatter = [[NSDateFormatter alloc] init];
         dateFormatter.dateFormat = @"yyyy-MM-d'T'HH:mm:ssZZZZZ";
     });
-
+    
     // send the message to the truck's topic
-    NSString *destination = [NSString stringWithFormat:@"/topic/truck.%@.position", self.truckID];
-
+    NSString *destination = [NSString stringWithFormat:@"/topic/device.%@.position", self.deviceID];
+    
     // build a dictionary containing all the information to send
     NSDictionary *dict = @{
-        @"truck": self.truckID,
+        @"deviceID": self.deviceID,
         @"lat": [NSNumber numberWithDouble:location.coordinate.latitude],
         @"lng": [NSNumber numberWithDouble:location.coordinate.longitude],
         @"ts": [dateFormatter stringFromDate:location.timestamp]
@@ -634,9 +641,9 @@ that takes a +CLLocation+ object:
     // create a JSON string from this dictionary
     NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
     NSString *body =[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-
+    
     NSDictionary *headers = @{
-        @"content-type": @"application/json; charset=utf-8"
+        @"content-type": @"application/json;charset=utf-8"
     };
     
     // send the message
@@ -677,44 +684,47 @@ How can we check that messages are effectively sent?
 We will confirm it at three different stages:
 
 * display debug log on the device to check that messages are sent
-* use ActiveMQ consoles to check that it effectively handled the sent messages
+* use ActiveMQ  administration console to check that it effectively handled the sent messages
 * write the simplest STOMP consumer that can receive these messages.
 
-==== Display StompKit debug log.
+==== Display +StompKit+ debug log.
 
 Every time the StompKit library sends a message to a STOMP broker, it logs the STOMP frame that is sent.
 
-To display them in the console, edit the file named +StompKit.m+ in Xcode that is under the +Pods+ project (its full path is +Pods+ > +Pods+ > +StompKit+ > +StompKit.m+ in the Project Navigator view) and change the macro to activate logs by replacing the +0+ by **`1`**.
+To display them in the console, edit the file named +StompKit.m+ in Xcode that is under the +Pods+ project (its full path is +Pods+ > +Pods+ > +StompKit+ > +StompKit.m+ in the Project Navigator view) and change the macro to activate logs by replacing the +0+ by +1+.
 
 [source,objc]
 ----
+#pragma mark Logging macros
+
 #if 1 // set to 1 to enable logs
+
+...
 ----
 
 If we restart the application, we now see debug statements in Xcode's Debug console:
 
 ----
-2014-01-31 10:48:56.750 TruckTracker[2460:70b] >>> SEND
-destination:/topic/truck.66284AB0-C266-4A4D-9443-FEFB5774FA3C.position
-content-type:application/json; charset=utf-8
-content-length:118
+2014-03-13 17:19:05.711 Locations[79549:60b] >>> SEND
+destination:/topic/device.2262EC25-E9FD-4578-BADE-4E113DE45934.position
+content-type:application/json;charset=utf-8
+content-length:122
 
-{"lng":-122.0307334,"lat":37.33154242,"ts":"2014-01-31T10:48:56+01:00","truck":"
-66284AB0-C266-4A4D-9443-FEFB5774FA3C"}
+{"lng":-122.03254905,"deviceID":"2262EC25-E9FD-4578-BADE-4E113DE45934","lat":37.33521504,"ts":"2014-03-13T17:19:05+01:00"}
 ...
 ----
 
-This confirms that STOMP messages are effectively sent by the application.
+This confirms that STOMP messages are effectively sent by the +Locations+ application.
 
 ==== ActiveMQ Admin Console
 
 In <<app_activemq_admin_console>>, we have used the ActiveMQ admin console to check the broker configuration. We can also use this console to check the destinations and their associated metrics.
 
-Go to the ActiveMQ admin console in your Web browser at http://localhost:8161/hawtio[http://localhost:8161/hawtio] and navigate the ActiveMQ tree down to the postion topic in +mybroker > Topic > truck.66284AB0-C266-4A4D-9443-FEFB5774FA3C.position+. 
+Go to the ActiveMQ admin console in your Web browser at http://localhost:8161/hawtio[http://localhost:8161/hawtio] and navigate the ActiveMQ tree down to the postion topic in +mybroker > Topic > device.2262EC25-E9FD-4578-BADE-4E113DE45934.position+. 
 
 In the right side panel, select +Attributes+ in the top menu to display all the attributes associated to this topic.
 
-To check whether the broker is receiving the messages on this destination, the attribute to check is +Enqueue count+. It corresponds to the messages that has been _enqueued_ (or in other word, _sent_) to the destination. We see that this value is growing over time (it is at +515+ when the screenshot below was taken). This confirms that the broker is actually receiving the messages sent by the mobule application.
+To check whether the broker is receiving the messages on this destination, the attribute to check is +Enqueue count+. It corresponds to the messages that has been _enqueued_ (or in other word, _sent_) to the destination. We see that this value is growing over time (it was at +113+ when the screenshot below was captured). This confirms that the broker is actually receiving the messages sent by the mobule application.
 
 [[img_mobile_stomp_16]]
 .Check the number of messages sent to a destination in ActiveMQ admin console
@@ -785,7 +795,7 @@ The Truck ID is displayed on the application screen. You will have to adapt the 
 
 ----
 SUBSCRIBE
-destination:/topic/truck.66284AB0-C266-4A4D-9443-FEFB5774FA3C.position
+destination:/topic/device.2262EC25-E9FD-4578-BADE-4E113DE45934.position
 
 ^@
 ----
@@ -794,31 +804,36 @@ As soon as we sent this command to the STOMP broker, we will receive +MESSAGE+ f
 
 ----
 MESSAGE
-content-type:application/json; charset=utf-8
-message-id:ID\cretsina.local-64018-1390843083020-2\c6\c-1\c1\c356
-destination:/topic/truck.66284AB0-C266-4A4D-9443-FEFB5774FA3C.position
-timestamp:1391162082774
+content-type:application/json;charset=utf-8
+message-id:ID:jeff.local-50971-1394726830317-2:5:-1:1:323
+destination:/topic/device.2262EC25-E9FD-4578-BADE-4E113DE45934.position
+timestamp:1394727930755
 expires:0
-subscription:mysub
-content-length:119
+content-length:122
 priority:4
 
-{"lng":-122.02859586,"lat":37.33770217,"ts":"2014-01-31T10:54:42+01:00","truck":"66284AB0-C266-4A4D-9443-FEFB5774FA3C"}
+{"lng":-122.12966111,"deviceID":"2262EC25-E9FD-4578-BADE-4E113DE45934","lat":37.36492641,"ts":"2014-03-13T17:25:30+01:00"}
 ----
 
 [NOTE]
 ====
-We can see that there are more headers in the consumed messages that in the messages we sent (which only had +content-type+ and +content-lenght+).
+We can see that there are more headers in the consumed messages that in the messages we sent (which only had +content-type+ and +content-length+).
 These headers are added by the STOMP broker and provides additional metadata about the messages. We will explore some of them later in <<ch_advanced_stomp>> and <<ch_beyond_stomp>>.
 ====
 
-At this stage, we have a mobile application that is broadcasting its position by sending messages to a STOMP destination.
+At this stage, we have a mobile application that is a STOMP _producer_. It broadcasts its position by sending messages to a STOMP destination.
 
-=== Display the Orders
+=== Display the Text Messages
 
-We will now code the second part of the mobile applications that will receive orders for the truck and display them in a table.
+We will now write the second part of the +Locations+ application that will _consume_ STOMP message containing some text and display them in a table.
 
-Let's write the graphical part first by adding a +UITable+ to the user interface.
+
+TODO 
+
+
+
+
+We will write the graphical part first by adding a +UITable+ to the user interface.
 
 Click on +Main.storyboard+ to open it. From the +Object+ library, drag a +Table View+ on the View's window. Place it below the +currentPositionLable+ and make it as wide as possible.
 
