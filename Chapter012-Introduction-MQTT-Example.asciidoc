@@ -1,7 +1,7 @@
 [[ch_introduction_mqtt_example]]
 === +Motions+ Application Using MQTT
 
-Most mobile devices contain sensor that allows to track the device motions (and to a certain extent the motion of its owner). Using additional sensors, we could even imagine having access to the owner's health data (heart bate, diabetes level, etc.). This type of information could be sent to a centralized application that would be able to track the data and extract personal information about them to report to the owner.
+Most mobile devices contain sensor that allows to track the device motions (and to a certain extent the motion of its owner). Using additional sensors, we could even imagine having access to the owner's health data (heart rate, hydration, blood glucose level, etc.). This type of information could be sent to a centralized application that would be able to track the data and extract personal information about them to report to the owner.
 
 We will write a simple application, +Motions+ that follows this model to illustrate the use of MQTT protocol. The iOS application will track the device motion (through its pitch, roll and yaw values) and change its background color to "alert" its user when an alert message is received.
 The pending Web application will display the motions of all devices that broadcast them and be able to send alert messages to them:
