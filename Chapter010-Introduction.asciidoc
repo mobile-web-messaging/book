@@ -9,7 +9,7 @@ To illustrate their use on mobile and Web platforms, we will write two applicati
 
 ++++
 <remark>
-TODO More about the difference between request/reply protocol and messaging protocols, strengths & weaknesses,...
+TODO More about the difference between request/reply protocol and messaging protocols, strengths/weaknesses,...
 </remark>
 ++++
 
