@@ -1,6 +1,8 @@
 [preface]
 == Preface
 
+=== What This Book is About
+
 This is a book about _messaging_ protocols and how software developers can use them to build more responsive, resilient applications running on mobile devices and Web browsers.
 
 Messaging protocols are nothing new. This simple and powerful technology has been used with success in the enterprise software for many years. It has been one of the buildings block that let heterogeneous services and platforms communicate with each other.
@@ -10,23 +12,33 @@ Nowadays, HTTP has emerged as the mainstream transport protocol and is extensive
 
 Messaging protocols _complement_ HTTP and this book will show cases where using a messaging protocol is better suited than using HTTP (or any other request/reply transport protocol).
 
+=== What This Book is _Not_ About
+
+_Messaging_ is an overloaded term that can mean many different things in software development. In this book, we will only talk about _messaging protocols_.
+
+This book is not about _messaging applications_ like Apple's `Messages` or `WhatsApp`. This type of applications can be built on top of messaging protocols and this book may be a good introduction if you intend to build a messaging application. However there are many other features expected in messaging application that will not be covered in this book.
+
+This book is also not about _programming language or framework messaging_ (as used in Objective-C to invoke methods on a object or in Erlang to communicate between processes).
+
+In the rest of this book, we will use the term _messaging_ in the context of messaging protocols.
+
 === Messaging is Simple
 
 At its core, the messaging concepts are simple: an application _produces_ a _message_ to a _destination_ on a _broker_. Independently (at another time, on another machine), another application subscribes to this same destination to _consume_ the message.
 
 In two sentences, I introduced the five concepts that are (almost) all there is to know about messaging:
 
-* a _message_ is the data that are exchanged between applications
-* a _destination_ is a type of address that is used to exchange messages
-* a _producer_ is an application that sends _messages_ *to* a _destination_
-* a _consumer_ is an application that consumes _messages_ *from* a _destination_
-* a _broker_ is the server entity that will handle messages from producers and delivers them to the consumers according to their destinations.
+. a _message_ is the data that are exchanged between applications
+. a _destination_ is a type of address that is used to exchange messages
+. a _producer_ is an application that sends _messages_ *to* a _destination_
+. a _consumer_ is an application that consumes _messages_ *from* a _destination_
+. a _broker_ is the server entity that will handle messages from producers and delivers them to the consumers according to their destinations.
 
 [[img_preface_messaging_concepts]]
 .Messaging Concepts
 image::images/Preface/messaging_concepts.png["Diagram of the messaging concepts"]
 
-The simplicity of messaging can be deceiving but it is this simplicity that allows to use it in powerful, sometimes complex ways.
+The simplicity of messaging can be deceiving but it is this simplicity that allows to use it in powerful, sometimes complex, ways.
 
 .Messaging Terminology
 [NOTE]
@@ -36,7 +48,7 @@ Depending on the messaging protocol or model, the _producer_ is sometimes called
 In this book, I will always use the general terms of _producer_ and _consumer_.
 ====
 
-One key aspect of messaging is that it couples very loosely its participants. The sender and consumer know nothing of each other. When one application produces a message, it has no knowledge on when or where the message will be consumed.
+One key aspect of messaging is that it couples very loosely its participants. The procuder and consumer know nothing of each other. When one application produces a message, it has no knowledge on when or where the message will be consumed.
 There may be one or many consumers that will receive the message. It also possible that the message will not be consumed at all if nobody has registered any interest for it.
 
 Likewise, when an application consumes a message, it does not know which application sent it.
@@ -45,18 +57,18 @@ Producers and consumers do not even need to be online at the same time. The prod
 
 Producers and consumers need to know about the broker to connect to it but they may even not connect to the same broker. A set of brokers can constitute a cluster and messages would flow from one to another before it is finally delivered to a consumer.
 
-Messaging protocol is a simple idea. Most of the complexity of using it is figuring out the best suited _model_ for your applications (the type of destinations to use). This book will show the two models that are most commonly used to build messaging applications: _point-to-point_ and _publish/subscribe_.
+Messaging protocol is a simple idea. Most of the complexity of using it is figuring out the best suited _model_ for your applications (the type of destinations to use). This book will show the two models that are most commonly used: _point-to-point_ and _publish/subscribe_.
 
 === Enterprise Messaging Is Not So Simple
 
-When companies are acquired or merged, they need a way to enable communication between their systems. Messaging is one approach to achieve this integration in a non-obstrusive way. 
-The systems must agree on the data representation (transmitted by the _message_) and the _destination_ (or the topic of interest shared by the different systems).
+When companies are acquired or merged, they need a way to enable communication between their systems. Messaging is one approach to achieve this integration in a unobstrusive way (as much as it is possible). 
+The systems must agree on the data representation (transmitted in the _message_) and the _destination_ (or the topic of interest shared by the different systems).
 
 With its use in entreprise software, messaging technology and their underlying protocols became increasingly complex to meet entreprise requirements (high-availability, failover, load-balancing, etc.).
 
-Besides, the integrated applications must often agreed on a messaging system to use throughout the company. In the Java world, the specification that deals with messaging is called JMS (Java Message Service). It defines a set of interfaces that a Java application can use to send and receive messages. However, JMS does not define any protocol (how the bytes are sent over the wire) and leave this implementation detail to the JMS brokers that implement the API. This means that JMS implementations are not interoperable: one must use the broker's client implementation to send a message to the broker. If applications were using different brokers, they had interoperability issues and must use _bridges_ to transfer messages from one broker to another. This lack of interoperability brings complexity as you need to add servers to host the bridges, make them redundant for high-availability, etc.
+Besides, the integrated applications must often agree on a messaging system to use throughout the company. In the Java world, the specification that deals with messaging is called Java Message Service <<jms>>. It defines a set of interfaces that a Java application can use to send and receive messages. However, JMS does not define any protocol (how the bytes are sent over the wire) and leave this implementation detail to the JMS brokers that implement the API. This means that JMS implementations are not interoperable: one must use the broker's client implementation to send a message to the broker. If applications were using different JMS brokers, they had interoperability issues and must use _bridges_ to transfer messages from one JMS broker to another. This lack of interoperability brings complexity as you need to add servers to host the bridges, make them redundant for high-availability, etc.
 
-Over time, we have seen the appearances of entreprise messaging protocols such as AMQP (Advanced Message Queuing Protocol) that handles enterprise features and interoperability. This leads to complex protocols that are difficult to implement and whose interoperability is subjective (backwards compatibility is not guaranteed, different implementations may not implement the whole specification leading to interoperability issues).
+Over time, we have seen the appearances of entreprise messaging protocols such as the Advanced Message Queuing Protocol <<amqp>> that handles enterprise features and interoperability. This leads to complex protocols that are difficult to implement and whose interoperability is subjective (backwards compatibility is not guaranteed, different implementations may not implement the whole specification leading to interoperability issues).
 
 === Mobile Messaging Is Simple Again
 
@@ -91,7 +103,7 @@ Chapter 2, Mobile Messaging With STOMP::
 In this chapter, I present STOMP, a simple text-based messaging protocol. I use StompKit, an iOS library for STOMP, to build the +Locations+ app that sends GPS data from the device and receives text messages.
 
 Chapter 3, Web Messaging With STOMP::
-In this chapter, we introduce stomp.js, a JavaScript library for STOMP, and write a Web application that receives messages with the GPS from the +Locations+ applicaiton on iOS devices and display them on a map. This Web application will also send messages to the mobile app.
+In this chapter, we introduce stomp.js, a JavaScript library for STOMP, and write a Web application that receives messages with the GPS from the +Locations+ application on iOS devices and display them on a map. This Web application will also send messages to the mobile app.
 
 Chapter 4, Advanced STOMP::
 In this chapter, we present the advanced features of STOMP that we did not use in the previous chapters to build our applications. These advanced features are not always used by messaging applications but they may prove useful as the applications grow in complexity. 

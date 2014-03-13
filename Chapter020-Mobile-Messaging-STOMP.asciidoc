@@ -24,9 +24,9 @@ STOMP is a simple text-based messaging protocol that is well suited to build lig
 STOMP provides an interoperable wire format so that clients can communicate with any message broker.
 The simplicity of the protocol ensures that it's straightforward to have interoperability between any client and brokers.
 
-This book covers the latest released version of the protocol at the time of this writing: http://stomp.github.io/stomp-specification-1.2.html[STOMP 1.2].
+This book covers the latest released version of the protocol at the time of this writing: STOMP 1.2 <<stomp1.2>>. 
 
-STOMP does not define the semantic of the destination, they depends on the STOMP Broker you are using.
+STOMP does not define the semantic of the destination, they depend on the STOMP Broker you are using.
 
 There are some conventions shared by STOMP brokers (for example, prefixing a destination by +/queue/+ to use a queue and by +/topic/+ to use a topic) but you need to consult your broker documentation to check which messaging model are supported (including _Point-to-Point_ and _Publish/Subscribe_) and how to use them.
 
