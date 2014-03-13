@@ -2,4 +2,34 @@
 
 = Mobile and Web Messaging
 
-include::Book-Mobile-and-Web-Messaging.asciidoc[]
+include::Preface.asciidoc[]
+
+include::Chapter010-Introduction.asciidoc[]
+
+include::Chapter011-Introduction-STOMP-Example.asciidoc[]
+
+include::Chapter012-Introduction-MQTT-Example.asciidoc[]
+
+include::Chapter013-Introduction-Summary.asciidoc[]
+
+include::Chapter020-Mobile-Messaging-STOMP.asciidoc[]
+
+include::Chapter030-Web-Messaging-STOMP.asciidoc[]
+
+include::Chapter040-Avdanced-STOMP.asciidoc[]
+
+include::Chapter050-Beyond-STOMP.asciidoc[]
+
+include::Chapter060-Mobile-Messaging-MQTT.asciidoc[]
+
+include::Chapter070-Web-Messaging-MQTT.asciidoc[]
+
+include::Chapter080-Advanced-MQTT.asciidoc[]
+
+include::AppendixA-ActiveMQ.asciidoc[]
+
+include::AppendixB-Mosquitto.asciidoc[]
+
+include::Bibliography.asciidoc[]
+
+include::index.asciidoc[]
