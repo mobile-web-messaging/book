@@ -96,11 +96,11 @@ In this book, I will make a tour of messaging protocols for mobile devices and W
 
 Chapter 1, Introduction::
 In this chapter, I introduce the concepts of messaging protocols, how they differ from request/reply protocols such as HTTP.
-To illustrate the use of messaging protocols on mobile and Web platforms, we will build 2 applications (one named +Locations+ will use STOMP and the other named +Motions+ will use MQTT).
+To illustrate the use of messaging protocols on mobile and Web platforms, we will build two applications (one named +Locations+ will use STOMP and the other named +Motions+ will use MQTT).
 Both applications will come in two parts: one will run on mobile devices, the other inside a Web browser and they will communicate using messages. This chapter explains the overall design of these two example applications.
 
 Chapter 2, Mobile Messaging With STOMP::
-In this chapter, I present STOMP, a simple text-based messaging protocol. I use StompKit, an iOS library for STOMP, to build the +Locations+ app that sends GPS data from the device and receives text messages.
+In this chapter, I present STOMP, a simple text-based messaging protocol. I use StompKit, an iOS library for STOMP, to build the +Locations+ application that sends GPS data from the device and receives text messages.
 
 Chapter 3, Web Messaging With STOMP::
 In this chapter, we introduce stomp.js, a JavaScript library for STOMP, and write a Web application that receives messages with the GPS from the +Locations+ application on iOS devices and display them on a map. This Web application will also send messages to the mobile app.
@@ -178,11 +178,8 @@ This icon indicates a warning or caution.
 ====
 
 === Using Code Examples
-++++
-<remark>PROD: Please reach out to author to find out if they will be uploading code examples to oreilly.com or their own site (e.g., GitHub). If there is no code download, delete this whole section.</remark>
-++++
 
-Supplemental material (code examples, exercises, etc.) is available for download at link:$$http://examples.oreilly.com/<ISBN>-files/$$[].
+Supplemental material (code examples, exercises, etc.) is available for download at link:$$https://github.com/mobile-web-messaging/code//$$[].
 
 This book is here to help you get your job done. In general, if example code is offered with this book, you may use it in your programs and documentation. You do not need to contact us for permission unless you’re reproducing a significant portion of the code. For example, writing a program that uses several chunks of code from this book does not require permission. Selling or distributing a CD-ROM of examples from O’Reilly books does require permission. Answering a question by citing this book and quoting example code does not require permission. Incorporating a significant amount of example code from this book into your product’s documentation does require permission.
 

@@ -1,34 +1,27 @@
 [[ch_introduction_stomp_example]]
 === +Locations+ Application Using STOMP
 
-Let's take the example of a delivery company like UPS that manages a fleet of trucks.
-Each truck is responsible for the delivery of packages.
-They receive orders from their headquarter to:
+Suppose that we work for a delivery company that uses a fleet of trucks to deliver packages to its clients.
 
-* fetch packages at the company's warehouses
-* deliver packages to the customer's addresses
+Each truck is responsible for the delivery of packages and they receive orders from their headquarters. To manage efficiently all the trucks, the company headquarters want to monitor the truck's positions and be able to send them orders on-the-go.
 
-To manage efficiently all the trucks, the company head quarters want to monitor the truck's positions and be able to send them orders on-the-go.
+We will build a very simple application named +Locations+ that looks similar to this example.
 
-We will build a very simple iOS application named +Locations+ that looks similar to this example. This application will broadcast the device's geolocation data (using is GPS sensor).
-It will also display text messages that it receives from a destination.
-
-The pending Web application will display the locations of all the devices on a map. it will also be used to send text messages to a given devices.
+The "truck" will use an iOS application to broadcast the device's geolocation data using its GPS sensor and display text messages that it receives from the headquarters. The "headquarters" will use a Web application to display the locations of all the "trucks" on a map. it will also be used to send text messages to a given truck on their devices:
 
 . In <<ch_mobile_stomp>>, we will write the +Locations+ iOS application using the STOMP protocol to send GPS data and receive text from an iOS device.
-. In <<ch_web_stomp>>, we will write a Web application using STOMP protocol over Web Sockets to receive GPS data in a Web browser and send text to the devices.
+. In <<ch_web_stomp>>, we will write the Web application using STOMP protocol over Web Sockets to receive GPS data in a Web browser and send text to the devices.
 
 [[img_example_app_1]]
-.The +Locations+ application with two devices, +AAA+ and +BBB+ and one Web application.
-image::images/Chapter011/stomp_app_diagram_1.png["Diagram of the Locations application"]
+.Diagram of the +Locations+ application with two devices, +AAA+ and +BBB+, and one Web application.
+image::images/Chapter011/stomp_app_diagram_1.png["Diagram of the Locations application with two devices, AAA and BBB, and one Web application"]
 
-Before introducing the messaging protocol that will be used by the application, we can already define 
-the application's messaging topology and how the different parts of the application will exchange messages.
+Before introducing STOMP, the messaging protocol that will be used by the application, we can already define the application's messaging models and how the different parts of the application will exchange messages.
 
 [[ch_introduction_stomp_example_topology]]
 ==== +Locations+ Messaging Models
 
-In this application, we will use two destinations, one with a Publish/Subscribe model to broadcast the device GPS data and one with a Point-to-Point model to exchange the text messages:
+In this application, we will use two destinations, one with a Publish/Subscribe model to broadcast the device GPS data and one with a Point-to-Point model for the text messages:
 
 * +device.XXX.location+ is the _topic_ to broadcast its GPS geolocation data where +XXX+ is the device identifier (Publish/Subscribe model) 
 * +device.XXX.text+ is the _queue_ to receive simple text message  (Point-to-Point model)
@@ -36,29 +29,29 @@ In this application, we will use two destinations, one with a Publish/Subscribe 
 A topic is used to send the GPS data as this allows potentially many consumers to receive the information.
 However a queue is used to handle the device's text as only one single device will consume messages from this destination.
 
-Each device running the +Locations+ application will be:
+Each device (identified by an unique identifier +XXX+) running the +Locations+ application will be:
 
 * a _producer_ of messages to the topic +device.XXX.location+
 * the only _consumer_ of messages from the queue +device.XXX.text+
 
 Conversely, the Web application will be:
 
-* a _consumer_ of messages from all the topics +device.XXX.location+
-* a _producer_ of message from the queues +device.XXX.text+
+* a _consumer_ of messages from _all_ the topics of the form +device.XXX.location+
+* a _producer_ of message to _all_ the queues of the form +device.XXX.text+
 
 [[ch_introduction_stomp_example_message]]
-==== Locations Message Representation
+==== +Locations+ Message Representation
 
 There will be two types of exchanged messages:
 
-* one to represent GPS data (sent to the topics +device.XXX.location+)
-* one to represent orders (sent to the queues +device.XXX.text+)
+* one to represent GPS data (exhanged on the topics +device.XXX.location+)
+* one to represent orders (exchanged on the queues +device.XXX.text+)
 
-===== Geolocation messages
-The Truck app will send the GPS data using a JSON representation:
+===== Geolocation Messages
+The +Locations+ iOS application will send the GPS data using a JSON representation in the message payload:
 
 [[ex_example_gps_data]]
-.Geolocation data representation
+.Geolocation Message Payload
 ====
 ----
 {
@@ -74,24 +67,24 @@ The Truck app will send the GPS data using a JSON representation:
 <4> +ts+ is a string representing the time when the position was taken (using the http://en.wikipedia.org/wiki/ISO_8601[ISO 8601] format)
 ====
 
-===== Text messages
-The text messages that will be consumed by the +Locations+ iOP app will
+===== Text Messages
+The text messages that will be consumed by the +Locations+ iOS application will
 be represented as a simple plain text string.
 
 [[ex_example_text]]
-.Text data representation
+.Text Message Payload
 ====
 ----
 "Where are you heading to?"
 ----
 ====
 
-A more realistic representation of this message would also contain the name of the person sending the message, etc. We are using a plain text version as this
-format is enough to provide a first version.
+A more realistic representation of this message would also contain additional information such the identifier of the headquarter sending the message, etc.
+We are using a plain text version as this format is enough to provide a first version.
 
-With the messaging topology and data representation known, we can already refine the application diagram.
+With the messaging topology and data representation known, we can now refine the +Locations+ application diagram.
 
 [[img_example_app_2]]
-.The +Locations+ application's data workflow.
-image::images/Chapter011/stomp_app_diagram_2.png["Diagram of the Locations application data worflow"]
+.Diagram of the +Locations+ application with its messaging models and representations
+image::images/Chapter011/stomp_app_diagram_2.png[Diagram of the Locations application]
 
