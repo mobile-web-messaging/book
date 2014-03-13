@@ -8,7 +8,9 @@ To illustrate their use on mobile and Web platforms, we will write two applicati
 === Request/reply protocol
 
 ++++
+<remark>
 TODO More about the difference between request/reply protocol and messaging protocols, strengths & weaknesses,...
+</remark>
 ++++
 
 HTTP hits the sweet spot between simplicity and efficiency. It has few disadvantages but one of the main one is that it follows a request/reply pattern where the client must _initiate_ a request to get a _reply_ from the server. In other words, the server can not send data to the HTTP client if this one does not send a request first. There are workarounds to overcome this challenges but they bring additional issues when they are used. Messaging protocol are well suited for this kind of use cases.
@@ -56,7 +58,9 @@ Some protocols defines the notions of _durable subscribers_. If a consumer subsc
 === Message Representation
 
 ++++
+<remark>
 TODO define the message representation in broad term (not depending on the messaging protocol)
+</remark>
 ++++
 
 . Destination
