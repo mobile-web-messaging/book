@@ -4,6 +4,8 @@
 [role="lead"]
 In this chapter, we will write a Web application that sends and receives messages using the STOMP protocol over HTML5 Web Sockets.
 
+In <<ch_introduction_stomp_example>>, we describe the +Locations+ applications. In this chapter, we will write its web application that consumes the device's GPS position to display them on a map and sends text messages to the device.
+
 [[img_web_stomp_1]]
 .Diagram of the +Locations+ Web application
 image::images/Chapter030/stomp_web_app.png["Diagram of the +Locations+ Web application"]

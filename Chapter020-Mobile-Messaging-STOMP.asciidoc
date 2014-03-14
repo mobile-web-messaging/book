@@ -47,7 +47,7 @@ To use STOMP on iOS, we will use the +StompKit+ Objective-C library that impleme
 
 The source code of this library project is hosted on https://github.com/mobile-web-messaging/StompKit/[GitHub].
 
-=== Create the +TruckTracker+ Project With Xcode
+=== Create the +Locations+ Project With Xcode
 
 We will use https://developer.apple.com/xcode/[Xcode] to create the +TruckTracker+ application.
 
