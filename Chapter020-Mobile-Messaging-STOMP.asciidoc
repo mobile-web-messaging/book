@@ -5,7 +5,7 @@
 In this chapter, we will present the STOMP messaging protocool and write our first messaging client: an native application running on an iPhone.
 We will use STOMP to send and receive messages using the Objective-C library StompKit.
 
-In <<ch_introduction_stomp_example>>, we describe the +Locations+ applications. In this chapter, we will write its iOS application that will broadcast the GPS position and receive text message.
+In <<ch_introduction_stomp_example>>, we described the +Locations+ application. In this chapter, we will write the iOS application that broadcasts the device's  position and receive text messages.
 
 [[img_mobile_stomp_1]]
 .Diagram of the +Locations+ iOS application
@@ -49,7 +49,7 @@ The source code of this library project is hosted on https://github.com/mobile-w
 
 === Create the +Locations+ Project With Xcode
 
-We will use https://developer.apple.com/xcode/[Xcode] to create the +TruckTracker+ application.
+We will use https://developer.apple.com/xcode/[Xcode] to create the +Locations+ iOS application.
 
 Once Xcode is installed and started, we create a new project from its launch screen:
 
@@ -57,7 +57,7 @@ Once Xcode is installed and started, we create a new project from its launch scr
 .Select +Create a new Xcode project+ from Xcode launch screen.
 image::images/Chapter020/xcode_launch_screen.png["XCode Launch screen"]
 
-The application consists in a single view so we choose the **`Single View Application`** template in +iOs > Application+ from the template screen.
+The application consists in a single view so we choose the +Single View Application+ template in +iOs > Application+ from the template screen.
 
 [[img_mobile_stomp_2]]
 .Select +Single View Application+ from the template screen
@@ -77,7 +77,7 @@ To import the library that we will use to send and receive messages, we will set
 
 First we need to close Xcode because we will modify the project structure to import our dependencies.
 
-After installing CocoaPods by following the instructions on its web site, we create a file at the root of the project (in the same directory than +Locations.xcodeproj+) named **`Podfile`**.
+After installing CocoaPods by following the instructions on its web site, we create a file named **`Podfile`** at the root of the project (in the same directory than +Locations.xcodeproj+).
 
 [[ex_mobile_stomp_1]]
 .+Locations+' Podfile
@@ -126,6 +126,7 @@ image::images/Chapter020/blank_view.png["Locations Blank View"]
 
 Nothing is displayed but it confirms that the project and its dependencies are  successfully compiled and launched.
 
+[[ch_mobile_stomp_deviceID]]
 === Identify The Device
 
 The iPhone device is will broadcast its position. The first thing to do is identify the device. To keep the example simple, we will use a _universal unique identifier_ (or UUID) as the device identifier and display it in the view.
@@ -146,7 +147,7 @@ I will not describe into details how to set up the layout constraints for the gr
 However the example code in the https://github.com/mobile-web-messaging/code[GitHib repository] is constrained correctly.
 ====
 
-The UUID that we will generate is quite long so we will change its appearance by setting its +Font+ +System 13.0+ and its +Alignment+ to centered to fit the screen.
+The UUID that we will generate is quite long so we will change its appearance by setting its +Font+ to +System 13.0+ and its +Alignment+ to centered to fit the screen.
 
 [[img_mobile_stomp_7]]
 .Change the appearance of the device ID label.
@@ -253,7 +254,7 @@ The label is now connected to the property. The next step is to retrieve the geo
 
 iOS provides the +CoreLocation+ framework to access the location data.
 
-We need to add it to the libraries linked by the app. Click on the +Locations+ project and then the +Locations+ target. In the +General+ tab, under the +Linked Frameworks and Libraries+ section, click on the +++ button. In the selection window, type **`CoreLocation`**, select the +CoreLocation.framework+ and click on the +Add+ button.
+We need to add it to the libraries linked by the application. Click on the +Locations+ project and then the +Locations+ target. In the +General+ tab, under the +Linked Frameworks and Libraries+ section, click on the +++ button. In the selection window, type **`CoreLocation`**, select the +CoreLocation.framework+ and click on the +Add+ button.
 
 [[img_mobile_stomp_13]]
 .Add the CoreLocation framework.
