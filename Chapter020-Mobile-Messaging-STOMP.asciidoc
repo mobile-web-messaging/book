@@ -575,7 +575,7 @@ As we described in <<ch_introduction_stomp_example_topology>>, each device will 
 
 [source,objc]
 ----
-NSString *destination = [NSString stringWithFormat:@"/topic/device.%@.position", self.deviceID];
+NSString *destination = [NSString stringWithFormat:@"/topic/device.%@.location", self.deviceID];
 ----
 
 .ActiveMQ STOMP Destinations Naming Conventions
@@ -583,7 +583,7 @@ NSString *destination = [NSString stringWithFormat:@"/topic/device.%@.position",
 ====
 ActiveMQ convention is to prefix a STOMP destination by +/topic/+ to use a Publish/Subscribe messaging model and by +/queue/+ to use a Point-to-Point model.
 
-Since we designed our application to use a topic for the +device.XXX.position+, we must preprend it with +/topic/+
+Since we designed our application to use a topic for the +device.XXX.location+, we must preprend it with +/topic/+
 ====
 
 As we described in <<ch_introduction_stomp_example_message>>, the message representation is a JSON string that contains the location coordinates, the timestamp and the truck ID.
@@ -637,7 +637,7 @@ We will encapsulate all these steps in a +sendLocation:+ method that takes a +CL
     });
 
     // send the message to the truck's topic
-    NSString *destination = [NSString stringWithFormat:@"/topic/device.%@.position", self.deviceID];
+    NSString *destination = [NSString stringWithFormat:@"/topic/device.%@.location", self.deviceID];
 
     // build a dictionary containing all the information to send
     NSDictionary *dict = @{
@@ -714,7 +714,7 @@ If we restart the application, we now see debug statements in Xcode's Debug cons
 
 ----
 2014-03-13 17:19:05.711 Locations[79549:60b] >>> SEND
-destination:/topic/device.2262EC25-E9FD-4578-BADE-4E113DE45934.position
+destination:/topic/device.2262EC25-E9FD-4578-BADE-4E113DE45934.location
 content-type:application/json;charset=utf-8
 content-length:122
 
@@ -728,7 +728,7 @@ This confirms that STOMP messages are effectively sent by the +Locations+ applic
 
 In <<app_activemq_admin_console>>, we have used the ActiveMQ admin console to check the broker configuration. We can also use this console to check the destinations and their associated metrics.
 
-Go to the ActiveMQ admin console in your Web browser at http://localhost:8161/hawtio[http://localhost:8161/hawtio] and navigate the ActiveMQ tree down to the postion topic in +mybroker > Topic > device.2262EC25-E9FD-4578-BADE-4E113DE45934.position+.
+Go to the ActiveMQ admin console in your Web browser at http://localhost:8161/hawtio[http://localhost:8161/hawtio] and navigate the ActiveMQ tree down to the postion topic in +mybroker > Topic > device.2262EC25-E9FD-4578-BADE-4E113DE45934.location+.
 
 In the right side panel, select +Attributes+ in the top menu to display all the attributes associated to this topic.
 
@@ -803,7 +803,7 @@ The Truck ID is displayed on the application screen. You will have to adapt the 
 
 ----
 SUBSCRIBE
-destination:/topic/device.2262EC25-E9FD-4578-BADE-4E113DE45934.position
+destination:/topic/device.2262EC25-E9FD-4578-BADE-4E113DE45934.locatio
 
 ^@
 ----
@@ -814,7 +814,7 @@ As soon as we sent this command to the STOMP broker, we will receive +MESSAGE+ f
 MESSAGE
 content-type:application/json;charset=utf-8
 message-id:ID:jeff.local-50971-1394726830317-2:5:-1:1:323
-destination:/topic/device.2262EC25-E9FD-4578-BADE-4E113DE45934.position
+destination:/topic/device.2262EC25-E9FD-4578-BADE-4E113DE45934.location
 timestamp:1394727930755
 expires:0
 content-length:122
@@ -971,7 +971,7 @@ Step (2) is handled in STOMPKit by calling +STOMPClient+'s +subscribeTo:headers:
 This method takes 3 parameters:
 
 * the +destination+ that the client wants to consume from. In our case it is the destination +/queue/device.XXX.text+ (we prepended the destination with the +/queue/+ prefix according to ActiveMQ naming convention).
-* a dictionary of +headers+ to pass additional metadata to the subscription. Since we do not have any such header for the time being, we will pass a empty dictionary
+* a dictionary of +headers+ to pass additional metadata to the connection process. Since we do not have any such header for the time being, we will pass a empty dictionary
 * a +STOMPMessageHandler+ block with a +STOMPMessage+ parameter that will be called every time the broker sends a messages to the client to consume it. In our case, we will have to create a dictionary from the JSON string contained in the message body and add the order to the +texts+ array.
 
 We will add a method named +subscribe+ to the +MWMViewController+ implementation:

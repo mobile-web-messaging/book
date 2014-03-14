@@ -32,15 +32,14 @@ stomp.js is a small JavaScript library that implements the STOMP protocol over H
 
 TODO
 
-=== Bootstrap the Control Center Web Application
+=== Bootstrap the Web Application
 
-As we explained in the first chapter, the _Control Center_ Web will be use to follow the position of all the trucks in the fleet 
-and send them orders.
+As we explained in the first chapter, this Web application will be use to display the locations of the devices and send them text messages.
 
 It will be a very simple one-page Web application that can be run from a Web server serving static pages. It does not require
 any server-side runtime as all the code will be executed inside the Web browser using JavaScript.
 
-Let's bootstrap the Web application by creating a *__control.html__* page.
+Let's bootstrap the Web application by creating a *__locations.html__* page.
 
 [[ex_web_stomp_1]]
 ====
@@ -51,10 +50,10 @@ Let's bootstrap the Web application by creating a *__control.html__* page.
   <head>
     <meta content="width=device-width" name="viewport">
     <meta charset="utf-8">
-    <title>Truck Tracker Control Center</title>
+    <title>Locations - STOMP Example</title>
   </head>
   <body>
-    <h1>Truck Tracker Control Center</h1>
+    <h1>Locations - STOMP Example</h1>
       <form id='connect_form'>
         <fieldset>
           <label>WebSocket URL</label>
@@ -63,14 +62,14 @@ Let's bootstrap the Web application by creating a *__control.html__* page.
           <button type="button" id='disconnect_button' disabled>Disconnect</button>
         </fieldset>
       </form>
-      <form id="order_form" style="display: none;">
+      <form id="text_form" style="display: none;">
         <fieldset>
-          <legend>Send order to a truck</legend>
-          Truck: <select id="truckID"></select>
+          <legend>Send Text</legend>
+          Device: <select id="deviceID"></select>
           <br>
-          Order: <input id='order' size=64 placeholder="type the order to sent to the truck" type="text">
+          Text: <input id='text' size=64 placeholder="type the text to sent to the device" type="text">
           <br>
-          <button id='order_submit' type="submit">Send</button>
+          <button id='text_submit' type="submit">Send</button>
         </fieldset>
       </form>
       <hr>
@@ -78,11 +77,12 @@ Let's bootstrap the Web application by creating a *__control.html__* page.
       <div id="map-canvas" style="height:512px; width:100%; padding:0; margin:0">
       </div>
 
+      <footer>&copy; 2014 <a href="http://mobile-web-messaging.net">Mobile &amp; Web Messaging</a></footer>
 
       <!-- Scripts placed at the end of the document so the pages load faster -->
       <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
       <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
-      <script src="https://raw.github.com/jmesnil/stomp-websocket/v2.3.0/lib/stomp.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.1/stomp.min.js"></script>
       <script>
 $(document).ready(function() {
 
@@ -98,7 +98,7 @@ $(document).ready(function() {
 
 === Create a STOMP Client With stomp.js
 
-The STOMP client will be used for both consuming messages (from the trucks' position destination) and producing them (to the truck's orders queue).
+The STOMP client will be used for both consuming messages (from the device' location destination) and producing them (to the device's text destination).
 
 We will declare the +client+ variable to use it throughout our script.
 
@@ -115,26 +115,28 @@ This +client+ object will be created when the user click on the +Connect+ button
 
 [source,js]
 ----
-  // Connection to the STOMP broker
-  $('#connect_form').submit(function() {
-    var url = $("#connect_url").val();
+// Connection to the STOMP broker
+$('#connect_form').submit(function() {
+  var url = $("#connect_url").val();
 
-    // create the STOMP client
-    client = Stomp.client(url);
+  // create the STOMP client
+  client = Stomp.client(url);
 ----
 
 === Connect to a STOMP Broker
 
-Once we have the +client+ object, we call **`connect`** by passing the credentials (login and password) and a function that will be called back
-once the client has been successfully connected to the STOMP broker.
+Once we have the +client+ object, we call its +connect+ method to connect to the STOMP broker. This method takes at least two arguments:
+
+. a set of headers containing additional metadata that the STOMP broker can use during the connection process. In our case, we have no such header so we will pass an empty JavaScript literal object +{}+.
+. a function that is called back when the client is successfully connected to the STOMP broker.
 
 [[ex_web_stomp_2]]
 ====
 [source,js]
 ----
-    client.connect(login, passcode, function(frame) {
-        // this function is executed after a successful connection to the STOMP broker.
-    });
+client.connect({}, function(frame) {
+    // this function is executed after a successful connection to the STOMP broker.
+});
 ----
 ====
 
@@ -142,88 +144,88 @@ The Web page has a button with the id +connect_button+ to connect to the STOMP b
 
 [source,js]
 ----
-  // Connection to the STOMP broker
-  $('#connect_form').submit(function() {
-    var url = $("#connect_url").val();
+// Connection to the STOMP broker
+$('#connect_form').submit(function() {
+  var url = $("#connect_url").val();
 
-    // create the STOMP client
-    client = Stomp.client(url);
+  // create the STOMP client
+  client = Stomp.client(url);
 
-    client.connect("", "", function(frame) {
-      client.debug("connected to Stomp");
-      // TODO once the client is connected, subscribe to the truck's position destinations.
-    });
-    // disable the connect button
-    $("#connect_button").prop("disabled",true);
-    // enable the disconnect button
-    $("#disconnect_button").prop("disabled",false);
-    // show the form to send orders to the trucks
-    $("#order_form").show();
-    return false;
+  client.connect({}, function(frame) {
+    client.debug("connected to Stomp");
+    // TODO once the client is connected, subscribe to the truck's position destinations.
   });
+  // disable the connect button
+  $("#connect_button").prop("disabled",true);
+  // enable the disconnect button
+  $("#disconnect_button").prop("disabled",false);
+  // show the form to send text to the devices
+  $("#text_form").show();
+  return false;
+});
 ----
 
-If we want to be notified when the connection is *unsuccesful*, we can pass a fourth parameters to the `connect` method which is a call back that is executed in case of problem.
+If we want to be notified when the connection is *unsuccesful*, we can pass an additional argument to the +connect+ method which is a function that is called back if the connection is _not_ successful.
 
 [[ex_web_stomp_3]]
 ====
 [source,js]
 ----
-    client.connect(login, passcode, function(frame) {
-        // this function is executed after a successful connection to the STOMP broker.
-      }, function(frame) {
-        // this function is executed if the connection to the STOMP broker failed.
-    });
+client.connect(headers, function(frame) {
+    // this function is executed after a successful connection to the STOMP broker.
+  }, function(frame) {
+    // this function is executed if the connection to the STOMP broker failed.
+});
 ----
 ====
 
-Note that we passed empty strings to the +connect+ method's first and second parameters as we have not configured any security authentication in our STOMP broker.
-
 === Receive STOMP Messages
 
-Once the client is connected successfully to the STOMP broker, it can subscribe to a destination using the **`subscribe`** method which takes two parameters: the name of the destination and a callback method that 
-is executed every time a message is pushed from the broker to the client:
+Once the client is connected successfully to the STOMP broker, it can subscribe to a destination using the +subscribe+ method which takes two parameters:
+
+. the name of the destination
+. a function that is called back every time the broker delivers a message to the client.
 
 [[ex_web_stomp_4]]
 ====
 [source,js]
 ----
 client.subscribe(destination, function(message) {
-  // this function is executed every time a message is received
+  // this function is executed every time a message is consumed
 });
 ----
 ====
 
 The `message` parameter that is passed to the subscription callback corresponds to a STOMP message and has 3 properties:
 
-* **`command`** - the command of the STOMP frame (when a message is receives, it will always be `MESSAGE`)
-* **`headers`** - a JavaScript object containing all the frame headers. It can be empty if the message has no headers
-* **`body`** - a string representing the message's payload. It can be `null` if the message has no payload.
+* +command+ - the command of the STOMP frame (when a message is receives, it will always be +MESSAGE+)
+* +headers+ - a JavaScript object containing all the frame headers. It can be empty if the message has no headers
+* +body+ - a string representing the message's payload. It can be +null+ if the message has no payload.
 
 ==== Subscribe to a Wildcard Destination
 
-This Web application is interested to receive the position of _any_ truck that broadcasts it.
-This means that we must subscribe to the +/topic/truck.XXX.position+ for every trucks in the company where XXX is replaced by the truck ID.
+This Web application is interested to receive the location of _any_ devices that broadcasts it.
+This means that we must subscribe to the +/topic/device.XXX.location+ for every device where XXX is the device identifier.
 
-There are two different ways to achieve this. The first way is to know beforehands all the truck IDs in the company and subscribe to their topics one after the other. We can use the same subscription callback for all of them.
+There are two different ways to achieve this. The first way is to know beforehands all the device IDs and subscribe to their topics one after the other. We can use the same subscription callback for all of them.
 However, that implies that the Web application must now have a way to know this list. For example, it could be a Web service that returns such a list.
 
 The pseudo code for it would look like:
 
 ----
-var truckListURL = "...";
-var truckIDs = fetch(truckListURL);
+var listURL = "...";
+var deviceIDs = fetch(listURL);
 var callback = function(message) {
   // we use the same callback for every subscription
 }
-for (truck in truckIDs) {
-  var destination = "/topic/truck." + truckID + ".position";
+for (deviceID in deviceIDs) {
+  var destination = "/topic/truck." + deviceID + ".location";
   client.subscribe(destination, callback);
 }
 ----
 
-But what happens if another truck is added _after_ the Web application fetched the list of truck IDs? The Web application will not subscribe to its topic and will never display it on the map.
-We have to periodically fetch the list of truck IDs and check whether there are new ones or if some trucks have been removed. This starts to be quite complex to write for a simple intent.
+But what happens if another device starts broadcasting its location _after_ the Web application fetched the list of device IDs? The Web application will not subscribe to its topic and will never display it on the map.
+We would have to periodically fetch the list of device IDs and check whether there are new ones or if some devices have been removed.
 
 Fortunately, the flexibility of STOMP protocol comes handy to manage this in a simpler fashion. STOMP defines very loosely the destination
 
@@ -232,7 +234,7 @@ ____
 A STOMP server is modelled as a set of destinations to which messages can be sent. The STOMP protocol treats destinations as opaque string and their syntax is server implementation specific. Additionally STOMP does not define what the delivery semantics of destinations should be. The delivery, or “message exchange”, semantics of destinations can vary from server to server and even from destination to destination. This allows servers to be creative with the semantics that they can support with STOMP. 
 ____
 
-Until now, we have used _simple_ destinations such as +/topic/truck.66284AB0-C266-4A4D-9443-FEFB5774FA3C.position+ or +/queue/truck.66284AB0-C266-4A4D-9443-FEFB5774FA3C.orders+ that are straightforward to understand.
+Until now, we have used _simple_ destinations such as +/topic/device.2262EC25-E9FD-4578-BADE-4E113DE45934.location+ or +/queue/device.2262EC25-E9FD-4578-BADE-4E113DE45934.text+ that are straightforward to understand.
 
 We will now use a feature from our STOMP broker, ActiveMQ, that allows to use http://activemq.apache.org/wildcards.html[_wildcard_ destinations].
 
@@ -241,101 +243,102 @@ We will now use a feature from our STOMP broker, ActiveMQ, that allows to use ht
 * +>+ is used to recursively match any destination starting from this name
 
 With our example using ActiveMQ, we can use this notation to subscribe to any
-truck position topic by using the +/topic/truck.$$*$$.position+ widlcard destination (where +$$*$$+ stands for _any truck identifier_).
+device location topic by using the +/topic/device.$$*$$.location+ widlcard destination (where +$$*$$+ stands for _any device identifier_).
 
 The subscription code becomes simpler:
 
 [source,js]
 ----
-      // we use a wildcard destination to register to any
-      // destination that matches this pattern.
-      var destination = "/topic/truck.*.position";
-      client.subscribe(destination, function(message) {
-        // this function is called every time a message is received
-      });
+// we use a wildcard destination to register to any
+// destination that matches this pattern.
+var destination = "/topic/device.*.location";
+client.subscribe(destination, function(message) {
+  // this function is called every time a message is received
+});
 ----
 
 [NOTE]
 ====
-Since the semantic of STOMP destinations are specific to the STOMP broker, you have to check with its documentation to know if they support wildcard destinations or similar concepts. If it does not, you have to revert to the first idea to fetch the list of trucks and subscribe to each of the destination... or use another STOMP broker that supports this feature.
+Since the semantic of STOMP destinations are specific to the STOMP broker, you have to check with its documentation to know if they support wildcard destinations or similar concepts. If it does not, you have to revert to the first idea to fetch the list of devices and subscribe to each of the destination... or use another STOMP broker that supports this feature.
 ====
 
-Since we no longer know _a priori_ which truck position we are receiving, how do we determine that.
-There are 2 pieces of information we can use. When a consumer receives a STOMP message, the message always have a +destination+ header that corresponds to the _actual_ destination that we consume from. If we are subscribing to the wildcard address +/topic/truck.$$*$$.position+ and receives a message, we can look at the +message.headers["destination"]+ to get the actual destination (+/topic/truck.66284AB0-C266-4A4D-9443-FEFB5774FA3C.position+ in my case).
-However, we would then have to parse this +destination+ to extract the truck ID from it and write brittle code for that.
+Since we no longer know _a priori_ which device location we are receiving, we need a new way to determine which device has broadcasted it.
+There are two pieces of information we can use. When a consumer receives a STOMP message, the message always have a +destination+ header that corresponds to the _actual_ destination that the client consumed consume from. If we are subscribing to the wildcard address +/topic/device.$$*$$.location+ and receives a message, we can look at the +message.headers["destination"]+ to get the actual destination (+/topic/device.2262EC25-E9FD-4578-BADE-4E113DE45934.location+ in my case).
+However, we would then have to parse this +destination+ to extract the device ID from it and write brittle code for that.
 
-If you look back at <<ch_introduction_stomp_example_message>>, the message representation for the truck position also contains the truck ID in the +truck+ property:
+If we look back at <<ch_introduction_stomp_example_message>>, the message representation for the location also contains the device ID in the +deviceID+ property:
 
 [source,js]
 ----
 {
-  "truck": "66284AB0-C266-4A4D-9443-FEFB5774FA3C",
+  "deviceID": "BBB",
   "lat": 48.8581,
   "lng": 2.2946,
   "ts": "2013-09-23T08:43Z"
 }
 ----
 
-The message is _self-contained_ and gives all the interesting information that a consumer may need. When we receive a truck position message, we know which truck is sending it by simply looking at the +truck+ property from the JSON object created by parsing the message body.
+The message is _self-contained_ and defines all the interesting information that a consumer may need. When we receive such a location message, we know which device is sending it by simply looking at the +deviceID+ property from the JSON object created from  the message body.
 
 [source,js]
 ----
-      var destination = "/topic/truck.*.position";
-      client.subscribe(destination, function(message) {
-        // this function is called every time a message is received
-        // create an object from the JSON string contained in the message body
-        var payload = JSON.parse(message.body);
-        var truckID = payload.truck;
+var destination = "/topic/device.*.location";
+client.subscribe(destination, function(message) {
+  // this function is called every time a message is received
+  // create an object from the JSON string contained in the message body
+  var payload = JSON.parse(message.body);
+
+  var deviceID = payload.deviceID;
 ----
 
-When we receive the position of a truck, the last step we need to make is to display its position on a map. We will wrap this code in a +show+ method that is called from the subscription callback with the truck identifier and its latitute and longitude.
+When we receive the position of a device, the last step we need to make is to display its position on a map. We will wrap this code in a +show+ method that is called from the subscription callback with the device identifier and its latitute and longitude.
 
 The whole code to connect to the STOMP broker, subscribes to the wildcard destination is shown below.
 
 [source,js]
 ----
 // Connection to the STOMP broker
-// and subscription to the trucker's position destinations.
+// and subscription to the device's position destinations.
 $('#connect_form').submit(function() {
   var url = $("#connect_url").val();
 
   // create the STOMP client
   client = Stomp.client(url);
 
-  client.connect("", "", function(frame) {
+  client.connect({}, function(frame) {
     client.debug("connected to Stomp");
-    // once the client is connected, subscribe to the truck's position destinations.
+    // once the client is connected, subscribe to the device's location destinations.
 
     // we use a wildcard destination to register to any
     // destination that matches this pattern.
-    var destination = "/topic/truck.*.position";
+    var destination = "/topic/device.*.location";
     client.subscribe(destination, function(message) {
       // this function is called every time a message is received
       // create an object from the JSON string contained in the message body
       var payload = JSON.parse(message.body);
 
-      var truckID = payload.truck;
-      if (!$("#truckID option[value='" + truckID + "']").length) {
-        // if the truck ID is not already in the list of trucks we can send orders to, we add it.
-        $('#truckID').append($('<option>', {value:truckID}).text(truckID));                
+      var deviceID = payload.deviceID;
+      if (!$("#deviceID option[value='" + deviceID + "']").length) {
+        // if the device ID is not already in the list of devices we can send orders to, we add it.
+        $('#deviceID').append($('<option>', {value:deviceID}).text(deviceID));                
       }
-      // show the truck position on the map
-      show(truckID, payload.lat, payload.lng);
+      // show the device location on the map
+      show(deviceID, payload.lat, payload.lng);
     });
   });
   // disable the connect button
   $("#connect_button").prop("disabled",true);
   // enable the disconnect button
   $("#disconnect_button").prop("disabled",false);
-  // show the form to send orders to the trucks
-  $("#order_form").show();
+  // show the form to send text to the devices
+  $("#text_form").show();
   return false;
 });
 ----
 
-=== Draw the Truck Positions on a Map
+=== Draw the Device Locations on a Map
 
-The Web application is now receiving the GPS coordinates of any trucks that send them. We could just display them as text like we did for the mobile application in <<ch_mobile_stomp_display_truck_position>> but let's make it pretty by drawing them on a map instead by using Google Maps API.
+The Web application is now receiving the GPS coordinates of any devices that send them. We could just display them as text like we did for the iOS application in <<ch_mobile_stomp_display_position>> but we can make it prettier by drawing them on a map instead by using Google Maps API.
 
 In <<ex_web_stomp_1>> template, we already added the scripts to use Google Maps API. We now need to create the map and initialize it.
 
@@ -361,71 +364,70 @@ $(document).ready(function() {
 
 With this initialization code, the map will be drawn in the +map_canvas+ +div+ element and we can reference it using the +map+ variable.
 
-The +trackers+ variable is a map whose key are the truck identifiers and the values is a tracker with the latest location of the truck on the map.
+The +trackers+ variable is a map whose key are the device identifiers and the values is a tracker with the latest location of the device on the map.
 
-We have called a +show()+ method in the subscription handler. Let's code it now to display the truck on the map using its coordinates.
+We have called a +show()+ method in the subscription handler. We can now implement it now to display the device on the map using its coordinates.
 
 [source,js]
 ----
-  // show the truckID at the given latitude and longitude
-  function show(truckID, lat, lng) {
-    var position = new google.maps.LatLng(lat, lng);
-    // lazy instantiation of the map
-    if (!map) {
-      create_map(position);
-    }
-    // if there is no tracker for this truck
-    if (!trackers[truckID]) {
-      // create a marker for it
-      var marker = new google.maps.Marker({
-        position: position,
-        map: map,
-        title: truckID + " is here"});
-      var infowindow = new google.maps.InfoWindow({
-        content: "Truck " + truckID
-      });
-      var tracker = {
-        marker: marker
-      };
-      // add it to the trackers
-      trackers[truckID] = tracker;
-      google.maps.event.addListener(marker, 'click', function() {
-        infowindow.open(map, marker);
-      });
-    } else {
-      // the tracker is know, we just need to update its position
-      trackers[truckID].marker.setPosition(position);
-    }
+// show the device at the given latitude and longitude
+function show(deviceID, lat, lng) {
+  var position = new google.maps.LatLng(lat, lng);
+  // lazy instantiation of the map
+  if (!map) {
+    create_map(position);
   }
+  if (trackers[deviceID]) {
+    // the tracker is known, we just need to update its position
+    trackers[deviceID].marker.setPosition(position);
+  } else {
+    // there is no tracker for this device yet, let's create it
+    var marker = new google.maps.Marker({
+      position: position,
+      map: map,
+      title: deviceID + " is here"});
+    var infowindow = new google.maps.InfoWindow({
+      content: "Device " + deviceID
+    });
+    var tracker = {
+      marker: marker
+    };
+    // add it to the trackers
+    trackers[deviceID] = tracker;
+    google.maps.event.addListener(marker, 'click', function() {
+      infowindow.open(map, marker);
+    });
+  }
+}
 ----
 
-If we open now this +control.html+ file in a Web browser, we will see a map of the whole world displayed.
+If we open now this +locations.html+ file in a Web browser, we will see a map of the whole world displayed.
 
 [[img_web_stomp_1]]
-.The Control Center Web application.
-image::images/Chapter030/control_center.png["The Control Center Web application"]
+.The +Locations+ Web application.
+image::images/Chapter030/locations_web_app.png[The Locations Web application]
 
-If we click on the +Connect+ button, markers will appear on the map for each truck that sents its coordinates. 
+If we click on the +Connect+ button, markers will appear on the map for each device that broadcasts its coordinates. 
 
-In my case, I am using the iOS simulator to run the mobile application developed in the previous chapter and use its +Location+ tool to simulate a freeway drive (as explained in <<ch_mobile_stomp_location_simulator>>).
+In my case, I am using the +iOS simulator+ to run the mobile application developed in the previous chapter and use its +Location+ tool to simulate a freeway drive (as explained in <<ch_mobile_stomp_location_simulator>>).
 
 [[img_web_stomp_2]]
-.Following a truck on a freeway drive.
-image::images/Chapter030/truck_freeway_drive.png["Following a truck on a freeway drive"]
+.Simulate a freeway drive.
+image::images/Chapter030/freeway_drive.png[Simulate a freeway drive]
 
-The position of the truck is updated every time the Web application receives a STOMP message from the truck's position destination and you will see it move on the map.
+The position of the device is updated every time the Web application receives a STOMP message from the device's position destination and we see it move on the map.
 
-At this stage, the Web application receives STOMP messages to display the position of the trucks. We now need to write the code to send orders to the trucks.
+At this stage, the Web application receives STOMP messages to display the position of the devices. We now need to write the code to send texts to the devices.
 
 === Send STOMP Messages
 
-The STOMP client can send messages to the broker by calling the **`send`** method which takes three parameters:
+The STOMP client can send messages to the broker using its +send+ method which takes three parameters:
 
 * +destination+ - the name of the destination
 * +headers+ - a JavaScript object containing any additional headers
 * +body+ - a string corresponding to the message payload.
 
-Both `headers` and `body` are optional and can be omitted. However if you want to set the message payload, you must also specify the headers (using an empty
+Both +headers+ and +body+ are optional and can be omitted. However if you want to set the message body, you must also specify the headers (using an empty
 JavaScript literal if you have no header to set).
 
 [source,js]
@@ -433,69 +435,61 @@ JavaScript literal if you have no header to set).
 client.send(destination, {}, body);
 ----
 
-As we described in <<ch_introduction_stomp_example_topology>>, we use a queue to send orders to a given truck and the destination for this is named +/queue/truck.XXX.orders+
+As we described in <<ch_introduction_stomp_example_topology>>, we use a queue to send orders to a given device and the destination for this is named +/queue/device.XXX.text+
 
-The order is sent in the STOMP message body as a JSON string with a +order+ key.
+The text is sent in the STOMP message body as a plain text string.
 
 [source,js]
 ----
 {
-  "order": "Go to warehouse #1"
+  Hello, Where are you
 }
 ----
 
-We must respect this message format as it is the format expected by the mobile application to handle the orders and display them (we wrote this code in <<ch_mobile_stomp_subscribe>>).
+We must respect this message format as it is the format expected by the iOS application to handle the texts and display them (we wrote this code in <<ch_mobile_stomp_subscribe>>).
 
-We added a HTML +<form>+ element with the id +order_form+ to send an order. The truck identifier is taken from the selected option in the +<select>+ element identified by +truckID+. The order text is taken from the +<input>+ element identified by +order+.
+We added a HTML +<form>+ element with the id +text_form+ to send a text message. The device identifier is taken from the selected option in the +<select>+ element identified by +deviceID+. The text itself is taken from the +<input>+ element identified by +text+.
 
 Once we know the +truckID+ and the +order+, we have all we need to send an order to this truck. The destination for the order will be built using the +truckID+. Since the message payload will be a JSON string, we add a +content-type+ header set to +application/json; charset=utf-8+.
-
-The message payload itself will the string obtained by _stringifying_ the order object.
 
 Piecing everything together, the code to send a STOMP message looks like:
 
 [source,js]
 ----
-  // Send an order to a truck
-  $('#order_form').submit(function() {
-    var truckID = $("#truckID").val();
-    var order = $("#order").val();
-      
-    // sue the truck's queue orders as the destination
-    var destination = "/queue/truck." + truckID + ".orders";
-    // declare the message body as a JSON string
-    var headers = {
-      "content-type": "application/json; charset=utf-8"
-    };
-    var body = JSON.stringify({
-      "order": order
-    })    
-    client.send(destination, headers, body);
-    // reset the order input field
-    $("#order").val("");
-    return false;
-  });
+// Send a text to a device
+$('#text_form').submit(function() {
+  var deviceID = $("#deviceID").val();
+  var text = $("#text").val();
+    
+  // sue the device's queue orders as the destination
+  var destination = "/queue/device." + deviceID + ".text";
+  // text is sent as a plain text string
+  client.send(destination, {}, text);
+  // reset the text input field
+  $("#text").val("");
+  return false;
+});
 ----
 
-If we reload the +control.html+ file after adding this code, we can now send an order to the truck by selecting it in the list in the +Send order to a truck+ form.
+If we reload the +locations.html+ file after adding this code, we can now send any text message to a device by selecting it in the list in the +Send Text+ form.
 
-Let's type an order such as +Go to office depot #2+ and click on the +Send+ button.
+Let's type a text such as +Hello, Where are you?+ and click on the +Send+ button.
 
 [[img_web_stomp_3]]
-.Send an order to a truck.
-image::images/Chapter030/send_order.png["Send an order to a truck"]
+.Send a text message to a device.
+image::images/Chapter030/send_text.png[Send a text message to a device]
 
-The message is sent when you click on the +Send+ button. Since the mobile application is subscribed to this destination, it will receive the message and display it in its table.
+The message is sent when you click on the +Send+ button. Since the +Locations+ iOS application is subscribed to this destination, it will receive the message and display it in its table.
 
 [[img_web_stomp_4]]
-.The mobile application received the order.
-image::images/Chapter030/mobile_app_received_order.png["The mobile application received the order"]
+.The +Locations+ iOS application received the text.
+image::images/Chapter030/ios_app_received_text.png[The Locations iOS application received the text]
 
 === Summary
 
 In this chapter, we learn to use +stomp.js+ to send and receive STOMP messages from a Web application.
 
-Regardless of using StompKit for mobile applications or stomp.js for Web applications, the steps are always the same.
+Whether you are using +StompKit+ in an iOS application or +stomp.js+ in a Web application, the steps are always the same.
 
 To send a message, the application must:
 
@@ -507,6 +501,6 @@ To consume a message, the application must
 . connect to the STOMP broker
 . subscribe to the destination and pass a callback that is called every time a message is received.
 
-At the end of this chapter, we have a very simple application that works. If you have access to several iPhone devices, you can see that the Web application will display the position of all the devices running the mobile application.
+At the end of this chapter, we have a very simple application that works. If you have access to several iPhone devices, you can see that the Web application will display the location of all the devices running the iOS application.
 
-In the next chapter, we will learn about more advanced features of STOMP. We did not present them as they were not required to write this simple application. However, it is likely that you may need some of these features if your applications are more complex.
+In the next chapter, we will learn about more advanced features of STOMP. We did not present them as they were not required to write this simple application. However, it is likely that you may need some of these features if your applications are more complex than this simple example.
