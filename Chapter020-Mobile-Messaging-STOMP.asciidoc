@@ -420,7 +420,7 @@ Now that the +Locations+ application is handling the device geolocation data, th
 
 Before sending any messages, we must first import the +StompKit+ library that we add to the +Podfile+ file at the beginning of this chapter.
 
-We must import its header file +StompKit.h+ at the top of the +MWMViewController.m+ file and add a +STOMPClient+ property named +client+ to the +MWMViewController+ interface.
+We must import its header file +StompKit.h+ at the top of the +MWMViewController.m+ file and add a +STOMPClient+ property named +client+ to the +MWMViewController+ private interface.
 
 ====
 [source, objc]

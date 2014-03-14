@@ -269,7 +269,11 @@ We now capture the device motions and display them. Next step is to broadcast th
 [[ch_mobile_mqtt_client]]
 === Create a MQTT Client With MQTTKit
 
-TODO
+To send and receive message with MQTT, we must first import the +MQTTKit+ library that was added to the project using CocoaPods at the beginning of this chapter.
+
+We must import its header file +MQTTKit.h+ at the top of the +MWMViewController.m+ file and add a +MQTTClient+ property named +client+ to the +MWMViewController+ private interface.
+
+We also define a constant to represent the hostname of the MQTT broker we are using +iot.eclipse.org+.
 
 [source,objc]
 ----
@@ -277,44 +281,59 @@ TODO
 
 #define kMqttHost @"iot.eclipse.org"
 
-@interface MWMViewController () <MQTTClientDelegate>
+@interface MWMViewController ()
 
-@property (strong, nonatomic) MQTTClient *mqttClient;
+@property (strong, nonatomic) MQTTClient *client;
 
 @end
 ----
 
-TODO
+We will create a new +MQTTClient+ object in the +MWMViewController+'s +viewDidLoad+ method.
+A +MQTTClient+ must be uniquely identified for the MQTT brokers it connects to.
+We can use the +deviceID+ as its client identifier.
 
 [source,objc]
 ----
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    // self.deviceID = [UIDevice currentDevice].identifierForVendor.UUIDString;
-    self.deviceID = @"C0962483-7DD9-43CC-B1A0-2E7FBFC05060";
-    NSLog(@"Device identifier is %@", self.deviceID);
 
     ...
-
-    self.mqttClient = [[MQTTClient alloc] initWithClientId:self.deviceID];
-    // Override point for customization after application launch.
-    self.mqttClient.delegate = self;
+    
+    self.client = [[MQTTClient alloc] initWithClientId:self.deviceID];
+    [self connect];
 }
 ----
 
 TODO
 
+
+
+
+
+
+
+
+
+
+
+
 [source,objc]
 ----
-#pragma mark - MQTTClientDelegate
+#pragma mark - MQTTKit Actions
 
-- (void)client:(MQTTClient *)client
-    didConnect:(NSUInteger)code
+- (void)connect
 {
-    // do nothing for the moment
+    NSLog(@"Connecting to %@...", kMqttHost);
+    [self.client connectToHost:kMqttHost completionHandler:^(MQTTConnectionReturnCode code) {
+        if (code == ConnectionAccepted) {
+            NSLog(@"connected to the MQTT broker");
+        } else {
+            NSLog(@"Failed to connect to the MQTT broker: code=%lu", code);
+        }
+    }];
 }
+
 ----
 
 === Connect to a MQTT Broker
