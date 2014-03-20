@@ -222,21 +222,22 @@ All this logic can be written in +viewDidLoad+ so that the motion manager will s
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
     self.deviceID = [UIDevice currentDevice].identifierForVendor.UUIDString;
     NSLog(@"Device identifier is %@", self.deviceID);
     self.deviceIDLabel.text = self.deviceID;
-    
+
     self.motionManager = [[CMMotionManager alloc] init];
     // use a frequency of circa 10Hz to get the device motion updates
     self.motionManager.deviceMotionUpdateInterval = 0.1;
     NSOperationQueue *queue = [[NSOperationQueue alloc] init];
     [self.motionManager startDeviceMotionUpdatesToQueue:queue withHandler:^(CMDeviceMotion *motion, NSError *error) {
         if(!error) {
+            CMAttitude *attitude = motion.attitude;
             dispatch_async(dispatch_get_main_queue(), ^{
-                self.pitchLabel.text = [NSString stringWithFormat:@"pitch: %.1f", motion.attitude.pitch];
-                self.rollLabel.text = [NSString stringWithFormat:@"roll: %.1f", motion.attitude.roll];
-                self.yawLabel.text = [NSString stringWithFormat:@"yaw: %.1f", motion.attitude.yaw];
+                self.pitchLabel.text = [NSString stringWithFormat:@"pitch: %.1f", attitude.pitch];
+                self.rollLabel.text = [NSString stringWithFormat:@"roll: %.1f", attitude.roll];
+                self.yawLabel.text = [NSString stringWithFormat:@"yaw: %.1f", attitude.yaw];
             });
         }
     }];
@@ -305,18 +306,14 @@ We can use the +deviceID+ as its client identifier.
 }
 ----
 
-TODO
+=== Connect to a MQTT Broker
 
+A +MQTTKit+ client will connect to the MQTT Broker when its +connectToHost:completionHandler:+ method is called.
+Since +MQTTKit+ is event-driven, the client will be *effectively* connected when its completionHandler block is called and the return code is +MQTTConnectionReturnCode+ is equal to +ConnectionAccepted+.
 
+You can not assume that the client is connected when the +connectToHost:completionHandler:+ method returns. Any actions that requires the client to be connected must happen inside the +completionHandler+ block.
 
-
-
-
-
-
-
-
-
+We will encapsulate this code in a +connect+ method that we called from +viewDidLoad+. 
 
 [source,objc]
 ----
@@ -336,51 +333,28 @@ TODO
 
 ----
 
-=== Connect to a MQTT Broker
-
-TODO
-
-[source,objc]
-----
-#pragma mark - MQTT actions
-
-- (void)connect
-{
-    [self.mqttClient connectToHost:kMqttHost];
-}
-----
-
-TODO
-
-[source,objc]
-----
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    
-    ...
-
-    self.mqttClient = [[MQTTClient alloc] initWithClientId:self.deviceID];
-    // Override point for customization after application launch.
-    self.mqttClient.delegate = self;
-
-    [self connect];
-}
-----
-
 === Disconnect from a MQTT Broker
 
-TODO
+The +client+ can disconnect from the MQTT broker by calling its +disconnectWithCompletionHandler:+ method.
+
+The +completionHandler+ block as a +code+ parameter that will be +0+ if the disconnection was successful.
 
 [source,objc]
 ----
 - (void)disconnect
 {
-    [self.mqttClient disconnect];
+    [self.client disconnectWithCompletionHandler:^(NSUInteger code) {
+        if (code == 0) {
+            NSLog(@"disconnected from the MQTT broker");
+        } else {
+            NSLog(@"disconnected unexpectedly...");
+        }
+    }];
 }
+
 ----
 
-TODO
+We want to disconnect from the MQTT broker when the +MWMViewController+ is no longer used. We will call the +disconnect+ method from +dealloc+. 
 
 [source,objc]
 ----
@@ -393,6 +367,64 @@ TODO
 
 === Send MQTT Messages
 
+The +MWMViewController+ automatically connects to the MQTT broker when its view is loaded and disconnects when it is deallocated.
+Next step is to send messages every time the device motion values are updated.
+
+The MQTT protocol is a binary protocol. The message payload must be encoded as binary data to be sent.
+The +MQTTKit+ library provides two methods to send messages:
+
+* The +publishData:toTopic:withQos:retain:+ method expects a +NSData+ object as the message payload and its +bytes+ will be used.
+* The +publishString:toTopic:withQos:retain:+ method can also be used for the common case of sending a text message. Internally, the +NSString+ that is passed in parameter is encoded as a +NSData+ using the UTF-8 encoding.
+
+In the +Motions+ iOS application, we send a message with a binary payload composed of three 64-bit floats for the +pitch+, +roll+, and +yaw+ values contained in a +CMAttitude+ object. We will build the payload's +NSData+ by converting the double values to a platform-independent format using the +CFConvertDoubleHostToSwapped+ function.
+
+The other three parametes to the +publish...+ methods are the same for both the binary and text payload version.
+
+The +topic+ parameter is the name of the topic to send the message.
+According to <<ch_introduction_mqtt_example_topology>>, the name of the topic is +/mwm/XXX/motion+ where XXX is the device identifier.
+
+The +qos+ parameter to the _Quality of Service_ (or QoS) to use to deliver the messages to the consumers.
+
+==== Quality Of Service
+
+The MQTT protocol defines three levels of Quality of Service:
+
+* At Most Once (wit the value +0+ represented by +AtMostOnce+ in +MQTTKit+)
+* At Least Once (wit the value +1+ represented by +AtLeastOnce+ in +MQTTKit+)
+* Exactly Once (wit the value +2+ represented by +ExactlyOnce+ in +MQTTKit+)
+
+These levels of QoS determines the guarantee that the MQTT broker will accept to deliver a message.
+With +At Most Once+, the MQTT broker guarantees that the published message will be delivered at most once to its consumers. This means that the consumers may not receive the message at all. If an error (either a network failure or a crash) occurs while the message is sent to the broker, it is possible that it will be lost and the consumers will never receive it.
+
+With +At Least Once+, the MQTT broker guarantees that the published message will be delivered at least once to the consumers. This also means that a consumer may receive the same message twice. If there is any error when the producer sends the message to the broker and did not receive an acknowledgement that its message has been received, it will resend it as second time as a _duplicate_ (the MQTT message will have a +DUP+ bit set). When the broker receives this duplicate message it will redeliver it to the consumer but it is possible that they in fact received the original message. The consumer may need to check if the +DUP+ bit is set on the delivered message to know whether it is an original message (and it must process it) or a duplicate (and it can discard it)
+
+The +At Least Once+ QoS offers the guarantee that no published message will be lost but at the cost of performance and additional code on the consumer side.
+The performance cost is caused by the additional message (a +PUBACK+ message) sent from the broker to the client to acknowledge that it has received the published message. That means that using this QoS level to publish +N+ messages will involve exchanging +2*N+ messages between the producer and the broker.
+
+The highest level of delivery is provided using the +Exactly Once+ QoS. With that level, the MQTT broker guarantees that the published message will be delivered _exactly_ once by the consumers. There will be no lost messages or duplicate messages. This is guaranteed by additional exchange of messages between the producer and broker (+PUBREC+, +PUBREL+, +PUBCOMP+ messages).
+That means that using this QoS level to publish +N+ messages will involve exchanging +4*N+ messages, requires four times more network trips that the lowest level of QoS of +At Most Once+ and twice the +At Least Once+.
+
+Choosing the correct QoS depends on the type of message exchanged and the _importance_ of its payload.
+In the +Motions+ iOS application, the published message contains device motion that are updated with a 1OHz frequence. It is acceptable if a published message is _lost_ because an new message with updated content will be sent after. Using the +AtMostOnce+ QoS is the best choice.
+
+==== Retain
+
+The final parameter of the +publish...+ methods is a boolean to specify whether the published message must be _retained_ by the topic.
+
+If this flag is set on the message, the broker will deliver the message to its subscribers and keep holding the message. If a new consumer subscribes to this topic, the broker will deliver the retained message to it. This is useful as the new subscriber will not have to wait for a publisher to send a message to receive new data. The retained message contains the _Last Known Good_ value.
+
+If our case, we will publish messages with _retain_ set to +YES+. If consumers subscribes to the device motion topic *after* the device stops updated its motion values, they will still be able to use the last know device motion value.
+This example is a bit of a stretch. A more interesting example would be an application broadcasting its location (similar to the +Locations+ application). Using retained message would allow the consumers to know the last know position of the device before it stops broadcasting its position.
+
+To sum up, the +Motions+ application will send a message:
+
+* with a binary payload composed of three 64-bits floats for the device's +pitch+, +roll+, and +yaw+ values
+* to the device motion topic +/mwm/XXX/motion+ where +XXX+ is the device identifier
+* with a QoS ot +AtMostOnce+ since we accept that a published message may not be delivered
+* with +retain+ set to +YES+ so that the broker will retain the Last Known Good message to deliver it to new subscribers.
+
+We will encapsulate this code in a +send:+ method taking a +CMAttitude+ parameter.
+
 [source,objc]
 ----
 - (void)send:(CMAttitude *)attitude
@@ -403,34 +435,51 @@ TODO
         CFConvertDoubleHostToSwapped(attitude.yaw).v
     };
     NSData *data = [NSData dataWithBytes:&values length:sizeof(values)];
-    [self.mqttClient publishData:data
-                         toTopic:[NSString stringWithFormat:kMotionTopic, self.deviceID]
-                         withQos:0
-                          retain:NO];
-
+    NSString *topic =[NSString stringWithFormat:@"/mwm/%@/motion", self.deviceID];
+    [self.client publishData:data
+                     toTopic:topic
+                     withQos:AtMostOnce
+                      retain:NO
+           completionHandler:nil];
 }
 ----
+
+Finally, last step is to call this message every time a device motion value is updated by the +motionManger+. This occurs in the +viewDidLoad+ method inside the +handler+ passed to the +motionManger+'s +startDeviceMotionUpdatesToQueue:withHandler:+ method.
 
 [source,objc]
 ----
 - (void)viewDidLoad
 {
-    ...
+    [super viewDidLoad];
+
+    self.deviceID = [UIDevice currentDevice].identifierForVendor.UUIDString;
+    NSLog(@"Device identifier is %@", self.deviceID);
+    self.deviceIDLabel.text = self.deviceID;
+
+    self.motionManager = [[CMMotionManager alloc] init];
+    // use a frequency of circa 10Hz to get the device motion updates
+    self.motionManager.deviceMotionUpdateInterval = 0.1;
+    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
     [self.motionManager startDeviceMotionUpdatesToQueue:queue withHandler:^(CMDeviceMotion *motion, NSError *error) {
         if(!error) {
-            [self send:motion.attitude];
+            CMAttitude *attitude = motion.attitude;
             dispatch_async(dispatch_get_main_queue(), ^{
-                self.pitchLabel.text = [NSString stringWithFormat:@"pitch: %.1f", motion.attitude.pitch];
-                self.rollLabel.text = [NSString stringWithFormat:@"roll: %.1f", motion.attitude.roll];
-                self.yawLabel.text = [NSString stringWithFormat:@"yaw: %.1f", motion.attitude.yaw];
+                self.pitchLabel.text = [NSString stringWithFormat:@"pitch: %.1f", attitude.pitch];
+                self.rollLabel.text = [NSString stringWithFormat:@"roll: %.1f", attitude.roll];
+                self.yawLabel.text = [NSString stringWithFormat:@"yaw: %.1f", attitude.yaw];
             });
+            // send the MQTT message
+            [self send:attitude];
         }
     }];
-    ...
+    
+    self.client = [[MQTTClient alloc] initWithClientId:self.deviceID];
 }
 ----
 
-<<ch_mobile_mqtt_receive>>
+Note that we do not send the message from the main queue that is used by UI code. Sending a MQTT message can be done from any queue, so we call it directly from the handler that is running on the +queue+ that was passed to the +startDeviceMotionUpdatesToQueue:withHander:+ method.
+
+[[ch_mobile_mqtt_receive]]
 === Receive MQTT Messages
 
 [source,objc]
