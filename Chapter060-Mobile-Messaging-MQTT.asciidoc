@@ -19,7 +19,7 @@ The whole application code can be retrieved from the https://github.com/mobile-w
 
 === MQTT
 
-MQTT only supports the _Publish/Subscribe_ messaging model. 
+MQTT only supports the _Publish/Subscribe_ messaging model.
 
 === +MQTTKit+
 
@@ -138,7 +138,7 @@ The device identifier is generated in the +MWMViewController+ implementation whe
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
     self.deviceID = [UIDevice currentDevice].identifierForVendor.UUIDString;
     NSLog(@"Device identifier is %@", self.deviceID);
     self.deviceIDLabel.text = self.deviceID;
@@ -208,7 +208,7 @@ We will also define a +motionManager+ property in +MWMViewController+ private in
 @end
 ----
 
-This +motionManager+ is used to capture the device motions. We must create a new +CMMotionManager+, specify the interval of update and call its +startDeviceMotionUpdatesToQueue:withHandler:+ method to get the device motion 
+This +motionManager+ is used to capture the device motions. We must create a new +CMMotionManager+, specify the interval of update and call its +startDeviceMotionUpdatesToQueue:withHandler:+ method to get the device motion
 periodically in a block. We create a new +NSOperationQueue+ to receive these updates on this queue.
 
 The device motion is represented by a +CMDeviceMotion+ object. In our example, we are interested only by its +attitude+ property that contains the +pitch+, +roll+ and +yaw+ value we want to broadcast.
@@ -228,8 +228,8 @@ All this logic can be written in +viewDidLoad+ so that the motion manager will s
     self.deviceIDLabel.text = self.deviceID;
 
     self.motionManager = [[CMMotionManager alloc] init];
-    // use a frequency of circa 10Hz to get the device motion updates
-    self.motionManager.deviceMotionUpdateInterval = 0.1;
+    // get the device motion updates every second.
+    self.motionManager.deviceMotionUpdateInterval = 1;
     NSOperationQueue *queue = [[NSOperationQueue alloc] init];
     [self.motionManager startDeviceMotionUpdatesToQueue:queue withHandler:^(CMDeviceMotion *motion, NSError *error) {
         if(!error) {
@@ -300,7 +300,7 @@ We can use the +deviceID+ as its client identifier.
     [super viewDidLoad];
 
     ...
-    
+
     self.client = [[MQTTClient alloc] initWithClientId:self.deviceID];
     [self connect];
 }
@@ -313,7 +313,7 @@ Since +MQTTKit+ is event-driven, the client will be *effectively* connected when
 
 You can not assume that the client is connected when the +connectToHost:completionHandler:+ method returns. Any actions that requires the client to be connected must happen inside the +completionHandler+ block.
 
-We will encapsulate this code in a +connect+ method that we called from +viewDidLoad+. 
+We will encapsulate this code in a +connect+ method.
 
 [source,objc]
 ----
@@ -330,8 +330,32 @@ We will encapsulate this code in a +connect+ method that we called from +viewDid
         }
     }];
 }
-
 ----
+
+We will call this method from +viewDidLoad+ to connect to the MQTT broker as soon as the view is loaded.
+
+
+[source,objc]
+----
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+
+    self.deviceID = [UIDevice currentDevice].identifierForVendor.UUIDString;
+    NSLog(@"Device identifier is %@", self.deviceID);
+    self.deviceIDLabel.text = self.deviceID;
+
+    ...
+
+    self.client = [[MQTTClient alloc] initWithClientId:self.deviceID];
+
+    [queue addOperationWithBlock:^{
+        [self connect];
+    }];
+}
+----
+
+We will use the +queue+ that was created for the +motionManager+ udpates to run the +connect+ method. This ensures that no network operation will slow down the UI (since +viewDidLoad+ is running on the main queue).
 
 === Disconnect from a MQTT Broker
 
@@ -354,7 +378,7 @@ The +completionHandler+ block as a +code+ parameter that will be +0+ if the disc
 
 ----
 
-We want to disconnect from the MQTT broker when the +MWMViewController+ is no longer used. We will call the +disconnect+ method from +dealloc+. 
+We want to disconnect from the MQTT broker when the +MWMViewController+ is no longer used. We will call the +disconnect+ method from +dealloc+.
 
 [source,objc]
 ----
@@ -405,7 +429,7 @@ The highest level of delivery is provided using the +Exactly Once+ QoS. With tha
 That means that using this QoS level to publish +N+ messages will involve exchanging +4*N+ messages, requires four times more network trips that the lowest level of QoS of +At Most Once+ and twice the +At Least Once+.
 
 Choosing the correct QoS depends on the type of message exchanged and the _importance_ of its payload.
-In the +Motions+ iOS application, the published message contains device motion that are updated with a 1OHz frequence. It is acceptable if a published message is _lost_ because an new message with updated content will be sent after. Using the +AtMostOnce+ QoS is the best choice.
+In the +Motions+ iOS application, the published message contains device motion that are updated every second. It is acceptable if a published message is _lost_ because an new message with updated content will be sent just one second after. Using the +AtMostOnce+ QoS is the best choice for this type of message.
 
 ==== Retain
 
@@ -444,7 +468,7 @@ We will encapsulate this code in a +send:+ method taking a +CMAttitude+ paramete
 }
 ----
 
-Finally, last step is to call this message every time a device motion value is updated by the +motionManger+. This occurs in the +viewDidLoad+ method inside the +handler+ passed to the +motionManger+'s +startDeviceMotionUpdatesToQueue:withHandler:+ method.
+Finally, last step is to call this method every time a device motion value is updated by the +motionManger+. This occurs in the +viewDidLoad+ method inside the +handler+ block passed to the +motionManger+'s +startDeviceMotionUpdatesToQueue:withHandler:+ method.
 
 [source,objc]
 ----
@@ -472,7 +496,7 @@ Finally, last step is to call this message every time a device motion value is u
             [self send:attitude];
         }
     }];
-    
+
     self.client = [[MQTTClient alloc] initWithClientId:self.deviceID];
 }
 ----
@@ -481,6 +505,97 @@ Note that we do not send the message from the main queue that is used by UI code
 
 [[ch_mobile_mqtt_receive]]
 === Receive MQTT Messages
+
+As described in <<ch_introduction_mqtt_example>>, the +Motions+ iOS application is also a consumer from the topic +/mwm/XXX/alert+. When it receives a message from this topic, it must change its background color to "alert" the user.
+
+Let's write the method that aler the user by changing the background color first. This +warnUser:+ method takes a +NSString+ parameter that should correspond to a color. Using +UIKit+ animations, we will:
+
+. animate the controller's view to change its background color from its original color to the one created from the +NSString+ parameter
+. we wait two seconds after the first animation is completed to revert back to the original background color.
+
+[source,objc]
+----
+# pragma mark - UI Actions
+
+// Warn the user by changing the view's background color to the specified color during 2 seconds
+- (void)warnUser:(NSString *)colorStr
+{
+    // keep a reference to the original color
+    UIColor *originalColor = self.view.backgroundColor;
+
+    [UIView animateWithDuration:0.5
+                          delay:0.0
+                        options:0
+                     animations:^{
+                         // change it to the color passed in parameter
+                         SEL sel = NSSelectorFromString([NSString stringWithFormat:@"%@Color", colorStr]);
+                         UIColor* color = nil;
+                         if ([UIColor respondsToSelector:sel]) {
+                             color  = [UIColor performSelector:sel];
+                         } else {
+                             color = [UIColor redColor];
+                         }
+                         self.view.backgroundColor = color;
+                     }
+                completion:^(BOOL finished) {
+                         // after a delay of 2 seconds, revert it to the original color
+                         [UIView animateWithDuration:0.5
+                                               delay:2
+                                             options:0
+                                          animations:^{
+                                              self.view.backgroundColor = originalColor;
+                                          }
+                                          completion:nil];
+                     }];
+}
+----
+
+To consumer messages from a MQTT broker, the +client+ must:
+
+. subscribe to its topic of interest
+. set its +messageHandler+ property that will be called every time a message is delivered.
+
+Note that you can subscribe to many topics from the client but it has only one +messageHandler+ property. If the client is subscribed to different topics, its +messageHandler+ must determine which topic the message is consumed from.
+
+==== Subscription
+
+The +Motions+ application will subscribe to its device alert topic +/mwm/XXX/alert+ by calling the method +subscribe:withQos:completionHandler:+ on its +client+ property.
+
+The first parameter is the device alert topic. We will define it at the top of the +MWMViewController.m+ file.
+
+[source,objc]
+----
+#define kAlertTopic @"/mwm/%@/alert"
+----
+
+The +subscribe:withQos:completionHandler:+ method takes a +qos+ that correspond to the quality of service that the consumer is requesting for message delivered from the topic.
+
+The completion handler will be called when the client is effectively subscribed to the topic. The handler has a +grantedQos+ parameter that corresponds to the effective quality of service. The producer is responsible for determining the maximum quality of service that a message can be delivered at but the consumer can decide to _downgrade_ the quality of service according to its usage.
+For example, a producer may publish a message with a QoS of +ExactlyOnce+ but a consumer may decide that it is acceptable for it if there are message duplicates and downgrade its QoS to +At Least Once+.
+
+In our case, we will request to have message delivered with a +qos+ set to +AtLeastOnce+ as we do not want to lose messages but can accept duplicate messages.
+
+[source,objc]
+----
+- (void)subscribe
+{
+    NSString *topic = [NSString stringWithFormat:kAlertTopic, self.deviceID];
+    [self.client subscribe:topic withQos:AtLeastOnce completionHandler:^(NSArray *grantedQos) {
+        NSLog(@"subscribed to %@ with QoS %@", topic, grantedQos);
+    }];
+}
+----
+
+TODO
+
+
+
+
+
+
+
+
+We need to call this method every time a message is received from the device's alert topic.
 
 [source,objc]
 ----
@@ -499,54 +614,11 @@ Note that we do not send the message from the main queue that is used by UI code
 
 TODO
 
-[source,objc]
-----
-# pragma mark - UI Actions
 
-// Warn the user by changing the view's background color to red for 2 seconds
-- (void)warnUser:(NSString *)colorStr
-{
-    // keep a reference to the original color
-    UIColor *originalColor = self.view.backgroundColor;
-    
-    [UIView animateWithDuration:0.5
-                          delay:0.0
-                        options:0
-                     animations:^{
-                         // change it to the color passed in parameter
-                         SEL sel = NSSelectorFromString([NSString stringWithFormat:@"%@Color", colorStr]);
-                         UIColor* color = nil;
-                         if ([UIColor respondsToSelector:sel]) {
-                             color  = [UIColor performSelector:sel];
-                         } else {
-                             color = [UIColor redColor];
-                         }
-                         self.view.backgroundColor = color;
-                     }
-                     completion:^(BOOL finished) {
-                         // after a delay of 2 seconds, revert it to the original color
-                         [UIView animateWithDuration:0.5
-                                               delay:2
-                                             options:0
-                                          animations:^{
-                                              self.view.backgroundColor = originalColor;
-                                          }
-                                          completion:nil];
-                     }];
-}
-----
 
 TODO
 
-[source,objc]
-----
-- (void)subscribe
-{
-    NSString *alertTopic = [NSString stringWithFormat:kAlertTopic, self.deviceID];
-    [self.mqttClient subscribe:alertTopic
-                       withQos:0];
-}
-----
+
 
 TODO
 
