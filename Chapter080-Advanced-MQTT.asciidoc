@@ -38,10 +38,35 @@ TODO
 }
 ----
 
+----
+var client = new Messaging.Client(host, Number(port), clientID);
+
+...
+
+var willMessage = new Messaging.Message("Web client " + clientID + " has unexpectedly died");
+willMessage.destinationName = "/mwm/lastWill";
+willMessage.qos = 1; // at least once
+willMessage.retained = false;
+
+client.connect({onSuccess: function(frame) {
+  // once the client is successfully connected,
+  // subscribe to all the motions topics
+  client.subscribe("/mwm/+/motion");
+},
+  onFailure: function(failure) {
+    alert(failure.errorMessage);
+  },
+  willMessage: willMessage
+});
+----
+
+
 [source,bash]
 ----
 $ mosquitto_sub -h iot.eclipse.org -t /mwm/lastWill
 Device C0962483-7DD9-43CC-B1A0-2E7FBFC05060 has unexpectedly died
+...
+Web client 0.89629763a7195923 has unexpectedly died
 ----
 
 === Message Retry
