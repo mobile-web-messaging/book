@@ -408,18 +408,18 @@ The other three parametes to the +publish...+ methods are the same for both the 
 The +topic+ parameter is the name of the topic to send the message.
 According to <<ch_introduction_mqtt_example_topology>>, the name of the topic is +/mwm/XXX/motion+ where XXX is the device identifier.
 
-The +qos+ parameter to the _Quality of Service_ (or QoS) to use to deliver the messages to the consumers.
+The +qos+ parameter corresponds to the _Quality of Service_ (or QoS) to use to deliver the messages to the consumers.
 
 ==== Quality Of Service
 
 The MQTT protocol defines three levels of Quality of Service:
 
-* At Most Once (wit the value +0+ represented by +AtMostOnce+ in +MQTTKit+)
-* At Least Once (wit the value +1+ represented by +AtLeastOnce+ in +MQTTKit+)
-* Exactly Once (wit the value +2+ represented by +ExactlyOnce+ in +MQTTKit+)
+* At Most Once (with the value +0+ represented by +AtMostOnce+ in +MQTTKit+)
+* At Least Once (with the value +1+ represented by +AtLeastOnce+ in +MQTTKit+)
+* Exactly Once (with the value +2+ represented by +ExactlyOnce+ in +MQTTKit+)
 
 These levels of QoS determines the guarantee that the MQTT broker will accept to deliver a message.
-With +At Most Once+, the MQTT broker guarantees that the published message will be delivered at most once to its consumers. This means that the consumers may not receive the message at all. If an error (either a network failure or a crash) occurs while the message is sent to the broker, it is possible that it will be lost and the consumers will never receive it.
+With +At Most Once+, the MQTT broker guarantees that the published message will be delivered at most once to its consumers. This means that the consumers may not receive the message at all. If an error (such as a network failure or a crash) occurs while the message is sent to the broker, it is possible that it will be lost and the consumers will never receive it.
 
 With +At Least Once+, the MQTT broker guarantees that the published message will be delivered at least once to the consumers. This also means that a consumer may receive the same message twice. If there is any error when the producer sends the message to the broker and did not receive an acknowledgement that its message has been received, it will resend it as second time as a _duplicate_ (the MQTT message will have a +DUP+ bit set). When the broker receives this duplicate message it will redeliver it to the consumer but it is possible that they in fact received the original message. The consumer may need to check if the +DUP+ bit is set on the delivered message to know whether it is an original message (and it must process it) or a duplicate (and it can discard it)
 
@@ -432,7 +432,9 @@ That means that using this QoS level to publish +N+ messages will involve exchan
 Choosing the correct QoS depends on the type of message exchanged and the _importance_ of its payload.
 In the +Motions+ iOS application, the published message contains device motion that are updated every second. It is acceptable if a published message is _lost_ because an new message with updated content will be sent just one second after. Using the +AtMostOnce+ QoS is the best choice for this type of message.
 
-==== Retain
+All the complexities of using higher level of QoS is transparent from the application using MQTT as it is the responsibility of the client library to handle it. However you need to be aware of the cost associated to using these QoS as they can have significant impact on your application performance and the device in general (as the additional network trips will drain the battery life).
+
+==== Retained Message
 
 The final parameter of the +publish...+ methods is a boolean to specify whether the published message must be _retained_ by the topic.
 
