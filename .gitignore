@@ -4,6 +4,7 @@ _vendor
 .bundle
 .config
 .rvmrc
+.ruby-*
 coverage
 Gemfile*
 InstalledFiles
