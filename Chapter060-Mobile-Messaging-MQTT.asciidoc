@@ -322,7 +322,8 @@ We will encapsulate this code in a +connect+ method.
 - (void)connect
 {
     NSLog(@"Connecting to %@...", kMqttHost);
-    [self.client connectToHost:kMqttHost completionHandler:^(MQTTConnectionReturnCode code) {
+    [self.client connectToHost:kMqttHost
+             completionHandler:^(MQTTConnectionReturnCode code) {
         if (code == ConnectionAccepted) {
             NSLog(@"connected to the MQTT broker");
         } else {
@@ -501,8 +502,28 @@ Finally, last step is to call this method every time a device motion value is up
 }
 ----
 
-Note that we do not send the message from the main queue that is used by UI code. Sending a MQTT message can be done from any queue, so we call it directly from the handler that is running on the +queue+ that was passed to the +startDeviceMotionUpdatesToQueue:withHander:+ method.
+We now have the +Motions+ iOS application that is sending MQTT messages. How can we check that this is effectively working.
 
+Conversely to +STOMP+, +MQTT+ is a binary protocol and we can not use a simple +telnet+ client to create a consumer and receive messages sent by the application.
+
+However the http://mosquitto.org(Mosquitto broker) provides simple command-line tool to send and receive message from a MQTT broker. The <<appendix_mosquitto>> explains how to download and install the Mosquitto broker. After it is done, we can use its +mosquitto_sub+ command line tool to connect to a MQTT broker (hosted at +iot.eclipse.org+) and subscribe to the device motion topic (in my case +/mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/motion+, you will have to replace it using your own device identifier).
+
+This tool will display the message payload. Since we are sending binary payload, we will pipe the command into the +hexdump+ tool to display the hexadecimal representation of the binary payload.
+
+[source,bash]
+----
+$ mosquitto_sub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/motion | hexdump
+...
+0000050 aa b0 4c 3f 9b 41 0c 6b 08 35 d3 3f d2 4b 23 f2
+0000060 71 1e 47 0a 3f d5 05 6a c4 37 52 16 3f d8 f7 b5
+0000070 34 f6 19 ea bf d2 97 6f 1a 65 86 af 0a 3f af 23
+0000080 78 91 85 1c 8d bf df b9 12 c4 78 64 1c 3f cb 3c
+0000090 50 fd 05 26 5b 0a 3f d1 60 87 16 0b 12 9e bf c2
+...
+----
+
+This confirms that the +Motions+ application is effectively publishing MQTT messages.
+ 
 [[ch_mobile_mqtt_receive]]
 === Receive MQTT Messages
 
@@ -573,7 +594,7 @@ The +subscribe:withQos:completionHandler:+ method takes a +qos+ that correspond 
 The completion handler will be called when the client is effectively subscribed to the topic. The handler has a +grantedQos+ parameter that corresponds to the effective quality of service. The producer is responsible for determining the maximum quality of service that a message can be delivered at but the consumer can decide to _downgrade_ the quality of service according to its usage.
 For example, a producer may publish a message with a QoS of +ExactlyOnce+ but a consumer may decide that it is acceptable for it if there are message duplicates and downgrade its QoS to +At Least Once+.
 
-In our case, we will request to have message delivered with a +qos+ set to +AtLeastOnce+ as we do not want to lose messages but can accept duplicate messages.
+In our case, we will request to have messages delivered with a +qos+ set to +AtLeastOnce+ as we do not want to lose messages but can accept duplicate messages.
 
 [source,objc]
 ----
@@ -586,68 +607,41 @@ In our case, we will request to have message delivered with a +qos+ set to +AtLe
 }
 ----
 
-TODO
-
-
-
-
-
-
-
-
-We need to call this method every time a message is received from the device's alert topic.
+We will subscribe to the alert topic as soon as the +client+ is connected to the MQTT broker by calling this +subscribe+ method from inside the +completionHandler+ in the +connect+ method.
 
 [source,objc]
 ----
-#pragma mark - MQTTClientDelegate
-
-- (void)client:(MQTTClient *)client didReceiveMessage:(MQTTMessage *)message
+- (void)connect
 {
-    NSString *alertTopic = [NSString stringWithFormat:kAlertTopic, self.deviceID];
-    if ([alertTopic isEqualToString:message.topic]) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self warnUser:message.payloadString];
-        });
-    }
+    NSLog(@"Connecting to %@...", kMqttHost);
+    [self.client connectToHost:kMqttHost
+             completionHandler:^(MQTTConnectionReturnCode code) {
+        if (code == ConnectionAccepted) {
+            NSLog(@"connected to the MQTT broker");
+            [self subscribe];
+        } else {
+            NSLog(@"Failed to connect to the MQTT broker: code=%lu", code);
+        }
+    }];
 }
 ----
 
-TODO
+==== Unsubscription
 
-
-
-TODO
-
-
-
-TODO
-
-[source,objc]
-----
-#pragma mark - MQTTClientDelegate
-
-- (void)client:(MQTTClient *)client
-    didConnect:(NSUInteger)code
-{
-    // once connect, subscribe to the client's alerts topic
-    [self subscribe];
-}
-----
-
-=== Unsubscribe From the Topic
-
-TODO
+To unsubscribe from a topic and stop receiving messages from it, we will call the +unsubscribe:withCompletionHandler:+ method of the +client+ where the first parameter is the topic to unsubscribe from (the alert topic in our case).
+The second parameter is a completion handler that is called back when the client has been acknowledged by the server that it is effectively unsubscribed.
+We don't have any need for this information in our case so we just pass +nil+ as the handler.
 
 [source,objc]
 ----
 - (void)unsubscribe
 {
-    NSString *alertTopic = [NSString stringWithFormat:kAlertTopic, self.deviceID];
-    [self.mqttClient unsubscribe:alertTopic];
+    NSString *topic = [NSString stringWithFormat:kAlertTopic, self.deviceID];
+    [self.client unsubscribe:topic withCompletionHandler:nil];
 }
 ----
 
-TODO
+We will call this +unsubscribe+ method just before disconnecting from the MQTT broker from the +dealloc+ method.
 
 [source,objc]
 ----
@@ -659,6 +653,93 @@ TODO
 }
 ----
 
+Since we disconnect just after unsubscribing, we could skip that step and just disconnect from the MQTT broker. At that moment, the MQTT broker will automatically unsubscribe the client from any topic. However it is a good practice to explicitly unsubscribe from subscribed topic. There are also many cases where unsubscribing may occur at a different time than the disconnection. In these cases, we can not rely on the client disconnection to perfom the unsubscription.
+
+==== Define a MQTTMessage Handler
+
+Subscribing to a topic is the first step to receive messages with +MQTTKit+. The secon step is to define a block that will be called every time a message is received from a subscribed topic.
+
+The +client+'s +messageHandler+ property defines a +MQTTMessageHandler+ block. This block has a +MQTTMessage+ parameter representing the MQTT message that is deliver to the client.
+
+The +MQTTMessage+ interface defines four properties corresponding to the message data:
+
+* +mid+ is a +unsigned short+ corresponding to the _message ID_.
+* +topic+ is the name of the topic that this message is coming from. If the client is subscribed to many topics, we must use this property to determine which topic the received message is coming from.
+* +retained+ is a +BOOL+ to check whether the message was retained (and contains the last known good value) or not (it is a _fresh_ message)
+* +payload+ is a +NSData+ object containing the binary content of the message payload.
+
+Since sending and receiving text message is very common, the +MQTTMessage+ interface also defines a +payloadString+ method that returns a +NSString+ decoded from the message binary payload using UTF-8.
+
+In the +Motions+ application, we expect to receive a text payload and will use this +payloadString+ to extract the color string from the received message.
+
+We need to set the +client+'s +messageHandler+ _before_ subscribing to the alert topic so that we do not miss any alert message sent after we subscribe but _before_ the +messageHandler+ is defined.
+We will do that in the +viewDidLoad+ method just after creating the +client+ instance.
+
+[source,objc]
+----
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+
+    self.deviceID = [UIDevice currentDevice].identifierForVendor.UUIDString;
+    NSLog(@"Device identifier is %@", self.deviceID);
+    self.deviceIDLabel.text = self.deviceID;
+
+    ...
+
+    self.client = [[MQTTClient alloc] initWithClientId:self.deviceID];
+    // use a weak reference to avoid a retain/release cycle in the block
+    __weak MWMViewController *weakSelf = self;
+    self.client.messageHandler = ^(MQTTMessage *message) {
+        NSString *alertTopic = [NSString stringWithFormat:kAlertTopic, weakSelf.deviceID];
+        if ([alertTopic isEqualToString:message.topic]) {
+            NSString *color = message.payloadString;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf warnUser:color];
+            });
+        }
+    };
+    
+    [self connect];
+}
+----
+
+We extracted the color using the message +payloadString+ method after checking that it was indeed coming from the device alert topic.
+We then call the +warnUser:+ method in a block that is run on the main queue since it contains code related to +UIKit+.
+
+To avoid a retain/release cycle between +self+ and the +messageHandler+ block, we need to create a _weak_ reference of +self+ and uses it from the block.
+
+How can we verify that the +Motions+ application is effectively receiving alert messages? To verify that the application was sending messages, we used the +mosquitto_sub+ tool. We will now use the opposite tool, +mosquitto_pub+, to publish a message on the alert topic and verify that the application background color changes.
+
+The +mosquitto_pub+ can send a text payload using the +-m+ option. We will use this option to pass the background color (for example +green+).
+
+[source,bash]
+----
+$ mosquitto_pub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/alert -m green
+----
+
+After this message is sent, the device will receive it and change its background color to green.
+
+[[img_mobile_mqtt_2]]
+.Alert message is received by the +Motions+ iOS application
+image::images/Chapter060/background_color_change.png[Alert message is received by the Motions iOS application]
+
 === Summary
 
-TODO
+In this chapter, we learn to use +MQTTKit+ to send and receive MQTT messages from an iOS application.
+
+To send a message, the application must:
+
+. connect to the MQTT broker
+. send the message to the topic
+
+To consume a message, the application must
+
+. connect to the MQTT broker
+. subscribe to the topic
+. define a message handler block that is called every time a message is received. This block is executed on a dispath queue. If there are any code that changes the user interface, it must be wrapped in a block executed on the main queue.
+
+We used two different types of message payloads:
+
+* a binary payload to send the device motions values as three 64-bit floats
+* a text payload to extract a background color from the messages received on the alert topic.
