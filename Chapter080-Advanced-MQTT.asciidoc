@@ -14,7 +14,35 @@ TODO
 
 === Last Will
 
-TODO
+[source,objc]
+----
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+
+    self.deviceID = [UIDevice currentDevice].identifierForVendor.UUIDString;
+    NSLog(@"Device identifier is %@", self.deviceID);
+
+    ...
+    
+    self.client = [[MQTTClient alloc] initWithClientId:self.deviceID];
+    NSString *willMessage = [NSString stringWithFormat:@"Device %@ has unexpectedly died", self.deviceID];
+    [self.client setWill:willMessage
+                 toTopic:kLastWillTopic
+                 withQos:AtLeastOnce
+                  retain:NO];
+
+    ...
+
+    [self connnect];
+}
+----
+
+[source,bash]
+----
+$ mosquitto_sub -h iot.eclipse.org -t /mwm/lastWill
+Device C0962483-7DD9-43CC-B1A0-2E7FBFC05060 has unexpectedly died
+----
 
 === Message Retry
 
