@@ -130,6 +130,9 @@ Once the client is successfully connected to the MQTT broker (that is to say whe
 Since MQTT client does not know the whole list of devices that send their motion data, it can not subscribe to specific MQTT topics.
 
 Fortunately MQTT defines wildcards for topic that is useful for this case.
+
+==== Topic Wildcards
+
 There are three characters that have a special meaning when they are used in a MQTT topic.
 
 Topic level separator +/+::
