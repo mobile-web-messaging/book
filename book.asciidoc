@@ -1,4 +1,4 @@
-:bookseries: basic
+:bookseries: animal
 
 = Mobile and Web Messaging
 
@@ -31,5 +31,3 @@ include::AppendixA-ActiveMQ.asciidoc[]
 include::AppendixB-Mosquitto.asciidoc[]
 
 include::Bibliography.asciidoc[]
-
-include::index.asciidoc[]
