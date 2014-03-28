@@ -2,7 +2,7 @@
 == Web Messaging With STOMP
 
 [role="lead"]
-In this chapter, we will write a Web application that sends and receives messages using the STOMP protocol over HTML5 Web Sockets.
+In this chapter, we will write a Web application that sends and receives messages using the STOMP protocol over HTML5 WebSockets.
 
 In <<ch_introduction_stomp_example>>, we described the +Locations+ application. In this chapter, we will write the Web application that consumes the device's GPS position to display them on a map and sends text messages to the devices.
 
@@ -10,11 +10,13 @@ In <<ch_introduction_stomp_example>>, we described the +Locations+ application. 
 .Diagram of the +Locations+ Web application
 image::images/Chapter030/stomp_web_app.png["Diagram of the +Locations+ Web application"]
 
-=== About the Code
-
+.About the Code
+[NOTE]
+====
 All along the chapter, we will show all the code required to run the application.
 
 The whole application code can be retrieved from the https://github.com/mobile-web-messaging/code[GitHub repository] in the +stomp/web/+ directory.
+====
 
 === Web Browser Communication Model
 

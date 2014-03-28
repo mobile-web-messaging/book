@@ -13,7 +13,47 @@ TODO More about the difference between request/reply protocol and messaging prot
 </remark>
 ++++
 
-HTTP hits the sweet spot between simplicity and efficiency. It has few disadvantages but one of the main one is that it follows a request/reply pattern where the client must _initiate_ a request to get a _reply_ from the server. In other words, the server can not send data to the HTTP client if this one does not send a request first. There are workarounds to overcome this challenges but they bring additional issues when they are used. Messaging protocol are well suited for this kind of use cases.
+HTTP hits the sweet spot between simplicity and efficiency. It has few disadvantages but one of the main is that it follows a request/reply pattern where the client must _initiate_ a request to get a _reply_ from the server. In other words, the server can not send data to the HTTP client if this one does not send a request first. There are workarounds to overcome this challenge but they bring additional issues when they are used. Messaging protocols are well suited for this kind of use cases.
+
+
+=== Messaging Concepts
+
+In the preface, I introduces messaging protocols in two sentences and five concepts: an application _produces_ a _message_ to a _destination_ on a _broker_. Independently (at another time, on another machine), another application subscribes to this same destination to _consume_ the message.
+
+Let's now define these five concepts:
+
+. A _message_ is the data exchanged between applications
+. A _destination_ is a type of address that is used to exchange messages
+. A _producer_ is an application that sends _messages_ *to* a _destination_
+. A _consumer_ is an application that consumes _messages_ *from* a _destination_
+. A _broker_ is the server entity that will handle messages from producers and delivers them to the consumers according to their destinations.
+
+[[img_preface_messaging_concepts]]
+.Messaging Concepts
+image::images/Preface/messaging_concepts.png["Diagram of the messaging concepts"]
+
+The simplicity of messaging can be deceiving but it is this simplicity that allows to use it in powerful ways.
+
+.Messaging Terminology
+[NOTE]
+====
+Depending on the messaging protocol or model, the _producer_ is sometimes called _sender_ or _publisher_. Likewise, the _consumer_ may be called _receiver_ or _subscriber_.
+
+In this book, I will always use the general terms of _producer_ and _consumer_.
+====
+
+One key aspect of messaging is that it loosely couples its participants. The producer and consumer know nothing of each other. When one application produces a message, it has no knowledge on when or where the message will be consumed.
+There may be one or many consumers that will receive the message. It also possible that the message will not be consumed at all if nobody has registered any interest for it.
+
+Likewise, when an application consumes a message, it does not know which application sent it.
+
+++++
+<remark>Add an example about this.</remark>
+++++
+
+Producers and consumers do not even need to be online at the same time. The producers can send a message and exit. The message will be held by the broker until a consumer subscribes to the same destination. At that moment, the broker will deliver the message to the consumer.
+
+Producers and consumers need to know about the broker to connect to it but they may even not connect to the same broker. A set of brokers can constitute a cluster and messages would flow from one to another before it is finally delivered to a consumer.
 
 === Messaging Models
 
@@ -28,7 +68,8 @@ There are two main messaging models:
 
 In a Point-to-Point messaging model, a message sent by a producer will be routed to a single consumer.
 
-The producer sends a message to a destination identified as a _queue_ in that messaging model. There can be none or many consumers subscribed (or _bound_) to this queue and the messaging broker will route incoming messages to only one of these consumers to deliver the message.
+The producer sends a message to a destination identified as a _queue_ in that messaging model. There can be zero, one or many consumers subscribed (or _bound_) to this queue and the messaging broker will route incoming messages to only one of these consumers to deliver the message.
+As illustrated in <<img_intro_point_to_point>>, when the producer sends a message to the queue, only one of the consumers that are subscribed receives the message.
 
 [[img_intro_point_to_point]]
 .Diagram of the Point-to-Point Topology
@@ -44,6 +85,7 @@ Some messaging brokers also allows to _expire_ messages if they remain in the qu
 In a Publish/Subscribe messaging model (often shortened as pub/sub), a message sent by a producer is routed to many consumers.
 
 The producer sends a message to a destination identified as a _topic_ in that messaging model. There can be none or many consumers subscribed to this topic and the messaging broker will route incoming message to _all_ these consumers to deliver the message. If there are no consumers bound to the topic, the broker will _not_ retain the incoming messages.
+As illustrated in <<img_intro_point_to_point>>, when the producer sends a message to the topic, all the consumers that are subscribed receives the message.
 
 [[img_intro_pub_sub]]
 .Diagram of the Publish/Subscribe Topology
@@ -53,7 +95,7 @@ This messaging model is also called _one-to-many_: for _one_ message sent by a p
 
 When a message is sent to a topic in this model, we often say that it is _broadcasted_ to all consumers as they will all receive it.
 
-Some protocols defines the notions of _durable subscribers_. If a consumer subscribes to the topic as a durable subscriber, the broker will retain messages when the consumer is offline and deliver the messages sent to the topic during its downtime when it comes online again.
+Some protocols defines the notions of _durable subscribers_. If a consumer subscribes to the topic as a durable subscriber, the broker will retain messages when the consumer is offline and deliver the messages sent to the topic during its downtime when the consumer comes online again.
 
 === Message Representation
 

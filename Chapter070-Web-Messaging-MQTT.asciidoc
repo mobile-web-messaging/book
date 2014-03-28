@@ -8,11 +8,13 @@ In this chapter, we will write a Web application that sends and receives message
 .Diagram of the +Motions+ Web application that displays data for two devices
 image::images/Chapter070/mqtt_web_app.png["The +Motions+ Web application that displays data for two devices."]
 
-=== About the Code
-
+.About the Code
+[NOTE]
+====
 All along the chapter, we will show all the code required to run the application.
 
 The whole application code can be retrieved from the https://github.com/mobile-web-messaging/code[GitHub repository] in the +mqtt/web/+ directory.
+====
 
 === Paho JavaScript client
 

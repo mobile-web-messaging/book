@@ -11,11 +11,13 @@ In <<ch_introduction_mqtt_example>>, we described the +Motions+ application. In 
 .Diagram of the +Motions+ iOS application
 image::images/Chapter060/mqtt_ios_app.png["Diagram of the Motions+ iOS application"]
 
-=== About the Code
-
+.About the Code
+[NOTE]
+====
 All along the chapter, we will show all the code required to run the application.
 
 The whole application code can be retrieved from the https://github.com/mobile-web-messaging/code[GitHub repository] in the +mqtt/ios/+ directory.
+====
 
 === MQTT
 

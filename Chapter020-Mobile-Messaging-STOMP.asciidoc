@@ -11,11 +11,13 @@ In <<ch_introduction_stomp_example>>, we described the +Locations+ application. 
 .Diagram of the +Locations+ iOS application
 image::images/Chapter020/stomp_ios_app.png["Diagram of the Locations iOS application"]
 
-=== About the Code
-
+.About the Code
+[NOTE]
+====
 All along the chapter, we will show all the code required to run the application.
 
 The whole application code can be retrieved from the https://github.com/mobile-web-messaging/code[GitHub repository] in the +stomp/ios/+ directory.
+====
 
 === STOMP
 
@@ -23,7 +25,7 @@ For the next four chapters, we will use the STOMP protocol to build our applicat
 
 This book covers the latest released version of the protocol at the time of this writing: STOMP 1.2 <<stomp1.2>>.
 
-STOMP is a simple text-based messaging protocol that is well suited to build lightweight messaging applications on any platforms. It provides an interoperable wire format so that any client can communicate with any message broker.
+STOMP is a simple text-based messaging protocol that is well suited to develop lightweight messaging applications on any platforms. It provides an interoperable wire format so that any client can communicate with any message broker.
 The simplicity of the protocol ensures that it is straightforward to have interoperability between client and brokers.
 
 STOMP does not define the semantic of the destination, they depend on the STOMP broker you are using.
@@ -692,9 +694,9 @@ How can we check that messages are effectively sent?
 
 We will confirm it at three different stages:
 
-* display debug log on the device to check that messages are sent
-* use ActiveMQ  administration console to check that it effectively handled the sent messages
-* write the simplest STOMP consumer that can receive these messages.
+. Display debug log on the device to check that messages are sent
+. Use ActiveMQ  administration console to check that it effectively handled the sent messages
+. Write the simplest STOMP consumer that can receive these messages.
 
 ==== Display +StompKit+ debug log.
 

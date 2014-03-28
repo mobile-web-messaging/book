@@ -38,6 +38,7 @@ TODO
 }
 ----
 
+[source,js]
 ----
 var client = new Messaging.Client(host, Number(port), clientID);
 
