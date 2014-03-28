@@ -80,7 +80,7 @@ image::images/Chapter010/point_to_point.png["Diagram of the Point-to-Point Topol
 
 This messaging model is also called _one-to-one_: for _one_ message sent by a producer to the queue, there is only _one_ consumer that will receive it.
 
-If there are no consumers bound to the queue, the broker will retain the incoming messages until a consumer subscribes and then deliver the message to it.
+If there are no consumers bound to the queue, the broker will retain the incoming messages until a consumer subscribes and then deliver the message to this consumer.
 Some messaging brokers also allows to _expire_ messages if they remain in the queue for a certain amount of time. This can be useful to avoid having consumers receive message corresponding to stale data.
 
 ==== Publish/Subscribe
@@ -88,7 +88,7 @@ Some messaging brokers also allows to _expire_ messages if they remain in the qu
 In a Publish/Subscribe messaging model (often shortened as pub/sub), a message sent by a producer is routed to many consumers.
 
 The producer sends a message to a destination identified as a _topic_ in that messaging model. There can be none or many consumers subscribed to this topic and the messaging broker will route incoming message to _all_ these consumers to deliver the message. If there are no consumers bound to the topic, the broker will _not_ retain the incoming messages.
-As illustrated in <<img_intro_pub_sub>>, when the producer sends a message to the topic, all the consumers that are subscribed receives the message.
+As illustrated in <<img_intro_pub_sub>>, when the producer sends a message to the topic, all the consumers that are subscribed receive the message.
 
 [[img_intro_pub_sub]]
 .Diagram of the Publish/Subscribe Topology
