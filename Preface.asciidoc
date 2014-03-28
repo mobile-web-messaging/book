@@ -130,8 +130,6 @@ The graphical application requires minimal knowledge of Xcode and Interface Buil
 
 The Web applications use the JavaScript language. We leverage http://jquery.com[jQuery] to make the Web applications interactive and manipulate the page elements but the messaging code is independent of any JavaScript frameworks.
 
-The examples can all be downloaded from the https://github.com/mobile-web-messaging/code/[book's GitHub repository].
-
 === Conventions Used in This Book
 
 The following typographical conventions are used in this book:
@@ -156,7 +154,7 @@ This icon indicates a warning or caution.
 
 === Using Code Examples
 
-Supplemental material (code examples, exercises, etc.) is available for download at link:$$https://github.com/mobile-web-messaging/code//$$[].
+Supplemental material (code examples, exercises, etc.) is available for download at link:$$https://github.com/mobile-web-messaging/code/$$[].
 
 This book is here to help you get your job done. In general, if example code is offered with this book, you may use it in your programs and documentation. You do not need to contact us for permission unless you’re reproducing a significant portion of the code. For example, writing a program that uses several chunks of code from this book does not require permission. Selling or distributing a CD-ROM of examples from O’Reilly books does require permission. Answering a question by citing this book and quoting example code does not require permission. Incorporating a significant amount of example code from this book into your product’s documentation does require permission.
 

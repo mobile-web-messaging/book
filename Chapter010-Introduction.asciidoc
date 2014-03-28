@@ -33,7 +33,7 @@ Let's now define these five concepts:
 
 [[img_preface_messaging_concepts]]
 .Messaging Concepts
-image::images/Preface/messaging_concepts.png["Diagram of the messaging concepts"]
+image::images/Chapter010/messaging_concepts.png["Diagram of the messaging concepts"]
 
 The simplicity of messaging can be deceiving but it is this simplicity that allows to use it in powerful ways.
 
