@@ -18,7 +18,10 @@ HTTP hits the sweet spot between simplicity and efficiency. It has few disadvant
 
 === Messaging Concepts
 
-In the preface, I introduces messaging protocols in two sentences and five concepts: an application _produces_ a _message_ to a _destination_ on a _broker_. Independently (at another time, on another machine), another application subscribes to this same destination to _consume_ the message.
+In the preface, I introduces messaging protocols in two sentences and five concepts:
+
+* An application _produces_ a _message_ to a _destination_ on a _broker_.
+* An application subscribes to this same destination to _consume_ the message.
 
 Let's now define these five concepts:
 

@@ -24,7 +24,12 @@ In the rest of this book, we will use the term _messaging_ in the context of mes
 
 === Messaging is Simple
 
-At its core, the messaging concepts are simple: an application _produces_ a _message_ to a _destination_ on a _broker_. Independently (at another time, on another machine), another application subscribes to this same destination to _consume_ the message. In two sentences, I introduced the five concepts that are (almost) all there is to know about messaging.
+At its core, the concept of a messaging protocol is simple:
+
+* An application _produces_ a _message_ to a _destination_ on a _broker_.
+* An application subscribes to this same destination to _consume_ the message.
+
+In these two sentences, I introduced the five concepts that are (almost) all there is to know about messaging.
 
 Messaging protocol is a simple idea. Most of the complexity of using it is figuring out the best suited _model_ for your applications (how the producers and consumers will exchanges messages). This book will show the two models that are most commonly used: _point-to-point_ and _publish/subscribe_.
 
@@ -116,7 +121,7 @@ If you are interested by the STOMP protocol, Chapters 2, 3, 4, and 5 and the mos
 
 This book is an introduction to the STOMP and MQTT messaging protocols and assumes no prior experience with them.
 This books explains in details the messaging protocols. Each platform's clients may provide a different API to deal with the protocols but the underlying concepts will remain the same.
-For both protocols, we will see two different libraries: an Objective-C library for iOS and a JavacScript library for Web applications.
+For both protocols, we will see two different libraries: an Objective-C library for iOS and a JavaScript library for Web applications.
 
 Basic programming skills are required. The examples in the book runs on different platforms and we used the programming language that made the most sense for each of them.
 
