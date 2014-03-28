@@ -2,7 +2,7 @@
 == Web Messaging With STOMP
 
 [role="lead"]
-In this chapter, we will write a Web application that sends and receives messages using the STOMP protocol over HTML5 WebSockets.
+In this chapter, we will write a Web application that sends and receives messages using the STOMP protocol over HTML5 Web Sockets.
 
 In <<ch_introduction_stomp_example>>, we described the +Locations+ application. In this chapter, we will write the Web application that consumes the device's GPS position to display them on a map and sends text messages to the devices.
 
@@ -10,13 +10,11 @@ In <<ch_introduction_stomp_example>>, we described the +Locations+ application. 
 .Diagram of the +Locations+ Web application
 image::images/Chapter030/stomp_web_app.png["Diagram of the +Locations+ Web application"]
 
-.About the Code
-[NOTE]
-====
+=== About the Code
+
 All along the chapter, we will show all the code required to run the application.
 
 The whole application code can be retrieved from the https://github.com/mobile-web-messaging/code[GitHub repository] in the +stomp/web/+ directory.
-====
 
 === Web Browser Communication Model
 
@@ -265,7 +263,10 @@ Since the semantic of STOMP destinations are specific to the STOMP broker, you h
 ====
 
 Since we no longer know _a priori_ which device location we are receiving, we need a new way to determine which device has broadcasted it.
-There are two pieces of information we can use. When a consumer receives a STOMP message, the message always have a +destination+ header that corresponds to the _actual_ destination that the client consumed consume from. If we are subscribing to the wildcard address +/topic/device.$$*$$.location+ and receives a message, we can look at the +message.headers["destination"]+ to get the actual destination (+/topic/device.2262EC25-E9FD-4578-BADE-4E113DE45934.location+ in my case).
+There are two pieces of information we can use. When a consumer receives a STOMP message, the message always have a +destination+ header that corresponds to the _actual_ destination that the client consumed consume from.
+
+Since we are subscribing to the wildcard address +/topic/device.$$*$$.location+, the actual destination we consume from will be stored in the received message's headers in +message.headers["destination"]+.
+In my case, the value of this header would +/topic/device.2262EC25-E9FD-4578-BADE-4E113DE45934.location+.
 However, we would then have to parse this +destination+ to extract the device ID from it and write brittle code for that.
 
 If we look back at <<ch_introduction_stomp_example_message>>, the message representation for the location also contains the device ID in the +deviceID+ property:
