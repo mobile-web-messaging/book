@@ -13,8 +13,8 @@ The "truck" will use an iOS application to broadcast the device's geolocation da
 . In <<ch_web_stomp>>, we will write the Web application using STOMP protocol over Web Sockets to receive GPS data in a Web browser and send text to the devices.
 
 [[img_example_app_1]]
-.Diagram of the +Locations+ application with two devices, +AAA+ and +BBB+, and one Web application.
-image::images/Chapter011/stomp_app_diagram_1.png["Diagram of the Locations application with two devices, AAA and BBB, and one Web application"]
+.Diagram of the +Locations+ application with two devices, +AAA+ and +BBB+, and two web applications.
+image::images/Chapter011/stomp_app_diagram_1.png["Diagram of the Locations application with two devices, AAA and BBB, and two web applications"]
 
 Before introducing STOMP, the messaging protocol that will be used by the application, we can already define the application's messaging models and how the different parts of the application will exchange messages.
 
