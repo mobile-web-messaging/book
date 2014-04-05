@@ -3,7 +3,14 @@
 
 Most mobile devices contain sensor that allows to track the device motions (and to a certain extent the motion of its owner). Using additional sensors, we could even imagine having access to the owner's health data (heart rate, hydration, blood glucose level, etc.). This type of information could be sent to a centralized application that would be able to track the data and extract personal information about them to report to the owner.
 
-We will write a simple application, +Motions+ that follows this model to illustrate the use of MQTT protocol. The iOS application will track the device motion (through its pitch, roll and yaw values) and change its background color to "alert" its user when an alert message is received.
+We will write a simple application, +Motions+ that follows this model to illustrate the use of MQTT protocol. The iOS application will track the device motion and change its background color to "alert" its user when an alert message is received.
+
+Device motion will be represented by three values corresponding to its pitch, roll and yaw values as shown in the illustration below.
+
+[[img_mqtt_example_app_0]]
+.The +pitch+, +roll+ and +yaw+ values represents the device motion.
+image::images/Chapter012/pitch_roll_yaw.png[The pitch, roll and yaw values represents the device motion]
+
 The pending Web application will display the motions of all devices that broadcast them and be able to send alert messages to them:
 
 . In <<ch_mobile_mqtt>>, we will write the +Motions+ iOS application using the MQTT protocol to send data about the device motions and receive alerts.
@@ -48,7 +55,7 @@ The +Motions+ iOS application will send the device motions data in a binary mess
 ----
 << 1.6 -0.1 0.8 >> <1>
 ----
-<1> The message is composed of three 64-bit floats for the +pitch+, +roll+, and +yaw+
+<1> The message is composed of three 64-bit floats for the +pitch+, +roll+, and +yaw+ values
 ====
 
 ===== Alert Messages
