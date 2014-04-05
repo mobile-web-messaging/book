@@ -523,7 +523,7 @@ We will call this +connect+ method when the view appears in +viewWillAppear:+.
 ----
 ====
 
-=== Disconnect From a STOMP Broker.
+=== Disconnect From a STOMP Broker
 
 The +STOMPClient+ disconnects from the broker using its +disconnect:+ method. This method takes a block that will be called when the client is disconnected from the server. The block takes a +NSError+ parameter that is set if there is an error during the disconnection operation.
 
@@ -696,9 +696,9 @@ We will confirm it at three different stages:
 
 . Display debug log on the device to check that messages are sent
 . Use ActiveMQ  administration console to check that it effectively handled the sent messages
-. Write the simplest STOMP consumer that can receive these messages.
+. Write the simplest STOMP consumer that can receive these messages
 
-==== Display +StompKit+ debug log.
+==== Display +StompKit+ debug log
 
 Every time the StompKit library sends a message to a STOMP broker, it logs the STOMP frame that is sent.
 
@@ -1145,6 +1145,6 @@ To consume a message, the application must
 We use two different types of message payloads:
 
 * a JSON payload by using its string representation for the message body and specifying +application/json; charset=utf-8+ in its +content-type+ header
-* a simple plain text payload using a string in its payload without any +content-type+ header.
+* a simple plain text payload using a string in its payload without any +content-type+ header
 
 Sending and consuming messages are only possible once the client is _successfully_ connected to the STOMP broker. Due to the event-driven design of StompKit, this is the case when the completionHandler block is executed without an error in +connectWithHeaders:completionHandler:+.
