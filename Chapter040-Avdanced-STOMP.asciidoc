@@ -63,12 +63,13 @@ Message acknowledgement is a feature available to STOMP _consumers_.
 
 When the broker delivers a message to a consumer, there is an change of responsibility between the broker and the consumer to determine which is the _owner_ of the message. The consumer becomes responsible of the message by _ackonwledging_ the message.
 
-By default, the STOMP broker will consider that the consumer automatically acknowledged the message when it receives it. 
+By default, the STOMP broker will consider that the consumer automatically acknowledge the message when it is delivered to the consumer.
 
 However there are cases where the consumer may prefer to acknowledge explicity the message. It leaves it a window of opportunity to determine whether it can handle the message or not.
-For example, if the client needs to write to a data store when it receives a message but is not able to open a connection to the data store, it may _nack_ the message (explicitly refuse to take ownership of it). When the STOMP broker is informed of this negatively acknowledgement, it may then decide to deliver the message to another consumer or try again some time later depending on its configuration.
+For example, the client needs to write the message payload in a data store.
+There may be issues with opening a connection to the data store and the client could chose to acknowledge the message only after having successfully written its body to the data store. In case of failure, it will instead _nack_ the message (explicitly refuse to take ownership of it). When the STOMP broker is informed of this negatively acknowledgement, it may then decide to deliver the message to another consumer subscribed to the destination or try again some time later depending on its configuration.
 
-The consumer specifies the type of acknowledgement it will use when subscribing to a destination.
+The consumer specifies its type of acknowledgement when it subscribes to a destination.
 STOMP supports 3 types of acknowledgements:
 
 * +auto+ (by default)
@@ -81,26 +82,37 @@ If +client+ or +client-individual+ is used, the consumer must send acknowledgeme
 
 If +client+ and +client-individual+ is used, the consumer may explicitly refuse to handle the message by sending a +NACK+ frame, a negative acknowledgement.
 
-==== Examples
+==== +StompKit+ Example
 
-Using +StompKit+:
+The message acknowledgement is specified when the +STOMPClient+ subscribes to a destination by calling its +subscribeTo:headers:messageHandler:+ method.
+To specify a +client+ or +client-individual+ acknowledgement, you must set a +ack+ header. +StompKit.h+ defines constants to represent the header name, +kHeaderAck+ and its accepted values, +kAckAuto+, +kAckClient+, and ++kAckClientIndividual).
+
+The +STOMPMessage+ parameter of the +messageHandler+ has two methods +ack+ and +nack+ to respectively acknowledge or nack the message.
+
+If the +ack+ header is not set or if it set to +auto+, message acknowledgement is performed by the broker and calling the +STOMPMessage+'s +ack+ and +nack+ methods will do nothing.
 
 [source,objc]
 ----
-// kHeaderAck and kAckClient constants are defined in StompKit.h
+// use client acknowledgement
 [self.client subscribeTo:destination
                  headers:@{kHeaderAck: kAckClient}
           messageHandler:^(STOMPMessage *message) {
-    // process the message
-    ...
-
-    // acknowledge it
-    [message ack];
-    // or you can nack it by calling [message nack] instead.
-}];
+              // process the message
+              // ...
+              
+              // acknowledge it
+              [message ack];
+              // or nack it with
+              // [message nack]
+          }];
 ----
 
-Using +stomp.js+:
+====  +stomp.js+ Example
+
+The +client+ can specify the type of acknowledgement by passing a dictionary with the +ack+ header as the last parameter of its +subscribe+ message.
+
+The +message+ parameter of the +subscribe+ callback has two methods, +ack+ and +nack+ to respectively acknowledge or nack the message.
+If the acknowledgement type is +auto+ (or if it is not specified at all), these +ack+ and +nack+ methods will do nothing.
 
 [source,js]
 ----
@@ -133,8 +145,8 @@ In that case, these _nacked_ messages would be handled back by the STOMP broker.
 
 STOMP has basic support for transactions.
 
-Sending a message or acknowledging the consumptions of messages can be performed inside a transaction.
-This means that the messages and acknowledgements are not processed by the broker when it receives the corresponding frames but when the transaction completes. If the client does not complete the transaction or aborts it, the broker will not process the frames that it received inside  the transaction and will just discard them.
+Sending a message or acknowledging the consumption of messages can be performed inside a transaction.
+This means that the messages and acknowledgements are not processed by the broker when it receives the corresponding frames but when the transaction completes. If the client does not complete the transaction or aborts it, the broker will not process the frames that it received inside  the transaction and will just discard them. Transactions ensure that messages and acknowledgement processing is _atomic_. _All_ transacted messages and acknowledgements will be processed by the broker when the transaction is committed or _none_ will be if the transaction is aborted.
 
 A transaction is started by the client by sending a +BEGIN+ frame to the broker. This frame must have a +transaction+ header whose value is a transaction identifier that must be unique within a STOMP connection.
 
@@ -158,9 +170,7 @@ STOMP does not provide a transaction timeout that would abort the transaction if
 The transaction lifecycle (controlled by +BEGIN+ and +COMMIT+/+ABORT+ frames) is the responsibility of the client.
 However the broker will automatically abort any active transaction if the client send a +DISCONNECT+ frame or if the underlying TCP connection fails.
 
-==== Examples
-
-Using +StompKit+:
+==== +StompKit+ Example
 
 The +STOMPClient+ can begin a transaction by calling its +begin:+ method and passing a +NSString+ that will be used to identify the transaction. Alternatively, you can call its +begin+ method (without any parameter) and a transaction identifier will be automatically generated. Both +begin:+ and +begin+ methods returns a +STOMPTransaction+ object.
 This object as a +identifier+ property that contains the transaction identifier.
@@ -192,7 +202,7 @@ NSLog(@"started transaction %@", transaction.identifier);
 [transaction abort];
 ----
 
-Using +stomp.js+:
+==== +stomp.js+ Example
 
 The API is very similar to +StompKit+. The +client+ object has a +begin+ method that can takes a parameter corresponding to the transaction identifier. If there is no parameter, an identifier is automatically generated. The +begin+ method returns a +transaction+ object that has an +id+ property corresponding to the transaction identifier.
 
