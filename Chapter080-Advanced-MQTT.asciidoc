@@ -14,52 +14,75 @@ TODO
 
 === Last Will
 
+One strength of messaging protocols is that producers and consumers are loosely coupled. They do not have to be online at the same time to exchange messages. The producer can send a message to a destination and be terminated. The messaging broker will then deliver the message to a consumer when it subscribes to this destination.
+
+However there are cases where an application may require more information on the liveness of messaging clients.
+
+Let's take the example of the +Motions+ application that broadcasts the device position when it moves. A consumer of the device position topic will consume these messages.
+However, how could the consumer distinguish between receiving the messages because the device does not move or because the device is offline and has stopped broadcasting its position.
+
+If the device is offline, the consumer may want to be notified to discard the device position from the map or show it differently from other _live_ devices.
+
+MQTT provides a _last will_ feature that we could use to handle this use case.
+
+When a MQTT client connects to the broker, it can specify a last will message that will be published to a last will topic by the broker _on behalf_ of the client in case of unexpected disconnection. If the client disconnects normally, its last will message is not published.
+
+We could use this last will to let consumers know that the +Motions+ iOS application has been terminated abnormally and its device is no longer online.
+
+==== +MQTTKit+ Example
+
+The +STOMPClient+ object has a +setWill:toTopic:withQos:retain+ method to specify the client's last will. This method must be called before the client connects to the MQTT broker to take effect.
+
+We could improve the +Motions+ iOS application by specifying a last will to its +client+ object in +MWMViewController.m+ before it connects.
+
+The last will topic can be any MQTT topic. We will use the +/mwm/lastWill+ topic so that a consumer would have to subscribe to this topic to be notified of any device's abnormal disconnection.
+
 [source,objc]
 ----
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
+NSString *willTopic = @"/mwm/lastWill";
+NSString *willMessage = [NSString stringWithFormat:@"Device %@ has unexpectedly died", self.deviceID];
+[self.client setWill:willMessage
+             toTopic:willTopic
+             withQos:ExactlyOnce
+              retain:NO];
 
-    self.deviceID = [UIDevice currentDevice].identifierForVendor.UUIDString;
-    NSLog(@"Device identifier is %@", self.deviceID);
-
-    ...
-    
-    self.client = [[MQTTClient alloc] initWithClientId:self.deviceID];
-    NSString *willMessage = [NSString stringWithFormat:@"Device %@ has unexpectedly died", self.deviceID];
-    [self.client setWill:willMessage
-                 toTopic:kLastWillTopic
-                 withQos:AtLeastOnce
-                  retain:NO];
-
-    ...
-
-    [self connnect];
+// connect after having set the client's last will
+[self.client connectToHost:kMqttHost
+         completionHandler:^(MQTTConnectionReturnCode code) {
+             //...
+         }];
 }
 ----
 
+Similarly to regular message, the last will message can specify its QoS and whether it must be retained. Last Will message may be important but infrequent. Using a QoS of exactly-once will ensure that a consumer of the last will topic will not receive false positives on the device's disconnection.
+We will also not retain the last will message. If it would be retained, a newly subscribed consumer would receive it and could assume that a device has been disconnecting while it reconnected in the mean time.
+
+==== +mqtt.js+ Example
+
+We could also support last will for the +Motions+ web application.
+
+The +client+'s +connect+ method can take an optional +willMessage+ object that represents the last will message to send if it disconnects unexpectedly.
+The value is a regular MQTT message created by calling +new Messaging.Message+ constructor and specifying its +destinationName+ (the last will topic), and optionally its +qos+ and +retained+ value.
+
 [source,js]
 ----
-var client = new Messaging.Client(host, Number(port), clientID);
-
-...
-
 var willMessage = new Messaging.Message("Web client " + clientID + " has unexpectedly died");
 willMessage.destinationName = "/mwm/lastWill";
-willMessage.qos = 1; // at least once
+willMessage.qos = 2; // exactly once
 willMessage.retained = false;
 
+// specify the last will when the client connects to the broker
 client.connect({onSuccess: function(frame) {
-  // once the client is successfully connected,
-  // subscribe to all the motions topics
-  client.subscribe("/mwm/+/motion");
-},
+    ...
+  },
   onFailure: function(failure) {
-    alert(failure.errorMessage);
+    ...
   },
   willMessage: willMessage
 });
 ----
+
+Let's also improve the +Motions+ web application by discarding the device data if the web application consume a last will topic about it.
 
 
 [source,bash]
