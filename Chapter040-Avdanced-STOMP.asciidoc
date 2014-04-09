@@ -49,8 +49,7 @@ STOMP defines only a handful of headers for its different frames.
 
 It is also possible to add other headers when sending a frame as long as it does not collide with the headers already specified in the STOMP protocol.
 
-Why would we use headers to pass information instead of putting it in the message payload? There is an fundamental difference between headers and payload.
-Headers are read by the STOMP brokers and can be used by them. Payload is opaque and the brokers never look at it (it is considered an black box).
+Why would we use headers to pass information instead of putting it in the message payload? The fundamental difference between headers and payload is that  headers can be read (and modified) by the STOMP brokers. Payload is treated a  a black box and the broker never reads or modifies it.
 
 We will cover some use cases for adding headers in the next chapter.
 
@@ -78,9 +77,9 @@ STOMP supports 3 types of acknowledgements:
 
 If the client does not specify any type of acknowledgement or use +default+, it does not need to send any acknowledgement, the STOMP broker will consider the message acknowledged as soon as it is delivered to the client.
 
-If +client+ or +client-individual+ is used, the consumer must send acknowledgements to the server with the +message-id+ that is acknowledged. The difference between +client+ and +client-individual+ is that +client+ will acknowledged the message *and all other messages delivered to the consumer before*. Using +client-individual+ will only acknowledge the message and no other messages.
+If +client+ or +client-individual+ is used, the consumer must send acknowledgements to the server with the +message-id+ that is acknowledged. The difference between +client+ and +client-individual+ is that +client+ will acknowledged the message *and all other messages delivered to the consumer before*. Using +client-individual+ will only acknowledge the message and no other messages. The consumer acknowledge a message by sending a +ACK+ frame to the STOMP broker.
 
-If +client+ and +client-individual+ is used, the consumer may explicitly refuse to process the message by sending a +NACK+, a negative acknowledgement.
+If +client+ and +client-individual+ is used, the consumer may explicitly refuse to handle the message by sending a +NACK+ frame, a negative acknowledgement.
 
 ==== Examples
 
@@ -120,17 +119,116 @@ client.subscribe(destination,
 
 There are many use cases where it is not necessary to use explicit acknowledgement.
 
-For example, in our Web application, we do not need to acknowledge every message that we receive from the truck's position destinations. At worst, there may be a problem to display the position but we know there are other messages that will come later to update the truck positions. Besides, acknowledging every message would have a performance cost. Sending the acknowledgement back to the broker would involve an additional network trip for every message.
+For example, in the +Locations+ Web application, we do not need to acknowledge every message that we receive from the devices with their GPS position. At worst, there may be a problem to display the position but we know there are other messages that will come later to update the device's position.
 
-The mobile application is also receiving messages from the truck's order queue.
-These messages may be more important to acknowledge them explicitly. We could enhance the application by letting the truck driver confirms or rejects any order its receives. If the driver confirms the order, we would acknowledge the corresponding message. If it rejects it, we would nack it instead.
+Besides, acknowledging every message would have a performance cost. Sending the acknowledgement back to the broker would involve an additional network trip for every message.
 
-Note that using explicit acknowledgement also means that some order messages could go back to the STOMP broker. What should the broker do with these _rejected_ orders. Depending on the broker you use, it may provide additional features to handle these cases. A common feature is to use a "dead letter queue" where messages that are nacked multiple times from a destination are sent to a dead letter queue. An administrator can then inspect this dead letter queue to determine what to do with these messages. For example, send them to another driver, send alerts about the truck that rejected them, etc.
+The +Locations+ iOS application is also consuming messages from the truck's text queue.
+These messages may be more important to acknowledge them explicitly. We could enhance the application by letting the user confirms that it has read the message's text and the message would be acknowledged after this confirmation only.
 
+We could also let the user reject it by negatively acknowledged the message.
+In that case, these _nacked_ messages would be handled back by the STOMP broker. Depending on the broker you use, it may provide additional features to handle these messages. A common feature is to use a "dead letter queue" where messages that are nacked multiple times from a destination are sent to a dead letter queue. An administrator can then inspect this dead letter queue to determine what to do with these messages. For example, it can send them to another device, send alerts about the device that rejected them, etc.
 
 === Transactions
 
-TODO
+STOMP has basic support for transactions.
+
+Sending a message or acknowledging the consumptions of messages can be performed inside a transaction.
+This means that the messages and acknowledgements are not processed by the broker when it receives the corresponding frames but when the transaction completes. If the client does not complete the transaction or aborts it, the broker will not process the frames that it received inside  the transaction and will just discard them.
+
+A transaction is started by the client by sending a +BEGIN+ frame to the broker. This frame must have a +transaction+ header whose value is a transaction identifier that must be unique within a STOMP connection.
+
+Sending a message can then be part of this transaction by adding a +transaction+ header to its +SEND+ frames set to the same transaction identifier.
+If a consumer is subscribed to a STOMP destination with +client+ or +client-individual+ acknowledgement modes, it can also make the message acknowledgement (or nack) inside a transaction by setting the +transaction+ header on the +ACK+ (or +NACK+) frame.
+
+[NOTE]
+====
+By default, STOMP consumers use +auto+ acknowledgement. In that case, the message acknowledgement is performed automatically by the STOMP broker when the message is delivered to the client and the acknowledgement can *not* be put inside a transaction.
+====
+
+To complete this active transaction and allows the broker to process it, the client must send a +COMMIT+ frame with the same +transaction+ header than in the corresponding +BEGIN+ frame that started the transaction.
+To abort (or roll back) a transaction and discard any messages or acknowledgements sent inside it, the client must send instead an +ABORT+ frame with this +transaction+ header.
+
+[WARNING]
+====
+Beginning a transaction is not sufficient to send subsequent messages inside it. If a transaction is begun, the message to send must have its +transaction header+ set to the transaction identifier. Otherwise, the STOMP broker will not consider that the message is part of the transaction and will process it when it receives it instead of waiting for the transaction completion. If the client decides to abort the transaction, the message will have already been processed by the broker and will not be discarded.
+====
+
+STOMP does not provide a transaction timeout that would abort the transaction if it is not completed in a timely fashion.
+The transaction lifecycle (controlled by +BEGIN+ and +COMMIT+/+ABORT+ frames) is the responsibility of the client.
+However the broker will automatically abort any active transaction if the client send a +DISCONNECT+ frame or if the underlying TCP connection fails.
+
+==== Examples
+
+Using +StompKit+:
+
+The +STOMPClient+ can begin a transaction by calling its +begin:+ method and passing a +NSString+ that will be used to identify the transaction. Alternatively, you can call its +begin+ method (without any parameter) and a transaction identifier will be automatically generated. Both +begin:+ and +begin+ methods returns a +STOMPTransaction+ object.
+This object as a +identifier+ property that contains the transaction identifier.
+
+Sending a message, acknowledging, or nacking it can then be part of a transaction by adding a +transaction+ header set to the transaction identifier (+StompKit.h+ defines a +kHeaderTransaction+ to represent this +transaction+ header).
+
+Finally the +STOMPTransaction+ object has two methods +commit+ and +abort+ to respectively commit or rollback the transaction.
+
+[source,objc]
+----
+// begin a transaction
+STOMPTransaction *transaction = [self.client begin];
+// or STOMPTransaction *transaction = [self.client begin:mytxid];
+NSLog(@"started transaction %@", transaction.identifier);
+
+// send message inside a transaction
+[self.client sendTo:destination
+            headers:@{kHeaderTransaction: transaction.identifier}
+               body:body];
+
+// acknowledge a message inside a transaction
+[message ack:@{kHeaderTransaction: transaction.identifier}];
+// or nack a message inside a transaction with
+// [message nack:@{kHeaderTransaction: transaction.identifier}];
+
+// commit the transaction
+[transaction commit];
+// or abort it
+[transaction abort];
+----
+
+Using +stomp.js+:
+
+The API is very similar to +StompKit+. The +client+ object has a +begin+ method that can takes a parameter corresponding to the transaction identifier. If there is no parameter, an identifier is automatically generated. The +begin+ method returns a +transaction+ object that has an +id+ property corresponding to the transaction identifier.
+
+Sending a message, acknowledging, or nacking it can be part of a transaction by passing a +transaction+ header set to the transaction identifier to these methods.
+
+Finally, committing or aborting a transaction is performed by calling respectively the +commit+ and +abort+ method on the +transaction+ object.
+
+[source,js]
+----
+
+// begin a transaction
+var tx = client.begin();
+// or var tx = client.begin(mytxid);
+console.log("started transaction " + tx.id);
+
+// send a message inside a transaction
+client.send(destination, {transaction: tx.id}, body);
+
+// acknowledge a message inside a transaction
+var subscription = client.subscribe(destination,
+    function(message) {
+      // do something with the message
+      ...
+      // and acknowledge it inside the transaction
+      message.ack({ transaction: tx.id});
+      // or nack it inside the transaction
+      // message.nack({ transaction: tx.id});
+    },
+    {ack: 'client'}
+  );
+
+// commit the transaction
+tx.commit();
+// or abort it
+tx.abort();
+----
 
 === Receipts
 
