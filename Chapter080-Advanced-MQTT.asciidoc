@@ -6,7 +6,7 @@ TODO
 
 === Connection Options
 
-TODO 
+TODO
 
 === Heart-beat
 
@@ -166,7 +166,39 @@ TODO
 
 === Clean Session
 
-TODO
+[source,objc]
+----
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+
+    ...
+
+    // do not clean the session in the broker when the client disconnects
+    self.client = [[MQTTClient alloc] initWithClientId:self.deviceID
+                                          cleanSession:NO];
+
+    ...
+
+    [self connect];
+}
+----
+
+[source,bash]
+----
+$ mosquitto_pub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/alert -m blue -q 1
+----
+
+[source,js]
+----
+function sendAlert(deviceID) {
+  // create a message with an empty payload
+  var message = new Messaging.Message("red");
+  message.destinationName = "/mwm/" + deviceID + "/alert";
+  message.qos = 1;
+  client.send(message);
+}
+----
 
 === Summary
 
