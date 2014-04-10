@@ -31,43 +31,105 @@ We could use this last will to let consumers know that the +Motions+ iOS applica
 
 ==== +MQTTKit+ Example
 
-The +STOMPClient+ object has a +setWill:toTopic:withQos:retain+ method to specify the client's last will. This method must be called before the client connects to the MQTT broker to take effect.
+The +STOMPClient+ object has +setWill:toTopic:withQos:retain+ and +setWillData:toTopic:withQos:retain+ methods to specify the client's last will. The differences between the two methods is that the first one takes a +NSString+ for the will message payload and the second takes a +NSData+. These methods must be called before the client connects to the MQTT broker to take effect.
 
 We could improve the +Motions+ iOS application by specifying a last will to its +client+ object in +MWMViewController.m+ before it connects.
 
 The last will topic can be any MQTT topic. We will use the +/mwm/lastWill+ topic so that a consumer would have to subscribe to this topic to be notified of any device's abnormal disconnection.
+The payload of the last will message is a simple JSON object with a +deviceID+ property.
+We will encapsulate the setup of the last will in a +setWill+ method.
 
 [source,objc]
 ----
-NSString *willTopic = @"/mwm/lastWill";
-NSString *willMessage = [NSString stringWithFormat:@"Device %@ has unexpectedly died", self.deviceID];
-[self.client setWill:willMessage
-             toTopic:willTopic
-             withQos:ExactlyOnce
-              retain:NO];
+- (void)setLastWill
+{
+    NSString *willTopic = @"/mwm/lastWill";
+    NSDictionary *dict = @{ @"deviceID": self.deviceID};
+    NSData *willData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
 
-// connect after having set the client's last will
-[self.client connectToHost:kMqttHost
-         completionHandler:^(MQTTConnectionReturnCode code) {
-             //...
-         }];
+    [self.client setWillData:willData
+                 toTopic:willTopic
+                 withQos:ExactlyOnce
+                  retain:NO];
+}
+----
+
+We just need to call this method before connecting to the MQTT broker in +connect+.
+
+[source,objc]
+----
+- (void)connect
+{
+    [self setLastWill];
+    NSLog(@"Connecting to %@...", kMqttHost);
+    [self.client connectToHost:kMqttHost
+             completionHandler:^(MQTTConnectionReturnCode code) {
+        ...
+    }];
 }
 ----
 
 Similarly to regular message, the last will message can specify its QoS and whether it must be retained. Last Will message may be important but infrequent. Using a QoS of exactly-once will ensure that a consumer of the last will topic will not receive false positives on the device's disconnection.
 We will also not retain the last will message. If it would be retained, a newly subscribed consumer would receive it and could assume that a device has been disconnecting while it reconnected in the mean time.
 
+Before we configure the web application's own last will, we can first update it to discard data when it receives the last will message from a device.
+
+To achieve this, we need to:
+
+. subscribe to the last will topic +/mwm/lastWill+
+. update the subscription callback to handle last will messages
+
+The first step is done in the +onSuccess+ callback passed to +client+'s +connect+ method when we were already subscribing to the devices' motion topics.
+
+[source,js]
+----
+var lastWillTopic = "/mwm/lastWill";
+
+client.connect({onSuccess: function(frame) {
+  // once the client is successfully connected,
+  // subscribe to all the motions topics
+  client.subscribe("/mwm/+/motion");
+  // subscribe to the last will topic too:
+  client.subscribe(lastWillTopic);
+},
+----
+
+The second step requires to modify the +client+'s +onMessageArrived+ callback to check whether the message is coming from the last will topic and discard the device data if that the case. Since the last will message representation is a JSON object, we must first parse it by calling +JSON.parse+ on the message's +payloadString+
+
+[source,js]
+----
+client.onMessageArrived = function(message) {
+  if (message.destinationName === lastWillTopic) {
+    var payload = JSON.parse(message.payloadString);
+    discard(payload.deviceID);
+    return;
+  }
+  // the rest of the function is unchanged
+  ...
+};
+----
+
+The +discard+ function will delete the data from the +devices+ dictionary and remove the HTML elements that were created to display the device.
+
+[source,js]
+----
+function discard(deviceID) {
+  console.log("discard data for " + deviceID);
+  delete devices[deviceID];
+  $('#'+ deviceID).remove();
+}
+----
+
 ==== +mqtt.js+ Example
 
-We could also support last will for the +Motions+ web application.
-
+It is also possible to set a client's last will using +mqtt.js+.
 The +client+'s +connect+ method can take an optional +willMessage+ object that represents the last will message to send if it disconnects unexpectedly.
 The value is a regular MQTT message created by calling +new Messaging.Message+ constructor and specifying its +destinationName+ (the last will topic), and optionally its +qos+ and +retained+ value.
 
 [source,js]
 ----
 var willMessage = new Messaging.Message("Web client " + clientID + " has unexpectedly died");
-willMessage.destinationName = "/mwm/lastWill";
+willMessage.destinationName = "/mwm/lastWill/web";
 willMessage.qos = 2; // exactly once
 willMessage.retained = false;
 
@@ -82,16 +144,21 @@ client.connect({onSuccess: function(frame) {
 });
 ----
 
-Let's also improve the +Motions+ web application by discarding the device data if the web application consume a last will topic about it.
-
+Often, applications may not need to be notified of the last will of another MQTT client. However, we may still want to monitor the unexpected disconnection to be informed of the liveness of the whole system.
+If all MQTT clients have configured their last will, we can have a crude monitoring application by subscribing to all their last will topics.
 
 [source,bash]
 ----
-$ mosquitto_sub -h iot.eclipse.org -t /mwm/lastWill
-Device C0962483-7DD9-43CC-B1A0-2E7FBFC05060 has unexpectedly died
+$ mosquitto_sub -h iot.eclipse.org -t /mwm/lastWill/# -v
 ...
-Web client 0.89629763a7195923 has unexpectedly died
+/mwm/lastWill {"deviceID":"C0962483-7DD9-43CC-B1A0-2E7FBFC05060"}
+/mwm/lastWill/web Web client 0.90778b769105b876 has unexpectedly died
 ----
+
+[NOTE]
+====
+We have subscribed to the wildcard topic +/mwm/lastWill/#+ to receive messages from both +/mwm/lastWill+ (that is used by the +Motions+ iOS application) and any of its child including +/mwmw/lastWill/web+ (that is used by the web application).
+====
 
 === Message Retry
 
