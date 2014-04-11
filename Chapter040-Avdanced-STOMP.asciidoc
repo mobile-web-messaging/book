@@ -263,8 +263,8 @@ STOMP offers a mechanism to test the healthiness of a connection between a STOMP
         NSLog(@"got error from STOMP: %@", error);
     };
     // will send a heartbeat at most every minute.
-    // expect broker's heartbeat at least every 10 seconds.
-    NSString *heartbeat = @"60000,10000";
+    // expect broker's heartbeat at least every 20 seconds.
+    NSString *heartbeat = @"60000,20000";
     [self.client connectWithHeaders:@{ @"client-id": self.deviceID,
                                        kHeaderHeartBeat: heartbeat }
                   completionHandler:^(STOMPFrame *connectedFrame, NSError *error) {
@@ -281,8 +281,8 @@ STOMP offers a mechanism to test the healthiness of a connection between a STOMP
 client = Stomp.client(url);
 // will send a heartbeat at most every 20 seconds
 client.heartbeat.outgoing = 20000;
-// expects broker's heartbeat at least every 30 seconds
-client.heartbeat.incoming = 30000;
+// expects broker's heartbeat at least every minute
+client.heartbeat.incoming = 60000;
 client.connect({}, function(frame) {
   ...
 });
