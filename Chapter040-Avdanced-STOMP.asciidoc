@@ -250,9 +250,79 @@ TODO
 
 === Heart-beating
 
-STOMP offers a mechanism to test the healthiness of a connection between a STOMP client and a broker
+STOMP offers a mechanism to test the healthiness of a network connection between a STOMP client and a broker using heart-beating.
+In the absence of messages exchanged between the STOMP client and the broker, both can send _heartbeat_ periodically to inform the other that is alive but has no activity.
+
+If heart-beating is enabled, this allows the client and the broker to be informed in case of network failures and act accordingly (the client could try to reconnect to the broker, the broker could clean up the resources created on behalf of the client, etc.).
+
+Heart-beating is negotiated between the client and the broker when the client connects to the broker (by sending a +CONNECT+ frame) and the broker accepts the connection (by sending a +CONNECTED+ frame to the client). Both frames accepts a +heart-beat+ header whose value contains two integers separated by a comma.
+
+----
+CONNECT
+heart-beat:<cx>,<cy>
+
+CONNECTED:
+heart-beat:<sx>,<sy>
+----
+
+* +<cx>+ is the smallest number of milliseconds between heartbeats that the client guarantees. If it is set to +0+, the client will not send any heartbeat at all.
+* +<cy>+ is the desired number of milliseconds between heartbeats coming from the broker. If it is set to +0+, the client is does not want to receive any heartbeat.
+* +<sx>+ is the smallest number of milliseconds between heartbeats that the broker guarantees. If it is set to +0+, the broker will not send any heartbeat at all.
+* +<sy>+ is the desired number of milliseconds between heartbeats coming from the client. If it is set to +0+, the broker does not want to receive any heartbeat.
+
+When the client is successfully connected to the STOMP broker (it has received the +CONNECTED+ frame), it must determine the frequency of the heartbeats to send to the broker and the frequency of heartbeats coming from the broker.
+
+The values that are used to determine the frequency of heartbeats sent to broker are +<cx>+ and +<sy>+. If +<cx>+ is +0+ (the client will send no heartbeat) or if +<sy>+ is +0+ (the broker does not expect any client heartbeats), there will be no client heartbeating at all. This means that the broker will not be able to test the healthiness of the client connection.
+Otherwise, both server and broker expect to exchange client heartbeats. The frequency is then determined by the maximum value between the value guaranted by the client, +<cx>+, and the value desired by the broker, +<sy>+. In other words, the client must send heartbeats at least +MAX(cx,sy)+ milliseconds.
+
+For the heartbeats sent by the broker to the client, the algorithm is the same but using the +<cy>+ and +<sx>+ values.
+
+Let's take a simple example to illustrate the algorithm. A STOMP client connect to the broker with the +heart-beat+ header set to +0,60000+ (the client will not send any heartbeats but desires to receive the broker's ones every minute).
+
+----
+CONNECT
+heart-beat:0,60000
+....
+----
+
+The broker accepts the connection and replies with a +CONNECTED+ frame that contains a +heart-beat+ header set to +20000,30000+ (the broker guarantees to send heartbeat every 20 seconds and desires to receive the client's ones every 30 seconds).
+
+----
+CONNECTED
+heart-beat:20000,30000
+....
+----
+
+Since the client specified that it will send no heartbeat (+0+ as the first value of the +CONNECT+'s +heart-beat+ header), client heartbeating is disabled and the broker should not expect any (although it _desired_ to receive them every 20 seconds).
+
+The client desired to receive the broker heartbeat every minute (+60000+ as the second value of the +CONNECT+'s +heart-beat+ header). The broker replied that it can guarantee to send them at least every 30 seconds (second value of the +CONNECTED+'s +heart-beat+ header). In that case, the broker and the client agrees that the broker must send heartbeats every minute (the maximum between 1 minute and 30 seoncds). In other words, the broker _could_ send heartbeats every 30 seconds (as it guaranteed in the +CONNECTED+ frame) but the client will only check them every minute.
+
+[NOTE]
+.ActiveMQ heart-beating
+====
+ActiveMQ supports heart-beating and mirrors the heartbeat values sent by the STOMP client. This lets the STOMP client be the sole decider of the heartbeating values. 
+
+This means that if a client connects with a +heart-beat+ header set to +<cx>,<sy>+, the broker will accept the connection with a +heart-beat+ header set to +<sy>,<cx>+.
+
+The client guaranted to send hearbeat every +<cx>+ milliseconds, so the broker replied that it desires to receive them at this rate.
+The client desired to receive heartbeat every +<sy>+ milliseconds, so the broker replied that it guarantees to send its heartbeat at this rate.
+====
+
+The client should set its heart-beat header according to its usage. For example if an application is sending messages at a regular rate (such as the +Locations+ iOS application), there is no need to send heartbeats to the broker at a similar (or faster) rate. The messages sent are proof enough of the client activity.
+Likewise if a client expects to receive messages at a regular rate (such as the +Locations+ web application), there is no need to require the broker to send frequent heartbeats.
+
+However if the application does not send messages often (the +Locations+ web application will seldom sent text messages to the device' text topics), it probably should send heartbeats more frequently to inform the broker of its healthiness.
+Likewise, if the application does not receive messages often (such as the +Locations+ iOS application), it should desire more frequent heartbeats from the broker.
 
 ==== +StompKit+ Example
+
+A +STOMPClient+ supports heart-beating by passing the +heart-beat+ header when it connects to the broker using its +connectWithHeaders:completionHandler+ method.
+
+By default, +StompKit+ defines a heartbeat of +5000,10000+ (send heartbeat every 5 seconds and receive them every 10 seconds).
+
+Let's add heart-beating to the +Locations+ iOS application.
+The application often sends messages (every time the device GPS position is updated) but receive them less frequently (when an user sends a message from the web application).
+We will guarantee to send heartbeat every minute (+60000+ms) and desires to receive them from the broker every 20 seconds (+20000+ms).
 
 [source,objc]
 ----
@@ -275,10 +345,20 @@ STOMP offers a mechanism to test the healthiness of a connection between a STOMP
 
 ==== +stomp.js+ Example
 
+The +STOMP+ client has a +heartbeat+ property composed of two properties:
+
+  * +heartbeat.outgoing+ is the guaranteed frequency of heartbeat it can send to the broker (i.e. +<cx>+)
+  * +heartbeat.incoming+ is the desired frequency of heartbeat coming from the broker (i.e. +<cy>+).
+
+By default, +stomp.js+ defines a heartbeat of +10000,10000+ (to send and receive heartbeats every 10 seconds).
+    
+These properties must be modified *before* the +connect+ method is called to take them into account.
+
 [source,js]
 ----
 // create the STOMP client
 client = Stomp.client(url);
+
 // will send a heartbeat at most every 20 seconds
 client.heartbeat.outgoing = 20000;
 // expects broker's heartbeat at least every minute
