@@ -244,13 +244,49 @@ tx.abort();
 
 TODO
 
-=== Heart-beating
-
-TODO
-
 === Error handling
 
 TODO
+
+=== Heart-beating
+
+STOMP offers a mechanism to test the healthiness of a connection between a STOMP client and a broker
+
+==== +StompKit+ Example
+
+[source,objc]
+----
+- (void)connect
+{
+    NSLog(@"Connecting...");
+    self.client.errorHandler = ^(NSError* error) {
+        NSLog(@"got error from STOMP: %@", error);
+    };
+    // will send a heartbeat at most every minute.
+    // expect broker's heartbeat at least every 10 seconds.
+    NSString *heartbeat = @"60000,10000";
+    [self.client connectWithHeaders:@{ @"client-id": self.deviceID,
+                                       kHeaderHeartBeat: heartbeat }
+                  completionHandler:^(STOMPFrame *connectedFrame, NSError *error) {
+                      ...
+                  }];
+}
+----
+
+==== +stomp.js+ Example
+
+[source,js]
+----
+// create the STOMP client
+client = Stomp.client(url);
+// will send a heartbeat at most every 20 seconds
+client.heartbeat.outgoing = 20000;
+// expects broker's heartbeat at least every 30 seconds
+client.heartbeat.incoming = 30000;
+client.connect({}, function(frame) {
+  ...
+});
+----
 
 === Summary
 
