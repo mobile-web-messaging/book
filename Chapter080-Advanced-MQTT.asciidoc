@@ -166,6 +166,8 @@ TODO
 
 === Clean Session
 
+==== +MQTTKit+ Example
+
 [source,objc]
 ----
 - (void)viewDidLoad
@@ -175,7 +177,7 @@ TODO
     ...
 
     // do not clean the session in the broker when the client disconnects
-    self.client = [[MQTTClient alloc] initWithClientId:self.deviceID
+    self.client = [[MQTTClient alloc] initWithClientID:self.deviceID
                                           cleanSession:NO];
 
     ...
@@ -192,12 +194,27 @@ $ mosquitto_pub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/
 [source,js]
 ----
 function sendAlert(deviceID) {
-  // create a message with an empty payload
   var message = new Messaging.Message("red");
   message.destinationName = "/mwm/" + deviceID + "/alert";
+  // send the alert with a QoS of at-least-once
   message.qos = 1;
   client.send(message);
 }
+----
+
+==== +mqtt.js+ Example
+
+[source,js]
+----
+// specify if the session must be cleaned when the client connects to the broker
+client.connect({onSuccess: function(frame) {
+    ...
+  },
+  onFailure: function(failure) {
+    ...
+  },
+  cleanSession: false
+});
 ----
 
 === Summary
