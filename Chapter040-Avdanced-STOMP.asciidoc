@@ -322,7 +322,7 @@ By default, +StompKit+ defines a heartbeat of +5000,10000+ (send heartbeat every
 
 Let's add heart-beating to the +Locations+ iOS application.
 The application often sends messages (every time the device GPS position is updated) but receive them less frequently (when an user sends a message from the web application).
-We will guarantee to send heartbeat every minute (+60000+ms) and desires to receive them from the broker every 20 seconds (+20000+ms).
+We will guarantee to send heartbeat every minute (60000ms) and desires to receive them from the broker every 20 seconds (20000ms).
 
 [source,objc]
 ----
