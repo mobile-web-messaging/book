@@ -220,7 +220,7 @@ We will also define a +motionManager+ property in +MWMViewController+ private in
 This +motionManager+ is used to capture the device motions. We must create a new +CMMotionManager+, specify the interval of update and call its +startDeviceMotionUpdatesToQueue:withHandler:+ method to get the device motion
 periodically in a block. We create a new +NSOperationQueue+ to receive these updates on this queue.
 
-The device motion is represented by a +CMDeviceMotion+ object. In our example, we are interested only by its +attitude+ property that contains the +pitch+, +roll+ and +yaw+ value we want to broadcast.
+The device motion is represented by a +CMDeviceMotion+ object. In our example, we are interested only by its +attitude+ property that contains the +pitch+, +roll+ and +yaw+ value we want to broadcast. Their values are expressed in radians, so we will convert them in degrees to display them.
 
 Since the block to receive motion update is executed on the +NSOperationQueue+ we have created, we can not update the +UILabel+ from it. We must instead create another block and call +dispatch_async+ to execute the graphical changes on the UI main queue (that is retrieved by calling +dispatch_get_main_queue()+).
 
@@ -240,13 +240,18 @@ All this logic can be written in +viewDidLoad+ so that the motion manager will s
     // get the device motion updates every second.
     self.motionManager.deviceMotionUpdateInterval = 1;
     NSOperationQueue *queue = [[NSOperationQueue alloc] init];
-    [self.motionManager startDeviceMotionUpdatesToQueue:queue withHandler:^(CMDeviceMotion *motion, NSError *error) {
+    [self.motionManager startDeviceMotionUpdatesToQueue:queue
+                                            withHandler:^(CMDeviceMotion *motion, NSError *error) {
         if(!error) {
             CMAttitude *attitude = motion.attitude;
             dispatch_async(dispatch_get_main_queue(), ^{
-                self.pitchLabel.text = [NSString stringWithFormat:@"pitch: %.1f", attitude.pitch];
-                self.rollLabel.text = [NSString stringWithFormat:@"roll: %.1f", attitude.roll];
-                self.yawLabel.text = [NSString stringWithFormat:@"yaw: %.1f", attitude.yaw];
+                // convert values from radians to degrees
+                double pitch = attitude.pitch * 180 / M_PI;
+                double roll = attitude.roll * 180 / M_PI;
+                double yaw = attitude.yaw * 180 / M_PI;
+                self.pitchLabel.text = [NSString stringWithFormat:@"pitch: %.0f°", pitch];
+                self.rollLabel.text = [NSString stringWithFormat:@"roll: %.0f°", roll];
+                self.yawLabel.text = [NSString stringWithFormat:@"yaw: %.0f°", yaw];
             });
         }
     }];
@@ -480,6 +485,8 @@ We will encapsulate this code in a +send:+ method taking a +CMAttitude+ paramete
 }
 ----
 
+The message will contain the motion values in radians. It will be up to the consumers to convert them in degrees if necessary.
+
 Finally, the last step is to call this method every time a device motion value is updated by the +motionManger+. This occurs in the +viewDidLoad+ method inside the +handler+ block passed to the +motionManger+'s +startDeviceMotionUpdatesToQueue:withHandler:+ method.
 
 [source,objc]
@@ -493,21 +500,26 @@ Finally, the last step is to call this method every time a device motion value i
     self.deviceIDLabel.text = self.deviceID;
 
     self.motionManager = [[CMMotionManager alloc] init];
-    // use a frequency of circa 10Hz to get the device motion updates
-    self.motionManager.deviceMotionUpdateInterval = 0.1;
+    // get the device motion updates every second.
+    self.motionManager.deviceMotionUpdateInterval = 1;
     NSOperationQueue *queue = [[NSOperationQueue alloc] init];
-    [self.motionManager startDeviceMotionUpdatesToQueue:queue withHandler:^(CMDeviceMotion *motion, NSError *error) {
+    [self.motionManager startDeviceMotionUpdatesToQueue:queue
+                                            withHandler:^(CMDeviceMotion *motion, NSError *error) {
         if(!error) {
             CMAttitude *attitude = motion.attitude;
             dispatch_async(dispatch_get_main_queue(), ^{
-                self.pitchLabel.text = [NSString stringWithFormat:@"pitch: %.1f", attitude.pitch];
-                self.rollLabel.text = [NSString stringWithFormat:@"roll: %.1f", attitude.roll];
-                self.yawLabel.text = [NSString stringWithFormat:@"yaw: %.1f", attitude.yaw];
+                // convert values from radians to degrees
+                double pitch = attitude.pitch * 180 / M_PI;
+                double roll = attitude.roll * 180 / M_PI;
+                double yaw = attitude.yaw * 180 / M_PI;
+                self.pitchLabel.text = [NSString stringWithFormat:@"pitch: %.0f°", pitch];
+                self.rollLabel.text = [NSString stringWithFormat:@"roll: %.0f°", roll];
+                self.yawLabel.text = [NSString stringWithFormat:@"yaw: %.0f°", yaw];
             });
-            // send the MQTT message
             [self send:attitude];
         }
     }];
+    
 
     self.client = [[MQTTClient alloc] initWithClientId:self.deviceID];
 }
