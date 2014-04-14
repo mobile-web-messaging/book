@@ -262,7 +262,7 @@ client.subscribe(destination, function(message) {
 Since the semantic of STOMP destinations are specific to the STOMP broker, you have to check with its documentation to know if they support wildcard destinations or similar concepts. If it does not, you have to revert to the first idea to fetch the list of devices and subscribe to each of the destination... or use another STOMP broker that supports this feature.
 ====
 
-Since we no longer know _a priori_ which device location we are receiving, we need a new way to determine which device has broadcasted it.
+Since we no longer know _a priori_ which device location we are receiving, we need a new way to determine which device has broadcast it.
 There are two pieces of information we can use. When a consumer receives a STOMP message, the message always have a +destination+ header that corresponds to the _actual_ destination that the client consumed consume from.
 
 Since we are subscribing to the wildcard address +/topic/device.$$*$$.location+, the actual destination we consume from will be stored in the received message's headers in +message.headers["destination"]+.

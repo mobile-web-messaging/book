@@ -3,11 +3,11 @@
 
 [role="lead"]
 In this chapter, I present the main concepts of messaging protocols.
-To illustrate their use on mobile and Web platforms, we will write two application (one for each messaging protocols that are described, STOMP and MQTT). This chapter will present the overal design of these two applications that will be written in the subsequent chapters.
+To illustrate their use on mobile and Web platforms, we will write two applications (one for each messaging protocol that are described, STOMP and MQTT). This chapter will present the overal design of these two applications that will be written in the subsequent chapters.
 
 === Messaging Concepts
 
-In the preface, I introduces messaging protocols in two sentences and five concepts:
+In the preface, I introduce messaging protocols in two sentences and five concepts:
 
 * An application _produces_ a _message_ to a _destination_ on a _broker_.
 * An application subscribes to this same destination to _consume_ the message.
@@ -18,13 +18,13 @@ Let's now define these five concepts:
 . A _destination_ is a type of address that is used to exchange messages
 . A _producer_ is an application that sends _messages_ *to* a _destination_
 . A _consumer_ is an application that consumes _messages_ *from* a _destination_
-. A _broker_ is the server entity that will handle messages from producers and delivers them to the consumers according to their destinations.
+. A _broker_ is the server entity that will handle messages from producers and deliver them to the consumers according to their destinations.
 
 [[img_preface_messaging_concepts]]
 .Messaging Concepts
 image::images/Chapter010/messaging_concepts.png["Diagram of the messaging concepts"]
 
-The simplicity of messaging can be deceiving but it is this simplicity that allows to use it in powerful ways.
+The simplicity of messaging can be deceiving but it is this simplicity that allows developers to use it in powerful ways.
 
 .Messaging Terminology
 [NOTE]
@@ -70,24 +70,24 @@ image::images/Chapter010/point_to_point.png["Diagram of the Point-to-Point Topol
 This messaging model is also called _one-to-one_: for _one_ message sent by a producer to the queue, there is only _one_ consumer that will receive it.
 
 If there are no consumers bound to the queue, the broker will retain the incoming messages until a consumer subscribes and then deliver the message to this consumer.
-Some messaging brokers also allows to _expire_ messages if they remain in the queue for a certain amount of time. This can be useful to avoid having consumers receive message corresponding to stale data.
+Some messaging brokers allow to _expire_ messages if they remain in the queue for a certain amount of time. This can be useful to avoid having consumers receive message corresponding to stale data.
 
 ==== Publish/Subscribe
 
 In a Publish/Subscribe messaging model (often shortened as pub/sub), a message sent by a producer is routed to many consumers.
 
-The producer sends a message to a destination identified as a _topic_ in that messaging model. There can be none or many consumers subscribed to this topic and the messaging broker will route incoming message to _all_ these consumers to deliver the message. If there are no consumers bound to the topic, the broker will _not_ retain the incoming messages.
+The producer sends a message to a destination identified as a _topic_ in that messaging model. There can be zero or many consumers subscribed to this topic and the messaging broker will route incoming message to _all_ these consumers to deliver the message. If there are no consumers bound to the topic, the broker may _not_ retain the incoming messages.
 As illustrated in <<img_intro_pub_sub>>, when the producer sends a message to the topic, all the consumers that are subscribed receive the message.
 
 [[img_intro_pub_sub]]
 .Diagram of the Publish/Subscribe Topology
 image::images/Chapter010/pub_sub.png["Diagram of the Point-to-Point Topology"]
 
-This messaging model is also called _one-to-many_: for _one_ message sent by a producer to a topic, there are _many_ consumers that will receive it.
+This messaging model is also called _one-to-many_: for _one_ message sent by a producer to a topic, there are _many_ consumers that may receive it.
 
-When a message is sent to a topic in this model, we often say that it is _broadcasted_ to all consumers as they will all receive it.
+When a message is sent to a topic in this model, we often say that it is _broadcast_ to all consumers as they will all receive it.
 
-Some protocols defines the notions of _durable subscribers_. If a consumer subscribes to the topic as a durable subscriber, the broker will retain messages when the consumer is offline and deliver the messages sent to the topic during its downtime when the consumer comes online again.
+Some protocols define the notion of _durable subscribers_. If a consumer subscribes to the topic as a durable subscriber, the broker will retain messages when the consumer is offline and deliver the messages sent to the topic during its downtime when the consumer comes online again.
 
 === Message Representation
 
