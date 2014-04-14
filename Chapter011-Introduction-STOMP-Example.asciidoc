@@ -3,7 +3,7 @@
 
 Suppose that we work for a delivery company that uses a fleet of trucks to deliver packages to its clients.
 
-Each truck is responsible for the delivery of packages and they receive orders from their headquarters. To manage efficiently all the trucks, the company headquarters want to monitor the truck's positions and be able to send them orders on-the-go.
+Each truck is responsible for the delivery of packages and they receive orders from their headquarters. To efficiently manage all the trucks, the company headquarters want to monitor the truck's positions and be able to send them orders on-the-go.
 
 We will build a very simple application named +Locations+ that looks similar to this example.
 

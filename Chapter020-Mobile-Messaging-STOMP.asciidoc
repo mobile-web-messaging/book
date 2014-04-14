@@ -121,9 +121,10 @@ First, we will verify that the project is setup correctly and that the applicati
 
 We will simulate the latest iPhone devices by selecting +Product > Destination > iPhone Retina (4-inch 64-bit)+ from Xcode menu bar.
 
-<remark>
 ++++
+<remark>
 Command symbol is not displayed in PDF.
+</remark>
 ++++ 
 If we run the application by selecting **`Product`** > **`Run`** (or pressing +&#x2318;+R+), the iOS simulator starts and opens the application which is composed of a blank view.
 
