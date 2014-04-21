@@ -10,10 +10,19 @@ http://stomp.github.io/stomp-specification-1.2.html[STOMP 1.2] that was released
 
 As we present these features, we will show how to use them from either +StompKit+ or +stomp.js+. The API may vary depending on the platform and language but the concept remains the same. If you have ever to use STOMP from another language or platform, you will have to adapt to the library API but the underlying concept will still apply.
 
+Clients and brokers can use these features by sending additional frames (defined in the protocol) or by using message headers.
+The STOMP protocol defines frames to provide transactions, a combination of frames and headers for message acknowledgement and headers for hearbeat negotiation.
+
+In this chapter, we will describe the features provided by the STOMP protocol that client and broker must support to be compliant.
+
+STOMP is also extensible and clients and brokers can support additional features by using headers not defined in the protocol. We will describe such additional features in the next chapter.
+
+In any case, the features (defined in the protocol or supported only by some brokers) rely on the structure of STOMP frames.
+
 [[ch_adv_stomp_frame]]
 === Frame representation
 
-STOMP is modelled on HTTP and based on _frames_.
+All data exchanged between a client and a broker is done using STOMP frames. STOMP is modelled on HTTP and its frames follows a similar structure.
 Each frame is composed of 3 elements:
 
 * a _command_
@@ -41,7 +50,7 @@ but it can also transmit binary data in its payload by specifying an alternative
 
 In the two previous chapters, we were sending JSON data in the messages. We were setting the string representation of the JSON structure in the message body and setting the `content-type` header to `application/json; charset=utf-8`.
 
-STOMP uses frames not only to send messages (with the +SEND+ command) and receive them (with the +MESSAGE+ command) but also for all its operation comands (such as +CONNECT+, +DISCONNECT+, +SUBSCRIBE+, etc.)
+STOMP uses frames not only to send messages (with the +SEND+ command) and receive them (with the +MESSAGE+ command) but also for all its operation comands (such as +CONNECT+, +DISCONNECT+, +SUBSCRIBE+, etc.).
 
 ==== Headers
 
@@ -49,9 +58,9 @@ STOMP defines only a handful of headers for its different frames.
 
 It is also possible to add other headers when sending a frame as long as it does not collide with the headers already specified in the STOMP protocol.
 
-Why would we use headers to pass information instead of putting it in the message payload? The fundamental difference between headers and payload is that  headers can be read (and modified) by the STOMP brokers. Payload is treated a  a black box and the broker never reads or modifies it.
+An application may use headers instead of the message's payload to transmit data. The fundamental difference between headers and payload is that  headers can be read (and modified) by the STOMP brokers. Payload is treated a  a black box and the broker never reads or modifies it.
 
-We will cover some use cases for adding headers in the next chapter.
+In practice, headers are most used to specifiy additional features or constraints to the message processing.
 
 === Authentication
 
@@ -240,13 +249,88 @@ tx.commit();
 tx.abort();
 ----
 
-=== Receipts
-
-TODO
-
 === Error handling
 
 TODO
+
+=== Receipts
+
+STOMP provide a basic mechanism to let a client (producer or consumer) know when the broker has received its frames. This can be used with any STOMP frames. For example a client can be notified when the broker receives a message that a producer send (using a +SEND+ frame) or when a consumer subscribes to a destination (using a +SUBSCRIBE+ frame).
+
+To use this mechanism, the frame that is sent to the broker must include a +receipt+ header with any abitrary value. After the broker has processed the frame, it will deliver a +RECEIPT+ frame to the client with a +receipt-id+ header corresponding to the +receipt+ header in the frame that has been processed.
+
+As an example, we can use receipt to confirm that a consumer has been subscribed successfully to a destination. If the broker can not successfully create the subscription, it will send back an +ERROR+ frame to the client and close the connection. In practice, this means at a successful subscription is _silent_, the client is not informed. We can use receipt to remedy that by adding a +receipt+ header when the client subscribes to a destination and wait to receive the corresponding +RECEIPT+ frame that will inform the client that the broker has processed its subscription successfully.
+
+==== +StompKit+ Example
+
+A +STOMPClient+ has a +receiptHandler+ property that can be set to handle receipts. The +receiptHandler+ is a block that take a +STOMPFrame+ corresponding to a +RECEIPT+ frame. 
+
+Let's add a receipt for the device text queue's subscription to the +Locations+ iOS application.
+
+In its +subscribe+ method, we will build a +receipt+ identifier for the subscription receipt and set the +client+'s +receiptHandler+. In this block, we just check if the +headers+ of the +frame+ parameter contains a +kHeaderReceiptID+ key whose value match the +receipt+ identifier.
+
+To receive such a receipt from the subscription, we just need to add a +kHeaderReceipt+ header to the +subscribeTo:headers:messageHandler:+ and set it to the +receipt+ identifier.
+
+[source,objc]
+----
+- (void)subscribe
+{
+    // susbscribes to the device text queue:
+    NSString *destination = [NSString stringWithFormat:@"/queue/device.%@.text", self.deviceID];
+
+    // build a receipt identifier
+    NSString *receipt = [NSString stringWithFormat:@"%@-%@", self.deviceID, destination];
+    // set the client's receiptHandler to handle any receipt delivered by the broker
+    self.client.receiptHandler = ^(STOMPFrame *frame) {
+        NSString *receiptID = [frame.headers objectForKey:kHeaderReceiptID];
+        if ([receiptID isEqualToString:receipt]) {
+            NSLog(@"Susbscribed to %@", destination);
+        }
+    };
+    NSLog(@"subscribing to %@", destination);
+    // pass a receipt header to be informed of the subscription processing
+    subscription = [self.client subscribeTo:destination
+                                    headers:@{kHeaderReceipt: receipt}
+                             messageHandler:^(STOMPMessage *message) {
+        ...
+    }];
+}
+----
+
+If the +Locations+ iOS application is run with this code, we see the log that confirms the client is successfully subscribed to the destination.
+
+----
+2014-04-21 17:30:39.205 Locations[2384:3903] subscribing to /queue/device.2262EC25-E9FD-4578-BADE-4E113DE45934.text
+2014-04-21 17:30:39.208 Locations[2384:3903] Subscribed to /queue/device.2262EC25-E9FD-4578-BADE-4E113DE45934.text
+----
+
+Note that the client's +receiptHandler+ will receive any receipt delivered to the client. If you expect receipts from different STOMP frames, the client will have to handle all of them from a single +receiptHandler+ block.
+
+==== +stomp.js+ Example
+
+The +stomp.js+ client has a +onreceipt+ handler that can be set to receive receipts. It takes a function with a single +frame+ parameter corresponding to a +RECEIPT+ frame.
+
+To receive a receipt for a subscription, we just need to add a +receipt+ header to the headers passed as the last parameter of the +subscribe+ method.
+
+[source,js]
+----
+var destination = "/topic/device.*.location";
+
+var receipt = "receipt_" + destination;
+client.onreceipt = function(frame) {
+  var receiptID = frame.headers['receipt-id'];
+  if (receipt === receiptID) {
+    console.log("subscribed to " + destination);
+  }
+}
+client.subscribe(destination, function(message) {
+  ...
+}, {receipt: receipt});
+----
+
+If we reload the +Locations+ web application, the browser console will display a log when the receipt confirming the subscription is handled by the client.
+
+All +stomp.js+ method that corresponds to STOMP frames accept a +headers+ parameter that can be used to receive +RECEIPT+ frames from the broker.
 
 === Heart-beating
 
