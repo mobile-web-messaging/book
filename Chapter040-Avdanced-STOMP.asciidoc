@@ -255,11 +255,11 @@ TODO
 
 === Receipts
 
-STOMP provide a basic mechanism to let a client (producer or consumer) know when the broker has received its frames. This can be used with any STOMP frames. For example a client can be notified when the broker receives a message that a producer send (using a +SEND+ frame) or when a consumer subscribes to a destination (using a +SUBSCRIBE+ frame).
+STOMP provides a basic mechanism to let a client know when the broker has received and processed its frames. This can be used with any STOMP frames. For example a client can be notified when the broker receives a message that a producer send (using a +SEND+ frame) or when a consumer subscribes to a destination (with a +SUBSCRIBE+ frame).
 
 To use this mechanism, the frame that is sent to the broker must include a +receipt+ header with any abitrary value. After the broker has processed the frame, it will deliver a +RECEIPT+ frame to the client with a +receipt-id+ header corresponding to the +receipt+ header in the frame that has been processed.
 
-As an example, we can use receipt to confirm that a consumer has been subscribed successfully to a destination. If the broker can not successfully create the subscription, it will send back an +ERROR+ frame to the client and close the connection. In practice, this means at a successful subscription is _silent_, the client is not informed. We can use receipt to remedy that by adding a +receipt+ header when the client subscribes to a destination and wait to receive the corresponding +RECEIPT+ frame that will inform the client that the broker has processed its subscription successfully.
+As an example, we can use receipt to confirm that a consumer has been subscribed successfully to a destination. If the broker can not successfully create the subscription, it will send back an +ERROR+ frame to the client and close the connection. In practice, this means that a successful subscription is _silent_, the client is not informed of its success. We can use receipts to have an explicit confirmation of the subscription by adding a +receipt+ header when the client subscribes to a destination. The broker must then deliver a  +RECEIPT+ frame that will inform the client that the broker has processed its subscription successfully.
 
 ==== +StompKit+ Example
 
@@ -269,7 +269,7 @@ Let's add a receipt for the device text queue's subscription to the +Locations+ 
 
 In its +subscribe+ method, we will build a +receipt+ identifier for the subscription receipt and set the +client+'s +receiptHandler+. In this block, we just check if the +headers+ of the +frame+ parameter contains a +kHeaderReceiptID+ key whose value match the +receipt+ identifier.
 
-To receive such a receipt from the subscription, we just need to add a +kHeaderReceipt+ header to the +subscribeTo:headers:messageHandler:+ and set it to the +receipt+ identifier.
+To receive such a receipt from the subscription, we need to add a +kHeaderReceipt+ header to the +subscribeTo:headers:messageHandler:+ and set it to the +receipt+ identifier.
 
 [source,objc]
 ----
