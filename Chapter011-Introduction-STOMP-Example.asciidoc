@@ -1,5 +1,5 @@
 [[ch_introduction_stomp_example]]
-=== +Locations+ Application Using STOMP
+==== +Locations+ Application Using STOMP
 
 Suppose that we work for a delivery company that uses a fleet of trucks to deliver packages to its clients.
 
@@ -19,7 +19,7 @@ image::images/Chapter011/stomp_app_diagram_1.png["Diagram of the Locations appli
 Before introducing STOMP, the messaging protocol that will be used by the application, we can already define the application's messaging models and how the different parts of the application will exchange messages.
 
 [[ch_introduction_stomp_example_topology]]
-==== +Locations+ Messaging Models
+===== +Locations+ Messaging Models
 
 In this application, we will use two destinations, one with a Publish/Subscribe model to broadcast the device GPS data and one with a Point-to-Point model for the text messages:
 
@@ -40,14 +40,14 @@ Conversely, the Web application will be:
 * a _producer_ of message to _all_ the queues of the form +device.XXX.text+
 
 [[ch_introduction_stomp_example_message]]
-==== +Locations+ Message Representation
+===== +Locations+ Message Representation
 
 There will be two types of exchanged messages:
 
 * one to represent GPS data (exhanged on the topics +device.XXX.location+)
 * one to represent orders (exchanged on the queues +device.XXX.text+)
 
-===== Geolocation Messages
+====== Geolocation Messages
 The +Locations+ iOS application will send the GPS data using a JSON representation in the message payload:
 
 [[ex_example_gps_data]]
@@ -67,7 +67,7 @@ The +Locations+ iOS application will send the GPS data using a JSON representati
 <4> +ts+ is a string representing the time when the position was taken (using the http://en.wikipedia.org/wiki/ISO_8601[ISO 8601] format)
 ====
 
-===== Text Messages
+====== Text Messages
 The text messages that will be consumed by the +Locations+ iOS application will
 be represented as a simple plain text string.
 

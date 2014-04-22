@@ -117,3 +117,7 @@ TODO More about the difference between request/reply protocol and messaging prot
 ++++
 
 HTTP hits the sweet spot between simplicity and efficiency. It has few disadvantages but one of the main is that it follows a request/reply pattern where the client must _initiate_ a request to get a _reply_ from the server. In other words, the server can not send data to the HTTP client if this one does not send a request first. There are workarounds to overcome this challenge but they bring additional issues when they are used. Messaging protocols are well suited for this kind of use cases.
+
+=== Examples
+
+To illustrate the use of messaging protocols on mobile and Web platforms, we will build two set of applications in this book. Each set will be be composed of an iOS application and a web one. The first application will use STOMP and the second one MQTT.

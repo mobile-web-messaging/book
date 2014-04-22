@@ -52,7 +52,7 @@ Finally we will save it in a folder on our machine.
 
 === Create the Podfile
 
-We will again use CocoaPods to manage the project dependencies.
+We will again use CocoaPods to manage the project dependencies (as explained in <<ch_mobile_stomp_cocoapods>> for the STOMP example).
 
 We close Xcode because CocoaPods will modify the project settings to import the dependencies.
 

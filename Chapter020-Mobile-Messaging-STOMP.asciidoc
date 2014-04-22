@@ -73,13 +73,14 @@ image::images/Chapter020/project_options_screen.png["XCode project options scree
 
 Finally we will save it in a folder on our machine.
 
+[[ch_mobile_stomp_cocoapods]]
 === Create the Podfile
 
 To import the library that we will use to send and receive messages, we will setup the project to use http://cocoapods.org[CocoaPods], an Objective-C Library Manager.
 
 First we need to close Xcode because we will modify the project structure to import our dependencies.
 
-After installing CocoaPods by following the instructions on its web site, we create a file named **`Podfile`** at the root of the project (in the same directory than +Locations.xcodeproj+).
+After installing CocoaPods by following the http://guides.cocoapods.org/using/getting-started.html#getting-started[instructions on its web site], we create a file named **`Podfile`** at the root of the project (in the same directory than +Locations.xcodeproj+).
 
 [[ex_mobile_stomp_1]]
 .+Locations+' Podfile
