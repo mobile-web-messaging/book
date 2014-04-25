@@ -46,7 +46,6 @@ There will be two types of exchanged messages:
 * one to represent device motion data (exhanged on the topics +/mwm/XXX/motion+)
 * one to represent alerts (exchanged on the topics +/mwm/XXX/alert+)
 
-====== Device Motion Messages
 The +Motions+ iOS application will send the device motions data in a binary message where its payload will be composed of three 64-bit floats representing the device's pitch, roll and yaw values.
 
 [[ex_example_motion_data]]
@@ -58,7 +57,6 @@ The +Motions+ iOS application will send the device motions data in a binary mess
 <1> The message is composed of three 64-bit floats for the +pitch+, +roll+, and +yaw+ values
 ====
 
-====== Alert Messages
 The alert messages that will be consumed by the +Motions+ iOS application will
 be represented as a simple plain text string corresponding to a color. The +Motions+ application will use this payload to change temporarily its background color to _alert_ the user.
 

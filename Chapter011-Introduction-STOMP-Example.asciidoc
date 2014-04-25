@@ -47,7 +47,6 @@ There will be two types of exchanged messages:
 * one to represent GPS data (exhanged on the topics +device.XXX.location+)
 * one to represent orders (exchanged on the queues +device.XXX.text+)
 
-====== Geolocation Messages
 The +Locations+ iOS application will send the GPS data using a JSON representation in the message payload:
 
 [[ex_example_gps_data]]
@@ -67,7 +66,6 @@ The +Locations+ iOS application will send the GPS data using a JSON representati
 <4> +ts+ is a string representing the time when the position was taken (using the http://en.wikipedia.org/wiki/ISO_8601[ISO 8601] format)
 ====
 
-====== Text Messages
 The text messages that will be consumed by the +Locations+ iOS application will
 be represented as a simple plain text string.
 
