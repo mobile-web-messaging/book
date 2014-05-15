@@ -94,7 +94,7 @@ If +client+ and +client-individual+ is used, the consumer may explicitly refuse 
 ==== +StompKit+ Example
 
 The message acknowledgement is specified when the +STOMPClient+ subscribes to a destination by calling its +subscribeTo:headers:messageHandler:+ method.
-To specify a +client+ or +client-individual+ acknowledgement, you must set a +ack+ header. +StompKit.h+ defines constants to represent the header name, +kHeaderAck+ and its accepted values, +kAckAuto+, +kAckClient+, and ++kAckClientIndividual).
+To specify a +client+ or +client-individual+ acknowledgement, you must set a +ack+ header. +StompKit.h+ defines constants to represent the header name, +kHeaderAck+ and its accepted values, +kAckAuto+, +kAckClient+, and +kAckClientIndividual+).
 
 The +STOMPMessage+ parameter of the +messageHandler+ has two methods +ack+ and +nack+ to respectively acknowledge or nack the message.
 
