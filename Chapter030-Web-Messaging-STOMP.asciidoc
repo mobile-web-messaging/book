@@ -16,21 +16,38 @@ All along the chapter, we will show all the code required to run the application
 
 The whole application code can be retrieved from the https://github.com/mobile-web-messaging/code[GitHub repository] in the +stomp/web/+ directory.
 
-=== Web Browser Communication Model
-
-One-way communication from the browser to the server. The server could not send data to the browser without the browser first initiating the conversation.
-
 === HTML5 Web Sockets
 
-Thanks to HTML5 Web Sockets, it is now possible to have two-way communication between the browser and the server. The server can now send data to the browser without the client initiating the conversation. This enables to push messages from the Web server to the browser.
+Web Sockets is a recent features of Web browser that provides a bi-directional and full-duplex communication channel over a single TCP connection between the Web browser and the Web server.
+Before Web Sockets, communication was only one-way: the browser is initiating the communication by sending a HTTP request to the Web server which replies with a HTTP response. The server could not send data to the browser without it sending a request first.
+There exists some techniques to provide a bi-directional HTTP (such as HTTP long polling and HTTP streaming) but they have significant issues as described in <<rfc6202>>.
 
-We are no longer limited to pull-based messages where the browser need to regularly contact the server to know whether there are any available messages to consume.
+Thanks to HTML5 Web Sockets, it is now possible to have two-way communication between the browser and the server in a simple way. The server can send data to the browser without waiting for a request first. This enables to deliver messages from the Web server to the browser.
+
+We are no longer limited to pull-based messages where the browser need to regularly contact the server to know whether there are any available messages to consume. This preserves bandwidth (the browser no longer need to send periodic query requests) and battery on mobile devices. 
+
+[NOTE]
+====
+Web Sockets have many use cased in addition to messaging. In some simple cases, sending data on Web Sockets without using a messaging protocol could be enough.
+
+For further information, the <<highperfbrowser>> book contains a thorough introduction to Web Sockets.
+====
 
 === stomp.js, STOMP Over Web Sockets
 
-stomp.js is a small JavaScript library that implements the STOMP protocol over HTML 5 Web Sockets and allows to send and receive STOMP messages in a Web browser.
+If your Web browser supports Web Sockets (and all modern browsers do), we can then use a STOMP client that leverages them to send and receive STOMP messages directly from the Web browser.
 
-TODO
+stomp.is is a small JavaScript library (8KiB for its minified version) that provides a full-featured STOMP 1.2 client.
+
+It can run in multiple JavaScript platforms. Its main target is the Web browser (using Web Sockets as its transport protocol) but it can also be used in other JavaScript platforms such as http://nodejs.org[node.js] (using TCP sockets).
+
+[WARNING]
+====
+A STOMP client running in a Web browser is similar to another STOMP client running on other platform with one exception: STOMP messages are transported by Web Sockets and not regular TCP sockets.
+The is a significant difference between them is that a Web Socket is created by sending a HTTP request with a +Upgrade: websocket+ header. The STOMP broker must be able to handle such a HTTP request and upgrade the connection from HTTP to the STOMP protocol.
+
+Web Sockets support is not part of the STOMP protocol. The most used STOMP brokers such as ActiveMQ (that is used in this book), HornetQ, or RabbitMQ  support it but you will have to consult your broker documentation to check if it does.
+====
 
 === Bootstrap the Web Application
 
