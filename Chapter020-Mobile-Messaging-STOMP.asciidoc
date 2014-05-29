@@ -126,7 +126,7 @@ We will simulate the latest iPhone devices by selecting +Product > Destination >
 <remark>
 Command symbol is not displayed in PDF.
 </remark>
-++++ 
+++++
 If we run the application by selecting **`Product`** > **`Run`** (or pressing +&#x2318;+R+), the iOS simulator starts and opens the application which is composed of a blank view.
 
 [[img_mobile_stomp_5]]
@@ -695,7 +695,63 @@ Next step is to call this method every time we receive an updated location in th
 ----
 ====
 
-When we run the application, a STOMP message will be sent every time the location manager updates the device's location.
+Messages will be sent every time the device location changes. This is a bit unconvenient when developing this application as I don't want to move around my home to change my location and send a message.
+
+To simplify development, we will add code to send the last known location when the user shakes the device.
+
+We will need add a +lastKnownLocation+ property to the +MWMViewController+ private interface and use it to store the location returned by the +CLLocationManager+ delegate method.
+
+====
+[source,objc]
+----
+@interface MWMViewController () <CLLocationManagerDelegate>
+
+...
+@property (strong, nonatomic) CLLocation *lastKnownLocation;
+
+@end
+
+@implementation MWMViewController
+
+...
+
+#pragma mark - CLLocationManagerDelegate protocol
+
+- (void)locationManager:(CLLocationManager *)manager
+    didUpdateToLocation:(CLLocation *)newLocation
+           fromLocation:(CLLocation *)oldLocation
+{
+
+    ...
+
+    // send a message with the location data
+    [self sendLocation:newLocation];
+    // store the location to send it again when user shakes the device
+    self.lastKnownLocation = newLocation;
+}
+----
+====
+
+To send a message with this +lastKnownLocation+ when the user shakes the device, we must implement the +motionEnded:withEvent:+ method in the +MWMViewController+ implementation and check if the event is a motion shake (identified by +UIEventSubtypeMotionShake+).
+
+====
+[source,objc]
+----
+#pragma mark - User Events
+
+- (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
+{
+    if (motion == UIEventSubtypeMotionShake) {
+        NSLog(@"device is shaked");
+        if (self.lastKnownLocation) {
+            [self sendLocation:self.lastKnownLocation];
+        }
+    }
+}
+----
+====
+
+When we run the application, a STOMP message will be sent every time the location manager updates the device's location or when the user shakes the device.
 
 How can we check that messages are effectively sent?
 

@@ -73,7 +73,7 @@ priority from other producers.
 
 In the Truck Tracker application, we have not an use case where changing the priority of a message would make sense since we use different channels for tracking GPS data
 and sending orders to the trucks. If we were using a single channel for both kind of messages, we could give the order messages a higher priority (for example 7) so that they
-may be deliver ahead of messages with normal priority. 
+may be deliver ahead of messages with normal priority.
 
 [[ex_beyond_stomp_4]]
 ====
@@ -84,7 +84,10 @@ client.send("/topic/mytopic", { priority: 7 }, order);
 ----
 ====
 
-=== Summary
+=== Expiration
 
 TODO
 
+=== Summary
+
+TODO

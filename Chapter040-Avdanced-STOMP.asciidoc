@@ -108,7 +108,7 @@ If the +ack+ header is not set or if it set to +auto+, message acknowledgement i
           messageHandler:^(STOMPMessage *message) {
               // process the message
               // ...
-              
+
               // acknowledge it
               [message ack];
               // or nack it with
@@ -125,7 +125,7 @@ If the acknowledgement type is +auto+ (or if it is not specified at all), these 
 
 [source,js]
 ----
-client.subscribe(destination, 
+client.subscribe(destination,
   function(message) {
     // process the message
     ...
@@ -251,19 +251,137 @@ tx.abort();
 
 === Error handling
 
+Until now, we have used STOMP in a perfect world where no unexpected problems happened.
+Realistically, problems will occur. On mobile devices, network will be lost and the connection to the
+STOMP broker will be broken.
+
+STOMP provides basic support to handle errors. The STOMP broker can inform the client that an error occurs
+by sending a +ERROR+ frame to the client. This frame may contain a +message+ header that contains a short description
+of the error. Most STOMP brokers deliver +ERROR+ frames with a message payload containing more detailed information
+on the error.
+
+STOMP specifies that after delivering an +ERROR+ frame to the client, the broker must close the connection.
+This means that STOMP is not resilient to error. If a single error occurs on the server, the broker will close the connection
+to the client. In addition, there is no guarantee that the client will be able to receive the +ERROR+ frame before the connection
+is closed.
+
+In practice, this implies that to be able to handle any errors in the client, we should:
+
+1. Handle +ERRORS+ frames coming from the broker
+2. Handle unexpected connection closed events
+
+==== +StompKit+ Example
+
+We will modify the +Locations+ iOS to handle errors and automatically reconnect to the STOMP broker after a delay.
+
+The +STOMPClient+ has a +errorHandler+ property that is called if the client encounters any error. Error can come from the STOMP protocol (when the broker deliver an +ERROR+ frame) or from the underlying network connection (e.g. if the network is lost or if the broker closes the connection before any +ERROR+ frame is delivered).
+
+The +errorHandler+ property is a block with a standard +NSSError+ parameter.
+If the error is coming from the STOMP broker, the corresponding +STOMPFrame+ is stored in the error's +userInfo+ dictionary with the key +frame+.
+
+There are two places where we must handle reconnection:
+
+1. during the initial connection (for example if the broker is not up during the initial reconnect, we will continue to attempt to connect to it until it is up again).
+2. when we receive an error from the +STOMPClient+'s +errorHandler+ property.
+
+In both case, we will attemp to reconnect by disconnecting first (in the eventual case where we were already connected), waiting for 10 seconds and connecting again. This code can be encapsulated in a +reconnect:+ method of the +MWMViewController+ implementation.
+
+[source,objc]
+----
+#pragma mark - Messaging
+
+- (void)reconnect:(NSError *)error {
+    NSLog(@"got error %@", error);
+    STOMPFrame *frame = error.userInfo[@"frame"];
+    if (frame) {
+        NSString *message = frame.headers[@"message"];
+        NSLog(@"error from the STOMP protocol: %@", message);
+    }
+    [self disconnect];
+    sleep(10);
+    NSLog(@"Reconnecting...");
+    [self connect];
+}
+----
+
+
+We then must call this +reconnect:+ method from the client's +errorHandler+ property and the +completionHandler+ block of its +connectWithHeaders:completionHandler:+ method (both called from the +MWMViewController+ +connect+ method).
+
+[source,objc]
+----
+- (void)connect
+{
+    NSLog(@"Connecting...");
+    __weak typeof(self) weakSelf = self;
+    self.client.errorHandler = ^(NSError* error) {
+        [weakSelf reconnect:error];
+    };
+    [self.client connectWithHeaders:@{ @"client-id": self.deviceID }
+                  completionHandler:^(STOMPFrame *connectedFrame, NSError *error) {
+                      if (error) {
+                          NSLog(@"Error during connection: %@", error);
+                          [weakSelf reconnect:error];
+                      } else {
+                          // we are connected to the STOMP broker without an error
+                          NSLog(@"Connected");
+                          [self subscribe];
+                      }
+                  }];
+    // when the method returns, we can not assume that the client is connected
+}
+----
+
+To avoid a retain/release cycle between +self+ and the blocks, we need to create a _weak_ reference of +self+ and uses it from the blocks.
+
+==== +stomp.js+ Example
+
+[source,js]
+----
+function connect(url) {
+  // create the STOMP client
+  client = Stomp.client(url);
+
+  ...
+
+  var connectedCallback =  function(frame) {
+    ...
+  };
+  var errorCallback = function(error) {
+    client.debug("received error: " + error);
+    reconnect(url);
+  };
+
+  client.connect({}, connectedCallback, errorCallback);
+}
+
+function reconnect(url) {
+  if (client.connected) {
+    console.log("disconnecting...");
+    disconnect()
+  }
+  console.log("reconnecting");
+  connect(url);
+}
+----
+
 TODO
 
 === Receipts
 
 STOMP provides a basic mechanism to let a client know when the broker has received and processed its frames. This can be used with any STOMP frames. For example a client can be notified when the broker receives a message that a producer send (using a +SEND+ frame) or when a consumer subscribes to a destination (with a +SUBSCRIBE+ frame).
 
-To use this mechanism, the frame that is sent to the broker must include a +receipt+ header with any abitrary value. After the broker has processed the frame, it will deliver a +RECEIPT+ frame to the client with a +receipt-id+ header corresponding to the +receipt+ header in the frame that has been processed.
+To use this mechanism, the frame that is sent to the broker must include a +receipt+ header with any arbitrary value. After the broker has processed the frame, it will deliver a +RECEIPT+ frame to the client with a +receipt-id+ header corresponding to the +receipt+ header in the frame that has been processed.
 
-As an example, we can use receipt to confirm that a consumer has been subscribed successfully to a destination. If the broker can not successfully create the subscription, it will send back an +ERROR+ frame to the client and close the connection. In practice, this means that a successful subscription is _silent_, the client is not informed of its success. We can use receipts to have an explicit confirmation of the subscription by adding a +receipt+ header when the client subscribes to a destination. The broker must then deliver a  +RECEIPT+ frame that will inform the client that the broker has processed its subscription successfully.
+As an example, we can use receipt to confirm that a consumer has been subscribed successfully to a destination.
+If the broker can not successfully create the subscription, it will send back an +ERROR+ frame to the client and close the connection.
+In practice, this means that a successful subscription is _silent_, the client is not informed of its success. We can use receipts to have an explicit confirmation of the subscription by adding a +receipt+ header when the client subscribes to a destination.
+The broker must then deliver a +RECEIPT+ frame that will inform the client that the broker has processed its subscription successfully.
+If the subscription is not successful, the broker will deliver a +ERROR+ frame that has a +receipt-id+ header corresponding to the
++RECEIPT+'s +receipt+ header to be able to correlate the error.
 
 ==== +StompKit+ Example
 
-A +STOMPClient+ has a +receiptHandler+ property that can be set to handle receipts. The +receiptHandler+ is a block that take a +STOMPFrame+ corresponding to a +RECEIPT+ frame. 
+A +STOMPClient+ has a +receiptHandler+ property that can be set to handle receipts. The +receiptHandler+ is a block that take a +STOMPFrame+ corresponding to a +RECEIPT+ frame.
 
 Let's add a receipt for the device text queue's subscription to the +Locations+ iOS application.
 
@@ -287,7 +405,7 @@ To receive such a receipt from the subscription, we need to add a +kHeaderReceip
             NSLog(@"Susbscribed to %@", destination);
         }
     };
-    NSLog(@"subscribing to %@", destination);
+    NSLog(@"Subscribing to %@", destination);
     // pass a receipt header to be informed of the subscription processing
     subscription = [self.client subscribeTo:destination
                                     headers:@{kHeaderReceipt: receipt}
@@ -300,7 +418,7 @@ To receive such a receipt from the subscription, we need to add a +kHeaderReceip
 If the +Locations+ iOS application is run with this code, we see the log that confirms the client is successfully subscribed to the destination.
 
 ----
-2014-04-21 17:30:39.205 Locations[2384:3903] subscribing to /queue/device.2262EC25-E9FD-4578-BADE-4E113DE45934.text
+2014-04-21 17:30:39.205 Locations[2384:3903] Subscribing to /queue/device.2262EC25-E9FD-4578-BADE-4E113DE45934.text
 2014-04-21 17:30:39.208 Locations[2384:3903] Subscribed to /queue/device.2262EC25-E9FD-4578-BADE-4E113DE45934.text
 ----
 
@@ -384,7 +502,7 @@ The client desired to receive the broker heartbeat every minute (+60000+ as the 
 [NOTE]
 .ActiveMQ heart-beating
 ====
-ActiveMQ supports heart-beating and mirrors the heartbeat values sent by the STOMP client. This lets the STOMP client be the sole decider of the heartbeating values. 
+ActiveMQ supports heart-beating and mirrors the heartbeat values sent by the STOMP client. This lets the STOMP client be the sole decider of the heartbeating values.
 
 This means that if a client connects with a +heart-beat+ header set to +<cx>,<sy>+, the broker will accept the connection with a +heart-beat+ header set to +<sy>,<cx>+.
 
@@ -435,7 +553,7 @@ The +STOMP+ client has a +heartbeat+ property composed of two properties:
   * +heartbeat.incoming+ is the desired frequency of heartbeat coming from the broker (i.e. +<cy>+).
 
 By default, +stomp.js+ defines a heartbeat of +10000,10000+ (to send and receive heartbeats every 10 seconds).
-    
+
 These properties must be modified *before* the +connect+ method is called to take them into account.
 
 [source,js]
@@ -454,5 +572,14 @@ client.connect({}, function(frame) {
 
 === Summary
 
-TODO
+In an ideal world, only the basic features of STOMP would be required to use messaging in mobile and web applications.
+However to handle errors that will eventually happen under normal use, we need to leverage advanced STOMP features.
 
+In this chapter, we learnt to use:
+
+* authentication to ensure that only authenticated clients can communicate with the STOMP broker
+* acknowledgement to let the client accepts explicitly the delivery of a message
+* transaction to send messages as a single atomic unit-of-work
+* error handling to face unexpected issues and eventually reconnect to the broker
+* receipt to receive confirmation that a frame has been succesfully processed by the broker
+* heart-beating to ensure that the network connection between the client and broker is healthy and kill the connection if that is not the case
