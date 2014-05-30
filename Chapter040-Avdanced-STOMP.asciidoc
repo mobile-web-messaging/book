@@ -228,7 +228,7 @@ To abort (or roll back) a transaction and discard any messages or acknowledgemen
 
 [WARNING]
 ====
-Beginning a transaction is not sufficient to send subsequent messages inside it. If a transaction is begun, the message to send must have its +transaction header+ set to the transaction identifier. Otherwise, the STOMP broker will not consider that the message is part of the transaction and will process it when it receives it instead of waiting for the transaction completion. If the client decides to abort the transaction, the message will have already been processed by the broker and will not be discarded.
+Beginning a transaction is not sufficient to send subsequent messages inside it. If a transaction is begun, the message to send must have its +transaction+ header set to the transaction identifier. Otherwise, the STOMP broker will not consider that the message is part of the transaction and will process it when it receives it instead of waiting for the transaction completion. If the client decides to abort the transaction, the message will have already been processed by the broker and will not be discarded.
 ====
 
 STOMP does not provide a transaction timeout that would abort the transaction if it is not completed in a timely fashion.
@@ -277,7 +277,6 @@ Finally, committing or aborting a transaction is performed by calling respective
 
 [source,js]
 ----
-
 // begin a transaction
 var tx = client.begin();
 // or var tx = client.begin(mytxid);
@@ -395,7 +394,7 @@ A +stomp.js+ +client+ can specify an +errorCallback+ handler as the last paramet
 
 We can modify the +locations.html+ Web application to automatically reconnect when an error occurs.
 
-We will create a +reconnect+ method which disconnects the +stomp.js+ client if it is connected and calls +connect+ with the Web socket URL.
+We will create a +reconnect+ method which disconnects the +stomp.js+ client if it is connected and calls +connect+ again with the Web socket URL.
 
 [source,js]
 ----
@@ -414,11 +413,6 @@ We then need to create an +errorCallback+ handler that calls this +reconnect+ me
 [source,js]
 ----
 function connect(url) {
-  // create the STOMP client
-  client = Stomp.client(url);
-
-  ...
-
   var connectedCallback =  function(frame) {
     ...
   };
@@ -427,9 +421,17 @@ function connect(url) {
     reconnect(url);
   };
 
+  // create the STOMP client
+  client = Stomp.client(url);
+  // and connects to the STOMP broker
   client.connect({}, connectedCallback, errorCallback);
 }
 ----
+
+[WARNING]
+====
+A Web socket can be opened only once. If a problem occurs and the socket is closed, it can no longer be used. This implies that we can not just call the +client+'s +connect+ method again as its Web socket is no longer usable. Instead we must create a *new* +client+ which will open a new Web socket.
+====
 
 Whenever an error occurs (for example if the network connection is broken or the STOMP broker becomes temporarily unavailable), the +errorCallback+ will be called and the client will try to reconnect.
 

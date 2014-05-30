@@ -24,7 +24,7 @@ There exists some techniques to provide a bi-directional HTTP (such as HTTP long
 
 Thanks to HTML5 Web Sockets, it is now possible to have two-way communication between the browser and the server in a simple way. The server can send data to the browser without waiting for a request first. This enables to deliver messages from the Web server to the browser.
 
-We are no longer limited to pull-based messages where the browser need to regularly contact the server to know whether there are any available messages to consume. This preserves bandwidth (the browser no longer need to send periodic query requests) and battery on mobile devices. 
+We are no longer limited to pull-based messages where the browser need to regularly contact the server to know whether there are any available messages to consume. This preserves bandwidth (the browser no longer need to send periodic query requests) and battery on mobile devices.
 
 [NOTE]
 ====
@@ -90,7 +90,7 @@ Let's bootstrap the Web application by creating a *__locations.html__* page.
         </fieldset>
       </form>
       <hr>
-      
+
       <div id="map-canvas" style="height:512px; width:100%; padding:0; margin:0">
       </div>
 
@@ -106,7 +106,7 @@ $(document).ready(function() {
 // We will put all the JavaScript code in this block that is called
 // when the document is ready
 
-}
+};
     </script>
   </body>
 </html>
@@ -128,58 +128,68 @@ $(document).ready(function() {
 }
 ----
 
-This +client+ object will be created when the user click on the +Connect+ button by calling +Stomp.client+ with the URL retrieved from the +connect_url+ input element.
+
+When the user click on the +Connect+ button, the URL is retrieved from the +connect_url+ input element and passed to the +connect+ method. In this method, we will create the +client+ and connect to the STOMP broker.
 
 [source,js]
 ----
-// Connection to the STOMP broker
+// handles the connect_form
 $('#connect_form').submit(function() {
   var url = $("#connect_url").val();
 
-  // create the STOMP client
-  client = Stomp.client(url);
+  connect(url);
+  return false;
+});
 ----
 
 === Connect to a STOMP Broker
 
+In the +connect+ method, we create the STOMP client by calling +Stomp.client(url)+.
 Once we have the +client+ object, we call its +connect+ method to connect to the STOMP broker. This method takes at least two arguments:
 
 . a set of headers containing additional metadata that the STOMP broker can use during the connection process. In our case, we have no such header so we will pass an empty JavaScript literal object +{}+.
-. a function that is called back when the client is successfully connected to the STOMP broker.
+. a +connectedCallback+ function that is called back when the client is successfully connected to the STOMP broker.
 
 [[ex_web_stomp_2]]
 ====
 [source,js]
 ----
-client.connect({}, function(frame) {
-    // this function is executed after a successful connection to the STOMP broker.
-});
-----
-====
-
-The Web page has a button with the id +connect_button+ to connect to the STOMP broker that is handled using jQuery. When the user clicks this button, we will create the +client+ object and connect to the STOMP broker Web Socket URL.
-
-[source,js]
-----
 // Connection to the STOMP broker
-$('#connect_form').submit(function() {
-  var url = $("#connect_url").val();
+// and subscription to the device's position destinations.
+//
+// the url paramater is the Web Socket URL of the STOMP broker
+function connect(url) {
+
+  // creates the callback that is called when the client
+  // is successfully connected to the STOMP broker
+  var connectedCallback =  function(frame) {
+      ...
+  };
 
   // create the STOMP client
   client = Stomp.client(url);
+  // and connects to the STOMP broker
+  client.connect({}, connectedCallback);
+}
+----
+====
 
-  client.connect({}, function(frame) {
-    client.debug("connected to Stomp");
-    // TODO once the client is connected, subscribe to the truck's position destinations.
-  });
+The +connectedCallback+ is called when the client is successfully connected to the STOMP broker. At this stage, we can clean up the user interface by hiding the +Connect+ button, showing the +Disconnect+ button and the form to send text messages to the devices.
+
+[source,js]
+----
+var connectedCallback =  function(frame) {
+  client.debug("connected to Stomp");
   // disable the connect button
   $("#connect_button").prop("disabled",true);
   // enable the disconnect button
   $("#disconnect_button").prop("disabled",false);
   // show the form to send text to the devices
   $("#text_form").show();
-  return false;
-});
+
+  // ...
+
+};
 ----
 
 If we want to be notified when the connection is *unsuccesful*, we can pass an additional argument to the +connect+ method which is a function that is called back if the connection is _not_ successful.
@@ -188,9 +198,8 @@ If we want to be notified when the connection is *unsuccesful*, we can pass an a
 ====
 [source,js]
 ----
-client.connect(headers, function(frame) {
-    // this function is executed after a successful connection to the STOMP broker.
-  }, function(frame) {
+client.connect({}, connectedCallback,
+  function(frame) {
     // this function is executed if the connection to the STOMP broker failed.
 });
 ----
@@ -229,6 +238,7 @@ However, that implies that the Web application must now have a way to know this 
 
 The pseudo code for it would look like:
 
+[source,js]
 ----
 var listURL = "...";
 var deviceIDs = fetch(listURL);
@@ -248,7 +258,7 @@ Fortunately, the flexibility of STOMP protocol comes handy to manage this in a s
 
 [quote, STOMP 1.2 Protocol]
 ____
-A STOMP server is modelled as a set of destinations to which messages can be sent. The STOMP protocol treats destinations as opaque string and their syntax is server implementation specific. Additionally STOMP does not define what the delivery semantics of destinations should be. The delivery, or “message exchange”, semantics of destinations can vary from server to server and even from destination to destination. This allows servers to be creative with the semantics that they can support with STOMP. 
+A STOMP server is modelled as a set of destinations to which messages can be sent. The STOMP protocol treats destinations as opaque string and their syntax is server implementation specific. Additionally STOMP does not define what the delivery semantics of destinations should be. The delivery, or “message exchange”, semantics of destinations can vary from server to server and even from destination to destination. This allows servers to be creative with the semantics that they can support with STOMP.
 ____
 
 Until now, we have used _simple_ destinations such as +/topic/device.2262EC25-E9FD-4578-BADE-4E113DE45934.location+ or +/queue/device.2262EC25-E9FD-4578-BADE-4E113DE45934.text+ that are straightforward to understand.
@@ -309,6 +319,9 @@ client.subscribe(destination, function(message) {
   var payload = JSON.parse(message.body);
 
   var deviceID = payload.deviceID;
+
+  //...
+});
 ----
 
 When we receive the position of a device, the last step we need to make is to display its position on a map. We will wrap this code in a +show+ method that is called from the subscription callback with the device identifier and its latitute and longitude.
@@ -319,14 +332,21 @@ The whole code to connect to the STOMP broker, subscribes to the wildcard destin
 ----
 // Connection to the STOMP broker
 // and subscription to the device's position destinations.
-$('#connect_form').submit(function() {
-  var url = $("#connect_url").val();
+//
+// the url paramater is the Web Socket URL of the STOMP broker
+function connect(url) {
 
-  // create the STOMP client
-  client = Stomp.client(url);
-
-  client.connect({}, function(frame) {
+  // creates the callback that is called when the client
+  // is successfully connected to the STOMP broker
+  var connectedCallback =  function(frame) {
     client.debug("connected to Stomp");
+    // disable the connect button
+    $("#connect_button").prop("disabled",true);
+    // enable the disconnect button
+    $("#disconnect_button").prop("disabled",false);
+    // show the form to send text to the devices
+    $("#text_form").show();
+
     // once the client is connected, subscribe to the device's location destinations.
 
     // we use a wildcard destination to register to any
@@ -339,21 +359,19 @@ $('#connect_form').submit(function() {
 
       var deviceID = payload.deviceID;
       if (!$("#deviceID option[value='" + deviceID + "']").length) {
-        // if the device ID is not already in the list of devices we can send orders to, we add it.
-        $('#deviceID').append($('<option>', {value:deviceID}).text(deviceID));                
+        // if the device ID is not already in the list of devices we can send  orders to, we add it.
+        $('#deviceID').append($('<option>', {value:deviceID}).text(deviceID));
       }
       // show the device location on the map
       show(deviceID, payload.lat, payload.lng);
     });
-  });
-  // disable the connect button
-  $("#connect_button").prop("disabled",true);
-  // enable the disconnect button
-  $("#disconnect_button").prop("disabled",false);
-  // show the form to send text to the devices
-  $("#text_form").show();
-  return false;
-});
+  };
+
+  // create the STOMP client
+  client = Stomp.client(url);
+  // and connects to the STOMP broker
+  client.connect({}, connectedCallback);
+}
 ----
 
 === Draw the Device Locations on a Map
@@ -427,7 +445,7 @@ If we open now this +locations.html+ file in a Web browser, we will see a map of
 .The +Locations+ Web application.
 image::images/Chapter030/locations_web_app.png[The Locations Web application]
 
-If we click on the +Connect+ button, markers will appear on the map for each device that broadcasts its coordinates. 
+If we click on the +Connect+ button, markers will appear on the map for each device that broadcasts its coordinates.
 
 In my case, I am using the +iOS simulator+ to run the mobile application developed in the previous chapter and use its +Location+ tool to simulate a freeway drive (as explained in <<ch_mobile_stomp_location_simulator>>).
 
@@ -480,7 +498,7 @@ Piecing everything together, the code to send a STOMP message looks like:
 $('#text_form').submit(function() {
   var deviceID = $("#deviceID").val();
   var text = $("#text").val();
-    
+
   // sue the device's queue orders as the destination
   var destination = "/queue/device." + deviceID + ".text";
   // text is sent as a plain text string
@@ -504,6 +522,43 @@ The message is sent when you click on the +Send+ button. Since the +Locations+ i
 [[img_web_stomp_4]]
 .The +Locations+ iOS application received the text.
 image::images/Chapter030/ios_app_received_text.png[The Locations iOS application received the text]
+
+=== Disconnect from the STOMP broker
+
+The +locations.html+ connects to the STOMP broker when the user clicks on the +Connect+ button. The user can then disconnect from the broker by clicking on the +Disconnect+ button.
+
+To disconnect from the STOMP broker, we call the +disconnect+ method on the +client+ and pass a callback that is called after the disconnection is successful.
+
+In this callback, we clean up the trackers that are displayed on the map so that nothing is shown after the user is disconnected. We also revert the user interface by hiding the +Disconnect+ button and the text form and showing the +Connect+ button.
+
+
+[source,js]
+----
+function disconnect() {
+  // disconnect from the broker
+  client.disconnect(function() {
+    // once we are successfully disconnected, clear out all the trackers from the map
+    for (var tracker in trackers) {
+      trackers[tracker].marker.setMap(null);
+    }
+    trackers = {};
+  });
+  $("#deviceID").empty();
+  $("#connect_button").prop("disabled",false);
+  $("#disconnect_button").prop("disabled",true);
+  $("#text_form").hide();
+}
+----
+
+Finally, we need to call this +disconnect+ method when the +Disconnect+ button is clicked.
+
+[source,js]
+----
+$('#disconnect_button').click(function() {
+  disconnect();
+  return false;
+});
+----
 
 === Summary
 
