@@ -64,6 +64,62 @@ In practice, headers are most used to specifiy additional features or constraint
 
 === Authentication
 
+In the two previous chapters, the STOMP clients are connected to the broker *anonymously*. We do not pass any user credentials that the broker could use to authenticate the user and check whether he or she could send and/or receive messages.
+
+If the STOMP broker is configured to accept secured connections, the client needs to pass +login+ and +passcode+ parameters when it connects to the STOMP broker.
+
+[NOTE]
+.ActiveMQ Authentication
+====
+By default, ActiveMQ accepts anonymous connections. To change its security settings to authenticate users and grant them restricted priviledges (so that they can only receive messages from example), consult its http://activemq.apache.org/security.html[security documentation page].
+====
+
+==== +StompKit+ Example
+
+To use an authenticated connection with +StompKit+, you need to pass the login and passcode parameters to the headers dictionary when calling the +connectWithHeaders:completionHandler+ method on the +STOMPClient+. +StompKit+ defines the +kHeaderLogin+ and +kHeaderPasscode+ constants to represent the headers keys.
+
+[source,objc]
+----
+- (void)connect
+{
+    NSLog(@"Connecting...");
+
+    NSString *login = @"...";
+    NSString *passcode = @"...";
+    [self.client connectWithHeaders:@{ @"client-id": self.deviceID,
+                                       kHeaderLogin: login,
+                                       kHeaderPasscode: passcode}
+                  completionHandler:^(STOMPFrame *connectedFrame, NSError *error) {
+                      ...
+}
+----
+
+==== +stomp.js+ Example
+
+A +stomp.js+ client can be authenticated by adding the +login+ and +passcode+ headers to the set of headers that is the first parameter of its +connect+ method.
+
+[source,js]
+----
+function connect(url) {
+  // create the STOMP client
+  client = Stomp.client(url);
+
+  ...
+
+  var connectedCallback =  function(frame) {
+    ...
+  };
+
+  var login = ...;
+  var passcode = ...;
+
+  client.connect({
+      login: login,
+      passcode: passcode,
+    }, connectedCallback);
+}
+----
+
 TODO
 
 === Message Acknowledgement
@@ -376,6 +432,8 @@ function connect(url) {
 ----
 
 Whenever an error occurs (for example if the network connection is broken or the STOMP broker becomes temporarily unavailable), the +errorCallback+ will be called and the client will try to reconnect.
+
+Depending on your application, you may instead decide to report the error to the user and let him know that the client is no longer able to exchange messages with the broker.
 
 === Receipts
 
