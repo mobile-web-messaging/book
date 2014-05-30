@@ -96,7 +96,7 @@ To use an authenticated connection with +StompKit+, you need to pass the login a
 
 ==== +stomp.js+ Example
 
-A +stomp.js+ client can be authenticated by adding the +login+ and +passcode+ headers to the set of headers that is the first parameter of its +connect+ method.
+A +stomp.js+ client can be authenticated by adding the +login+ and +passcode+ headers to the first parameter of its +connect+ method.
 
 [source,js]
 ----
@@ -119,8 +119,6 @@ function connect(url) {
     }, connectedCallback);
 }
 ----
-
-TODO
 
 === Message Acknowledgement
 
