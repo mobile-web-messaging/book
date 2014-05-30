@@ -335,6 +335,26 @@ To avoid a retain/release cycle between +self+ and the blocks, we need to create
 
 ==== +stomp.js+ Example
 
+A +stomp.js+ +client+ can specify an +errorCallback+ handler as the last parameter of its +connect+ method. This handler will be called whenever the client encounters an error (whether coming from the STOMP protocol or the underlying network connection).
+
+We can modify the +locations.html+ Web application to automatically reconnect when an error occurs.
+
+We will create a +reconnect+ method which disconnects the +stomp.js+ client if it is connected and calls +connect+ with the Web socket URL.
+
+[source,js]
+----
+function reconnect(url) {
+  if (client.connected) {
+    console.log("disconnecting...");
+    disconnect()
+  }
+  console.log("reconnecting");
+  connect(url);
+}
+----
+
+We then need to create an +errorCallback+ handler that calls this +reconnect+ method and pass it as the last parameter of the +client+'s +connect+ method.
+
 [source,js]
 ----
 function connect(url) {
@@ -353,18 +373,9 @@ function connect(url) {
 
   client.connect({}, connectedCallback, errorCallback);
 }
-
-function reconnect(url) {
-  if (client.connected) {
-    console.log("disconnecting...");
-    disconnect()
-  }
-  console.log("reconnecting");
-  connect(url);
-}
 ----
 
-TODO
+Whenever an error occurs (for example if the network connection is broken or the STOMP broker becomes temporarily unavailable), the +errorCallback+ will be called and the client will try to reconnect.
 
 === Receipts
 
@@ -575,7 +586,7 @@ client.connect({}, function(frame) {
 In an ideal world, only the basic features of STOMP would be required to use messaging in mobile and web applications.
 However to handle errors that will eventually happen under normal use, we need to leverage advanced STOMP features.
 
-In this chapter, we learnt to use:
+In this chapter, we learn to use:
 
 * authentication to ensure that only authenticated clients can communicate with the STOMP broker
 * acknowledgement to let the client accepts explicitly the delivery of a message
