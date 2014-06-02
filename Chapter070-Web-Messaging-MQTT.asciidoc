@@ -16,10 +16,10 @@ All along the chapter, we will show all the code required to run the application
 The whole application code can be retrieved from the https://github.com/mobile-web-messaging/code[GitHub repository] in the +mqtt/web/+ directory.
 ====
 
-=== Paho JavaScript client
+=== Eclipse Paho JavaScript client
 
-In <<ch_mobile_mqtt_paho>>, we mentioned http://eclipse.org/paho[Eclipe Paho] as our MQTT applications use the broker hosted by it.
-Eclipse Paho provides a variety of MQTT clients for different languages and platforms. In particular, they offer a JavaScript client for Web browser that uses HTML5 Web Sockets.
+In <<ch_mobile_mqtt_paho>>, we mentioned that http://iot.eclipse.org[iot.eclipse.org] provides a public MQTT broker that we use for our MQTT applications.
+Eclipse also provides a variety of MQTT clients for different languages and platforms. In particular, it has a JavaScript client for Web browser that uses HTML5 Web Sockets.
 
 The source code of the project is hosted in this  http://git.eclipse.org/c/paho/org.eclipse.paho.mqtt.javascript.git/[Git repository].
 
@@ -34,7 +34,7 @@ any server-side runtime as all the code will be executed inside the Web browser 
 To display the device motions data, we will use http://en.wikipedia.org/wiki/Sparkline[Sparklines]. The Web application use jQuery and a library named http://omnipotent.net/jquery.sparkline(jQuery Sparklines) for this.
 
 Note however that we use jQuery for convenience but the MQTT JavaScript client does not require it at all and can be used with any JavaScript frameworks or libraries.
- 
+
 Let's bootstrap the Web application by creating a *motions.html__* page.
 
 [[ex_web_mqtt_1]]
@@ -51,7 +51,7 @@ Let's bootstrap the Web application by creating a *motions.html__* page.
 </head>
 <body>
   <h1>Motions - MQTT Example</h1>
-  
+
   <h2>Devices</h2>
   <ul id="devices">
   </ul>
@@ -113,14 +113,14 @@ There are four steps to achieve that in a proper fashion:
     if (response.errorCode !== 0) {
       alert(response.errorMessage + "\nclientID = " + client.clientID + " [" + response.errorCode + "]\n");
     }
-  };            
+  };
   client.connect({onSuccess: function(frame) {
     // this function is executed after a successful connection to the MQTT broker.
   },
     onFailure: function(failure) {
       alert(failure.errorMessage);
     }
-  }); 
+  });
 ----
 
 All these handlers are optional and you may omit them. However without them, the Web application may fail to connect or lose connection without any way to let the user be aware of it.
@@ -144,7 +144,7 @@ Multi-level wildcard +#+::
 The number sign (#) is a wildcard character that matches any number of levels within a topic.
 
 Single-level wildcard +$$+$$+::
-The plus sign (+) is a wildcard character that matches only one topic level. 
+The plus sign (+) is a wildcard character that matches only one topic level.
 
 The Web application is interested to receive any messages sent to topics of the form +/mwm/XXX/motion+ where +XXX+ is the device identifier. It maps to the MQTT wildcard topic +/mwm/$$+$$/motion+.
 
@@ -231,18 +231,18 @@ function updateSparklines(deviceID, pitch, yaw, roll) {
     values = {
       "pitch" : [],
       "roll" : [],
-      "yaw" : [],        
+      "yaw" : [],
     };
-  }    
+  }
   // add the new value at the end of the array
   values.pitch.push(pitch);
   values.roll.push(roll);
   values.yaw.push(yaw);
   // keep only the 50 more recent values
   if (values.pitch.length > 50) {
-    values.pitch.splice(0,1); 
-    values.roll.splice(0,1); 
-    values.yaw.splice(0,1); 
+    values.pitch.splice(0,1);
+    values.roll.splice(0,1);
+    values.yaw.splice(0,1);
   }
   // put back the updated values in the clients map
   devices[deviceID] = values;
@@ -333,4 +333,3 @@ To consume a message, the application must
 . subscribe to a (potentially wildcard) topic and set a handler that is called every time a message is received.
 
 In the next chapter, we will learn about more advanced features of MQTT that were not required to write this simple application. However, it is likely that you may need some of these features if your applications are more complex.
-

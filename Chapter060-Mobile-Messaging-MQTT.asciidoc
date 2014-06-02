@@ -49,7 +49,7 @@ The source code of this library project is hosted on https://github.com/mobile-w
 [[ch_mobile_mqtt_paho]]
 === Eclipse public MQTT Server
 
-For the MQTT +Motions+ application, we will not run a MQTT broker on our local network but use instead a public MQTT broker hosted by http://iot.eclipse.org/sandbox.html#mqtt[iot.eclipse.org], the portal for Internet of Things development of the Eclipse foundation. This bpublic roker is running using the Mosquitto project (the same codebase underneath MQTT) and any MQTT client can connect to it. While it is not appropriate to use it for production (there is no uptime guarantee for it), it shows that it is possible to use MQTT on Internet.
+For the MQTT +Motions+ application, we will not run a MQTT broker on our local network but use instead a public MQTT broker hosted by http://iot.eclipse.org/sandbox.html#mqtt[iot.eclipse.org], the portal for Internet of Things development of the Eclipse foundation. This public broker is running using the Mosquitto project (the same codebase underneath MQTT) and any MQTT client can connect to it. While it is not appropriate to use it for production (there is no uptime guarantee for it), it shows that it is possible to use MQTT on Internet.
 
 MQTT clients can connect to it using the +iot.eclipse.org+ hostname on the port +1883+ (that is reserved for MQTT).
 
