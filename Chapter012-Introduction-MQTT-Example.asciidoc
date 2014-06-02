@@ -38,6 +38,11 @@ Conversely, the Web application will be:
 * a _consumer_ of messages from all the topics of the form +/mwm/XXX/motion+
 * a _producer_ of message to all the topics of the form +/mwm/XXX/alert+
 
+[NOTE]
+====
+MQTT only supports the _Publish/Subscribe_ messaging model. Ideally, the alert destination would be better modeled as a queue (one per device). Since MQTT does not have support for queues, we will work around that by using one topic for each device and only have the corresponding device subscribes to it.
+====
+
 [[ch_introduction_mqtt_example_message]]
 ===== +Motions+ Message Representation
 

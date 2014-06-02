@@ -3,7 +3,7 @@
 
 [role="lead"]
 In this chapter, we present MQTT, a binary-based protocol developed for telemetry
-communication. Its simplicity and compactness make it ideally suited for mobile devices. We will write an iOS application using the +MQTTKit+ library to send and receive messages using the MQTT protocol.
+communication. Its simplicity and compactness make it well suited for mobile devices. We will write an iOS application using the +MQTTKit+ library to send and receive messages using the MQTT protocol.
 
 In <<ch_introduction_mqtt_example>>, we described the +Motions+ application. In this chapter, we will write the iOS application that broadcasts the device motion data and receives alert message.
 
@@ -21,16 +21,35 @@ The whole application code can be retrieved from the https://github.com/mobile-w
 
 === MQTT
 
-MQTT only supports the _Publish/Subscribe_ messaging model.
+MQTT is a simple and lightweight messaging protocol that only supports the _Publish/Subscribe_ messaging model.
+
+Its most interesting features are its compactness (reducing bandwidth and memory usage) and its small set of features (making it simple to implement on various platforms)
+
+MQTT is a simple protocol well suited for a limited set of applications that can be modeled using Publish/Subscribe. However, MQTT is also lacking flexibility and you have to consider carefully if it meets your requirements.
+
+One missing feature of MQTT is the lack of headers in the message representation.
+
+MQTT defines a fixed set of headers for its command messages (used to connect to the broker, send a message, create a subscription, etc.) but there is no general notions of a header that the application or the broker could add to the messages.
+
+This significantely reduces the usefulness of the messages that are delivered by MQTT. As a simple example, the absence of headers mean that there is no way to know what type of data to expect from the payload. HTTP and STOMP defines a +content-type+ header that can be queried to know the MIME type of the payload and extract it accordingling. MQTT does not allow this and the consumer must have _a priori_ knowledge of the payload type for a message before being able to read it.
+
+The absence of headers also imply tha the MQTT broker can not provide additional features not covered by the protocol in a non-intrusive way. As we saw in <<ch_beyond_stomp>>, STOMP broker can use headers to priority, expiration, and other features just by adding headers to the messages.
+
+If you plan to use MQTT in your applications, you should consider carefully whether its features match your requirements.
+
+If you require features that are not provided by the protocol (or another messaging model that _Publish/Subscribe), you may lose all the benefits of using this simple protocol and write brittle code that puts all the complexity in your applications instead of relying on the broker's set of features.
+But if your requirements are fullfilled by MQTT features (as is the case for a lot of applications), you will be all set to use messaging in your applications.
 
 === +MQTTKit+
 
-TODO
+This book uses the https://github.com/mobile-web-messaging/MQTTKit[MQTTKit] library for iOS (and Mac OS X) applications. It is a modern Objective-C library that uses ARC and blocks to write messaging clients in a simple fashion. It is based on the http://mosquitto.org[Mosquitto] project that provides a lower-level C implementation of MQTT.
 
 [[ch_mobile_mqtt_paho]]
-=== Eclipse Paho MQTT Server
+=== Eclipse public MQTT Server
 
-TODO
+For the MQTT +Motions+ application, we will not run a MQTT broker on our local network but use instead a public MQTT broker hosted by http://iot.eclipse.org/sandbox.html#mqtt[iot.eclipse.org], the portal for Internet of Things development of the Eclipse foundation. This bpublic roker is running using the Mosquitto project (the same codebase underneath MQTT) and any MQTT client can connect to it. While it is not appropriate to use it for production (there is no uptime guarantee for it), it shows that it is possible to use MQTT on Internet.
+
+MQTT clients can connect to it using the +iot.eclipse.org+ hostname on the port +1883+ (that is reserved for MQTT).
 
 === Create the +Motions+ project With Xcode
 
@@ -519,7 +538,7 @@ Finally, the last step is to call this method every time a device motion value i
             [self send:attitude];
         }
     }];
-    
+
 
     self.client = [[MQTTClient alloc] initWithClientId:self.deviceID];
 }
@@ -546,7 +565,7 @@ $ mosquitto_sub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/
 ----
 
 This confirms that the +Motions+ application is effectively publishing MQTT messages.
- 
+
 [[ch_mobile_mqtt_receive]]
 === Receive MQTT Messages
 
@@ -722,7 +741,7 @@ We will do that in the +viewDidLoad+ method just after creating the +client+ ins
             });
         }
     };
-    
+
     [self connect];
 }
 ----
