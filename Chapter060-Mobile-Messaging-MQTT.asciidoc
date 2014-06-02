@@ -42,7 +42,9 @@ But if your requirements are fullfilled by MQTT features (as is the case for a l
 
 === +MQTTKit+
 
-This book uses the https://github.com/mobile-web-messaging/MQTTKit[MQTTKit] library for iOS (and Mac OS X) applications. It is a modern Objective-C library that uses ARC and blocks to write messaging clients in a simple fashion. It is based on the http://mosquitto.org[Mosquitto] project that provides a lower-level C implementation of MQTT.
+This book uses the MQTTKit library for iOS (and Mac OS X) applications. It is a modern Objective-C library that uses ARC and blocks to write messaging clients in a simple fashion. It is based on the http://mosquitto.org[Mosquitto] project that provides a lower-level C implementation of MQTT.
+
+The source code of this library project is hosted on https://github.com/mobile-web-messaging/MQTTKit[GitHub].
 
 [[ch_mobile_mqtt_paho]]
 === Eclipse public MQTT Server

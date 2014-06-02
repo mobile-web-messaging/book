@@ -32,6 +32,10 @@ STOMP does not define the semantic of the destination, they depend on the STOMP 
 
 There are some conventions shared by STOMP brokers (for example, prefixing a destination by +/queue/+ to use a queue and by +/topic/+ to use a topic) but you need to consult your broker documentation to check which messaging model are supported (including _Point-to-Point_ and _Publish/Subscribe_) and how to use them.
 
+STOMP is based on text and a few parsing rules which makes it simple to use from any platform able to read and write text and open a network connection.
+However, being text-based means that the protocol is not the most efficient to use as it will takes less space on the network and in memory that corresponding binary-based protocols.
+If your applications can work with these constraints, STOMP is a a good messaging protocol to use.
+
 .Install and configure a messaging broker
 [NOTE]
 ====
