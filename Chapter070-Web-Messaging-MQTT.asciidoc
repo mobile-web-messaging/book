@@ -31,14 +31,12 @@ Additionnally, the Web application will also be able to send alert messages to t
 It will be a very simple one-page Web application that can be run from a Web server serving static pages. It does not require
 any server-side runtime as all the code will be executed inside the Web browser using JavaScript.
 
-To display the device motions data, we will use http://en.wikipedia.org/wiki/Sparkline[Sparklines]. The Web application use jQuery and a library named http://omnipotent.net/jquery.sparkline(jQuery Sparklines) for this.
+The device motions data will be displayed graphically as http://en.wikipedia.org/wiki/Sparkline[Sparklines]. The Web application uses jQuery and a library named http://omnipotent.net/jquery.sparkline[jQuery Sparklines] to draw them.
 
 Note however that we use jQuery for convenience but the MQTT JavaScript client does not require it at all and can be used with any JavaScript frameworks or libraries.
 
-Let's bootstrap the Web application by creating a *motions.html__* page.
+Let's bootstrap the Web application by creating a +motions.html+ page.
 
-[[ex_web_mqtt_1]]
-====
 [source,html]
 ----
 <!DOCTYPE html>
@@ -72,7 +70,6 @@ $(document).ready(function() {
 </body>
 </html>
 ----
-====
 
 === Create a MQTT Client with mqttws31.js
 

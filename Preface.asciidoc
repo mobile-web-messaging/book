@@ -35,7 +35,7 @@ A messaging protocol is a simple idea. Most of the complexity of using one is fi
 
 === Enterprise Messaging Is Not So Simple
 
-When companies are acquired or merged, they need a way to enable communication between their systems. Messaging is one approach to achieve this integration in a unobstrusive way (as much as it is possible). 
+When companies are acquired or merged, they need a way to enable communication between their systems. Messaging is one approach to achieve this integration in a unobstrusive way (as much as it is possible).
 The systems must agree on the data representation (transmitted in the _message_) and the _destination_ (or the topic of interest shared by the different systems).
 
 With its use in enterprise software, messaging protocols became increasingly complex to meet enterprise requirements (high-availability, failover, load-balancing, etc.).
@@ -46,13 +46,11 @@ Over time, we have seen the appearances of enterprise messaging protocols such a
 
 === Mobile Messaging Is Simple Again
 
-Meanwhile, we have also watched the advent of messaging protocols with more constrained goals that turns out to be simpler and more efficient to use.
+The increasing complexity of messaging protocols used in enterprise software makes them difficult to implement and they are not best suited for constrained environments such as mobile devices.
 
-++++
-<remark>Rephrase to make more clear</remark>
-++++
+Mobile devices requires messaging protocols with more constrained goals that turns out to be simpler and more efficient to use without draining battery or requiring always-on network connections.
 
-While these protocols do not provide all the features offered by enterprise-class messaging protocols, they can be very useful in most cases for mobile and Web platforms.
+While these simpler protocols do not provide all the features offered by enterprise-class messaging protocols, they are a good fit for mobile and Web platforms.
 
 In this book, I will talk about two of them, STOMP and MQTT.
 

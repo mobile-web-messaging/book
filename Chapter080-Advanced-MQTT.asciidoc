@@ -8,6 +8,10 @@ TODO
 
 TODO
 
+=== Error handling
+
+TODO
+
 === Heart-beat
 
 * Keep Alive timer

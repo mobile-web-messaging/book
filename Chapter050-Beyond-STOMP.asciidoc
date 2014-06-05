@@ -100,14 +100,14 @@ producer sent messages A, B, and C in that order, a single consumer will receive
 However, there are cases where a producer wants to send a more _urgent_ message that should take precedence over messages that it already sent.
 
 Some STOMP brokers provides a way to achieve this using message _priority_. When a producer sends a message, it can sets a +priority+ header to change the
-message priority. The usual semantics for the priority value is copied from JMS API which defines ten levels of priority value, with 0 as the lowest priority and 9 as the highest (and 4 as
+message priority. The usual semantics for the priority value is copied from JMS API which defines ten levels of priority value, with +0+ as the lowest priority and +9+ as the highest (and +4+ as
 the default priority).
 
 A broker will often try to deliver expedited messages before messages of lower priority but this is not a strong requirement. To ensure a _fair_ delivery of messages,
 it may deliver lower priority messages so that a single producer sending only messages with the highest priority does not prevent the delivery of messages of lower priority from other producers.
 
 In the +Locations+ application, we do not have an use case where changing the priority of a message would make sense since we use different channels for tracking device location and sending text messages to the device.
-If we were using a single channel for both kind of messages, we could give the text messages a higher priority (for example 7) so that they
+If we were using a single channel for both kind of messages, we could give the text messages a higher priority (for example +7+) so that they
 may be deliver ahead of messages with normal priority.
 
 [source,js]
@@ -121,7 +121,7 @@ Messages can be valid for only a given duration after which they are not relevan
 
 Some STOMP brokers allow to expire messages after a period of time. The broker will periodically check that if messages held by its destinations have expired. If that is the case, it will discard them from the destinations and consumers will not receive them with their expired data.
 
-ActiveMQ accepts a +expires+ header when a message is sent by a STOMP consumer to specify until which time the message is valid. The value is the number of milliseconds between the http://en.wikipedia.org/wiki/Unix_time[UNIX time] (00:00:00, Thursday, 1 January 1970 UTC) and the expiration date.
+ActiveMQ accepts a +expires+ header when a message is sent by a STOMP consumer to specify until which time the message is valid. The value is the number of milliseconds between the http://en.wikipedia.org/wiki/Unix_time[UNIX time] (00:00:00, Thursday, 1^st^ January 1970 UTC) and the expiration date.
 
 For example, if we want to expire messages ten minutes after they are sent by the +Locations+ applications, we need to add an +expires+ header whose value is the number of milliseconds since the Unix time and ten minutes after now.
 

@@ -23,6 +23,8 @@ The whole application code can be retrieved from the https://github.com/mobile-w
 
 MQTT is a simple and lightweight messaging protocol that only supports the _Publish/Subscribe_ messaging model.
 
+This book covers the latest released version of the protocol at the time of this writing: MQTT 3.1 <<mqttv3.1>>.
+
 Its most interesting features are its compactness (reducing bandwidth and memory usage) and its small set of features (making it simple to implement on various platforms)
 
 MQTT is a simple protocol well suited for a limited set of applications that can be modeled using Publish/Subscribe. However, MQTT is also lacking flexibility and you have to consider carefully if it meets your requirements.
@@ -31,13 +33,13 @@ One missing feature of MQTT is the lack of headers in the message representation
 
 MQTT defines a fixed set of headers for its command messages (used to connect to the broker, send a message, create a subscription, etc.) but there is no general notions of a header that the application or the broker could add to the messages.
 
-This significantely reduces the usefulness of the messages that are delivered by MQTT. As a simple example, the absence of headers mean that there is no way to know what type of data to expect from the payload. HTTP and STOMP defines a +content-type+ header that can be queried to know the MIME type of the payload and extract it accordingling. MQTT does not allow this and the consumer must have _a priori_ knowledge of the payload type for a message before being able to read it.
+This significantely reduces the usefulness of the messages that are delivered by MQTT. As a simple example, the absence of headers mean that there is no way to know what type of data to expect from the payload. HTTP and STOMP defines a +content-type+ header that can be queried to know the MIME type of the payload and extract it accordingly. MQTT does not allow this and the consumer must have _a priori_ knowledge of the payload type for a message before being able to read it.
 
 The absence of headers also imply tha the MQTT broker can not provide additional features not covered by the protocol in a non-intrusive way. As we saw in <<ch_beyond_stomp>>, STOMP broker can use headers to priority, expiration, and other features just by adding headers to the messages.
 
 If you plan to use MQTT in your applications, you should consider carefully whether its features match your requirements.
 
-If you require features that are not provided by the protocol (or another messaging model that _Publish/Subscribe), you may lose all the benefits of using this simple protocol and write brittle code that puts all the complexity in your applications instead of relying on the broker's set of features.
+If you require features that are not provided by the protocol (or another messaging model than _Publish/Subscribe_), you may lose all the benefits of using this simple protocol and write brittle code that puts all the complexity in your applications instead of relying on the broker's set of features.
 But if your requirements are fullfilled by MQTT features (as is the case for a lot of applications), you will be all set to use messaging in your applications.
 
 === +MQTTKit+
@@ -550,7 +552,7 @@ We now have the +Motions+ iOS application that is sending MQTT messages. How can
 
 Conversely to +STOMP+, +MQTT+ is a binary protocol and we can not use a simple +telnet+ client to create a consumer and receive messages sent by the application.
 
-However the http://mosquitto.org(Mosquitto broker) provides simple command-line tool to send and receive message from a MQTT broker. The <<appendix_mosquitto>> explains how to download and install the Mosquitto broker. After it is done, we can use its +mosquitto_sub+ command line tool to connect to a MQTT broker (hosted at +iot.eclipse.org+) and subscribe to the device motion topic (in my case +/mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/motion+, you will have to replace it using your own device identifier).
+However the http://mosquitto.org[Mosquitto broker] provides simple command-line tool to send and receive message from a MQTT broker. The <<appendix_mosquitto>> explains how to download and install the Mosquitto broker. After it is done, we can use its +mosquitto_sub+ command line tool to connect to a MQTT broker (hosted at +iot.eclipse.org+) and subscribe to the device motion topic (in my case +/mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/motion+, you will have to replace it using your own device identifier).
 
 This tool will display the message payload. Since we are sending binary payload, we will pipe the command into the +hexdump+ tool to display the hexadecimal representation of the binary payload.
 
