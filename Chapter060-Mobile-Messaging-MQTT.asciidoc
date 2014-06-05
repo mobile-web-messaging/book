@@ -447,6 +447,7 @@ According to <<ch_introduction_mqtt_example_topology>>, the name of the topic is
 
 The +qos+ parameter corresponds to the _Quality of Service_ (or QoS) to use to deliver the messages to the consumers.
 
+[[mqtt_qos]]
 ==== Quality Of Service
 
 The MQTT protocol defines three levels of Quality of Service:
@@ -464,7 +465,7 @@ The +At Least Once+ QoS offers the guarantee that no published message will be l
 The performance cost is caused by the additional message (a +PUBACK+ message) sent from the broker to the client to acknowledge that it has received the published message. That means that using this QoS level to publish +N+ messages will involve exchanging +2*N+ messages between the producer and the broker.
 
 The highest level of delivery is provided using the +Exactly Once+ QoS. With that level, the MQTT broker guarantees that the published message will be delivered _exactly_ once by the consumers. There will be no lost messages or duplicate messages. This is guaranteed by additional exchange of messages between the producer and broker (+PUBREC+, +PUBREL+, +PUBCOMP+ messages).
-That means that using this QoS level to publish +N+ messages will involve exchanging +4*N+ messages, requires four times more network trips that the lowest level of QoS of +At Most Once+ and twice the +At Least Once+.
+That means that using this QoS level to publish +N+ messages will involve exchanging +4*N+ messages, requires four times more network trips than the lowest level of QoS of +At Most Once+ and twice more than the +At Least Once+ level.
 
 Choosing the correct QoS depends on the type of message exchanged and the _importance_ of its payload.
 In the +Motions+ iOS application, the published message contains device motion that are updated every second. It is acceptable if a published message is _lost_ because an new message with updated content will be sent just one second after. Using the +AtMostOnce+ QoS is the best choice for this type of message.

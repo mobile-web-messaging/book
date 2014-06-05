@@ -646,9 +646,9 @@ However to handle errors that will eventually happen under normal use, we need t
 
 In this chapter, we learn to use:
 
-* authentication to ensure that only authenticated clients can communicate with the STOMP broker
-* acknowledgement to let the client accepts explicitly the delivery of a message
-* transaction to send messages as a single atomic unit-of-work
-* error handling to face unexpected issues and eventually reconnect to the broker
-* receipt to receive confirmation that a frame has been succesfully processed by the broker
-* heart-beating to ensure that the network connection between the client and broker is healthy and kill the connection if that is not the case
+* _authentication_ to ensure that only authenticated clients can communicate with the STOMP broker
+* _acknowledgement_ to let the client accepts explicitly the delivery of a message
+* _transaction_ to send messages as a single atomic unit-of-work
+* _error handling_ to face unexpected issues and eventually reconnect to the broker
+* _receipt_ to receive confirmation that a frame has been succesfully processed by the broker
+* _heart-beating_ to ensure that the network connection between the client and broker is healthy and kill the connection if that is not the case

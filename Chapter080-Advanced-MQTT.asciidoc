@@ -164,13 +164,9 @@ $ mosquitto_sub -h iot.eclipse.org -t /mwm/lastWill/# -v
 We have subscribed to the wildcard topic +/mwm/lastWill/#+ to receive messages from both +/mwm/lastWill+ (that is used by the +Motions+ iOS application) and any of its child including +/mwmw/lastWill/web+ (that is used by the web application).
 ====
 
-=== Message Retry
-
-TODO
-
 === Clean Session
 
-When a MQTT client connects to the broker, it can specify whether the broker must store its state after it disconnects and until it reconnects. The client state that is store includes its subscriptions and any in-flight with a QoS greater or equals to 1. Messages with a QoS of 0 (AtMostOnce) are not stored since they are delivered on a best effort basis.
+When a MQTT client connects to the broker, it can specify whether the broker must store its state after it disconnects and until it reconnects. The client state that is store includes its subscriptions and any in-flight with a QoS greater or equals to +1+. Messages with a QoS of +0+ (+At Most Once+) are not stored since they are delivered on a best effort basis.
 
 The client uses a "Clean Session" flag for this. If the flag is set, the broker will not store any state and the connection opened by the client will be _clean_. If the flag is not set, the broker will store the client state.
 
@@ -204,7 +200,7 @@ It is also possible to change this behaviour by using the +MQTTClient+'s +initWi
 
 If the +Motions+ iOS application is modified this way, we can test it by connecting to the broker (so that the broker knows that it must store its state) and closing the application.
 
-While the application is closed, we will modify the +motions.html+ Web application to send an alert message to the device alert topic with a QoS of 1 (AtLeastOnce).
+While the application is closed, we will modify the +motions.html+ Web application to send an alert message to the device alert topic with a QoS of +1+ (+At Least Once+).
 
 [source,js]
 ----
@@ -223,7 +219,7 @@ If we open the +Motions+ iOS application again, the broker will then deliver the
 
 ==== +mqtt.js+ Example
 
-The +mqtt.js+ library also creates clients by default with the "Clean Session" flag set. It is possible to change this behaviour by adding a +cleanSession+ property set to +false+ in the properties passed to the client's +connect+ method.
+The clients created by the +mqtt.js+ library also connects by default with the "Clean Session" flag set. It is possible to change this behaviour by adding a +cleanSession+ property set to +false+ in the properties passed to the client's +connect+ method.
 
 [source,js]
 ----
@@ -240,9 +236,12 @@ client.connect({onSuccess: function(frame) {
 
 === Summary
 
+MQTT is a simple protocol that provides few advanced features. However these features can be handy to solve common issues encountered by messaging applications.
+
+In this chapter, we learn to use:
+
 * Connection Options
-* Error handling
-* Heart-beat
-* Last Will
-* Message retry
-* Clean Session
+* _error handling_ to face unexpected issues and eventually reconnect to the broker
+* _heart-beating_ to ensure that the network connection between the client and broker is healthy and kill the connection if that is not the case
+* _last will_ to let the broker sent a message on behalf of the client in case of unexpected disconnection
+* _clean session_ to preserve client states on the broker between connections
