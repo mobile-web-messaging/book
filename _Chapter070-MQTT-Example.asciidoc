@@ -1,9 +1,0 @@
-== MQTT Example
-
-[role="lead"]
-In this chapter, we will write an Android app that uses MQTT to send the GPS data
-of the device and display orders
-
-=== Truck Tracker Android app
-
-TODO

@@ -1,5 +1,0 @@
-[[ch_mobile_messaging_mqtt]]
-== Mobile Messaging With MQTT
-
-[role="lead"]
-TODO
