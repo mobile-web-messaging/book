@@ -170,7 +170,19 @@ TODO
 
 === Clean Session
 
+When a MQTT client connects to the broker, it can specify whether the broker must store its state after it disconnects and until it reconnects. The client state that is store includes its subscriptions and any in-flight with a QoS greater or equals to 1. Messages with a QoS of 0 (AtMostOnce) are not stored since they are delivered on a best effort basis.
+
+The client uses a "Clean Session" flag for this. If the flag is set, the broker will not store any state and the connection opened by the client will be _clean_. If the flag is not set, the broker will store the client state.
+
+A client with the "Clean Session" flag set will have to subscribe again to consume messages.
+
+A client does not set the "Clean Session" flag will consume memory on the broker side (to store its state) and the broker may also perform administrative operations to remove such state.
+Unless there is a strong incentive to use such a client, it is better practice to use a "Clean session" client and subscribes again after it reconnects.
+
 ==== +MQTTKit+ Example
+
+By default, MQTT clients created using +MQTTKit+ have the "Clean Session" flag set (their state is not stored by the broker after they disconnect).
+It is also possible to change this behaviour by using the +MQTTClient+'s +initWithClientID:cleanSession:+ initializer and passing +NO+ to its +cleanSession+ parameter.
 
 [source,objc]
 ----
@@ -190,10 +202,9 @@ TODO
 }
 ----
 
-[source,bash]
-----
-$ mosquitto_pub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/alert -m blue -q 1
-----
+If the +Motions+ iOS application is modified this way, we can test it by connecting to the broker (so that the broker knows that it must store its state) and closing the application.
+
+While the application is closed, we will modify the +motions.html+ Web application to send an alert message to the device alert topic with a QoS of 1 (AtLeastOnce).
 
 [source,js]
 ----
@@ -206,7 +217,13 @@ function sendAlert(deviceID) {
 }
 ----
 
+The client will not be available to receive the message so the broker must store it to deliver when the client reconnects.
+
+If we open the +Motions+ iOS application again, the broker will then deliver the message to the client.
+
 ==== +mqtt.js+ Example
+
+The +mqtt.js+ library also creates clients by default with the "Clean Session" flag set. It is possible to change this behaviour by adding a +cleanSession+ property set to +false+ in the properties passed to the client's +connect+ method.
 
 [source,js]
 ----
@@ -223,4 +240,9 @@ client.connect({onSuccess: function(frame) {
 
 === Summary
 
-TODO
+* Connection Options
+* Error handling
+* Heart-beat
+* Last Will
+* Message retry
+* Clean Session
