@@ -2,6 +2,8 @@
 
 = Mobile and Web Messaging
 
+include::Dedication.asciidoc[]
+
 include::Preface.asciidoc[]
 
 include::Chapter010-Introduction.asciidoc[]
