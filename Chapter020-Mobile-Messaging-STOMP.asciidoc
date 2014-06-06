@@ -1,29 +1,10 @@
 [[part_stomp]]
-=STOMP
-
-[[ch_mobile_stomp]]
-== Mobile Messaging With STOMP
-
-[role="lead"]
-In this chapter, we will present the STOMP messaging protocool and write our first messaging client: an native application running on an iPhone.
-We will use STOMP to send and receive messages using the Objective-C library StompKit.
-
-In <<ch_introduction_stomp_example>>, we described the +Locations+ application. In this chapter, we will write the iOS application that broadcasts the device's  position and receive text messages.
-
-[[img_mobile_stomp_1]]
-.Diagram of the +Locations+ iOS application
-image::images/Chapter020/stomp_ios_app.png["Diagram of the Locations iOS application"]
-
-.About the Code
-[NOTE]
-====
-All along the chapter, we will show all the code required to run the application.
-
-The whole application code can be retrieved from the https://github.com/mobile-web-messaging/code[GitHub repository] in the +stomp/ios/+ directory.
-====
+= STOMP
 
 === STOMP
 
+[partintro]
+--
 For the next four chapters, we will use the STOMP protocol to build our applications.
 
 This book covers the latest released version of the protocol at the time of this writing: STOMP 1.2 <<stomp1.2>>.
@@ -48,6 +29,28 @@ configured to be able to exchange messages.
 In this book, we use Apache ActiveMQ as the messaging broker. The <<appendix_activemq>> shows how to install and configure ActiveMQ.
 
 Once ActiveMQ is started, it will accept STOMP connections on the +61613+ port.
+====
+--
+
+[[ch_mobile_stomp]]
+== Mobile Messaging With STOMP
+
+[role="lead"]
+In this chapter, we will present the STOMP messaging protocool and write our first messaging client: an native application running on an iPhone.
+We will use STOMP to send and receive messages using the Objective-C library StompKit.
+
+In <<ch_introduction_stomp_example>>, we described the +Locations+ application. In this chapter, we will write the iOS application that broadcasts the device's  position and receive text messages.
+
+[[img_mobile_stomp_1]]
+.Diagram of the +Locations+ iOS application
+image::images/Chapter020/stomp_ios_app.png["Diagram of the Locations iOS application"]
+
+.About the Code
+[NOTE]
+====
+All along the chapter, we will show all the code required to run the application.
+
+The whole application code can be retrieved from the https://github.com/mobile-web-messaging/code[GitHub repository] in the +stomp/ios/+ directory.
 ====
 
 === StompKit

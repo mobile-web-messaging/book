@@ -209,7 +209,7 @@ Watch us on YouTube: link:$$http://www.youtube.com/oreillymedia$$[]
 
 I’d like to thank the many people who contributed to this book. I hope I have not forgotten anyone, but I probably have.
 
-My colleagues at Red Hat provided help and support in innumerable ways. This list of people is necessarily very incomplete: Bill Burke (I should have listened to you: writing a book is a tiring experience!), Clebert Suconic and Andy Taylor for their messaging expertise, Mark Little for its support. A special thanks to Dimitris Andreadis for his trust and letting me spend a part of my work time on this book. Thanks to my teammates in the WildFly and EAP teams (Jason Greene, David M. Lloyd, Brian Stansberry, Kabir Khan, Tomaz Cerar, Emanuel Muckenhuber and all those I have pleasure to work with daily) that helped me lessen my workload so that I could focus on writing this book.
+My colleagues at Red Hat provided help and support in innumerable ways. This list of people is necessarily very incomplete: Bill Burke (I should have listened to you: writing a book is a tiring experience!), Clebert Suconic and Andy Taylor for their messaging expertise, Mark Little for his support. A special thanks to Dimitris Andreadis for his trust and letting me spend a part of my work time on this book. Thanks to my teammates in the WildFly and EAP teams (Jason Greene, David M. Lloyd, Brian Stansberry, Kabir Khan, Tomaz Cerar, Emanuel Muckenhuber and all those I have pleasure to work with daily) that helped me lessen my workload so that I could focus on writing this book.
 
 Andy Piper, Clebert Suconic helped tremendously by reviewing this book. It is much better thanks to their comments and critics.
 
