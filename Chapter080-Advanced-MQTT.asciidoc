@@ -12,9 +12,58 @@ TODO
 
 TODO
 
-=== Heart-beat
+=== Heart-beating
 
-* Keep Alive timer
+MQTT offers a simple mechanism to test the healthiness of the network connection betwee a client and a broker using heart-beating.
+
+Heart-beating is enabled by specifying a _keep alive timer_ when the client initially connects to the broker. This timer, measured in seconds, defines the maximum time interval between messages received from a client. It allows the client and broker to detect whether the network connection is broken without waiting for the long TCP/IP timeout. A timer value of +0+ disables heart-beating.
+
+In the absence of regular messages exchanged between them, the client and the broker automaticall send respective heart-beats (+PINGREQ+ for the clien and +PINGRESP+ for the broker) based on the keep alive timer to check the healthiness of the network connection.
+
+If the client does not receive heart-beats from the broker, it will close the underlying network connection and report an error.
+
+If the broker does not receive heart-beats from the client, it will consider that the client is disconnected.
+
+[CAUTION]
+====
+Setting a good value for the keep alive timer is highly dependent on the application use cases and the platform it runs on.
+
+For mobile devices that are subject to frequent intermittent network failures, using a value too small will report false failures and increase the instability of the application. It will also increase the bandwith and battery usage as heart-beats would have to be sent over the network more frequently.
+====
+
+==== +MQTTKit+ Example
+
+By default, +MQTTKit+ defines a keep alive timer of 60 seconds.
+
+It is possible to change this value using the +keepAlive+ property on the +MQTTClient+ object. The property type is a +short+ and its value must be changed prior to calling the client's +connect+ methods to take effect.
+
+[source,objc]
+----
+MQTTClient *client = [[MQTTClient alloc] initWithClientId:clientID];
+client.keepAlive = 10; // seconds
+[client connectToHost:host
+    completionHandler:^(MQTTConnectionReturnCode code) {
+        //...
+}];
+----
+
+==== +mqtt.js+ Example
+
++mqtt.js+ also defines a keep aliver timer of 60 seconds by default.
+
+The +client+'s +connect+ method can take an optional +keepAliveInterval+ integer to specify another value (or +0+ to disable heart-beating).
+
+[source,js]
+----
+client.connect({onSuccess: function(frame) {
+    ...
+  },
+  onFailure: function(failure) {
+    ...
+  },
+  keepAliveInterval: 10 // seconds
+});
+----
 
 === Last Will
 
@@ -30,8 +79,9 @@ If the device is offline, the consumer may want to be notified to discard the de
 MQTT provides a _last will_ feature that we could use to handle this use case.
 
 When a MQTT client connects to the broker, it can specify a last will message that will be published to a last will topic by the broker _on behalf_ of the client in case of unexpected disconnection. If the client disconnects normally, its last will message is not published.
+If the client uses heart-beating and the broker fails to receive its heart-beat in a timely fashion, this is considered as an unexpected disconnection and the last will message will be published.
 
-We could use this last will to let consumers know that the +Motions+ iOS application has been terminated abnormally and its device is no longer online.
+We could use this last will to let consumers know that the +Motions+ iOS application has been terminated abnormally or its device is no longer reachable (in case of network disconnection).
 
 ==== +MQTTKit+ Example
 
@@ -223,7 +273,7 @@ The clients created by the +mqtt.js+ library also connects by default with the "
 
 [source,js]
 ----
-// specify if the session must be cleaned when the client connects to the broker
+// specify that the session must not be cleaned when the client connects to the broker
 client.connect({onSuccess: function(frame) {
     ...
   },
