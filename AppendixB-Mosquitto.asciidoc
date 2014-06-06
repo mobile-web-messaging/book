@@ -3,7 +3,7 @@
 == Mosquitto
 
 [role="lead"]
-In this appendix, we describe how to install http://mosquitto.org[Mosquitto] tool to produce and consume MQTT messages from the command line.
+In this appendix, we describe how to install the http://mosquitto.org[Mosquitto broker] and its tools to produce and consume MQTT messages from the command line.
 
 === Download and Installation
 
@@ -29,7 +29,7 @@ For example to send a message with the text +yellow+ for payload on the topic +/
 
 [source,sh]
 ----
-c$ mosquitto_pub -h iot.eclipse.org -t /mwm/XYZ/alert -m yellow
+$ mosquitto_pub -h iot.eclipse.org -t /mwm/XYZ/alert -m yellow
 ----
 
 The full list of the +mosquitto_pub+ parameters is available by calling +mosquitto_pub --help+.
@@ -114,6 +114,8 @@ on the broker hosted on +iot.eclipse.org+, the command line is:
 [source,sh]
 ----
 $ mosquitto_sub -h iot.eclipse.org -t /mwm/XYZ/alert
+...
+yellow
 ----
 
 Each message that is consumed by the tool will be displayed on a new line. You can use type +ctrl + c+ to exit the tool and stop consuming messages.
