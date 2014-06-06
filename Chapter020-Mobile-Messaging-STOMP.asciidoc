@@ -1,3 +1,6 @@
+[[part_stomp]]
+=STOMP
+
 [[ch_mobile_stomp]]
 == Mobile Messaging With STOMP
 

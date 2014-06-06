@@ -1,3 +1,6 @@
+[[part_mqtt]]
+= MQTT
+
 [[ch_mobile_mqtt]]
 == Mobile Messaging With MQTT
 
