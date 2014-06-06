@@ -1,8 +1,6 @@
 [[part_stomp]]
 = STOMP
 
-=== STOMP
-
 [partintro]
 --
 For the next four chapters, we will use the STOMP protocol to build our applications.
@@ -20,7 +18,7 @@ STOMP is based on text and a few parsing rules which makes it simple to use from
 However, being text-based means that the protocol is not the most efficient to use as it will takes less space on the network and in memory that corresponding binary-based protocols.
 If your applications can work with these constraints, STOMP is a a good messaging protocol to use.
 
-.Install and configure a messaging broker
+.Install and configure a STOMP broker
 [NOTE]
 ====
 Before using a STOMP client, a broker must be installed and
@@ -36,7 +34,7 @@ Once ActiveMQ is started, it will accept STOMP connections on the +61613+ port.
 == Mobile Messaging With STOMP
 
 [role="lead"]
-In this chapter, we will present the STOMP messaging protocool and write our first messaging client: an native application running on an iPhone.
+In this chapter, we will write our first messaging client: an native application running on an iPhone.
 We will use STOMP to send and receive messages using the Objective-C library StompKit.
 
 In <<ch_introduction_stomp_example>>, we described the +Locations+ application. In this chapter, we will write the iOS application that broadcasts the device's  position and receive text messages.
