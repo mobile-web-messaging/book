@@ -10,7 +10,30 @@ TODO
 
 === Error handling
 
-TODO
+[source,objc]
+----
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+
+    ...
+
+    self.client = [[MQTTClient alloc] initWithClientId:self.deviceID];
+
+    // use a weak reference to avoid a retain/release cycle in the block
+    __weak MWMViewController *weakSelf = self;
+    self.client.disconnectionHandler = ^(NSUInteger code) {
+        NSLog(@"client disconnected with code %lu", (unsigned long)code);
+        NSLog(@"trying to reconnect...");
+        // trying to reconnect;
+        [weakSelf connect];
+    };
+
+    ...
+
+    [self connect];
+}
+----
 
 === Heart-beating
 
