@@ -2,7 +2,7 @@
 == Advanced STOMP
 
 [role="lead"]
-In the two previous chapters, we have used STOMP to send and receive messages from a native iOS application and from a Web application.
+In the two previous chapters, we have used STOMP to send and receive messages from a native iOS application and a Web application.
 STOMP provides additional features that we did not use to write these applications. In this chapter, we will make a tour of all the features provided by STOMP.
 
 This chapter covers the latest version of the protocol when this book was written:
@@ -302,7 +302,7 @@ tx.commit();
 tx.abort();
 ----
 
-=== Error handling
+=== Error Handling
 
 Until now, we have used STOMP in a perfect world where no unexpected problems happened.
 Realistically, problems will occur. On mobile devices, network will be lost and the connection to the
