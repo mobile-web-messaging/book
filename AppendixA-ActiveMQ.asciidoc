@@ -1,3 +1,6 @@
+[[part_appendix]]
+= Appendixes
+
 [[appendix_activemq]]
 [appendix]
 == Apache ActiveMQ
