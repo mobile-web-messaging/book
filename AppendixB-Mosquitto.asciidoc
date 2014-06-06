@@ -34,7 +34,6 @@ $ mosquitto_pub -h iot.eclipse.org -t /mwm/XYZ/alert -m yellow
 
 The full list of the +mosquitto_pub+ parameters is available by calling +mosquitto_pub --help+.
 
-[source,sh]
 ----
 $ mosquitto_pub --help
 mosquitto_pub is a simple mqtt client that will publish a message on a single topic and exit.
@@ -122,7 +121,6 @@ Each message that is consumed by the tool will be displayed on a new line. You c
 
 The full list of the +mosquitto_sub+ parameters is available by calling +mosquitto_sub --help+.
 
-[source,sh]
 ----
 $ mosquitto_sub --help
 mosquitto_sub is a simple mqtt client that will subscribe to a single topic and print all messages it receives.
