@@ -14,6 +14,19 @@ TODO
 
 === Error Handling
 
+MQTT provides does not provide error handling. A MQTT broker has no possible way to inform a client that an error occured. The only action that the MQTT broker can take is to close the underlying network connection so that the client is no longer connected to the broker.
+
+MQTT libraries provides callback or handlers for these cases so that they can act when such an error occurs.
+
+==== +MQTTKit+ Example
+
+The +MQTTClient+ class has a +disconnectionHandler+ property that can be set to handle any unexpected error leading to a disconnection. The disconnection can be the consequence of the MQTT broker closing the network exception (in case of abnormal errors or an administrative operation) or the network connection can be directly broken (for example if a mobile device is no longer able to receive any signal).
+
+The +disconnectionHandler+ is a block that takes a +NSUinteger code+ parameter.
+There are no standard values for the code and you will have to consult your MQTT broker documentation if you need to act differently depending on the type of errors.
+
+We can modify the +Motions+ iOS application to handle such disconnection failures and aggressively try to reconnect the MQTT broker (assuming the root cause of the disconnection failures are transient).
+
 [source,objc]
 ----
 - (void)viewDidLoad
@@ -37,6 +50,22 @@ TODO
 
     [self connect];
 }
+----
+
+==== +mqtt.js+ Example
+
+In <<ch_mobile_mqtt_connect>>, we already set a +onConnectionLost+ callback on the +client+ to be notified in case of connection error. The callback has a single +response+ parameter object. This parameter is composed of two properties:
+
+* +errorCode+, a numerical representation of the type of connection error
+* +errorMessage+, a textual description of the error.
+
+[source,js]
+----
+[source,js]
+----
+client.onConnectionLost = function(response) {
+  alert(response.errorMessage + "\nclientID = " + client.clientID + " [" + response.errorCode + "]\n");
+};
 ----
 
 === Heart-beating
@@ -318,7 +347,7 @@ MQTT is a simple protocol that provides few advanced features. However these fea
 In this chapter, we learn to use:
 
 * Connection Options
-* _error handling_ to face unexpected issues and eventually reconnect to the broker
+* _error handling_ to face unexpected connection issues and eventually reconnect to the broker
 * _heart-beating_ to ensure that the network connection between the client and broker is healthy and kill the connection if that is not the case
 * _last will_ to let the broker sent a message on behalf of the client in case of unexpected disconnection
-* _clean session_ to preserve client states on the broker between connections
+* _clean session_ to preserve client state on the broker between connections

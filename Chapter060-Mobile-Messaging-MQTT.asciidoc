@@ -343,7 +343,6 @@ We can use the +deviceID+ as its client identifier.
     ...
 
     self.client = [[MQTTClient alloc] initWithClientId:self.deviceID];
-    [self connect];
 }
 ----
 
@@ -390,14 +389,9 @@ We will call this method from +viewDidLoad+ to connect to the MQTT broker as soo
     ...
 
     self.client = [[MQTTClient alloc] initWithClientId:self.deviceID];
-
-    [queue addOperationWithBlock:^{
-        [self connect];
-    }];
+    [self connect];
 }
 ----
-
-We will use the +queue+ that was created for the +motionManager+ udpates to run the +connect+ method. This ensures that no network operation will slow down the UI (since +viewDidLoad+ is running on the main queue).
 
 === Disconnect from a MQTT Broker
 

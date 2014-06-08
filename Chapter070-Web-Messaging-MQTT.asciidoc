@@ -94,6 +94,7 @@ $(document).ready(function() {
 }
 ----
 
+[[ch_mobile_mqtt_connect]]
 === Connect to the MQTT Broker
 
 Once the +client+ is created, the next step is to connect to the MQTT broker.
@@ -106,18 +107,18 @@ There are four steps to achieve that in a proper fashion:
 
 [source,js]
 ----
-  client.onConnectionLost = function(response) {
-    if (response.errorCode !== 0) {
-      alert(response.errorMessage + "\nclientID = " + client.clientID + " [" + response.errorCode + "]\n");
-    }
-  };
-  client.connect({onSuccess: function(frame) {
+client.onConnectionLost = function(response) {
+  if (response.errorCode !== 0) {
+    alert(response.errorMessage + "\nclientID = " + client.clientID + " [" + response.errorCode + "]\n");
+  }
+};
+client.connect({onSuccess: function(frame) {
     // this function is executed after a successful connection to the MQTT broker.
   },
-    onFailure: function(failure) {
-      alert(failure.errorMessage);
-    }
-  });
+  onFailure: function(failure) {
+    alert(failure.errorMessage);
+  }
+});
 ----
 
 All these handlers are optional and you may omit them. However without them, the Web application may fail to connect or lose connection without any way to let the user be aware of it.
@@ -149,9 +150,9 @@ Note that it would not have been a good idea to use the more general wildcard +/
 
 [source,js]
 ----
-  client.connect({onSuccess: function(frame) {
-    // once the client is successfully connected,
-    // subscribe to all the motions topics
+client.connect({onSuccess: function(frame) {
+     // once the client is successfully connected,
+     // subscribe to all the motions topics
     client.subscribe("/mwm/+/motion");
   },
     ...
