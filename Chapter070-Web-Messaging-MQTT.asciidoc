@@ -73,7 +73,7 @@ $(document).ready(function() {
 
 === Create a MQTT Client with mqttws31.js
 
-When the browser loads this page, we will cerate a MQTT client using the JavaScript library.
+When the browser loads this page, we will create a MQTT client using the JavaScript library.
 
 To create the client we must pass the MQTT broker host and port. In our case, it is respectively +iot.eclipse.org+ and +80+. Note than in <<ch_mobile_mqtt_client>>, the +Motions+ iOS application was connecting to +iot.eclipse.org+ on its default port +1883+. This default port expects a TCP socket connection. Since the Web application uses HTML5 Web Sockets, it must connect to the +80+ port that will handle the HTTP Upgrade process from the initial HTTP connection.
 
