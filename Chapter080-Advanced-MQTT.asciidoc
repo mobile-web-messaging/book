@@ -8,9 +8,67 @@ MQTT provides additional features that we did not use to write these application
 This chapter covers the latest version of the protocol when this book was written:
 http://www.ibm.com/developerworks/webservices/library/ws-mqtt/index.html[MQTT v3.1] that was released on 2010, August 19^th^.
 
-=== Connection Options
+=== Authentication
 
-TODO
+In the two previous chapters, we connected to the Eclipse public MQTT broker that accepts _unauthenticated_ connections. We did not need to pass any user credentials as they would not be checked by the broker anyawy.
+
+If you are using a MQTT broker that is configured to accept secured connections, the client needs to pass a _user name_ and _password_ when it connects to the broker.
+
+==== +MQTTKit+ Example
+
+The +MQTTClient+ has two +NSString+ properties that must be set to authenticate the client, +username+ and +password+. They must be set _prior_ to calling the client's +connect+ methods to take effect.
+
+If the MQTT broker requires authentication, the client can check if the connection was refused due to invalid user credentials using the +ConnectionRefusedBadUserNameOrPassword+ error code from the +completionHandler+.
+
+[source,objc]
+----
+- (void)connect
+{
+    NSString *username = @"...";
+    NSString *password = @"...";
+
+    self.client.username = username;
+    self.client.password = password;
+    NSLog(@"Connecting to %@...", kMqttHost);
+    [self.client connectToHost:kMqttHost
+             completionHandler:^(MQTTConnectionReturnCode code) {
+        if (code == ConnectionAccepted) {
+            NSLog(@"connected to the MQTT broker");
+            [self subscribe];
+        } else if (code == ConnectionRefusedBadUserNameOrPassword) {
+            NSLog(@"Failed to authenticate the user");
+        } else {
+            NSLog(@"Failed to connect to the MQTT broker: code=%lu", (unsigned long)code);
+        }
+    }];
+}
+----
+
+==== +mqtt.js+ Example
+
+To authenticate using the +mqtt.js+ library, you must set the +userName+ and +password+ properties to the object passed to the client's +connect+ method.
+
+If the MQTT broker requires authentication and the client passes invalid user credentials, the client will be notified by having its +onFailure+ handler called with a failure's code set to +4+ (the value specified in the MQTT protocol for the error +Connection Refused: bad user name or password+).
+
+[source,js]
+----
+var userName = "...";
+var password = "...";
+
+client.connect({onSuccess: function(frame) {
+    ...
+  },
+  onFailure: function(failure) {
+   if (failure.code === 4) {
+      alert("invalid user credentials");
+      return;
+   }
+    ...
+  },
+  userName: userName;
+  password: password;
+});
+----
 
 === Error Handling
 
@@ -57,10 +115,8 @@ We can modify the +Motions+ iOS application to handle such disconnection failure
 In <<ch_mobile_mqtt_connect>>, we already set a +onConnectionLost+ callback on the +client+ to be notified in case of connection error. The callback has a single +response+ parameter object. This parameter is composed of two properties:
 
 * +errorCode+, a numerical representation of the type of connection error
-* +errorMessage+, a textual description of the error.
+* +errorMessage+, a textual description of the error
 
-[source,js]
-----
 [source,js]
 ----
 client.onConnectionLost = function(response) {
@@ -346,7 +402,7 @@ MQTT is a simple protocol that provides few advanced features. However these fea
 
 In this chapter, we learn to use:
 
-* Connection Options
+* _authentication_ to ensure that only authenticated clients can communicate with the MQTT broker
 * _error handling_ to face unexpected connection issues and eventually reconnect to the broker
 * _heart-beating_ to ensure that the network connection between the client and broker is healthy and kill the connection if that is not the case
 * _last will_ to let the broker sent a message on behalf of the client in case of unexpected disconnection
