@@ -25,7 +25,7 @@ If you require features that are not provided by the protocol (or another messag
 But if your requirements are fullfilled by MQTT features (as is the case for a lot of applications), you will be all set to use messaging in your applications.
 
 [[ch_mobile_mqtt_paho]]
-.Eclipse public MQTT Server
+.Eclipse Public MQTT Server
 [NOTE]
 ====
 For the MQTT +Motions+ application, we will not run a MQTT broker on our local network but use instead a public MQTT broker hosted by http://iot.eclipse.org/sandbox.html#mqtt[iot.eclipse.org], the portal for Internet of Things development of the Eclipse foundation. This public broker is running using the Mosquitto project (the same codebase underneath MQTTKit) and any MQTT client can connect to it. While it is not appropriate to use it for production (there is no uptime guarantee for it), it shows that it is possible to use MQTT on Internet.
@@ -35,7 +35,7 @@ MQTT clients can connect to it using the +iot.eclipse.org+ hostname on the port 
 --
 
 [[ch_mobile_mqtt]]
-== Mobile Messaging With MQTT
+== Mobile Messaging with MQTT
 
 [role="lead"]
 In this chapter, We will write an iOS application using the +MQTTKit+ library to send and receive messages using the MQTT protocol.
@@ -60,7 +60,7 @@ This book uses the MQTTKit library for iOS (and Mac OS X) applications. It is a 
 
 The source code of this library project is hosted on https://github.com/mobile-web-messaging/MQTTKit[GitHub].
 
-=== Create the +Motions+ project With Xcode
+=== Create the +Motions+ Project with Xcode
 
 We will use https://developer.apple.com/xcode/[Xcode] to create the +Locations+ iOS application.
 
@@ -101,7 +101,7 @@ platform :ios, '5.0'
 After saving this file, run the **`pod install`** command.
 
 [[ex_mobile_mqtt_2]]
-.Install +Motions+ dependencies
+.Install +Motions+ Dependencies
 ====
 ----
 $ pod install
@@ -310,7 +310,7 @@ The +iOS Simulator+ is not able to simulate device motions. If you run the +Moti
 We now capture the device motions and display them. Next step is to broadcast them by sending MQTT messages.
 
 [[ch_mobile_mqtt_client]]
-=== Create a MQTT Client With MQTTKit
+=== Create a MQTT Client with MQTTKit
 
 To send and receive message with MQTT, we must first import the +MQTTKit+ library that was added to the project using CocoaPods at the beginning of this chapter.
 
@@ -447,7 +447,7 @@ According to <<ch_introduction_mqtt_example_topology>>, the name of the topic is
 The +qos+ parameter corresponds to the _Quality of Service_ (or QoS) to use to deliver the messages to the consumers.
 
 [[mqtt_qos]]
-==== Quality Of Service
+==== Quality of Service
 
 The MQTT protocol defines three levels of Quality of Service:
 

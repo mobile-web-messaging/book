@@ -44,9 +44,9 @@ If the MQTT broker requires authentication, the client can check if the connecti
 }
 ----
 
-==== +mqtt.js+ Example
+==== +mqttws31.js+ Example
 
-To authenticate using the +mqtt.js+ library, you must set the +userName+ and +password+ properties to the object passed to the client's +connect+ method.
+To authenticate using the +mqttws31.js+ library, you must set the +userName+ and +password+ properties to the object passed to the client's +connect+ method.
 
 If the MQTT broker requires authentication and the client passes invalid user credentials, the client will be notified by having its +onFailure+ handler called with a failure's code set to +4+ (the value specified in the MQTT protocol for the error +Connection Refused: bad user name or password+).
 
@@ -110,7 +110,7 @@ We can modify the +Motions+ iOS application to handle such disconnection failure
 }
 ----
 
-==== +mqtt.js+ Example
+==== +mqttws31.js+ Example
 
 In <<ch_mobile_mqtt_connect>>, we already set a +onConnectionLost+ callback on the +client+ to be notified in case of connection error. The callback has a single +response+ parameter object. This parameter is composed of two properties:
 
@@ -159,9 +159,9 @@ client.keepAlive = 10; // seconds
 }];
 ----
 
-==== +mqtt.js+ Example
+==== +mqttws31.js+ Example
 
-+mqtt.js+ also defines a keep aliver timer of 60 seconds by default.
++mqttws31.js+ also defines a keep aliver timer of 60 seconds by default.
 
 The +client+'s +connect+ method can take an optional +keepAliveInterval+ integer to specify another value (or +0+ to disable heart-beating).
 
@@ -286,9 +286,9 @@ function discard(deviceID) {
 }
 ----
 
-==== +mqtt.js+ Example
+==== +mqttws31.js+ Example
 
-It is also possible to set a client's last will using +mqtt.js+.
+It is also possible to set a client's last will using +mqttws31.js+.
 The +client+'s +connect+ method can take an optional +willMessage+ object that represents the last will message to send if it disconnects unexpectedly.
 The value is a regular MQTT message created by calling +new Messaging.Message+ constructor and specifying its +destinationName+ (the last will topic), and optionally its +qos+ and +retained+ value.
 
@@ -379,9 +379,9 @@ The client will not be available to receive the message so the broker must store
 
 If we open the +Motions+ iOS application again, the broker will then deliver the message to the client.
 
-==== +mqtt.js+ Example
+==== +mqttws31.js+ Example
 
-The clients created by the +mqtt.js+ library also connects by default with the "Clean Session" flag set. It is possible to change this behaviour by adding a +cleanSession+ property set to +false+ in the properties passed to the client's +connect+ method.
+The clients created by the +mqttws31.js+ library also connects by default with the "Clean Session" flag set. It is possible to change this behaviour by adding a +cleanSession+ property set to +false+ in the properties passed to the client's +connect+ method.
 
 [source,js]
 ----

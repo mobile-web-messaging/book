@@ -14,7 +14,7 @@ Mosquitto also comes with two command lines tools to send and receive MQTT messa
 
 To install Mosquitto on your operating system, please consult its http://mosquitto.org/download/[documentation page] that contains instructions for various operation systems and package managers.
 
-=== Produce messages with +mosquitto_pub+
+=== Produce Messages with +mosquitto_pub+
 
 The +mosquitto_pub+ command-line tool can be used to produce MQTT messages.
 
@@ -98,7 +98,7 @@ Usage: mosquitto_pub [-h host] [-p port] [-q qos] [-r] {-f file | -l | -n | -m m
 See http://mosquitto.org/ for more information.
 ----
 
-=== Consume messages with +mosquitto_sub+
+=== Consume Messages with +mosquitto_sub+
 
 The +mosquitto_sub+ command-line tool can be used to consume MQTT messages.
 

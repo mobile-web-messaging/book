@@ -1,5 +1,5 @@
 [[ch_web_mqtt]]
-== Web Messaging With MQTT
+== Web Messaging with MQTT
 
 [role="lead"]
 In this chapter, we will write a Web application that sends and receives messages using the MQTT protocol over HTML5 Web Sockets.
@@ -16,14 +16,14 @@ All along the chapter, we will show all the code required to run the application
 The whole application code can be retrieved from the https://github.com/mobile-web-messaging/code[GitHub repository] in the +mqtt/web/+ directory.
 ====
 
-=== Eclipse Paho JavaScript client
+=== Eclipse Paho JavaScript Client
 
 In <<ch_mobile_mqtt_paho>>, we mentioned that http://iot.eclipse.org[iot.eclipse.org] provides a public MQTT broker that we use for our MQTT applications.
 Eclipse also provides a variety of MQTT clients for different languages and platforms. In particular, it has a JavaScript client for Web browser that uses HTML5 Web Sockets.
 
 The source code of the project is hosted in this  http://git.eclipse.org/c/paho/org.eclipse.paho.mqtt.javascript.git/[Git repository].
 
-=== Bootstrap the Motions Web Application
+=== Bootstrap the +motions.html+ Web Application
 
 As we explained in <<ch_introduction_mqtt_example>>, this Web application will display on a Web page the motion data sent by the devices using the +Motions+ iOS application written in the previous chapter.
 Additionnally, the Web application will also be able to send alert messages to the devices.
@@ -38,7 +38,7 @@ Note however that we use jQuery for convenience but the MQTT JavaScript client d
 Let's bootstrap the Web application by creating a +motions.html+ page.
 
 [[ex_web_mqtt_1]]
-.Template for the +locations.html+ Web application
+.Template for the +locations.html+ Web Application
 ====
 [source,html]
 ----
@@ -75,7 +75,7 @@ $(document).ready(function() {
 ----
 ====
 
-=== Create a MQTT Client with mqttws31.js
+=== Create a MQTT Client with +mqttws31.js+
 
 When the browser loads this page, we will create a MQTT client using the JavaScript library.
 

@@ -1,5 +1,5 @@
 [[ch_web_stomp]]
-== Web Messaging With STOMP
+== Web Messaging with STOMP
 
 [role="lead"]
 In this chapter, we will write a Web application that sends and receives messages using the STOMP protocol over HTML5 Web Sockets.
@@ -49,7 +49,7 @@ The significant difference between them is that a Web Socket is created by sendi
 Web Sockets support is not part of the STOMP protocol. The most used STOMP brokers such as ActiveMQ (that is used in this book), HornetQ, or RabbitMQ  support it but you will have to consult your broker documentation to check if it does.
 ====
 
-=== Bootstrap the Web Application
+=== Bootstrap the +locations.html+ Web Application
 
 As we explained in the first chapter, this Web application will be use to display the locations of the devices and send them text messages.
 
@@ -59,7 +59,7 @@ any server-side runtime as all the code will be executed inside the Web browser 
 Let's bootstrap the Web application by creating a +locations.html+ page.
 
 [[ex_web_stomp_1]]
-.Template for the +locations.html+ Web application
+.Template for the +locations.html+ Web Application
 ====
 [source,html]
 ----
@@ -114,7 +114,7 @@ $(document).ready(function() {
 ----
 ====
 
-=== Create a STOMP Client With stomp.js
+=== Create a Stomp Client with +stomp.js+
 
 The STOMP client will be used for both consuming messages (from the device' location destination) and producing them (to the device's text destination).
 
@@ -521,7 +521,7 @@ The message is sent when you click on the +Send+ button. Since the +Locations+ i
 .The +Locations+ iOS application received the text.
 image::images/Chapter030/ios_app_received_text.png[The Locations iOS application received the text]
 
-=== Disconnect from the STOMP broker
+=== Disconnect from the STOMP Broker
 
 The +locations.html+ connects to the STOMP broker when the user clicks on the +Connect+ button. The user can then disconnect from the broker by clicking on the +Disconnect+ button.
 

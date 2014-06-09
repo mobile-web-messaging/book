@@ -20,7 +20,7 @@ STOMP is also extensible and clients and brokers can support additional features
 In any case, the features (defined in the protocol or supported only by some brokers) rely on the structure of STOMP frames.
 
 [[ch_adv_stomp_frame]]
-=== Frame representation
+=== Frame Representation
 
 All data exchanged between a client and a broker is done using STOMP frames. STOMP is modelled on HTTP and its frames follows a similar structure.
 Each frame is composed of 3 elements:
@@ -170,7 +170,7 @@ If the +ack+ header is not set or if it set to +auto+, message acknowledgement i
           }];
 ----
 
-====  +stomp.js+ Example
+==== +stomp.js+ Example
 
 The +client+ can specify the type of acknowledgement by passing a dictionary with the +ack+ header as the last parameter of its +subscribe+ message.
 
@@ -569,7 +569,7 @@ Since the client specified that it will send no heartbeat (+0+ as the first valu
 The client desired to receive the broker heartbeat every minute (+60000+ as the second value of the +CONNECT+'s +heart-beat+ header). The broker replied that it can guarantee to send them at least every 30 seconds (second value of the +CONNECTED+'s +heart-beat+ header). In that case, the broker and the client agrees that the broker must send heartbeats every minute (the maximum between 1 minute and 30 seoncds). In other words, the broker _could_ send heartbeats every 30 seconds (as it guaranteed in the +CONNECTED+ frame) but the client will only check them every minute.
 
 [NOTE]
-.ActiveMQ heart-beating
+.ActiveMQ Heart-beating
 ====
 ActiveMQ supports heart-beating and mirrors the heartbeat values sent by the STOMP client. This lets the STOMP client be the sole decider of the heartbeating values.
 

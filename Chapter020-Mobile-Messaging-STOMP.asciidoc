@@ -18,7 +18,7 @@ STOMP is based on text and a few parsing rules which makes it simple to use from
 However, being text-based means that the protocol is not the most efficient to use as it requires more network bandwidth and memory than corresponding binary-based protocols.
 If your applications can work with these constraints, STOMP is a a good messaging protocol to use.
 
-.Install and configure a STOMP broker
+.Install and Configure a STOMP Broker
 [NOTE]
 ====
 Before using a STOMP client, a broker must be installed and
@@ -31,7 +31,7 @@ Once ActiveMQ is started, it will accept STOMP connections on the +61613+ port.
 --
 
 [[ch_mobile_stomp]]
-== Mobile Messaging With STOMP
+== Mobile Messaging with STOMP
 
 [role="lead"]
 In this chapter, we will write our first messaging client: an native application running on an iPhone.
@@ -57,7 +57,7 @@ To use STOMP on iOS, we will use the +StompKit+ Objective-C library that impleme
 
 The source code of this library project is hosted on https://github.com/mobile-web-messaging/StompKit/[GitHub].
 
-=== Create the +Locations+ Project With Xcode
+=== Create the +Locations+ Project with Xcode
 
 We will use https://developer.apple.com/xcode/[Xcode] to create the +Locations+ iOS application.
 
@@ -144,7 +144,7 @@ image::images/Chapter020/blank_view.png["Locations Blank View"]
 Nothing is displayed but it confirms that the project and its dependencies are  successfully compiled and launched.
 
 [[ch_mobile_stomp_deviceID]]
-=== Identify The Device
+=== Identify the Device
 
 The iPhone device is will broadcast its position. The first thing to do is identify the device. To keep the example simple, we will use a _universal unique identifier_ (or UUID) as the device identifier and display it in the view.
 
@@ -424,7 +424,7 @@ If the user taps +OK+, the +locationManager+ will start update the device locati
 image::images/Chapter020/current_position.png["Display the current position of the device"]
 
 [[ch_mobile_stomp_location_simulator]]
-==== Simulate a Location With iOS Simulator
+==== Simulate a Location with iOS Simulator
 
 If you are running the application on an iPhone device, the real geolocation data from the device will be used.
 If you run the application using the +iOS Simulator+, you can simulate different location in the +Debug > Location+ menu. For example, the +Freeway Drive+ will simulate a car driving on a freeway between Palo Alto and San Francisco.
@@ -433,7 +433,7 @@ Whether you are running the application on a device or in the simulator, you sho
 
 Now that the +Locations+ application is handling the device geolocation data, the next step is to send them using STOMP.
 
-=== Create a STOMP Client With +StompKit+
+=== Create a STOMP Client with +StompKit+
 
 Before sending any messages, we must first import the +StompKit+ library that we add to the +Podfile+ file at the beginning of this chapter.
 
@@ -538,7 +538,7 @@ We will call this +connect+ method when the view appears in +viewWillAppear:+.
 ----
 ====
 
-=== Disconnect From a STOMP Broker
+=== Disconnect from a STOMP Broker
 
 The +STOMPClient+ disconnects from the broker using its +disconnect:+ method. This method takes a block that will be called when the client is disconnected from the server. The block takes a +NSError+ parameter that is set if there is an error during the disconnection operation.
 
@@ -770,7 +770,7 @@ We will confirm it at three different stages:
 . Use ActiveMQ  administration console to check that it effectively handled the sent messages
 . Write the simplest STOMP consumer that can receive these messages
 
-==== Display +StompKit+ debug log
+==== Display +StompKit+ Debug Log
 
 Every time the StompKit library sends a message to a STOMP broker, it logs the STOMP frame that is sent.
 
@@ -815,7 +815,7 @@ image::images/Chapter020/activemq_admin_console_topic_enqueue_count.png["Check t
 
 Another interesting attribute is +Dequeue count+. It corresponds to the messages removed from the topic and sent to consumers. In our case, it stays at +0+ because there is no consumer that are subscribed to this destination.
 
-==== A Simple STOMP Consumer
+==== a Simple STOMP Consumer
 
 When I presented STOMP, I wrote that the protocol is so simple that a +telnet+ client _is_ a STOMP client.
 
@@ -823,7 +823,7 @@ Let's prove that by writing the simplest STOMP client that will consume the mess
 
 We need to open a +telnet+ client to connect to the broker host on the +61613+ port. Since I am on the same machine than the broker, I will simply connect to +localhost+:
 
-.Connection with a telnet client
+.Connection with a +telnet+ Client
 ====
 ++++
 <screen>
@@ -837,7 +837,7 @@ Escape character is '^]'.
 
 Once the client is connected, we must connect to the broker to open a STOMP connection (as we did in the application using +STOMPClient+'s +connectWithHeaders:completionHandler:+ method).
 
-.Connect to a STOMP broker
+.Connect to a STOMP Broker
 ====
 ++++
 <screen>
@@ -860,7 +860,7 @@ Note also that there is a blank line between the +CONNECT+ line and the NULL oct
 Once you type +ctrl + @+, the messaging broker will process the +CONNECT+ frame
 and reply with a +CONNECTED+ frame:
 
-.Receive a connection confirmation
+.Receive a Connection Confirmation
 ====
 ++++
 <screen>
@@ -1037,7 +1037,7 @@ To consume messages, a STOMP client must:
 
 
 [[ch_mobile_stomp_subscribe]]
-==== Subscribe to a STOMP destination
+==== Subscribe to a STOMP Destination
 
 We already took care of step (1) by calling +STOMPClient+'s +connectWithHeaders:completionHandler:+ in +MWMViewController+'s +connect+ method.
 
@@ -1111,7 +1111,7 @@ We need to call this +subscribe+ method as soon as the client is connected to th
 }
 ----
 
-=== Unsubscribe From the Destination
+=== Unsubscribe from the Destination
 
 The application will consume messages from the destination as long as it remains connected to the STOMP broker.
 
