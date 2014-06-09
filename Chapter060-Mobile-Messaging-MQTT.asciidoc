@@ -7,7 +7,7 @@ MQTT is a simple and lightweight messaging protocol that only supports the _Publ
 
 This book covers the latest released version of the protocol at the time of this writing: MQTT 3.1 <<mqttv3.1>>.
 
-Its most interesting features are its compactness (reducing bandwidth and memory usage) and its small set of features (making it simple to implement on various platforms)
+Its most interesting features are its compactness (reducing bandwidth and memory usage) and its small set of features (making it available on many platforms).
 
 MQTT is a simple protocol well suited for a limited set of applications that can be modeled using Publish/Subscribe. However, MQTT is also lacking flexibility and you have to consider carefully if it meets your requirements.
 
@@ -15,7 +15,7 @@ One missing feature of MQTT is the lack of headers in the message representation
 
 MQTT defines a fixed set of headers for its command messages (used to connect to the broker, send a message, create a subscription, etc.) but there is no general notions of a header that the application or the broker could add to the messages.
 
-This significantely reduces the usefulness of the messages that are delivered by MQTT. As a simple example, the absence of headers mean that there is no way to know what type of data to expect from the payload. HTTP and STOMP defines a +content-type+ header that can be queried to know the MIME type of the payload and extract it accordingly. MQTT does not allow this and the consumer must have _a priori_ knowledge of the payload type for a message before being able to read it.
+This impacts the usefulness of the messages that are delivered by MQTT. As a simple example, the absence of headers mean that there is no way to know what type of data to expect from the payload. HTTP and STOMP defines a +content-type+ header that can be queried to know the MIME type of the payload and extract it accordingly. MQTT does not allow this and the consumer must have _a priori_ knowledge of the payload type for a message before being able to read it.
 
 The absence of headers also imply tha the MQTT broker can not provide additional features not covered by the protocol in a non-intrusive way. As we saw in <<ch_beyond_stomp>>, STOMP broker can use headers to priority, expiration, and other features just by adding headers to the messages.
 
@@ -24,10 +24,11 @@ If you plan to use MQTT in your applications, you should consider carefully whet
 If you require features that are not provided by the protocol (or another messaging model than _Publish/Subscribe_), you may lose all the benefits of using this simple protocol and write brittle code that puts all the complexity in your applications instead of relying on the broker's set of features.
 But if your requirements are fullfilled by MQTT features (as is the case for a lot of applications), you will be all set to use messaging in your applications.
 
+[[ch_mobile_mqtt_paho]]
 .Eclipse public MQTT Server
 [NOTE]
 ====
-For the MQTT +Motions+ application, we will not run a MQTT broker on our local network but use instead a public MQTT broker hosted by http://iot.eclipse.org/sandbox.html#mqtt[iot.eclipse.org], the portal for Internet of Things development of the Eclipse foundation. This public broker is running using the Mosquitto project (the same codebase underneath MQTT) and any MQTT client can connect to it. While it is not appropriate to use it for production (there is no uptime guarantee for it), it shows that it is possible to use MQTT on Internet.
+For the MQTT +Motions+ application, we will not run a MQTT broker on our local network but use instead a public MQTT broker hosted by http://iot.eclipse.org/sandbox.html#mqtt[iot.eclipse.org], the portal for Internet of Things development of the Eclipse foundation. This public broker is running using the Mosquitto project (the same codebase underneath MQTTKit) and any MQTT client can connect to it. While it is not appropriate to use it for production (there is no uptime guarantee for it), it shows that it is possible to use MQTT on Internet.
 
 MQTT clients can connect to it using the +iot.eclipse.org+ hostname on the port +1883+ (that is reserved for MQTT).
 ====
@@ -39,7 +40,7 @@ MQTT clients can connect to it using the +iot.eclipse.org+ hostname on the port 
 [role="lead"]
 In this chapter, We will write an iOS application using the +MQTTKit+ library to send and receive messages using the MQTT protocol.
 
-In <<ch_introduction_mqtt_example>>, we described the +Motions+ application. In this chapter, we will write the iOS application that broadcasts the device motion data and receives alert message.
+In <<ch_introduction_mqtt_example>>, we described the +Motions+ application. In this chapter, we will write the iOS application that broadcasts the device motion data and receives alert messages.
 
 [[img_mobile_mqtt_1]]
 .Diagram of the +Motions+ iOS application
@@ -145,7 +146,7 @@ Click on **`Main.storyboard`** to open it. From the +Object+ library, drag a +La
 .Add the Device ID label.
 image::images/Chapter060/deviceID_label.png[Add the Device ID label]
 
-We will again change its +Font+ to +System 13.0+ and its +Alignment+ to centered to fit the screen.
+We will again change its +Font+ to +System 13.0+ and its +Alignment+ to +centered+ to fit the screen.
 
 This label will be connected to a +deviceIDLabel+ outlet property defined in the +MWMViewController+ private interface in +MWMViewController.m+ file.
 We also add a +deviceID+ string to store the device identifier.
@@ -349,7 +350,7 @@ We can use the +deviceID+ as its client identifier.
 === Connect to a MQTT Broker
 
 A +MQTTKit+ client will connect to the MQTT Broker when its +connectToHost:completionHandler:+ method is called.
-Since +MQTTKit+ is event-driven, the client will be *effectively* connected when its completionHandler block is called and the return code is +MQTTConnectionReturnCode+ is equal to +ConnectionAccepted+.
+Since +MQTTKit+ is event-driven, the client will be _effectively_ connected when its completionHandler block is called and the return code is +MQTTConnectionReturnCode+ is equal to +ConnectionAccepted+.
 
 You can not assume that the client is connected when the +connectToHost:completionHandler:+ method returns. Any actions that requires the client to be connected must happen inside the +completionHandler+ block.
 
@@ -438,7 +439,7 @@ The +MQTTKit+ library provides two methods to send messages:
 
 In the +Motions+ iOS application, we send a message with a binary payload composed of three 64-bit floats for the +pitch+, +roll+, and +yaw+ values contained in a +CMAttitude+ object. We will build the payload's +NSData+ by converting the double values to a platform-independent format using the +CFConvertDoubleHostToSwapped+ function.
 
-The other three parametes to the +publish...+ methods are the same for both the binary and text payload version.
+The other three parameters to the +publish...+ methods are the same for both the binary and text payload version.
 
 The +topic+ parameter is the name of the topic to send the message.
 According to <<ch_introduction_mqtt_example_topology>>, the name of the topic is +/mwm/XXX/motion+ where XXX is the device identifier.
@@ -476,7 +477,7 @@ The final parameter of the +publish...+ methods is a boolean to specify whether 
 
 If this flag is set on the message, the broker will deliver the message to its subscribers and keep holding the message. If a new consumer subscribes to this topic, the broker will deliver the retained message to it. This is useful as the new subscriber will not have to wait for a publisher to send a message to receive new data. The retained message contains the _Last Known Good_ value.
 
-If our case, we will publish messages with _retain_ set to +YES+. If consumers subscribes to the device motion topic *after* the device stops updated its motion values, they will still be able to use the last know device motion value.
+If our case, we will publish messages with +retain+ set to +YES+. If consumers subscribes to the device motion topic _after_ the device stops updated its motion values, they will still be able to use the last know device motion value.
 This example is a bit of a stretch. A more interesting example would be an application broadcasting its location (similar to the +Locations+ application). Using retained message would allow the consumers to know the last know position of the device before it stops broadcasting its position.
 
 To sum up, the +Motions+ application will send a message:
@@ -502,7 +503,7 @@ We will encapsulate this code in a +send:+ method taking a +CMAttitude+ paramete
     [self.client publishData:data
                      toTopic:topic
                      withQos:AtMostOnce
-                      retain:NO
+                      retain:YES
            completionHandler:nil];
 }
 ----
@@ -675,7 +676,7 @@ We will subscribe to the alert topic as soon as the +client+ is connected to the
 
 To unsubscribe from a topic and stop receiving messages from it, we will call the +unsubscribe:withCompletionHandler:+ method of the +client+ where the first parameter is the topic to unsubscribe from (the alert topic in our case).
 The second parameter is a completion handler that is called back when the client has been acknowledged by the server that it is effectively unsubscribed.
-We don't have any need for this information in our case so we just pass +nil+ as the handler.
+We do not have any need for this information so we just pass +nil+ as the handler.
 
 [source,objc]
 ----

@@ -15,7 +15,7 @@ STOMP does not define the semantic of the destination, they depend on the STOMP 
 There are some conventions shared by STOMP brokers (for example, prefixing a destination by +/queue/+ to use a queue and by +/topic/+ to use a topic) but you need to consult your broker documentation to check which messaging model are supported (including _Point-to-Point_ and _Publish/Subscribe_) and how to use them.
 
 STOMP is based on text and a few parsing rules which makes it simple to use from any platform able to read and write text and open a network connection.
-However, being text-based means that the protocol is not the most efficient to use as it will takes less space on the network and in memory that corresponding binary-based protocols.
+However, being text-based means that the protocol is not the most efficient to use as it requires more network bandwidth and memory than corresponding binary-based protocols.
 If your applications can work with these constraints, STOMP is a a good messaging protocol to use.
 
 .Install and configure a STOMP broker
@@ -164,7 +164,7 @@ I will not describe into details how to set up the layout constraints for the gr
 However the example code in the https://github.com/mobile-web-messaging/code[GitHib repository] is constrained correctly.
 ====
 
-The UUID that we will generate is quite long so we will change its appearance by setting its +Font+ to +System 13.0+ and its +Alignment+ to centered to fit the screen.
+The UUID that we will generate is quite long so we will change its appearance by setting its +Font+ to +System 13.0+ and its +Alignment+ to +centered+ to fit the screen.
 
 [[img_mobile_stomp_7]]
 .Change the appearance of the device ID label.
@@ -172,7 +172,7 @@ image::images/Chapter020/deviceID_label_options.png[Change the appearance of the
 
 We will connect this label to the +MWMViewController+ object.
 
-Add the necessary outlet property in +MWMViewController.m+ and a +NSString+ to hold the identifier.
+Add the necessary outlet property in the +MWMViewController+ private interface in MWMViewController.m+ and a +NSString+ to hold the identifier.
 
 [source,objc]
 ----
@@ -232,7 +232,7 @@ Now that we have the identifier of the device, the next step is to retrieve its 
 
 [NOTE]
 ====
-The next sections deal with setting up the framework and writing code to retrieve the GPS data from the device and display them. This is unrelated to messaging and you can skip them if you only want to read how to send and receive messages. Still, we thought the messaging code would be more meaningful if it was using real data instead of generating random dummy data. By using GPS data instead, we will be able to build a mobile app that display these data on a map in the next chapter.
+The next sections deal with setting up the framework and writing code to retrieve the GPS data from the device and display them. This is unrelated to messaging and you can skip them if you only want to read how to send and receive messages. Still, we thought the messaging code would be more meaningful if it was using real data instead of generating random dummy data. By using GPS data instead, we will be able to build a mobile application that display these data on a map in the next chapter.
 ====
 
 [[ch_mobile_stomp_display_position]]
@@ -252,7 +252,7 @@ We will change its appearance to match the +deviceID+ label by setting its +Font
 .Change the appearance of the current position label.
 image::images/Chapter020/currentPosition_label_options.png[Change the current position label appearance]
 
-Open the +MWMViewController.m+ file and add a property to the +MWMViewController+ _interface.
+Open the +MWMViewController.m+ file and add a property to the +MWMViewController+ private interface.
 
 [source,objc]
 ----
@@ -279,7 +279,7 @@ image::images/Chapter020/CoreLocation_framework.png["Add the CoreLocation framew
 
 We can now use the +CoreLocation+ framework by importing +<CoreLocation/CoreLocation.h>+ at the top of the +MWMViewController.m+ file.
 
-We will make the +MWMViewController+ interface conform to the +CLLocationManagerDelegate+ protocol and declare a +CLLocationManager+ property named +locationManager+.
+We will make the +MWMViewController+ private interface conform to the +CLLocationManagerDelegate+ protocol and declare a +CLLocationManager+ property named +locationManager+.
 
 [source,objc]
 ----
@@ -292,7 +292,7 @@ interface MWMViewController () <CLLocationManagerDelegate>
 @end
 ----
 
-We will define two methods to start and stop updating the current location. When the apps starts updating the current location in +startUpdatingCurrentLocation+, it creates the +locationManager+ if it's not already created and designates the controller as the locationManager's +delegate+. We will also Since the geolocation data will be used to follow the device as it moves, we set the locationManagere's +desiredAccuracy+ to +kCLLocationAccuracyBestForNavigation+.
+We will define two methods to start and stop updating the current location. When the apps starts updating the current location in +startUpdatingCurrentLocation+, it creates the +locationManager+ if it is not already created and designates the controller as the locationManager's +delegate+. We will also Since the geolocation data will be used to follow the device as it moves, we set the locationManagere's +desiredAccuracy+ to +kCLLocationAccuracyBestForNavigation+.
 
 Finally, the application will start listening for the device location by calling locationManager's +startUpdatingLocation+ method.
 
@@ -339,7 +339,7 @@ To stop receiving the device location in +stopUpdatingCurrentLocation+, we simpl
 ====
 
 The location of the device will be received by the designated +CLLocationManagerDelegate+ (in our case, the +MWMViewController+ implementation itself). We need to implement the +locationManager:didUpdateToLocation:fromLocation:+ method and extract the
-coordinates from the +newLocation+'s +coordinate.
+coordinates from the +newLocation+'s +coordinate+.
 
 Once we have them, we can update the +currentPositionLabel+'s +text+ to display them.
 
@@ -363,7 +363,7 @@ Once we have them, we can update the +currentPositionLabel+'s +text+ to display 
 ----
 ====
 
-If there are any problem with the locationManager, we want to warn the user about it and stop updating the location. To do so, we implement the +CLLocationManagerDelegate+'s +locationManager:didFailWithError:+ method to display a warning to the user:
+If there is any problem with the +locationManager+, we want to warn the user about it and stop updating the location. To do so, we implement the +CLLocationManagerDelegate+'s +locationManager:didFailWithError:+ method to display a warning to the user:
 
 ====
 [source,objc]
@@ -384,7 +384,7 @@ If there are any problem with the locationManager, we want to warn the user abou
 ----
 ====
 
-Now that the code related to +CoreLocation+ is in place, we just need to callthe +startUpdatingCurrentLocation+ method when the view will appear.
+Now that the code related to +CoreLocation+ is in place, we just need to call the +startUpdatingCurrentLocation+ method when the view will appear.
 
 ====
 [source,objc]
@@ -399,7 +399,7 @@ Now that the code related to +CoreLocation+ is in place, we just need to callthe
 ----
 ====
 
-We also need to stop updating the location when the view disappears in +viewDidDisappear:+
+We also need to stop updating the location when the view disappears in +viewDidDisappear:+.
 
 ====
 [source,objc]
@@ -411,7 +411,7 @@ We also need to stop updating the location when the view disappears in +viewDidD
 ----
 ====
 
-The first time the app asks the +locationManager+ to start updating the device location, the user will see an alert view accessing him or her the permission to access the device location.
+The first time the application asks the +locationManager+ to start updating the device location, the user will see an alert view asking his or her permission to access the device location.
 
 [[img_mobile_stomp_14]]
 .Permission to use the current location.
@@ -604,8 +604,8 @@ ActiveMQ convention is to prefix a STOMP destination by +/topic/+ to use a Publi
 Since we designed our application to use a topic for the +device.XXX.location+, we must preprend it with +/topic/+
 ====
 
-As we described in <<ch_introduction_stomp_example_message>>, the message representation is a JSON string that contains the location coordinates, the timestamp and the truck ID.
-We build a NSDictionary from these data and serialize it as a JSON string:
+As we described in <<ch_introduction_stomp_example_message>>, the message representation is a JSON string that contains the location coordinates, the timestamp and the device ID.
+We build a +NSDictionary+ from these data and serialize it as a JSON string:
 
 [source,objc]
 ----
@@ -630,7 +630,8 @@ NSDictionary *headers = @{
 ----
 
 We now have the +destination+, +headers+, and +body+ to send in the message.
-Last step is to use the +client+'s +sendTo:headers:body+ method to send it:
+Last step is to use the +client+'s +sendTo:headers:body+ method to send it.
+
 [source,objc]
 ----
 // send the message
@@ -639,7 +640,7 @@ Last step is to use the +client+'s +sendTo:headers:body+ method to send it:
                body:body];
 ----
 
-We will encapsulate all these steps in a +sendLocation:+ method that takes a +CLLocation+ object:
+We will encapsulate all these steps in a +sendLocation:+ method that takes a +CLLocation+ parameter.
 
 ====
 [source,objc]
@@ -703,7 +704,7 @@ Next step is to call this method every time we receive an updated location in th
 ----
 ====
 
-Messages will be sent every time the device location changes. This is a bit unconvenient when developing this application as I don't want to move around my home to change my location and send a message.
+Messages will be sent every time the device location changes. This is a bit unconvenient when developing this application as I do not want to move around my home whenever I need to update my location and send a message.
 
 To simplify development, we will add code to send the last known location when the user shakes the device.
 
@@ -872,12 +873,12 @@ version:1.2
 ++++
 ====
 
-The STOMP connection is now established and the telnet client can now exchange messages with the broker. We are only interested to consume messages sent by the application on the truck's position topic.
-The Truck ID is displayed on the application screen. You will have to adapt the command to use your own truck ID to receive its message.
+The STOMP connection is now established and the telnet client can now exchange messages with the broker. We are only interested to consume messages sent by the application on the device's location topic.
+The device ID is displayed on the application screen. You will have to adapt the command to use your own device ID to receive its message.
 
 ----
 SUBSCRIBE
-destination:/topic/device.2262EC25-E9FD-4578-BADE-4E113DE45934.locatio
+destination:/topic/device.2262EC25-E9FD-4578-BADE-4E113DE45934.location
 
 ^@
 ----
@@ -1027,7 +1028,7 @@ With these methods implemented, the table will displayed all the texts that are 
 
 === Receive STOMP Messages
 
-Now that we are ready to display the texts in the table, next step is to subscribe to the device's text destination to consume STOMP messages containing the texts and store them in the +texts+ array.
+Now that we are ready to display the table, next step is to subscribe to the device's text destination to consume STOMP messages and store their text payload in the +texts+ array.
 
 To consume messages, a STOMP client must:
 
@@ -1046,7 +1047,7 @@ This method takes 3 parameters:
 
 * the +destination+ that the client wants to consume from. In our case it is the destination +/queue/device.XXX.text+ (we prepended the destination with the +/queue/+ prefix according to ActiveMQ naming convention).
 * a dictionary of +headers+ to pass additional metadata to the connection process. Since we do not have any such header for the time being, we will pass a empty dictionary
-* a +STOMPMessageHandler+ block with a +STOMPMessage+ parameter that will be called every time the broker sends a messages to the client to consume it. In our case, we will have to create a dictionary from the JSON string contained in the message body and add the order to the +texts+ array.
+* a +STOMPMessageHandler+ block with a +STOMPMessage+ parameter that will be called every time the broker sends a messages to the client to consume it. In our case, we just have to get the +NSString+ text from the message +body+ property and add it to the +texts+ array.
 
 We will add a method named +subscribe+ to the +MWMViewController+ implementation:
 
@@ -1085,7 +1086,7 @@ We declare this object in the +MWMViewController+'s implementation.
 STOMPSubscription *subscription;
 ----
 
-When should we call this +subscribe+ method? As soon as we are connected to the STOMP broker. We need to call it in the +connect+ method from the +completionHandler+ block that will be called when the client is _successfully_ connected to the STOMP broker:
+We need to call this +subscribe+ method as soon as the client is connected to the STOMP broker. The correct location is inside the +completionHandler+ block of the +connect+ method that will be called when the client is _successfully_ connected to the STOMP broker:
 
 [source,objc]
 ----
@@ -1216,6 +1217,6 @@ To consume a message, the application must
 We use two different types of message payloads:
 
 * a JSON payload by using its string representation for the message body and specifying +application/json; charset=utf-8+ in its +content-type+ header
-* a simple plain text payload using a string in its payload without any +content-type+ header
+* a simple plain text payload without any +content-type+ header
 
 Sending and consuming messages are only possible once the client is _successfully_ connected to the STOMP broker. Due to the event-driven design of StompKit, this is the case when the completionHandler block is executed without an error in +connectWithHeaders:completionHandler:+.

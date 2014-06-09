@@ -60,11 +60,11 @@ It is also possible to add other headers when sending a frame as long as it does
 
 An application may use headers instead of the message's payload to transmit data. The fundamental difference between headers and payload is that  headers can be read (and modified) by the STOMP brokers. Payload is treated a  a black box and the broker never reads or modifies it.
 
-In practice, headers are most used to specifiy additional features or constraints to the message processing.
+In practice, headers are most often used to specify additional features or constraints to the message processing.
 
 === Authentication
 
-In the two previous chapters, the STOMP clients are connected to the broker *anonymously*. We do not pass any user credentials that the broker could use to authenticate the user and check whether he or she could send and/or receive messages.
+In the two previous chapters, the STOMP clients are connected to the broker _anonymously_. We do not pass any user credentials that the broker could use to authenticate the user and check whether he or she could send and/or receive messages.
 
 If the STOMP broker is configured to accept secured connections, the client needs to pass +login+ and +passcode+ parameters when it connects to the STOMP broker.
 
@@ -124,11 +124,11 @@ function connect(url) {
 
 Message acknowledgement is a feature available to STOMP _consumers_.
 
-When the broker delivers a message to a consumer, there is an change of responsibility between the broker and the consumer to determine which is the _owner_ of the message. The consumer becomes responsible of the message by _ackonwledging_ the message.
+When the broker delivers a message to a consumer, there is a transfer of responsibility between the broker and the consumer to determine which is the _owner_ of the message. The consumer becomes responsible of the message by _acknowledging_ the message.
 
 By default, the STOMP broker will consider that the consumer automatically acknowledge the message when it is delivered to the consumer.
 
-However there are cases where the consumer may prefer to acknowledge explicity the message. It leaves it a window of opportunity to determine whether it can handle the message or not.
+However there are cases where the consumer may prefer to acknowledge explicity the message. It leaves a window of opportunity to determine whether it can handle the message or not.
 For example, the client needs to write the message payload in a data store.
 There may be issues with opening a connection to the data store and the client could chose to acknowledge the message only after having successfully written its body to the data store. In case of failure, it will instead _nack_ the message (explicitly refuse to take ownership of it). When the STOMP broker is informed of this negatively acknowledgement, it may then decide to deliver the message to another consumer subscribed to the destination or try again some time later depending on its configuration.
 
@@ -141,14 +141,14 @@ STOMP supports 3 types of acknowledgements:
 
 If the client does not specify any type of acknowledgement or use +default+, it does not need to send any acknowledgement, the STOMP broker will consider the message acknowledged as soon as it is delivered to the client.
 
-If +client+ or +client-individual+ is used, the consumer must send acknowledgements to the server with the +message-id+ that is acknowledged. The difference between +client+ and +client-individual+ is that +client+ will acknowledged the message *and all other messages delivered to the consumer before*. Using +client-individual+ will only acknowledge the message and no other messages. The consumer acknowledge a message by sending a +ACK+ frame to the STOMP broker.
+If +client+ or +client-individual+ is used, the consumer must send acknowledgements to the server with the +message-id+ of the message that is acknowledged. The difference between +client+ and +client-individual+ is that +client+ will acknowledged the message _and all other messages delivered to the consumer before_. Using +client-individual+ will only acknowledge the message and no other messages. The consumer acknowledge a message by sending a +ACK+ frame to the STOMP broker.
 
 If +client+ and +client-individual+ is used, the consumer may explicitly refuse to handle the message by sending a +NACK+ frame, a negative acknowledgement.
 
 ==== +StompKit+ Example
 
 The message acknowledgement is specified when the +STOMPClient+ subscribes to a destination by calling its +subscribeTo:headers:messageHandler:+ method.
-To specify a +client+ or +client-individual+ acknowledgement, you must set a +ack+ header. +StompKit.h+ defines constants to represent the header name, +kHeaderAck+ and its accepted values, +kAckAuto+, +kAckClient+, and +kAckClientIndividual+).
+To specify a +client+ or +client-individual+ acknowledgement, you must set a +ack+ header. +StompKit.h+ defines constants to represent the header name, +kHeaderAck+ and its accepted values, +kAckAuto+, +kAckClient+, and +kAckClientIndividual+.
 
 The +STOMPMessage+ parameter of the +messageHandler+ has two methods +ack+ and +nack+ to respectively acknowledge or nack the message.
 
@@ -194,12 +194,12 @@ client.subscribe(destination,
 
 There are many use cases where it is not necessary to use explicit acknowledgement.
 
-For example, in the +Locations+ Web application, we do not need to acknowledge every message that we receive from the devices with their GPS position. At worst, there may be a problem to display the position but we know there are other messages that will come later to update the device's position.
+For example, in the +locations.html+ Web application, we do not need to acknowledge every message that we receive from the devices with their GPS position. At worst, there may be a problem to display the position but we know there are other messages that will come later to update the device's position.
 
 Besides, acknowledging every message would have a performance cost. Sending the acknowledgement back to the broker would involve an additional network trip for every message.
 
-The +Locations+ iOS application is also consuming messages from the truck's text queue.
-These messages may be more important to acknowledge them explicitly. We could enhance the application by letting the user confirms that it has read the message's text and the message would be acknowledged after this confirmation only.
+The +Locations+ iOS application is also consuming messages from the device's text queue.
+These messages may be more important to acknowledge explicitly. We could enhance the application by letting the user confirm that it has read the message's text and the message would be acknowledged after this confirmation only.
 
 We could also let the user reject it by negatively acknowledged the message.
 In that case, these _nacked_ messages would be handled back by the STOMP broker. Depending on the broker you use, it may provide additional features to handle these messages. A common feature is to use a "dead letter queue" where messages that are nacked multiple times from a destination are sent to a dead letter queue. An administrator can then inspect this dead letter queue to determine what to do with these messages. For example, it can send them to another device, send alerts about the device that rejected them, etc.
@@ -337,7 +337,7 @@ There are two places where we must handle reconnection:
 1. during the initial connection (for example if the broker is not up during the initial reconnect, we will continue to attempt to connect to it until it is up again).
 2. when we receive an error from the +STOMPClient+'s +errorHandler+ property.
 
-In both case, we will attemp to reconnect by disconnecting first (in the eventual case where we were already connected), waiting for 10 seconds and connecting again. This code can be encapsulated in a +reconnect:+ method of the +MWMViewController+ implementation.
+In both case, we will attempt to reconnect by disconnecting first (in the eventual case where the client is already connected), waiting for 10 seconds and connecting again. This code can be encapsulated in a +reconnect:+ method of the +MWMViewController+ implementation.
 
 [source,objc]
 ----
@@ -428,7 +428,7 @@ function connect(url) {
 
 [WARNING]
 ====
-A Web socket can be opened only once. If a problem occurs and the socket is closed, it can no longer be used. This implies that we can not just call the +client+'s +connect+ method again as its Web socket is no longer usable. Instead we must create a *new* +client+ which will open a new Web socket.
+A Web socket can be opened only once. If a problem occurs and the socket is closed, it can no longer be used. This implies that we can not just call the +client+'s +connect+ method again as its Web socket is no longer usable. Instead we must create a _new_ +client+ which will open a new Web socket.
 ====
 
 Whenever an error occurs (for example if the network connection is broken or the STOMP broker becomes temporarily unavailable), the +errorCallback+ will be called and the client will try to reconnect.
@@ -515,7 +515,7 @@ client.subscribe(destination, function(message) {
 }, {receipt: receipt});
 ----
 
-If we reload the +Locations+ web application, the browser console will display a log when the receipt confirming the subscription is handled by the client.
+If we reload the +locations.html+ web application, the browser console will display a log when the receipt confirming the subscription is handled by the client.
 
 All +stomp.js+ method that corresponds to STOMP frames accept a +headers+ parameter that can be used to receive +RECEIPT+ frames from the broker.
 

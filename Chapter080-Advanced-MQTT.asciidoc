@@ -72,7 +72,7 @@ client.connect({onSuccess: function(frame) {
 
 === Error Handling
 
-MQTT provides does not provide error handling. A MQTT broker has no possible way to inform a client that an error occured. The only action that the MQTT broker can take is to close the underlying network connection so that the client is no longer connected to the broker.
+The MQTT protocol does not specify any error handling. A MQTT broker has no possible way to inform a client that an error occured. The only action that the MQTT broker can take is to close the underlying network connection so that the client is no longer connected to the broker.
 
 MQTT libraries provides callback or handlers for these cases so that they can act when such an error occurs.
 
@@ -184,7 +184,7 @@ One strength of messaging protocols is that producers and consumers are loosely 
 However there are cases where an application may require more information on the liveness of messaging clients.
 
 Let's take the example of the +Motions+ application that broadcasts the device position when it moves. A consumer of the device position topic will consume these messages.
-However, how could the consumer distinguish between receiving the messages because the device does not move or because the device is offline and has stopped broadcasting its position.
+However, how could the consumer distinguish between receiving the messages because the device does not move or because the device is offline and has stopped broadcasting its position?
 
 If the device is offline, the consumer may want to be notified to discard the device position from the map or show it differently from other _live_ devices.
 
@@ -311,7 +311,7 @@ client.connect({onSuccess: function(frame) {
 ----
 
 Often, applications may not need to be notified of the last will of another MQTT client. However, we may still want to monitor the unexpected disconnection to be informed of the liveness of the whole system.
-If all MQTT clients have configured their last will, we can have a crude monitoring application by subscribing to all their last will topics.
+If all MQTT clients have configured their last will, we can have a crude monitoring application by subscribing to their last will topics.
 
 [source,bash]
 ----
@@ -328,7 +328,7 @@ We have subscribed to the wildcard topic +/mwm/lastWill/#+ to receive messages f
 
 === Clean Session
 
-When a MQTT client connects to the broker, it can specify whether the broker must store its state after it disconnects and until it reconnects. The client state that is store includes its subscriptions and any in-flight with a QoS greater or equals to +1+. Messages with a QoS of +0+ (+At Most Once+) are not stored since they are delivered on a best effort basis.
+When a MQTT client connects to the broker, it can specify whether the broker must store its state after it disconnects and until it reconnects. The client state that is store includes its subscriptions and any in-flight message with a QoS greater or equals to +1+. Messages with a QoS of +0+ (+At Most Once+) are not stored since they are delivered on a best effort basis.
 
 The client uses a "Clean Session" flag for this. If the flag is set, the broker will not store any state and the connection opened by the client will be _clean_. If the flag is not set, the broker will store the client state.
 

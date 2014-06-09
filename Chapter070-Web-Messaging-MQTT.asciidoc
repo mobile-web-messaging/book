@@ -37,6 +37,9 @@ Note however that we use jQuery for convenience but the MQTT JavaScript client d
 
 Let's bootstrap the Web application by creating a +motions.html+ page.
 
+[[ex_web_mqtt_1]]
+.Template for the +locations.html+ Web application
+====
 [source,html]
 ----
 <!DOCTYPE html>
@@ -70,6 +73,7 @@ $(document).ready(function() {
 </body>
 </html>
 ----
+====
 
 === Create a MQTT Client with mqttws31.js
 
@@ -201,7 +205,7 @@ client.onMessageArrived = function(message) {
 The +updateSparklines()+ method will store the motions values in the +devices+ object that was created when the page is loaded.
 It will create the HTML elements to display the data and use jQuery Sparklines to display them in a graphic.
 
-The +devices+ object is a map whose keys will the +deviceID+s of the device that are sending the motion data. The values will be composed of three arrays to store the received value for +pitch+, +roll+, +yaw+. We will only keep the 50 most recent values.
+The +devices+ object is a map whose keys will the +deviceID+ of the devices that are sending the motion data. The values will be composed of three arrays to store the received value for +pitch+, +roll+, +yaw+. We will only keep the 50 most recent values.
 
 We will create three separate sparklines for:
 
@@ -283,7 +287,7 @@ image::images/Chapter070/motions_web_app.png["Two +Motions+ app are publishing t
 
 === Send MQTT Messages
 
-We have now create a Web application that receives MQTT messages.
+We now have a Web application that receives MQTT messages.
 
 The other feature of this Web application is to _send_ a MQTT message to an alert topic so that the device that subscribes to this topic will change its background color using the message payload.
 
@@ -315,10 +319,10 @@ image::images/Chapter070/app_red.png["The +Motions+ application background becom
 
 In this chapter, we learn to use MQTT over Web Socket to send and receive MQTT messages from a Web application.
 
-We dealts with two type of message payload:
+We use two different types of message payload:
 
-* a binary payload composed of 3 64-bit floats
-* a String payload
+* a binary payload composed of three 64-bit floats
+* a UTF-8 string payload
 
 To send a message, the application must:
 

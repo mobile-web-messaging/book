@@ -19,16 +19,16 @@ The whole application code can be retrieved from the https://github.com/mobile-w
 === HTML5 Web Sockets
 
 Web Sockets is a recent features of Web browser that provides a bi-directional and full-duplex communication channel over a single TCP connection between the Web browser and the Web server.
-Before Web Sockets, communication was only one-way: the browser is initiating the communication by sending a HTTP request to the Web server which replies with a HTTP response. The server could not send data to the browser without it sending a request first.
+Before Web Sockets, communication was only one-way: the browser initiates the communication by sending a HTTP request to the Web server which replies with a HTTP response. The server could not send data to the browser without the browser having first sent a request.
 There exists some techniques to provide a bi-directional HTTP (such as HTTP long polling and HTTP streaming) but they have significant issues as described in <<rfc6202>>.
 
-Thanks to HTML5 Web Sockets, it is now possible to have two-way communication between the browser and the server in a simple way. The server can send data to the browser without waiting for a request first. This enables to deliver messages from the Web server to the browser.
+Thanks to HTML5 Web Sockets, it is now possible to have two-way communication between the browser and the server. The server can send data to the browser without waiting for a request first. This enables to deliver messages from the Web server to the browser.
 
 We are no longer limited to pull-based messages where the browser need to regularly contact the server to know whether there are any available messages to consume. This preserves bandwidth (the browser no longer need to send periodic query requests) and battery on mobile devices.
 
 [NOTE]
 ====
-Web Sockets have many use cased in addition to messaging. In some simple cases, sending data on Web Sockets without using a messaging protocol could be enough.
+Web Sockets have many use cases in addition to messaging. In some simple cases, sending data on Web Sockets without using a messaging protocol could be enough.
 
 For further information, the <<highperfbrowser>> book contains a thorough introduction to Web Sockets.
 ====
@@ -39,12 +39,12 @@ If your Web browser supports Web Sockets (and all modern browsers do), we can th
 
 stomp.is is a small JavaScript library (8KiB for its minified version) that provides a full-featured STOMP 1.2 client.
 
-It can run in multiple JavaScript platforms. Its main target is the Web browser (using Web Sockets as its transport protocol) but it can also be used in other JavaScript platforms such as http://nodejs.org[node.js] (using TCP sockets).
+It can run in multiple JavaScript platforms. Its main target is the Web browser (using Web Sockets as its transport protocol) but it can also be used on other JavaScript platforms such as http://nodejs.org[node.js] (using TCP sockets).
 
 [WARNING]
 ====
 A STOMP client running in a Web browser is similar to another STOMP client running on other platform with one exception: STOMP messages are transported by Web Sockets and not regular TCP sockets.
-The is a significant difference between them is that a Web Socket is created by sending a HTTP request with a +Upgrade: websocket+ header. The STOMP broker must be able to handle such a HTTP request and upgrade the connection from HTTP to the STOMP protocol.
+The significant difference between them is that a Web Socket is created by sending a HTTP request with a +Upgrade: websocket+ header. The STOMP broker must be able to handle such a HTTP request and upgrade the connection from HTTP to the STOMP protocol.
 
 Web Sockets support is not part of the STOMP protocol. The most used STOMP brokers such as ActiveMQ (that is used in this book), HornetQ, or RabbitMQ  support it but you will have to consult your broker documentation to check if it does.
 ====
@@ -56,9 +56,10 @@ As we explained in the first chapter, this Web application will be use to displa
 It will be a very simple one-page Web application that can be run from a Web server serving static pages. It does not require
 any server-side runtime as all the code will be executed inside the Web browser using JavaScript.
 
-Let's bootstrap the Web application by creating a *__locations.html__* page.
+Let's bootstrap the Web application by creating a +locations.html+ page.
 
 [[ex_web_stomp_1]]
+.Template for the +locations.html+ Web application
 ====
 [source,html]
 ----
@@ -254,7 +255,7 @@ for (deviceID in deviceIDs) {
 But what happens if another device starts broadcasting its location _after_ the Web application fetched the list of device IDs? The Web application will not subscribe to its topic and will never display it on the map.
 We would have to periodically fetch the list of device IDs and check whether there are new ones or if some devices have been removed.
 
-Fortunately, the flexibility of STOMP protocol comes handy to manage this in a simpler fashion. STOMP defines very loosely the destination
+Fortunately, the flexibility of STOMP protocol comes handy to manage this in a simpler fashion. STOMP defines very loosely the notion of destination:
 
 [quote, STOMP 1.2 Protocol]
 ____
@@ -270,7 +271,7 @@ We will now use a feature from our STOMP broker, ActiveMQ, that allows to use ht
 * +>+ is used to recursively match any destination starting from this name
 
 With our example using ActiveMQ, we can use this notation to subscribe to any
-device location topic by using the +/topic/device.$$*$$.location+ widlcard destination (where +$$*$$+ stands for _any device identifier_).
+device location topic by using the +/topic/device.$$*$$.location+ wildcard destination (where +$$*$$+ stands for _any device identifier_).
 
 The subscription code becomes simpler:
 
@@ -286,7 +287,7 @@ client.subscribe(destination, function(message) {
 
 [NOTE]
 ====
-Since the semantic of STOMP destinations are specific to the STOMP broker, you have to check with its documentation to know if they support wildcard destinations or similar concepts. If it does not, you have to revert to the first idea to fetch the list of devices and subscribe to each of the destination... or use another STOMP broker that supports this feature.
+Since the semantic of STOMP destinations are specific to the STOMP broker, you have to check its documentation to know if they support wildcard destinations or similar concepts. If it does not, you have to revert to the first idea to fetch the list of devices and subscribe to each of the destination... or use another STOMP broker that supports this feature.
 ====
 
 Since we no longer know _a priori_ which device location we are receiving, we need a new way to determine which device has broadcast it.
@@ -324,9 +325,9 @@ client.subscribe(destination, function(message) {
 });
 ----
 
-When we receive the position of a device, the last step we need to make is to display its position on a map. We will wrap this code in a +show+ method that is called from the subscription callback with the device identifier and its latitute and longitude.
+When we receive the position of a device, the last step we need to make is to display its position on a map. We will wrap this code in a +show+ method that is called from the subscription callback with the device identifier, its latitute and longitude.
 
-The whole code to connect to the STOMP broker, subscribes to the wildcard destination is shown below.
+The whole code to connect to the STOMP broker and subscribe to the wildcard destination is shown below.
 
 [source,js]
 ----
@@ -477,18 +478,15 @@ As we described in <<ch_introduction_stomp_example_topology>>, we use a queue to
 
 The text is sent in the STOMP message body as a plain text string.
 
-[source,js]
 ----
-{
-  Hello, Where are you
-}
+Hello, Where are you?
 ----
 
 We must respect this message format as it is the format expected by the iOS application to handle the texts and display them (we wrote this code in <<ch_mobile_stomp_subscribe>>).
 
 We added a HTML +<form>+ element with the id +text_form+ to send a text message. The device identifier is taken from the selected option in the +<select>+ element identified by +deviceID+. The text itself is taken from the +<input>+ element identified by +text+.
 
-Once we know the +truckID+ and the +order+, we have all we need to send an order to this truck. The destination for the order will be built using the +truckID+. Since the message payload will be a JSON string, we add a +content-type+ header set to +application/json; charset=utf-8+.
+Once we know the +deviceID+ and the +order+, we have all we need to send an order to this device. The destination for the order will be built using the +device+.
 
 Piecing everything together, the code to send a STOMP message looks like:
 
@@ -499,7 +497,7 @@ $('#text_form').submit(function() {
   var deviceID = $("#deviceID").val();
   var text = $("#text").val();
 
-  // sue the device's queue orders as the destination
+  // use the device's queue orders as the destination
   var destination = "/queue/device." + deviceID + ".text";
   // text is sent as a plain text string
   client.send(destination, {}, text);

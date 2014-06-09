@@ -3,11 +3,11 @@
 
 Suppose that we work for a delivery company that uses a fleet of trucks to deliver packages to its clients.
 
-Each truck is responsible for the delivery of packages and they receive orders from their headquarters. To efficiently manage all the trucks, the company headquarters want to monitor the truck's positions and be able to send them orders on-the-go.
+Each truck is responsible for the delivery of packages and they receive orders from their headquarters. To efficiently manage all the trucks, the company headquarter want to monitor the truck's positions and be able to send them orders on-the-go.
 
 We will build a very simple application named +Locations+ that looks similar to this example.
 
-The "truck" will use an iOS application to broadcast the device's geolocation data using its GPS sensor and display text messages that it receives from the headquarters. The "headquarters" will use a Web application to display the locations of all the "trucks" on a map. it will also be used to send text messages to a given truck on their devices:
+The "truck" will use an iOS application to broadcast the device's geolocation data using its GPS sensor and display text messages that it receives from the headquarters. The "headquarter" will use a Web application to display the locations of all the "trucks" on a map. It will also be used to send text messages to a given truck on their devices:
 
 . In <<ch_mobile_stomp>>, we will write the +Locations+ iOS application using the STOMP protocol to send GPS data and receive text from an iOS device.
 . In <<ch_web_stomp>>, we will write the Web application using STOMP protocol over Web Sockets to receive GPS data in a Web browser and send text to the devices.
@@ -23,7 +23,7 @@ Before introducing STOMP, the messaging protocol that will be used by the applic
 
 In this application, we will use two destinations, one with a Publish/Subscribe model to broadcast the device GPS data and one with a Point-to-Point model for the text messages:
 
-* +device.XXX.location+ is the _topic_ to broadcast its GPS geolocation data where +XXX+ is the device identifier (Publish/Subscribe model) 
+* +device.XXX.location+ is the _topic_ to broadcast its GPS geolocation data where +XXX+ is the device identifier (Publish/Subscribe model)
 * +device.XXX.text+ is the _queue_ to receive simple text message  (Point-to-Point model)
 
 A topic is used to send the GPS data as this allows potentially many consumers to receive the information.
@@ -85,4 +85,3 @@ With the messaging topology and data representation known, we can now refine the
 [[img_example_app_2]]
 .Diagram of the +Locations+ application with its messaging models and representations
 image::images/Chapter011/stomp_app_diagram_2.png[Diagram of the Locations application]
-

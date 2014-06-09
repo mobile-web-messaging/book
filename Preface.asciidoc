@@ -8,9 +8,9 @@ This is a book about messaging protocols and how software developers can use the
 Messaging protocols are nothing new. They have been used with success in enterprise software for many years. They have been one of the building blocks that let different services and platforms communicate with each other.
 Their designs make them well suited to build applications for mobile devices and the Web.
 
-Nowadays, HTTP has emerged as the mainstream transport protocol and is extensively used to communicate betwen any clients (from web browsers of course but also from desktop and mobile applications, backend services, etc.) and web servers. It has replaced almost all proprietary or non standard protocols and is likely to be the de facto choice if your application needs to communicate with any remote endpoint (web server, backend services, etc.).
+Nowadays, HTTP has emerged as the mainstream transport protocol and is extensively used to communicate between any clients (from web browsers of course but also from desktop and mobile applications, backend services, etc.) and web servers. It has replaced almost all proprietary or non standard protocols and is likely to be the de facto choice if your application needs to communicate with any remote endpoint.
 
-Messaging protocols complement HTTP and this book will show cases where using a messaging protocol is better suited than using HTTP (or any other request/reply transport protocol) to build mobile or web applications.
+Messaging protocols complement HTTP and this book will show cases where a messaging protocol is better suited than HTTP (or any other request/reply transport protocol) to build mobile or web applications.
 
 === What This Book is _Not_ About
 
@@ -70,15 +70,15 @@ At the same time, we can leverage these messaging protocols to integrate with le
 In this book, I will introduce messaging protocols for mobile devices and Web applications.
 
 Chapter 1, Introduction::
-In this chapter, I introduce the concepts of messaging protocols, how they differ from request/reply protocols such as HTTP.
-To illustrate the use of messaging protocols on mobile and Web platforms, we will build two applications (one named +Locations+ will use STOMP and the other named +Motions+ will use MQTT).
+In this chapter, I introduce the concepts of messaging protocols, their models and message representation.
+To illustrate the use of messaging protocols on mobile and Web platforms, we will build two applications, one using STOMP and the other MQTT.
 Both applications will come in two parts: one will run on mobile devices, the other inside a Web browser and they will communicate using messages. This chapter explains the overall design of these two example applications.
 
 Chapter 2, Mobile Messaging With STOMP::
 In this chapter, I present STOMP, a simple text-based messaging protocol. I use StompKit, an iOS library for STOMP, to build the +Locations+ application that sends GPS data from the device and receives text messages.
 
 Chapter 3, Web Messaging With STOMP::
-In this chapter, we introduce stomp.js, a JavaScript library for STOMP, and write a Web application that receives messages with the GPS from the +Locations+ application on iOS devices and display them on a map. This Web application will also send messages to the mobile app.
+In this chapter, I introduce stomp.js, a JavaScript library for STOMP, and write a Web application that receives messages with the GPS datat from the +Locations+ application on iOS devices and display them on a map. This Web application will also send text messages to the iOS application.
 
 Chapter 4, Advanced STOMP::
 In this chapter, I present the advanced features of STOMP that we did not use in the previous chapters to build our applications. These advanced features are not always used by messaging applications but they may prove useful as the applications grow in complexity.
@@ -87,21 +87,20 @@ Chapter 5, Beyond STOMP::
 In this chapter, I present features that are not part of STOMP but available from some STOMP brokers. These features often help solve common issues and reduce code complexity by leveraging the brokers.
 
 Chapter 6, Mobile Messaging With MQTT::
-In this chapter, we introduce MQTT, a binary messaging protocol well suited to broadcast data from mobile or embedded devices.
-We write a mobile app, +Motions+, on iOS that uses MQTT to broadcast data about the device motions using the MQTTKit libary and listen for alerts to change the color of the application.
+In this chapter, I introduce MQTT, a binary messaging protocol well suited to broadcast data from mobile or embedded devices and write a mobile application, +Motions+, on iOS that uses MQTT to broadcast data about the device motion using the MQTTKit libary and listen for alerts to change the color of the application.
 
 Chapter 7, Web Messaging With MQTT::
-In this chapter, we use MQTT over Web Socket to write a Web application that
-receives the device motions' data sent by the +Motions+ application to display them and sends alerts to the devices to change their color.
+In this chapter, I use MQTT over Web Socket to write a Web application that
+receives the device motion data sent by the +Motions+ application to display them and sends alerts to the devices to change their color.
 
 Chapter 8, Advanced MQTT::
-In this chapter, I present the advanced features of MQTT that we did not use in the previous chapters but that you may encounter as you use it more extensively.
+In this chapter, I present the advanced features of MQTT that were not used in the previous chapters.
 
 Appendix A, ActiveMQ::
 In this appendix, we explain how to install and configure the messaging broker, Apache ActiveMQ, that is used in the book to run the STOMP examples.
 
 Appendix B, Mosquitto::
-In this appendix, we explain how to install and configure the messaging broker, Mosquitto, that is used in the book to send and receive MQTT messages.
+In this appendix, we explain how to install and configure the Mosquitto broker and its command-line tools that are used in the book to send and receive MQTT messages.
 
 .What Should I Read?
 [NOTE]
@@ -118,7 +117,7 @@ If you are interested by the STOMP protocol, Chapters 2, 3, 4, and 5 and the mos
 === Target Audience
 
 This book is an introduction to the STOMP and MQTT messaging protocols and assumes no prior experience with them.
-This book explains in detail the messaging protocols. Each platform's clients may provide a different API to deal with the protocols but the underlying concepts will remain the same.
+This book explains in detail the messaging protocols. Each platform's clients may provide a different API to deal with the protocols but the underlying concepts remain the same.
 For both protocols, we will see two different libraries: an Objective-C library for iOS and a JavaScript library for Web applications.
 
 Basic programming skills are required. The examples in the book runs on different platforms and we used the programming language that made the most sense for each of them.

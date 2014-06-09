@@ -7,7 +7,7 @@ To illustrate their use on mobile and Web platforms, we will write two applicati
 
 === Messaging Concepts
 
-In the preface, I introduce messaging protocols in two sentences and five concepts:
+In the preface, I introduced messaging protocols in two sentences and five concepts:
 
 * An application _produces_ a _message_ to a _destination_ on a _broker_.
 * An application subscribes to this same destination to _consume_ the message.
@@ -24,7 +24,7 @@ Let's now define these five concepts:
 .Messaging Concepts
 image::images/Chapter010/messaging_concepts.png["Diagram of the messaging concepts"]
 
-The simplicity of messaging can be deceiving but it is this simplicity that allows developers to use it in powerful ways.
+The simplicity of messaging can be deceiving but it is this simplicity that allows to use it in powerful ways.
 
 .Messaging Terminology
 [NOTE]
@@ -41,7 +41,7 @@ Likewise, when an application consumes a message, it does not know which applica
 
 Producers and consumers do not even need to be online at the same time. The producers can send a message and exit. The message will be held by the broker until a consumer subscribes to the same destination. At that moment, the broker will deliver the message to the consumer.
 
-Producers and consumers need to know about the broker to connect to it but they may even not connect to the same broker. A set of brokers can constitute a cluster and messages would flow from one to another before it is finally delivered to a consumer.
+Producers and consumers need to know about the broker to connect to it but they may even not connect to the same broker. A set of brokers can constitute a cluster and messages would flow from one to another before they are finally delivered to a consumer.
 
 === Messaging Models
 
@@ -66,7 +66,7 @@ image::images/Chapter010/point_to_point.png["Diagram of the Point-to-Point Topol
 This messaging model is also called _one-to-one_: for _one_ message sent by a producer to the queue, there is only _one_ consumer that will receive it.
 
 If there are no consumers bound to the queue, the broker will retain the incoming messages until a consumer subscribes and then deliver the message to this consumer.
-Some messaging brokers allow to _expire_ messages if they remain in the queue for a certain amount of time. This can be useful to avoid having consumers receive message corresponding to stale data.
+Some messaging brokers allow to _expire_ messages if they remain in the queue for a certain amount of time. This can be useful to avoid having consumers receive a message corresponding to stale data.
 
 ==== Publish/Subscribe
 
@@ -81,13 +81,13 @@ image::images/Chapter010/pub_sub.png["Diagram of the Point-to-Point Topology"]
 
 This messaging model is also called _one-to-many_: for _one_ message sent by a producer to a topic, there are _many_ consumers that may receive it.
 
-When a message is sent to a topic in this model, we often say that it is _broadcast_ to all consumers as they will all receive it.
+When a message is sent to a topic in this model, we often say that it is _broadcasted_ to all consumers as they will all receive it.
 
 Some protocols define the notion of _durable subscribers_. If a consumer subscribes to the topic as a durable subscriber, the broker will retain messages when the consumer is offline and deliver the messages sent to the topic during its downtime when the consumer comes online again.
 
 === Message Representation
 
-Producers and consumers exchanges information using messages.
+Producers and consumers exchange information using messages.
 
 A message is composed of three separate data: destination, headers, and body
 
@@ -97,12 +97,12 @@ image::images/Chapter010/message_representation.png["Diagram of a Message"]
 
 When a producer sends a message to a _destination_, the name of the destination is put inside the message. When a consumer receives this message, it can use this information to know which destination held this message. This is especially useful when a consumer is subscribes to many destinations as it helps identify the exchanged data.
 
-A message also contains _headers_. Messaging protocols uses headers to add metadata information to the messages. These metadata can be read by the consumers and give addition contextual information to a message. Examples of such metadata are message identifiers (that uniquely identify a message for a broker), timestamp (the date and time it was sent by the producer), redelivered flag (if the message was delivered unsuccessfully a first time and is delivered again), etc.
+A message may also contain _headers_. Messaging protocols uses headers to add metadata information to the messages. These metadata can be read by the consumers and give addition contextual information to a message. Examples of such metadata are message identifiers (that uniquely identify a message for a broker), timestamp (the date and time it was sent by the producer), redelivered flag (if the message was delivered unsuccessfully a first time and is delivered again), etc.
 Headers are specific to messaging protocols. Some messaging protocols (such as STOMP) allows the producer to set application-specific headers in addition to the headers defined by the protocol. Other protocols (such as MQTT) does not allow to set application-specific headers. In that case, the producer has to put any application-specific information in the message payload.
 
-Finallyn, a message can have an optional _body_ (or payload) that contains the data exchanged between the producer and consumer. The type of body depends on the messaging protocols, some defining text payload (such as STOMP) or binary (MQTT). A payload is an _opaque blob of content_. The broker do not read or modify it when it holds a message.
+Finally, a message can have an optional _body_ (or payload) that contains the data exchanged between the producer and consumer. The type of body depends on the messaging protocols, some defining text payload (such as STOMP) or binary (MQTT). A payload is an _opaque blob of content_. The broker do not read or modify it when it routes a message.
 
-In most cases, we will only use the message body to pass information using a variety of format (JSON string, simple plain string, array of float values, etc.). However if the protocol permits it, we will also set additional headers to the message to give metadata information about the body (the type of its content, its length, etc.) or activate some broker features.
+In most cases, we will only use the message body to pass information using a variety of format (JSON string, simple plain string, array of float values, etc.). However if the protocol permits it, we will also set additional headers to the message to give metadata information about the body (its content type, its length, etc.) or activate some broker features.
 
 === Examples
 
