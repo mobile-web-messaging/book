@@ -6,12 +6,15 @@
 == Apache ActiveMQ
 
 [role="lead"]
-In this appendix, we describe how to install and configure Apache ActiveMQ to
+In this appendix, we describe how to install and configure http://activemq.apache.org[Apache ActiveMQ] to
 support STOMP and MQTT protocols.
+
+Apache ActiveMQ is a popular and powerful Open Source messaging server. It is fast, supports many cross Language clients and protocols.
+In this book, we will connect to it from the Objective-C and JavaScript languages using two messaging protocols: STOMP and MQTT.
 
 === Download and Installation
 
-Apache ActiveMQ latest release at the time of writing this book is 5.9.0.It  can be downloaded for its
+Apache ActiveMQ latest release at the time of writing this book is 5.9.0. It can be downloaded from its
 http://activemq.apache.org/activemq-590-release.html[download page] and the
 http://activemq.apache.org/getting-started.html[getting started page] contains all the information to install it.
 
@@ -31,11 +34,11 @@ $ ./bin/mybroker start
 ...
 $ tail data/activemq.log
 ...
-2013-06-14 19:44:52,801 | INFO  | Apache ActiveMQ 5.8.0 (mybroker, ID:retsina.local-53410-1371231892651-0:1) started | org.apache.activemq.broker.BrokerService | main
+2014-06-11 15:17:17,113 | INFO  | Apache ActiveMQ 5.9.0 (mybroker, ID:jeff.local-50723-1402492636703-0:1) started | org.apache.activemq.broker.BrokerService | main
 ...
 ----
 
-To stop he broker, run the following command:
+To stop the broker, run the following command:
 
 [source,sh]
 ----
