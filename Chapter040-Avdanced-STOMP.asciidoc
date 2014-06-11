@@ -435,6 +435,7 @@ Whenever an error occurs (for example if the network connection is broken or the
 
 Depending on your application, you may instead decide to report the error to the user and let him know that the client is no longer able to exchange messages with the broker.
 
+[[ch_advanced_stomp_receipts]]
 === Receipts
 
 STOMP provides a basic mechanism to let a client know when the broker has received and processed its frames. This can be used with any STOMP frames. For example a client can be notified when the broker receives a message that a producer send (using a +SEND+ frame) or when a consumer subscribes to a destination (with a +SUBSCRIBE+ frame).
@@ -447,6 +448,8 @@ In practice, this means that a successful subscription is _silent_, the client i
 The broker must then deliver a +RECEIPT+ frame that will inform the client that the broker has processed its subscription successfully.
 If the subscription is not successful, the broker will deliver a +ERROR+ frame that has a +receipt-id+ header corresponding to the
 +RECEIPT+'s +receipt+ header to be able to correlate the error.
+
+Another use case for receipts is to make sending a message _synchronous_. The client would send a message with a +receipt+ header and blocks until it receives the corresponding +RECEIPT+ frame. This would add reliability (the client is sure that the broker has processed its message) at the cost of performance (the client can do nothing until the +RECEIPT+ frame is received).
 
 ==== +StompKit+ Example
 

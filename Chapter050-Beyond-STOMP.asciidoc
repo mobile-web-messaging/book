@@ -35,6 +35,8 @@ When the broker receives the message, it will check the +persistent+ header and 
 Persisting messages adds a significant cost: the broker must write the message to a durable support (on a file system or in a database) and wait for the operating system to effectively write it (some OS will buffer data written to disk).
 The broker must also have sufficient space on the durable support to write the  persistent messages (once a persistent message has been delivered to all its consumers, the broker can safely discard it from the durable support).
 
+To add further reliability, the client could use receipts (as described in <<ch_advanced_stomp_receipts>>) to wait until the broker has processed its message (and persisted it). Once the receipt is received, the client is guaranteed that the message would survive a server crash. Without a receipt, there is a small window for failure if the server crash _after_ receiving the message but _before_ storing it on its durable support.
+
 === Filtered Consumer
 
 There are cases where a consumer may be interested only by a subset of all messages delivered from a destination.

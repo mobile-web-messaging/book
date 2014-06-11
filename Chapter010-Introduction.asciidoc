@@ -68,6 +68,8 @@ This messaging model is also called _one-to-one_: for _one_ message sent by a pr
 If there are no consumers bound to the queue, the broker will retain the incoming messages until a consumer subscribes and then deliver the message to this consumer.
 Some messaging brokers allow to _expire_ messages if they remain in the queue for a certain amount of time. This can be useful to avoid having consumers receive a message corresponding to stale data.
 
+Point-to-point model is best used when only one consumer must process a message. A queue can be used to load-balance the message processing across different clients and ensure that only one client will receive it.
+
 ==== Publish/Subscribe
 
 In a Publish/Subscribe messaging model (often shortened as pub/sub), a message sent by a producer is routed to many consumers.
@@ -84,6 +86,8 @@ This messaging model is also called _one-to-many_: for _one_ message sent by a p
 When a message is sent to a topic in this model, we often say that it is _broadcasted_ to all consumers as they will all receive it.
 
 Some protocols define the notion of _durable subscribers_. If a consumer subscribes to the topic as a durable subscriber, the broker will retain messages when the consumer is offline and deliver the messages sent to the topic during its downtime when the consumer comes online again.
+
+Publish/Subscribe is particularly suited to send updates. A producer will send a message on the topic with its updated data and any consumer that is subscribed to the topic will be notified of the updates.
 
 === Message Representation
 
