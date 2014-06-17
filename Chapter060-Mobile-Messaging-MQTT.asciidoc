@@ -3,26 +3,12 @@
 
 [partintro]
 --
-MQTT is a simple and lightweight messaging protocol that only supports the _Publish/Subscribe_ messaging model.
 
 This book covers the latest released version of the protocol at the time of this writing: MQTT 3.1 <<mqttv3.1>>.
 
-Its most interesting features are its compactness (reducing bandwidth and memory usage) and its small set of features (making it available on many platforms).
+MQTT is a simple and lightweight messaging protocol that only supports the _Publish/Subscribe_ messaging model.
 
-MQTT is a simple protocol well suited for a limited set of applications that can be modeled using Publish/Subscribe. However, MQTT is also lacking flexibility and you have to consider carefully if it meets your requirements.
-
-One missing feature of MQTT is the lack of headers in the message representation.
-
-MQTT defines a fixed set of headers for its command messages (used to connect to the broker, send a message, create a subscription, etc.) but there is no general notions of a header that the application or the broker could add to the messages.
-
-This impacts the usefulness of the messages that are delivered by MQTT. As a simple example, the absence of headers mean that there is no way to know what type of data to expect from the payload. HTTP and STOMP defines a +content-type+ header that can be queried to know the MIME type of the payload and extract it accordingly. MQTT does not allow this and the consumer must have _a priori_ knowledge of the payload type for a message before being able to read it.
-
-The absence of headers also imply tha the MQTT broker can not provide additional features not covered by the protocol in a non-intrusive way. As we saw in <<ch_beyond_stomp>>, STOMP broker can use headers to priority, expiration, and other features just by adding headers to the messages.
-
-If you plan to use MQTT in your applications, you should consider carefully whether its features match your requirements.
-
-If you require features that are not provided by the protocol (or another messaging model than _Publish/Subscribe_), you may lose all the benefits of using this simple protocol and write brittle code that puts all the complexity in your applications instead of relying on the broker's set of features.
-But if your requirements are fullfilled by MQTT features (as is the case for a lot of applications), you will be all set to use messaging in your applications.
+MQTT is a binary protocol and its wireformat (the bits that are sent over the wire) is very compact reducing bandwidth and memory usage. It defines a small set of features and there are clients for it on many platforms ranging from traditional operating systems to embedded devices. In the next two chapters, we will write a mobile application for iOS and a Web application but the description of the MQTT protocol applies to any client (although their API may differ).
 
 [[ch_mobile_mqtt_paho]]
 .Eclipse Public MQTT Server
@@ -38,7 +24,7 @@ MQTT clients can connect to it using the +iot.eclipse.org+ hostname on the port 
 == Mobile Messaging with MQTT
 
 [role="lead"]
-In this chapter, We will write an iOS application using the +MQTTKit+ library to send and receive messages using the MQTT protocol.
+In this chapter, we will write an iOS application using the +MQTTKit+ library to send and receive messages using the MQTT protocol.
 
 In <<ch_introduction_mqtt_example>>, we described the +Motions+ application. In this chapter, we will write the iOS application that broadcasts the device motion data and receives alert messages.
 

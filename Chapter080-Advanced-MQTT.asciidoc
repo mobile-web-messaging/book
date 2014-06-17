@@ -396,6 +396,25 @@ client.connect({onSuccess: function(frame) {
 });
 ----
 
+=== Beyond MQTT?
+
+MQTT is a simple protocol well suited for a limited set of applications that can be modeled using Publish/Subscribe. 
+
+Its small set of features makes it simple to understand and use but it lacks some flexibility and you have to consider carefully if it meets your requirements.
+
+One missing feature of MQTT is the lack of headers in the message representation.
+
+MQTT defines a fixed set of headers for its command messages (used to connect to the broker, send a message, create a subscription, etc.) but there is no general notion of a header that the application or the broker could add to the messages.
+
+This impacts the expressiveness of the messages that are delivered using MQTT. As a simple example, the absence of headers mean that there is no way to know what type of data to expect from the payload. HTTP and STOMP defines a +content-type+ header that can be queried to know the MIME type of the payload and extract it accordingly. MQTT does not allow this and the consumer must have _a priori_ knowledge of the payload type for a message before being able to read it.
+
+The absence of headers also imply that the MQTT broker can not provide additional features not covered by the protocol in an unobtrusive way. As we saw in <<ch_beyond_stomp>>, STOMP brokers can provide additional features such as persistence, priority, expiration, etc. and the client can use them by adding headers to the messages. There is no such mechanism for MQTT in its current version. There are some ongoing discussion to add application-specific headers in a future version of the protocol but no agreement has been reached at the time of this writing.
+
+If you plan to use MQTT in your applications, you should consider carefully whether its features match your requirements.
+
+If you require features that are not provided by the protocol (or another messaging model than _Publish/Subscribe_), you may lose all the benefits of using this simple protocol and write brittle code that puts all the complexity in your applications instead of relying on the broker's set of features.
+But if your requirements are fullfilled by MQTT features (as is the case for a lot of applications), you will be all set to use messaging in your applications.
+
 === Summary
 
 MQTT is a simple protocol that provides few advanced features. However these features can be handy to solve common issues encountered by messaging applications.
