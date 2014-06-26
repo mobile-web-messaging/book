@@ -3,6 +3,10 @@
 /*--------Put Your Custom CSS Rules Below--------*/
 /*--- This oneoff overrides the code in https://github.com/oreillymedia/animal_theme/blob/master/pdf/pdf.css---*/
 
+/* Font fallback for U+2318 */
+
+pre, code { font-family: UbuntuMono, Symbola, monospace }
+
 /*----Uncomment to turn OFF automatic code wrapping (it's on by default in the new toolchain)
 
 pre {
