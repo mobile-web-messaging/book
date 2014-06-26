@@ -44,7 +44,7 @@ To illustrate their use on mobile and Web platforms, we will write two applicati
 </ol>
 
 <figure id="img_preface_messaging_concepts">
-<img src="images/Chapter010/messaging_concepts.png" alt="Diagram of the messaging concepts"></img>
+<img src="images/Chapter010/messaging_concepts.png" alt="Diagram of the messaging concepts"/>
 <figcaption>Messaging Concepts</figcaption>
 </figure>
 
@@ -111,7 +111,7 @@ There may be one or many consumers that will receive the message. It also possib
 As illustrated in <a data-type="xref" href="#img_intro_point_to_point">#img_intro_point_to_point</a>, when the producer sends a message to the queue, only one of the consumers that are subscribed receives the message.</p>
 
 <figure id="img_intro_point_to_point">
-<img src="images/Chapter010/point_to_point.png" alt="Diagram of the Point-to-Point Topology"></img>
+<img src="images/Chapter010/point_to_point.png" alt="Diagram of the Point-to-Point Topology"/>
 <figcaption>Diagram of the Point-to-Point Topology</figcaption>
 </figure>
 
@@ -144,7 +144,7 @@ Some messaging brokers allow to <em>expire</em> messages if they remain in the q
 As illustrated in <a data-type="xref" href="#img_intro_pub_sub">#img_intro_pub_sub</a>, when the producer sends a message to the topic, all the consumers that are subscribed receive the message.</p>
 
 <figure id="img_intro_pub_sub">
-<img src="images/Chapter010/pub_sub.png" alt="Diagram of the Point-to-Point Topology"></img>
+<img src="images/Chapter010/pub_sub.png" alt="Diagram of the Point-to-Point Topology"/>
 <figcaption>Diagram of the Publish/Subscribe Topology</figcaption>
 </figure>
 
@@ -183,7 +183,7 @@ As illustrated in <a data-type="xref" href="#img_intro_pub_sub">#img_intro_pub_s
 <p>A message is composed of three separate data: destination, headers, and body</p>
 
 <figure id="img_intro_message_representation">
-<img src="images/Chapter010/message_representation.png" alt="Diagram of a Message"></img>
+<img src="images/Chapter010/message_representation.png" alt="Diagram of a Message"/>
 <figcaption>Diagram of a Message</figcaption>
 </figure>
 
@@ -222,7 +222,7 @@ Headers are specific to messaging protocols. Some messaging protocols (such as S
 
 
 <section data-type="sect2" id="ch_introduction_stomp_example">
-<h2><code>Locations</code> Application Using STOMP</h2>
+<h2>Locations Application Using STOMP</h2>
 
 <p>Suppose that we work for a delivery company that uses a fleet of trucks to deliver packages to its clients.</p>
 
@@ -242,8 +242,8 @@ Headers are specific to messaging protocols. Some messaging protocols (such as S
 </ol>
 
 <figure id="img_example_app_1">
-<img src="images/Chapter011/stomp_app_diagram_1.png" alt="Diagram of the Locations application with two devices, AAA and BBB, and two web applications"></img>
-<figcaption>Diagram of the <code>Locations</code> application with two devices, <code>AAA</code> and <code>BBB</code>, and two web applications.</figcaption>
+<img src="images/Chapter011/stomp_app_diagram_1.png" alt="Diagram of the Locations application with two devices, AAA and BBB, and two web applications"/>
+<figcaption>Diagram of the Locations application with two devices, AAA and BBB, and two web applications.</figcaption>
 </figure>
 
 <p>Before introducing STOMP, the messaging protocol that will be used by the application, we can already define the application’s messaging models and how the different parts of the application will exchange messages.</p>
@@ -258,7 +258,7 @@ Headers are specific to messaging protocols. Some messaging protocols (such as S
 
 
 <section data-type="sect3" id="ch_introduction_stomp_example_topology">
-<h3><code>Locations</code> Messaging Models</h3>
+<h3>Locations Messaging Models</h3>
 
 <p>In this application, we will use two destinations, one with a Publish/Subscribe model to broadcast the device GPS data and one with a Point-to-Point model for the text messages:</p>
 <ul>
@@ -307,7 +307,7 @@ However a queue is used to handle the device’s text as only one single device 
 
 
 <section data-type="sect3" id="ch_introduction_stomp_example_message">
-<h3><code>Locations</code> Message Representation</h3>
+<h3>Locations Message Representation</h3>
 
 <p>There will be two types of exchanged messages:</p>
 <ul>
@@ -358,8 +358,8 @@ We are using a plain text version as this format is enough to provide a first ve
 <p>With the messaging topology and data representation known, we can now refine the <code>Locations</code> application diagram.</p>
 
 <figure id="img_example_app_2">
-<img src="images/Chapter011/stomp_app_diagram_2.png" alt="Diagram of the Locations application"></img>
-<figcaption>Diagram of the <code>Locations</code> application with its messaging models and representations</figcaption>
+<img src="images/Chapter011/stomp_app_diagram_2.png" alt="Diagram of the Locations application"/>
+<figcaption>Diagram of the Locations application with its messaging models and representations</figcaption>
 </figure>
 </section>
 
@@ -380,7 +380,7 @@ We are using a plain text version as this format is enough to provide a first ve
 
 
 <section data-type="sect2" id="ch_introduction_mqtt_example">
-<h2><code>Motions</code> Application Using MQTT</h2>
+<h2>Motions Application Using MQTT</h2>
 
 <p>Most mobile devices contain sensor that allows to track the device motions (and to a certain extent the motion of its owner). Using additional sensors, we could even imagine having access to the owner’s health data (heart rate, hydration, blood glucose level, etc.). This type of information could be sent to a centralized application that would be able to track the data and extract personal information about them to report to the owner.</p>
 
@@ -389,8 +389,8 @@ We are using a plain text version as this format is enough to provide a first ve
 <p>Device motion will be represented by three values corresponding to its pitch, roll and yaw values as shown in the illustration below.</p>
 
 <figure id="img_mqtt_example_app_0">
-<img src="images/Chapter012/pitch_roll_yaw.png" alt="The pitch" width="roll and yaw values represents the device motion"></img>
-<figcaption>The <code>pitch</code>, <code>roll</code> and <code>yaw</code> values represents the device motion.</figcaption>
+<img src="images/Chapter012/pitch_roll_yaw.png" alt="The pitch" width="roll and yaw values represents the device motion"/>
+<figcaption>The pitch, roll and yaw values represents the device motion.</figcaption>
 </figure>
 
 <p>The pending Web application will display the motions of all devices that broadcast them and be able to send alert messages to them:</p>
@@ -405,8 +405,8 @@ We are using a plain text version as this format is enough to provide a first ve
 </ol>
 
 <figure id="img_mqtt_example_app_1">
-<img src="images/Chapter012/mqtt_app_diagram_1.png" alt="Diagram of the +Motions+ application"></img>
-<figcaption>The <code>Motions</code> application with two clients, <code>AAA</code> and <code>BBB</code> and two Web applications monitoring them.</figcaption>
+<img src="images/Chapter012/mqtt_app_diagram_1.png" alt="Diagram of the +Motions+ application"/>
+<figcaption>The Motions application with two clients, AAA and BBB and two Web applications monitoring them.</figcaption>
 </figure>
 
 
@@ -419,7 +419,7 @@ We are using a plain text version as this format is enough to provide a first ve
 
 
 <section data-type="sect3" id="ch_introduction_mqtt_example_topology">
-<h3><code>Motions</code> Messaging Models</h3>
+<h3>Motions Messaging Models</h3>
 
 <p>In this application we will use two destination with the Publish/Subscribe model:</p>
 <ul>
@@ -471,7 +471,7 @@ We are using a plain text version as this format is enough to provide a first ve
 
 
 <section data-type="sect3" id="ch_introduction_mqtt_example_message">
-<h3><code>Motions</code> Message Representation</h3>
+<h3>Motions Message Representation</h3>
 
 <p>There will be two types of exchanged messages:</p>
 <ul>
@@ -513,8 +513,8 @@ be represented as a simple plain text string corresponding to a color. The <code
 <p>With the messaging topology and data representation known, we can now refine the <code>Motions</code> application diagram.</p>
 
 <figure id="img_mqtt_example_app_2">
-<img src="images/Chapter012/mqtt_app_diagram_2.png" alt="Diagram of the Motions application"></img>
-<figcaption>Diagram of the <code>Motions</code> application with its messaging models and representations.</figcaption>
+<img src="images/Chapter012/mqtt_app_diagram_2.png" alt="Diagram of the Motions application"/>
+<figcaption>Diagram of the Motions application with its messaging models and representations.</figcaption>
 </figure>
 </section>
 

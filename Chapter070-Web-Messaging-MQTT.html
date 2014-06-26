@@ -5,8 +5,8 @@
 <p class="lead">In this chapter, we will write a Web application that sends and receives messages using the MQTT protocol over HTML5 Web Sockets.</p>
 
 <figure id="img_web_mqtt_1">
-<img src="images/Chapter070/mqtt_web_app.png" alt="The +Motions+ Web application that displays data for two devices."></img>
-<figcaption>Diagram of the <code>Motions</code> Web application that displays data for two devices</figcaption>
+<img src="images/Chapter070/mqtt_web_app.png" alt="The +Motions+ Web application that displays data for two devices."/>
+<figcaption>Diagram of the Motions Web application that displays data for two devices</figcaption>
 </figure>
 <div data-type="note">
 <h1>About the Code</h1>
@@ -44,7 +44,7 @@ Eclipse also provides a variety of MQTT clients for different languages and plat
 
 
 <section data-type="sect1" id="_bootstrap_the_code_motions_html_code_web_application">
-<h1>Bootstrap the <code>motions.html</code> Web Application</h1>
+<h1>Bootstrap the motions.html Web Application</h1>
 
 <p>As we explained in <a data-type="xref" href="#ch_introduction_mqtt_example">#ch_introduction_mqtt_example</a>, this Web application will display on a Web page the motion data sent by the devices using the <code>Motions</code> iOS application written in the previous chapter.
 Additionnally, the Web application will also be able to send alert messages to the devices.</p>
@@ -58,7 +58,7 @@ any server-side runtime as all the code will be executed inside the Web browser 
 
 <p>Let’s bootstrap the Web application by creating a <code>motions.html</code> page.</p>
 <div id="ex_web_mqtt_1" data-type="example">
-<h5>Template for the <code>locations.html</code> Web Application</h5>
+<h5>Template for the locations.html Web Application</h5>
 
 
 <pre data-type="programlisting" data-code-language="html">&lt;!DOCTYPE html&gt;
@@ -107,7 +107,7 @@ $(document).ready(function() {
 
 
 <section data-type="sect1" id="_create_a_mqtt_client_with_code_mqttws31_js_code">
-<h1>Create a MQTT Client with <code>mqttws31.js</code></h1>
+<h1>Create a MQTT Client with mqttws31.js</h1>
 
 <p>When the browser loads this page, we will create a MQTT client using the JavaScript library.</p>
 
@@ -400,8 +400,8 @@ It will create the HTML elements to display the data and use jQuery Sparklines t
 <p>At this stage, we can alreay load the application in a Web browser. If there are devices that are running the <code>Motions</code> iOS applications, we will see them appear automatically on the page.</p>
 
 <figure id="img_web_mqtt_2">
-<img src="images/Chapter070/motions_web_app.png" alt="Two +Motions+ app are publishing their device motions."></img>
-<figcaption>Two <code>Motions</code> app are publishing their device motions.</figcaption>
+<img src="images/Chapter070/motions_web_app.png" alt="Two +Motions+ app are publishing their device motions."/>
+<figcaption>Two Motions app are publishing their device motions.</figcaption>
 </figure>
 </section>
 
@@ -444,8 +444,8 @@ It will create the HTML elements to display the data and use jQuery Sparklines t
 <p>If we reload the web application and clicks on an "Alert!" button, the corresponding device will receive the message from its alert topic and the code that we wrote in <a data-type="xref" href="#ch_mobile_mqtt_receive">#ch_mobile_mqtt_receive</a> will be executed to change temporarily the background color of the device.</p>
 
 <figure id="img_web_mqtt_3">
-<img src="images/Chapter070/app_red.png" alt="The +Motions+ application background becomes red when an alert is received from its alert topic."></img>
-<figcaption>The <code>Motions</code> application background becomes red when an alert is received from its alert topic.</figcaption>
+<img src="images/Chapter070/app_red.png" alt="The +Motions+ application background becomes red when an alert is received from its alert topic."/>
+<figcaption>The Motions application background becomes red when an alert is received from its alert topic.</figcaption>
 </figure>
 </section>
 

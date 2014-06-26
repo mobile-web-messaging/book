@@ -28,7 +28,7 @@ MQTT provides additional features that we did not use to write these application
 
 
 <section data-type="sect2" id="__code_mqttkit_code_example">
-<h2><code>MQTTKit</code> Example</h2>
+<h2>MQTTKit Example</h2>
 
 <p>The <code>MQTTClient</code> has two <code>NSString</code> properties that must be set to authenticate the client, <code>username</code> and <code>password</code>. They must be set <em>prior</em> to calling the client’s <code>connect</code> methods to take effect.</p>
 
@@ -71,7 +71,7 @@ MQTT provides additional features that we did not use to write these application
 
 
 <section data-type="sect2" id="__code_mqttws31_js_code_example">
-<h2><code>mqttws31.js</code> Example</h2>
+<h2>mqttws31.js Example</h2>
 
 <p>To authenticate using the <code>mqttws31.js</code> library, you must set the <code>userName</code> and <code>password</code> properties to the object passed to the client’s <code>connect</code> method.</p>
 
@@ -130,7 +130,7 @@ client.connect({onSuccess: function(frame) {
 
 
 <section data-type="sect2" id="__code_mqttkit_code_example_2">
-<h2><code>MQTTKit</code> Example</h2>
+<h2>MQTTKit Example</h2>
 
 <p>The <code>MQTTClient</code> class has a <code>disconnectionHandler</code> property that can be set to handle any unexpected error leading to a disconnection. The disconnection can be the consequence of the MQTT broker closing the network exception (in case of abnormal errors or an administrative operation) or the network connection can be directly broken (for example if a mobile device is no longer able to receive any signal).</p>
 
@@ -177,7 +177,7 @@ There are no standard values for the code and you will have to consult your MQTT
 
 
 <section data-type="sect2" id="__code_mqttws31_js_code_example_2">
-<h2><code>mqttws31.js</code> Example</h2>
+<h2>mqttws31.js Example</h2>
 
 <p>In <a data-type="xref" href="#ch_mobile_mqtt_connect">#ch_mobile_mqtt_connect</a>, we already set a <code>onConnectionLost</code> callback on the <code>client</code> to be notified in case of connection error. The callback has a single <code>response</code> parameter object. This parameter is composed of two properties:</p>
 <ul>
@@ -243,7 +243,7 @@ There are no standard values for the code and you will have to consult your MQTT
 
 
 <section data-type="sect2" id="__code_mqttkit_code_example_3">
-<h2><code>MQTTKit</code> Example</h2>
+<h2>MQTTKit Example</h2>
 
 <p>By default, <code>MQTTKit</code> defines a keep alive timer of 60 seconds.</p>
 
@@ -272,7 +272,7 @@ client.keepAlive = 10; // seconds
 
 
 <section data-type="sect2" id="__code_mqttws31_js_code_example_3">
-<h2><code>mqttws31.js</code> Example</h2>
+<h2>mqttws31.js Example</h2>
 
 <p><code>mqttws31.js</code> also defines a keep aliver timer of 60 seconds by default.</p>
 
@@ -335,7 +335,7 @@ If the client uses heart-beating and the broker fails to receive its heart-beat 
 
 
 <section data-type="sect2" id="__code_mqttkit_code_example_4">
-<h2><code>MQTTKit</code> Example</h2>
+<h2>MQTTKit Example</h2>
 
 <p>The <code>STOMPClient</code> object has <code>setWill:toTopic:withQos:retain</code> and <code>setWillData:toTopic:withQos:retain</code> methods to specify the client’s last will. The differences between the two methods is that the first one takes a <code>NSString</code> for the will message payload and the second takes a <code>NSData</code>. These methods must be called before the client connects to the MQTT broker to take effect.</p>
 
@@ -441,7 +441,7 @@ client.connect({onSuccess: function(frame) {
 
 
 <section data-type="sect2" id="__code_mqttws31_js_code_example_4">
-<h2><code>mqttws31.js</code> Example</h2>
+<h2>mqttws31.js Example</h2>
 
 <p>It is also possible to set a client’s last will using <code>mqttws31.js</code>.
 The <code>client</code>'s <code>connect</code> method can take an optional <code>willMessage</code> object that represents the last will message to send if it disconnects unexpectedly.
@@ -519,7 +519,7 @@ Unless there is a strong incentive to use such a client, it is better practice t
 
 
 <section data-type="sect2" id="__code_mqttkit_code_example_5">
-<h2><code>MQTTKit</code> Example</h2>
+<h2>MQTTKit Example</h2>
 
 <p>By default, MQTT clients created using <code>MQTTKit</code> have the "Clean Session" flag set (their state is not stored by the broker after they disconnect).
 It is also possible to change this behaviour by using the <code>MQTTClient</code>'s <code>initWithClientID:cleanSession:</code> initializer and passing <code>NO</code> to its <code>cleanSession</code> parameter.</p>
@@ -573,7 +573,7 @@ It is also possible to change this behaviour by using the <code>MQTTClient</code
 
 
 <section data-type="sect2" id="__code_mqttws31_js_code_example_5">
-<h2><code>mqttws31.js</code> Example</h2>
+<h2>mqttws31.js Example</h2>
 
 <p>The clients created by the <code>mqttws31.js</code> library also connects by default with the "Clean Session" flag set. It is possible to change this behaviour by adding a <code>cleanSession</code> property set to <code>false</code> in the properties passed to the client’s <code>connect</code> method.</p>
 
