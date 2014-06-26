@@ -1,9 +1,0 @@
-== Mobile and Web Messaging
-
-=== O'Reilly Media
-
-|==========================================================================================
-| Jeff Mesnil | +mailto:jmesnil@gmail.com[jmesnil@gmail.com]+ | +http://jmesnil.net/+ | +http://twitter.com/jmesnil[@jmesnil]+
-|==========================================================================================
-
-All contents of this repository licensed under http://creativecommons.org/licenses/by-sa/2.0/['Creative Commons Attribution-ShareAlike 2.0 Generic']
