@@ -40,7 +40,7 @@ client.send("/topic/mytopic", { persistent: true}, order);</pre>
 <p>Persisting messages adds a significant cost: the broker must write the message to a durable support (on a file system or in a database) and wait for the operating system to effectively write it (some operating system will buffer data before writtent them to disk).
 The broker must also have sufficient space on the durable support to write the  persistent messages (once a persistent message has been delivered to all its consumers, the broker can safely discard it from the durable support).</p>
 
-<p>To add further reliability, the client could use receipts (as described in <a data-type="xref" href="#ch_advanced_stomp_receipts"></a>) to wait until the broker has processed its message (and persisted it). Once the receipt is received, the client is guaranteed that the message would survive a server crash. Without a receipt, there is a small window for failure if the server crash <em>after</em> receiving the message but <em>before</em> storing it on its durable support.</p>
+<p>To add further reliability, the client could use receipts (as described in <a data-type="xref" href="#ch_advanced_stomp_receipts">#ch_advanced_stomp_receipts</a>) to wait until the broker has processed its message (and persisted it). Once the receipt is received, the client is guaranteed that the message would survive a server crash. Without a receipt, there is a small window for failure if the server crash <em>after</em> receiving the message but <em>before</em> storing it on its durable support.</p>
 </section>
 
 

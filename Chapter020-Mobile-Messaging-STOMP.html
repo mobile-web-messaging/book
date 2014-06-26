@@ -5,7 +5,7 @@
 <p class="lead">In this chapter, we will write our first messaging client: an native application running on an iPhone.
 We will use STOMP to send and receive messages using the Objective-C library StompKit.</p>
 
-<p>In <a data-type="xref" href="#ch_introduction_stomp_example"></a>, we described the <code>Locations</code> application. In this chapter, we will write the iOS application that broadcasts the device’s  position and receive text messages.</p>
+<p>In <a data-type="xref" href="#ch_introduction_stomp_example">#ch_introduction_stomp_example</a>, we described the <code>Locations</code> application. In this chapter, we will write the iOS application that broadcasts the device’s  position and receive text messages.</p>
 
 <figure id="img_mobile_stomp_1">
 <img src="images/Chapter020/stomp_ios_app.png" alt="Diagram of the Locations iOS application"></img>
@@ -476,7 +476,7 @@ coordinates from the <code>newLocation</code>'s <code>coordinate</code>.</p>
 <p>If you are running the application on an iPhone device, the real geolocation data from the device will be used.
 If you run the application using the <code>iOS Simulator</code>, you can simulate different location in the <code>Debug &gt; Location</code> menu. For example, the <code>Freeway Drive</code> will simulate a car driving on a freeway between Palo Alto and San Francisco.</p>
 
-<p>Whether you are running the application on a device or in the simulator, you should see the <code>currentPositionLabel</code> be udpated. The latitude and longitude numbers are difficult to interpret as such but in the next chapter <a data-type="xref" href="#ch_web_stomp"></a>, we will be able to use them to draw the position on a map to locate the devices.</p>
+<p>Whether you are running the application on a device or in the simulator, you should see the <code>currentPositionLabel</code> be udpated. The latitude and longitude numbers are difficult to interpret as such but in the next chapter <a data-type="xref" href="#ch_web_stomp">#ch_web_stomp</a>, we will be able to use them to draw the position on a map to locate the devices.</p>
 
 <p>Now that the <code>Locations</code> application is handling the device geolocation data, the next step is to send them using STOMP.</p>
 </section>
@@ -523,7 +523,7 @@ If you run the application using the <code>iOS Simulator</code>, you can simulat
 <p>We do not need to conform to any protocol to use <code>StompKit</code> as its API is based on <em>blocks</em> instead of protocol delegates.</p>
 
 <p>The <code>client</code> variable is created when the controller’s view is loaded in <code>MWMViewController</code>'s <code>viewDidLoad</code> method implementation. To create it, we need to pass the host and port of the STOMP broker to connect to.
-These information depends on the broker you are using. If you have configured ActiveMQ on your machine as described in the appendix <a data-type="xref" href="#appendix_activemq"></a>, you will be able to connect on its <code>61613</code> port.</p>
+These information depends on the broker you are using. If you have configured ActiveMQ on your machine as described in the appendix <a data-type="xref" href="#appendix_activemq">#appendix_activemq</a>, you will be able to connect on its <code>61613</code> port.</p>
 
 <p>The host will depend on your network configuration. On my local network, my server has the IP address <code>192.168.1.25</code>. I will use this value for the example but you will have to replace this by your own server address to run the applications.</p>
 <div data-type="example">
@@ -692,7 +692,7 @@ These information depends on the broker you are using. If you have configured Ac
 
 <p>We now have a connection to the STOMP broker and we receive the device’s geolocation data from the <code>CoreLocation</code> framework. The last step to do is to send these data to the topic associated to the device ID.</p>
 
-<p>As we described in <a data-type="xref" href="#ch_introduction_stomp_example_topology"></a>, each device will send its location on a topic named after its identifier.</p>
+<p>As we described in <a data-type="xref" href="#ch_introduction_stomp_example_topology">#ch_introduction_stomp_example_topology</a>, each device will send its location on a topic named after its identifier.</p>
 
 
 <pre data-type="programlisting" data-code-language="objc">NSString *destination = [NSString stringWithFormat:@"/topic/device.%@.location", self.deviceID];</pre>
@@ -706,7 +706,7 @@ These information depends on the broker you are using. If you have configured Ac
 
 </div>
 
-<p>As we described in <a data-type="xref" href="#ch_introduction_stomp_example_message"></a>, the message representation is a JSON string that contains the location coordinates, the timestamp and the device ID.
+<p>As we described in <a data-type="xref" href="#ch_introduction_stomp_example_message">#ch_introduction_stomp_example_message</a>, the message representation is a JSON string that contains the location coordinates, the timestamp and the device ID.
 We build a <code>NSDictionary</code> from these data and serialize it as a JSON string:</p>
 
 
@@ -925,7 +925,7 @@ content-length:122
 <section data-type="sect2" id="_activemq_admin_console">
 <h2>ActiveMQ Admin Console</h2>
 
-<p>In <a data-type="xref" href="#app_activemq_admin_console"></a>, we have used the ActiveMQ admin console to check the broker configuration. We can also use this console to check the destinations and their associated metrics.</p>
+<p>In <a data-type="xref" href="#app_activemq_admin_console">#app_activemq_admin_console</a>, we have used the ActiveMQ admin console to check the broker configuration. We can also use this console to check the destinations and their associated metrics.</p>
 
 <p>Go to the ActiveMQ admin console in your Web browser at <a href="http://localhost:8161/hawtio"><em class="hyperlink">http://localhost:8161/hawtio</em></a> and navigate the ActiveMQ tree down to the postion topic in <code>mybroker &gt; Topic &gt; device.2262EC25-E9FD-4578-BADE-4E113DE45934.location</code>.</p>
 
@@ -1029,7 +1029,7 @@ priority:4
 
 
 <p>We can see that there are more headers in the consumed messages that in the messages we sent (which only had <code>content-type</code> and <code>content-length</code>).
-These headers are added by the STOMP broker and provides additional metadata about the messages. We will explore some of them later in <a data-type="xref" href="#ch_advanced_stomp"></a> and <a data-type="xref" href="#ch_beyond_stomp"></a>.</p>
+These headers are added by the STOMP broker and provides additional metadata about the messages. We will explore some of them later in <a data-type="xref" href="#ch_advanced_stomp">#ch_advanced_stomp</a> and <a data-type="xref" href="#ch_beyond_stomp">#ch_beyond_stomp</a>.</p>
 
 </div>
 

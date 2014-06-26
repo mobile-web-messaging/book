@@ -108,7 +108,7 @@ There may be one or many consumers that will receive the message. It also possib
 <p>In a Point-to-Point messaging model, a message sent by a producer will be routed to a single consumer.</p>
 
 <p>The producer sends a message to a destination identified as a <em>queue</em> in that messaging model. There can be zero, one or many consumers subscribed (or <em>bound</em>) to this queue and the messaging broker will route incoming messages to only one of these consumers to deliver the message.
-As illustrated in <a data-type="xref" href="#img_intro_point_to_point"></a>, when the producer sends a message to the queue, only one of the consumers that are subscribed receives the message.</p>
+As illustrated in <a data-type="xref" href="#img_intro_point_to_point">#img_intro_point_to_point</a>, when the producer sends a message to the queue, only one of the consumers that are subscribed receives the message.</p>
 
 <figure id="img_intro_point_to_point">
 <img src="images/Chapter010/point_to_point.png" alt="Diagram of the Point-to-Point Topology"></img>
@@ -141,7 +141,7 @@ Some messaging brokers allow to <em>expire</em> messages if they remain in the q
 <p>In a Publish/Subscribe messaging model (often shortened as pub/sub), a message sent by a producer is routed to many consumers.</p>
 
 <p>The producer sends a message to a destination identified as a <em>topic</em> in that messaging model. There can be zero or many consumers subscribed to this topic and the messaging broker will route incoming message to <em>all</em> these consumers to deliver the message. If there are no consumers bound to the topic, the broker may <em>not</em> retain the incoming messages.
-As illustrated in <a data-type="xref" href="#img_intro_pub_sub"></a>, when the producer sends a message to the topic, all the consumers that are subscribed receive the message.</p>
+As illustrated in <a data-type="xref" href="#img_intro_pub_sub">#img_intro_pub_sub</a>, when the producer sends a message to the topic, all the consumers that are subscribed receive the message.</p>
 
 <figure id="img_intro_pub_sub">
 <img src="images/Chapter010/pub_sub.png" alt="Diagram of the Point-to-Point Topology"></img>
@@ -233,10 +233,10 @@ Headers are specific to messaging protocols. Some messaging protocols (such as S
 <p>The "truck" will use an iOS application to broadcast the device’s geolocation data using its GPS sensor and display text messages that it receives from the headquarters. The "headquarter" will use a Web application to display the locations of all the "trucks" on a map. It will also be used to send text messages to a given truck on their devices:</p>
 <ol>
 <li>
-<p>In <a data-type="xref" href="#ch_mobile_stomp"></a>, we will write the <code>Locations</code> iOS application using the STOMP protocol to send GPS data and receive text from an iOS device.</p>
+<p>In <a data-type="xref" href="#ch_mobile_stomp">#ch_mobile_stomp</a>, we will write the <code>Locations</code> iOS application using the STOMP protocol to send GPS data and receive text from an iOS device.</p>
 </li>
 <li>
-<p>In <a data-type="xref" href="#ch_web_stomp"></a>, we will write the Web application using STOMP protocol over Web Sockets to receive GPS data in a Web browser and send text to the devices.</p>
+<p>In <a data-type="xref" href="#ch_web_stomp">#ch_web_stomp</a>, we will write the Web application using STOMP protocol over Web Sockets to receive GPS data in a Web browser and send text to the devices.</p>
 </li>
 
 </ol>
@@ -396,10 +396,10 @@ We are using a plain text version as this format is enough to provide a first ve
 <p>The pending Web application will display the motions of all devices that broadcast them and be able to send alert messages to them:</p>
 <ol>
 <li>
-<p>In <a data-type="xref" href="#ch_mobile_mqtt"></a>, we will write the <code>Motions</code> iOS application using the MQTT protocol to send data about the device motions and receive alerts.</p>
+<p>In <a data-type="xref" href="#ch_mobile_mqtt">#ch_mobile_mqtt</a>, we will write the <code>Motions</code> iOS application using the MQTT protocol to send data about the device motions and receive alerts.</p>
 </li>
 <li>
-<p>In <a data-type="xref" href="#ch_web_mqtt"></a>, we will write a Web application using MQTT protocol over Web Sockets to receive all the device motions data and display them. The Web application will also be able to send alert messages to any devices sending its motions data.</p>
+<p>In <a data-type="xref" href="#ch_web_mqtt">#ch_web_mqtt</a>, we will write a Web application using MQTT protocol over Web Sockets to receive all the device motions data and display them. The Web application will also be able to send alert messages to any devices sending its motions data.</p>
 </li>
 
 </ol>
@@ -547,7 +547,7 @@ be represented as a simple plain text string corresponding to a color. The <code
 
 <p>We have also described the two applications with their messaging models and representation that will be written in the subsequent chapters: the <code>Locations</code> application that uses STOMP and the <code>Motions</code> applications that uses MQTT.</p>
 
-<p>In the next chapter, we will start writing the <code>Locations</code> application running on iOS devices. If you are more interested by learning about MQTT, you can go directly to <a data-type="xref" href="#ch_mobile_mqtt"></a> to start writing the <code>Motions</code> application.</p>
+<p>In the next chapter, we will start writing the <code>Locations</code> application running on iOS devices. If you are more interested by learning about MQTT, you can go directly to <a data-type="xref" href="#ch_mobile_mqtt">#ch_mobile_mqtt</a> to start writing the <code>Motions</code> application.</p>
 </section>
 
 
