@@ -63,7 +63,7 @@ We will use https://developer.apple.com/xcode/[Xcode] to create the +Locations+ 
 
 Once Xcode is installed and started, we create a new project from its launch screen:
 
-[[img_mobile_stomp_1]]
+[[img_mobile_stomp_125]]
 .Select +Create a new Xcode project+ from Xcode launch screen.
 image::images/Chapter020/xcode_launch_screen.png["XCode Launch screen"]
 
@@ -914,7 +914,7 @@ We will write the graphical part first by adding a +UITable+ to the user interfa
 
 Click on +Main.storyboard+ to open it. From the +Object+ library, drag a +Table View+ on the View's window. Place it below the current position +UILabel+.
 
-[[img_mobile_stomp_16]]
+[[img_mobile_stomp_162]]
 .Add a Table View
 image::images/Chapter020/table_view.png["Add a Table View"]
 
@@ -945,7 +945,7 @@ The +MWMViewController+ interface will be declared as both the data source and d
 
 We need to bind this outlet property to the table view. Open the +Main.storyboard+ and control-click on +View Controller+ to see its connection panel. Drag from +tableView+ to the table to connect it.
 
-[[img_mobile_stomp_18]]
+[[img_mobile_stomp_182]]
 .Connect the +tableView+ outlet property to the +Table View+.
 image::images/Chapter020/table_view_connection.png[Connect the tableView outlet property to the Table View]
 
