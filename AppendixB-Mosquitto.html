@@ -2,7 +2,7 @@
 <h1>Mosquitto</h1>
 
 
-<p>In this appendix, we describe how to install the <a href="http://mosquitto.org">Mosquitto broker</a> and its tools to produce and consume MQTT messages from the command line.</p>
+<p class="lead">In this appendix, we describe how to install the <a href="http://mosquitto.org">Mosquitto broker</a> and its tools to produce and consume MQTT messages from the command line.</p>
 
 
 
@@ -13,7 +13,7 @@
 <h1>Download and Installation</h1>
 
 <p>Mosquitto is an Open Source message broker that implements the MQTT protocol.
-The public MQTT broker hosted on <code>iot.eclipse.org</code> that we used in <a data-type="xref" href="#ch_mobile_mqtt">#ch_mobile_mqtt</a> and <a data-type="xref" href="#ch_web_mqtt">#ch_web_mqtt</a> is an instance of Mosquitto.</p>
+The public MQTT broker hosted on <code>iot.eclipse.org</code> that we used in <a data-type="xref" href="#ch_mobile_mqtt"></a> and <a data-type="xref" href="#ch_web_mqtt"></a> is an instance of Mosquitto.</p>
 
 <p>Mosquitto also comes with two command lines tools to send and receive MQTT messages. These tools are handy when writing an application using MQTT to be able to quickly produce and consume messages and check that the application is working as expected.</p>
 
@@ -40,28 +40,27 @@ The public MQTT broker hosted on <code>iot.eclipse.org</code> that we used in <a
 <p>In this book, we use it in the simplest fashion to send a message.
 The parameters we must pass to the tool are:</p>
 <ul>
-
-<li><p><code>-h host</code> to specify the host of the MQTT broker</p>
+<li>
+<p><code>-h host</code> to specify the host of the MQTT broker</p>
 </li>
-
-<li><p><code>-t topic</code> to specify the topic of the MQTT message</p>
+<li>
+<p><code>-t topic</code> to specify the topic of the MQTT message</p>
 </li>
-
-<li><p><code>-m message</code> to specify the message payload to send</p>
+<li>
+<p><code>-m message</code> to specify the message payload to send</p>
 </li>
-
 </ul>
 
 <p>For example to send a message with the text <code>yellow</code> for payload on the topic <code>/mwm/XYZ/alert</code> on the broker hosted on <code>iot.eclipse.org</code>, the command line is:</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="sh">$ mosquitto_pub -h iot.eclipse.org -t /mwm/XYZ/alert -m yellow</pre>
+<pre data-type="programlisting" data-code-language="sh">$ mosquitto_pub -h iot.eclipse.org -t /mwm/XYZ/alert -m yellow</pre>
 
 
 <p>The full list of the <code>mosquitto_pub</code> parameters is available by calling <code>mosquitto_pub --help</code>.</p>
 
 
-<pre data-type="programlisting" class="programlisting">$ mosquitto_pub --help
+<pre data-type="programlisting">$ mosquitto_pub --help
 mosquitto_pub is a simple mqtt client that will publish a message on a single topic and exit.
 mosquitto_pub version 1.3.1 running on libmosquitto 1.3.1.
 
@@ -144,20 +143,19 @@ See http://mosquitto.org/ for more information.</pre>
 
 <p>The minimal parameters we must pass to the tool are:</p>
 <ul>
-
-<li><p><code>-h host</code> to specify the host of the MQTT broker</p>
+<li>
+<p><code>-h host</code> to specify the host of the MQTT broker</p>
 </li>
-
-<li><p><code>-t topic</code> to specify the topic to consume from</p>
+<li>
+<p><code>-t topic</code> to specify the topic to consume from</p>
 </li>
-
 </ul>
 
 <p>For example to consume messages from the topic <code>/mwm/XYZ/alert</code>
 on the broker hosted on <code>iot.eclipse.org</code>, the command line is:</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="sh">$ mosquitto_sub -h iot.eclipse.org -t /mwm/XYZ/alert
+<pre data-type="programlisting" data-code-language="sh">$ mosquitto_sub -h iot.eclipse.org -t /mwm/XYZ/alert
 ...
 yellow</pre>
 
@@ -167,7 +165,7 @@ yellow</pre>
 <p>The full list of the <code>mosquitto_sub</code> parameters is available by calling <code>mosquitto_sub --help</code>.</p>
 
 
-<pre data-type="programlisting" class="programlisting">$ mosquitto_sub --help
+<pre data-type="programlisting">$ mosquitto_sub --help
 mosquitto_sub is a simple mqtt client that will subscribe to a single topic and print all messages it receives.
 mosquitto_sub version 1.3.1 running on libmosquitto 1.3.1.
 

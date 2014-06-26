@@ -2,10 +2,10 @@
 <h1>Mobile Messaging with STOMP</h1>
 
 
-<p>In this chapter, we will write our first messaging client: an native application running on an iPhone.
+<p class="lead">In this chapter, we will write our first messaging client: an native application running on an iPhone.
 We will use STOMP to send and receive messages using the Objective-C library StompKit.</p>
 
-<p>In <a data-type="xref" href="#ch_introduction_stomp_example">#ch_introduction_stomp_example</a>, we described the <code>Locations</code> application. In this chapter, we will write the iOS application that broadcasts the device’s  position and receive text messages.</p>
+<p>In <a data-type="xref" href="#ch_introduction_stomp_example"></a>, we described the <code>Locations</code> application. In this chapter, we will write the iOS application that broadcasts the device’s  position and receive text messages.</p>
 
 <figure id="img_mobile_stomp_1">
 <img src="images/Chapter020/stomp_ios_app.png" alt="Diagram of the Locations iOS application"></img>
@@ -52,7 +52,7 @@ We will use STOMP to send and receive messages using the Objective-C library Sto
 
 <p>Once Xcode is installed and started, we create a new project from its launch screen:</p>
 
-<figure id="img_mobile_stomp_12">
+<figure id="img_mobile_stomp_125">
 <img src="images/Chapter020/xcode_launch_screen.png" alt="XCode Launch screen"></img>
 <figcaption>Select <code>Create a new Xcode project</code> from Xcode launch screen.</figcaption>
 </figure>
@@ -95,9 +95,10 @@ We will use STOMP to send and receive messages using the Objective-C library Sto
 
 <p>After installing CocoaPods by following the <a href="http://guides.cocoapods.org/using/getting-started.html#getting-started">instructions on its web site</a>, we create a file named <strong><code>Podfile</code></strong> at the root of the project (in the same directory than <code>Locations.xcodeproj</code>).</p>
 <div id="ex_mobile_stomp_1" data-type="example">
-<h5><span data-type="label">Example 1-5. </span><code>Locations</code>' Podfile</h5>
+<h5><code>Locations</code>' Podfile</h5>
 
-<pre data-type="programlisting" class="programlisting">xcodeproj 'Locations.xcodeproj'
+
+<pre data-type="programlisting">xcodeproj 'Locations.xcodeproj'
 
 pod 'StompKit', '~&gt; 0.1'
 
@@ -106,9 +107,10 @@ platform :ios, '5.0'</pre>
 
 <p>After saving this file, run the <strong><code>pod install</code></strong> command.</p>
 <div id="ex_mobile_stomp_2" data-type="example">
-<h5><span data-type="label">Example 1-6. </span>Install <code>Locations</code> dependencies</h5>
+<h5>Install <code>Locations</code> dependencies</h5>
 
-<pre data-type="programlisting" class="programlisting">$ pod install
+
+<pre data-type="programlisting">$ pod install
 Analyzing dependencies
 Downloading dependencies
 Installing CocoaAsyncSocket (7.3.2)
@@ -189,7 +191,7 @@ Command symbol is not displayed in PDF.
 <p>Add the necessary outlet property in the <code>MWMViewController</code> private interface in MWMViewController.m+ and a <code>NSString</code> to hold the identifier.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">@interface MWMViewController ()
+<pre data-type="programlisting" data-code-language="objc">@interface MWMViewController ()
 
 @property (weak, nonatomic) IBOutlet UILabel *deviceIDLabel;
 
@@ -210,7 +212,7 @@ Command symbol is not displayed in PDF.
 <p>Open the <code>MWMViewController.m</code> file to add code to the <code>MWMViewController</code> <em>implementation</em>. When the application starts and the view is loaded in <code>viewDidLoad</code>, we set the <code>deviceID</code> using a UUID.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">- (void)viewDidLoad
+<pre data-type="programlisting" data-code-language="objc">- (void)viewDidLoad
 {
     [super viewDidLoad];
 
@@ -228,7 +230,7 @@ Command symbol is not displayed in PDF.
 <p>We also need to set the label to this ID when the view will appear.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">- (void)viewWillAppear:(BOOL)animated
+<pre data-type="programlisting" data-code-language="objc">- (void)viewWillAppear:(BOOL)animated
 {
     self.deviceIDLabel.text = self.deviceID;
 }</pre>
@@ -284,12 +286,12 @@ Command symbol is not displayed in PDF.
 <p>Open the <code>MWMViewController.m</code> file and add a property to the <code>MWMViewController</code> private interface.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">@property (weak, nonatomic) IBOutlet UILabel *currentPositionLabel;</pre>
+<pre data-type="programlisting" data-code-language="objc">@property (weak, nonatomic) IBOutlet UILabel *currentPositionLabel;</pre>
 
 
 <p>We then bind this property to the label. Open the <code>Main.storyboard</code> and control-click on <code>View Controller</code> to see its connection panel. Drag from <code>currentPositionLabel</code> to the label to connect it.</p>
 
-<figure id="img_mobile_stomp_125">
+<figure id="img_mobile_stomp_12">
 <img src="images/Chapter020/currentPositionLabel_connection.png" alt="Connect the currentPositionLabel outlet property to the current position UILabel"></img>
 <figcaption>Connect the <code>currentPositionLabel</code> outlet property to the current position <code>UILabel</code>.</figcaption>
 </figure>
@@ -326,7 +328,7 @@ Command symbol is not displayed in PDF.
 <p>We will make the <code>MWMViewController</code> private interface conform to the <code>CLLocationManagerDelegate</code> protocol and declare a <code>CLLocationManager</code> property named <code>locationManager</code>.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">#import &lt;CoreLocation/CoreLocation.h&gt;
+<pre data-type="programlisting" data-code-language="objc">#import &lt;CoreLocation/CoreLocation.h&gt;
 
 interface MWMViewController () &lt;CLLocationManagerDelegate&gt;
 
@@ -339,9 +341,10 @@ interface MWMViewController () &lt;CLLocationManagerDelegate&gt;
 
 <p>Finally, the application will start listening for the device location by calling locationManager’s <code>startUpdatingLocation</code> method.</p>
 <div data-type="example">
-<h5><span data-type="label">Example 1-6. </span></h5>
+<h5></h5>
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">#pragma mark - CoreLocation actions
+
+<pre data-type="programlisting" data-code-language="objc">#pragma mark - CoreLocation actions
 
 - (void)startUpdatingCurrentLocation
 {
@@ -369,9 +372,10 @@ interface MWMViewController () &lt;CLLocationManagerDelegate&gt;
 
 <p>To stop receiving the device location in <code>stopUpdatingCurrentLocation</code>, we simply call locationManager’s <code>stopUpdatingLocation</code> method.</p>
 <div data-type="example">
-<h5><span data-type="label">Example 1-6. </span></h5>
+<h5></h5>
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">- (void)stopUpdatingCurrentLocation
+
+<pre data-type="programlisting" data-code-language="objc">- (void)stopUpdatingCurrentLocation
 {
     [self.locationManager stopUpdatingLocation];
 }</pre>
@@ -382,9 +386,10 @@ coordinates from the <code>newLocation</code>'s <code>coordinate</code>.</p>
 
 <p>Once we have them, we can update the <code>currentPositionLabel</code>'s <code>text</code> to display them.</p>
 <div data-type="example">
-<h5><span data-type="label">Example 1-6. </span></h5>
+<h5></h5>
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">#pragma mark - CLLocationManagerDelegate protocol
+
+<pre data-type="programlisting" data-code-language="objc">#pragma mark - CLLocationManagerDelegate protocol
 
 - (void)locationManager:(CLLocationManager *)manager
     didUpdateToLocation:(CLLocation *)newLocation
@@ -402,9 +407,10 @@ coordinates from the <code>newLocation</code>'s <code>coordinate</code>.</p>
 
 <p>If there is any problem with the <code>locationManager</code>, we want to warn the user about it and stop updating the location. To do so, we implement the <code>CLLocationManagerDelegate</code>'s <code>locationManager:didFailWithError:</code> method to display a warning to the user:</p>
 <div data-type="example">
-<h5><span data-type="label">Example 1-6. </span></h5>
+<h5></h5>
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">- (void)locationManager:(CLLocationManager *)manager
+
+<pre data-type="programlisting" data-code-language="objc">- (void)locationManager:(CLLocationManager *)manager
        didFailWithError:(NSError *)error
 {
     // reset the current position label
@@ -421,9 +427,10 @@ coordinates from the <code>newLocation</code>'s <code>coordinate</code>.</p>
 
 <p>Now that the code related to <code>CoreLocation</code> is in place, we just need to call the <code>startUpdatingCurrentLocation</code> method when the view will appear.</p>
 <div data-type="example">
-<h5><span data-type="label">Example 1-6. </span></h5>
+<h5></h5>
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">- (void)viewWillAppear:(BOOL)animated
+
+<pre data-type="programlisting" data-code-language="objc">- (void)viewWillAppear:(BOOL)animated
 {
     self.truckIDLabel.text = self.truckID;
 
@@ -433,9 +440,10 @@ coordinates from the <code>newLocation</code>'s <code>coordinate</code>.</p>
 
 <p>We also need to stop updating the location when the view disappears in <code>viewDidDisappear:</code>.</p>
 <div data-type="example">
-<h5><span data-type="label">Example 1-6. </span></h5>
+<h5></h5>
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">- (void)viewDidDisappear:(BOOL)animated
+
+<pre data-type="programlisting" data-code-language="objc">- (void)viewDidDisappear:(BOOL)animated
 {
     [self stopUpdatingCurrentLocation];
 }</pre>
@@ -468,7 +476,7 @@ coordinates from the <code>newLocation</code>'s <code>coordinate</code>.</p>
 <p>If you are running the application on an iPhone device, the real geolocation data from the device will be used.
 If you run the application using the <code>iOS Simulator</code>, you can simulate different location in the <code>Debug &gt; Location</code> menu. For example, the <code>Freeway Drive</code> will simulate a car driving on a freeway between Palo Alto and San Francisco.</p>
 
-<p>Whether you are running the application on a device or in the simulator, you should see the <code>currentPositionLabel</code> be udpated. The latitude and longitude numbers are difficult to interpret as such but in the next chapter <a data-type="xref" href="#ch_web_stomp">#ch_web_stomp</a>, we will be able to use them to draw the position on a map to locate the devices.</p>
+<p>Whether you are running the application on a device or in the simulator, you should see the <code>currentPositionLabel</code> be udpated. The latitude and longitude numbers are difficult to interpret as such but in the next chapter <a data-type="xref" href="#ch_web_stomp"></a>, we will be able to use them to draw the position on a map to locate the devices.</p>
 
 <p>Now that the <code>Locations</code> application is handling the device geolocation data, the next step is to send them using STOMP.</p>
 </section>
@@ -498,9 +506,10 @@ If you run the application using the <code>iOS Simulator</code>, you can simulat
 
 <p>We must import its header file <code>StompKit.h</code> at the top of the <code>MWMViewController.m</code> file and add a <code>STOMPClient</code> property named <code>client</code> to the <code>MWMViewController</code> private interface.</p>
 <div data-type="example">
-<h5><span data-type="label">Example 1-6. </span></h5>
+<h5></h5>
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">#import &lt;StompKit.h&gt;
+
+<pre data-type="programlisting" data-code-language="objc">#import &lt;StompKit.h&gt;
 
 @interface MWMViewController () &lt;CLLocationManagerDelegate&gt;
 
@@ -514,13 +523,14 @@ If you run the application using the <code>iOS Simulator</code>, you can simulat
 <p>We do not need to conform to any protocol to use <code>StompKit</code> as its API is based on <em>blocks</em> instead of protocol delegates.</p>
 
 <p>The <code>client</code> variable is created when the controller’s view is loaded in <code>MWMViewController</code>'s <code>viewDidLoad</code> method implementation. To create it, we need to pass the host and port of the STOMP broker to connect to.
-These information depends on the broker you are using. If you have configured ActiveMQ on your machine as described in the appendix <a data-type="xref" href="#appendix_activemq">#appendix_activemq</a>, you will be able to connect on its <code>61613</code> port.</p>
+These information depends on the broker you are using. If you have configured ActiveMQ on your machine as described in the appendix <a data-type="xref" href="#appendix_activemq"></a>, you will be able to connect on its <code>61613</code> port.</p>
 
 <p>The host will depend on your network configuration. On my local network, my server has the IP address <code>192.168.1.25</code>. I will use this value for the example but you will have to replace this by your own server address to run the applications.</p>
 <div data-type="example">
-<h5><span data-type="label">Example 1-6. </span></h5>
+<h5></h5>
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">#define kHost     @"192.168.1.25"
+
+<pre data-type="programlisting" data-code-language="objc">#define kHost     @"192.168.1.25"
 #define kPort     61613
 
 ...
@@ -564,9 +574,10 @@ These information depends on the broker you are using. If you have configured Ac
 
 <p>We will encapsulate this code in a <code>connect</code> method in <code>MWMViewController</code> implementation.</p>
 <div data-type="example">
-<h5><span data-type="label">Example 1-6. </span></h5>
+<h5></h5>
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">@implementation MWMViewController
+
+<pre data-type="programlisting" data-code-language="objc">@implementation MWMViewController
 
 #pragma mark - Messaging
 
@@ -592,9 +603,10 @@ These information depends on the broker you are using. If you have configured Ac
 
 <p>We will call this <code>connect</code> method when the view appears in <code>viewWillAppear:</code>.</p>
 <div data-type="example">
-<h5><span data-type="label">Example 1-6. </span></h5>
+<h5></h5>
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">- (void)viewWillAppear:(BOOL)animated
+
+<pre data-type="programlisting" data-code-language="objc">- (void)viewWillAppear:(BOOL)animated
 {
     self.truckIDLabel.text = self.truckID;
 
@@ -621,9 +633,10 @@ These information depends on the broker you are using. If you have configured Ac
 
 <p>The <code>STOMPClient</code> disconnects from the broker using its <code>disconnect:</code> method. This method takes a block that will be called when the client is disconnected from the server. The block takes a <code>NSError</code> parameter that is set if there is an error during the disconnection operation.</p>
 <div data-type="example">
-<h5><span data-type="label">Example 1-6. </span></h5>
+<h5></h5>
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">#pragma mark - Messaging
+
+<pre data-type="programlisting" data-code-language="objc">#pragma mark - Messaging
 
 - (void)disconnect
 {
@@ -642,9 +655,10 @@ These information depends on the broker you are using. If you have configured Ac
 
 <p>We will disconnect from the broker once the view has disappeared in <code>viewDidDisappear:</code>.</p>
 <div data-type="example">
-<h5><span data-type="label">Example 1-6. </span></h5>
+<h5></h5>
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">- (void)viewDidDisappear:(BOOL)animated
+
+<pre data-type="programlisting" data-code-language="objc">- (void)viewDidDisappear:(BOOL)animated
 {
     [self stopUpdatingCurrentLocation];
     [self disconnect];
@@ -656,7 +670,7 @@ These information depends on the broker you are using. If you have configured Ac
 <p>If we run the application, we see logs in Xcode that shows the connection process:</p>
 
 
-<pre data-type="programlisting" class="programlisting">2014-03-13 17:07:21.667 Locations[79069:60b] Connecting...
+<pre data-type="programlisting">2014-03-13 17:07:21.667 Locations[79069:60b] Connecting...
 2014-03-13 17:07:21.723 Locations[79069:3903] Connected</pre>
 
 </section>
@@ -678,10 +692,10 @@ These information depends on the broker you are using. If you have configured Ac
 
 <p>We now have a connection to the STOMP broker and we receive the device’s geolocation data from the <code>CoreLocation</code> framework. The last step to do is to send these data to the topic associated to the device ID.</p>
 
-<p>As we described in <a data-type="xref" href="#ch_introduction_stomp_example_topology">#ch_introduction_stomp_example_topology</a>, each device will send its location on a topic named after its identifier.</p>
+<p>As we described in <a data-type="xref" href="#ch_introduction_stomp_example_topology"></a>, each device will send its location on a topic named after its identifier.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">NSString *destination = [NSString stringWithFormat:@"/topic/device.%@.location", self.deviceID];</pre>
+<pre data-type="programlisting" data-code-language="objc">NSString *destination = [NSString stringWithFormat:@"/topic/device.%@.location", self.deviceID];</pre>
 
 <div data-type="note">
 <h1>ActiveMQ STOMP Destinations Naming Conventions</h1>
@@ -692,11 +706,11 @@ These information depends on the broker you are using. If you have configured Ac
 
 </div>
 
-<p>As we described in <a data-type="xref" href="#ch_introduction_stomp_example_message">#ch_introduction_stomp_example_message</a>, the message representation is a JSON string that contains the location coordinates, the timestamp and the device ID.
+<p>As we described in <a data-type="xref" href="#ch_introduction_stomp_example_message"></a>, the message representation is a JSON string that contains the location coordinates, the timestamp and the device ID.
 We build a <code>NSDictionary</code> from these data and serialize it as a JSON string:</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">NSDictionary *dict = @{
+<pre data-type="programlisting" data-code-language="objc">NSDictionary *dict = @{
     @"deviceID": self.deviceID,
     @"lat": [NSNumber numberWithDouble:location.coordinate.latitude],
     @"lng": [NSNumber numberWithDouble:location.coordinate.longitude],
@@ -710,7 +724,7 @@ NSString *body =[[NSString alloc] initWithData:data encoding:NSUTF8StringEncodin
 Without such a <code>content-type</code>, the consumers would not necessarily know how to <em>read</em> the data in the body and interpret them.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">NSDictionary *headers = @{
+<pre data-type="programlisting" data-code-language="objc">NSDictionary *headers = @{
     @"content-type": @"application/json;charset=utf-8"
 };</pre>
 
@@ -719,7 +733,7 @@ Without such a <code>content-type</code>, the consumers would not necessarily kn
 Last step is to use the <code>client</code>'s <code>sendTo:headers:body</code> method to send it.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">// send the message
+<pre data-type="programlisting" data-code-language="objc">// send the message
 [self.client sendTo:destination
             headers:headers
                body:body];</pre>
@@ -727,9 +741,10 @@ Last step is to use the <code>client</code>'s <code>sendTo:headers:body</code> m
 
 <p>We will encapsulate all these steps in a <code>sendLocation:</code> method that takes a <code>CLLocation</code> parameter.</p>
 <div data-type="example">
-<h5><span data-type="label">Example 1-6. </span></h5>
+<h5></h5>
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">- (void)sendLocation:(CLLocation *)location
+
+<pre data-type="programlisting" data-code-language="objc">- (void)sendLocation:(CLLocation *)location
 {
     // build a static NSDateFormatter to display the current date in ISO-8601
     static NSDateFormatter *dateFormatter = nil;
@@ -766,9 +781,10 @@ Last step is to use the <code>client</code>'s <code>sendTo:headers:body</code> m
 
 <p>Next step is to call this method every time we receive an updated location in the <code>locationManager:didUpdateToLocation:fromLocation:</code> method.</p>
 <div data-type="example">
-<h5><span data-type="label">Example 1-6. </span></h5>
+<h5></h5>
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">- (void)locationManager:(CLLocationManager *)manager
+
+<pre data-type="programlisting" data-code-language="objc">- (void)locationManager:(CLLocationManager *)manager
     didUpdateToLocation:(CLLocation *)newLocation
            fromLocation:(CLLocation *)oldLocation
 {
@@ -791,9 +807,10 @@ Last step is to use the <code>client</code>'s <code>sendTo:headers:body</code> m
 
 <p>We will need add a <code>lastKnownLocation</code> property to the <code>MWMViewController</code> private interface and use it to store the location returned by the <code>CLLocationManager</code> delegate method.</p>
 <div data-type="example">
-<h5><span data-type="label">Example 1-6. </span></h5>
+<h5></h5>
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">@interface MWMViewController () &lt;CLLocationManagerDelegate&gt;
+
+<pre data-type="programlisting" data-code-language="objc">@interface MWMViewController () &lt;CLLocationManagerDelegate&gt;
 
 ...
 @property (strong, nonatomic) CLLocation *lastKnownLocation;
@@ -822,9 +839,10 @@ Last step is to use the <code>client</code>'s <code>sendTo:headers:body</code> m
 
 <p>To send a message with this <code>lastKnownLocation</code> when the user shakes the device, we must implement the <code>motionEnded:withEvent:</code> method in the <code>MWMViewController</code> implementation and check if the event is a motion shake (identified by <code>UIEventSubtypeMotionShake</code>).</p>
 <div data-type="example">
-<h5><span data-type="label">Example 1-6. </span></h5>
+<h5></h5>
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">#pragma mark - User Events
+
+<pre data-type="programlisting" data-code-language="objc">#pragma mark - User Events
 
 - (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
 {
@@ -843,14 +861,14 @@ Last step is to use the <code>client</code>'s <code>sendTo:headers:body</code> m
 
 <p>We will confirm it at three different stages:</p>
 <ol>
-
-<li><p>Display debug log on the device to check that messages are sent</p>
+<li>
+<p>Display debug log on the device to check that messages are sent</p>
 </li>
-
-<li><p>Use ActiveMQ  administration console to check that it effectively handled the sent messages</p>
+<li>
+<p>Use ActiveMQ  administration console to check that it effectively handled the sent messages</p>
 </li>
-
-<li><p>Write the simplest STOMP consumer that can receive these messages</p>
+<li>
+<p>Write the simplest STOMP consumer that can receive these messages</p>
 </li>
 
 </ol>
@@ -870,7 +888,7 @@ Last step is to use the <code>client</code>'s <code>sendTo:headers:body</code> m
 <p>To display them in the console, edit the file named <code>StompKit.m</code> in Xcode that is under the <code>Pods</code> project (its full path is <code>Pods</code> &gt; <code>Pods</code> &gt; <code>StompKit</code> &gt; <code>StompKit.m</code> in the Project Navigator view) and change the macro to activate logs by replacing the <code>0</code> by <code>1</code>.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">#pragma mark Logging macros
+<pre data-type="programlisting" data-code-language="objc">#pragma mark Logging macros
 
 #if 1 // set to 1 to enable logs
 
@@ -880,7 +898,7 @@ Last step is to use the <code>client</code>'s <code>sendTo:headers:body</code> m
 <p>If we restart the application, we now see debug statements in Xcode’s Debug console:</p>
 
 
-<pre data-type="programlisting" class="programlisting">2014-03-13 17:19:05.711 Locations[79549:60b] &gt;&gt;&gt; SEND
+<pre data-type="programlisting">2014-03-13 17:19:05.711 Locations[79549:60b] &gt;&gt;&gt; SEND
 destination:/topic/device.2262EC25-E9FD-4578-BADE-4E113DE45934.location
 content-type:application/json;charset=utf-8
 content-length:122
@@ -907,7 +925,7 @@ content-length:122
 <section data-type="sect2" id="_activemq_admin_console">
 <h2>ActiveMQ Admin Console</h2>
 
-<p>In <a data-type="xref" href="#app_activemq_admin_console">#app_activemq_admin_console</a>, we have used the ActiveMQ admin console to check the broker configuration. We can also use this console to check the destinations and their associated metrics.</p>
+<p>In <a data-type="xref" href="#app_activemq_admin_console"></a>, we have used the ActiveMQ admin console to check the broker configuration. We can also use this console to check the destinations and their associated metrics.</p>
 
 <p>Go to the ActiveMQ admin console in your Web browser at <a href="http://localhost:8161/hawtio"><em class="hyperlink">http://localhost:8161/hawtio</em></a> and navigate the ActiveMQ tree down to the postion topic in <code>mybroker &gt; Topic &gt; device.2262EC25-E9FD-4578-BADE-4E113DE45934.location</code>.</p>
 
@@ -944,7 +962,8 @@ content-length:122
 
 <p>We need to open a <code>telnet</code> client to connect to the broker host on the <code>61613</code> port. Since I am on the same machine than the broker, I will simply connect to <code>localhost</code>:</p>
 <div data-type="example">
-<h5><span data-type="label">Example 1-7. </span>Connection with a <code>telnet</code> Client</h5><pre data-type="programlisting">
+<h5>Connection with a <code>telnet</code> Client</h5>
+<pre data-type="programlisting">
 $ <strong><code>telnet localhost 61613</code></strong>
 Trying 127.0.0.1...
 Connected to localhost.
@@ -953,7 +972,8 @@ Escape character is '^]'.
 
 <p>Once the client is connected, we must connect to the broker to open a STOMP connection (as we did in the application using <code>STOMPClient</code>'s <code>connectWithHeaders:completionHandler:</code> method).</p>
 <div data-type="example">
-<h5><span data-type="label">Example 1-8. </span>Connect to a STOMP Broker</h5><pre data-type="programlisting">
+<h5>Connect to a STOMP Broker</h5>
+<pre data-type="programlisting">
 <strong><code>CONNECT
 
 </code></strong>^@
@@ -972,7 +992,8 @@ Escape character is '^]'.
 <p>Once you type <code>ctrl + @</code>, the messaging broker will process the <code>CONNECT</code> frame
 and reply with a <code>CONNECTED</code> frame:</p>
 <div data-type="example">
-<h5><span data-type="label">Example 1-9. </span>Receive a Connection Confirmation</h5><pre data-type="programlisting">
+<h5>Receive a Connection Confirmation</h5>
+<pre data-type="programlisting">
 CONNECTED
 heart-beat:0,0
 session:ID:jeff.local-63055-1391518653216-2:23
@@ -984,7 +1005,7 @@ version:1.2
 The device ID is displayed on the application screen. You will have to adapt the command to use your own device ID to receive its message.</p>
 
 
-<pre data-type="programlisting" class="programlisting">SUBSCRIBE
+<pre data-type="programlisting">SUBSCRIBE
 destination:/topic/device.2262EC25-E9FD-4578-BADE-4E113DE45934.location
 
 ^@</pre>
@@ -993,7 +1014,7 @@ destination:/topic/device.2262EC25-E9FD-4578-BADE-4E113DE45934.location
 <p>As soon as we sent this command to the STOMP broker, we will receive <code>MESSAGE</code> frames that corresponds to the messages sent by the application:</p>
 
 
-<pre data-type="programlisting" class="programlisting">MESSAGE
+<pre data-type="programlisting">MESSAGE
 content-type:application/json;charset=utf-8
 message-id:ID:jeff.local-50971-1394726830317-2:5:-1:1:323
 destination:/topic/device.2262EC25-E9FD-4578-BADE-4E113DE45934.location
@@ -1008,7 +1029,7 @@ priority:4
 
 
 <p>We can see that there are more headers in the consumed messages that in the messages we sent (which only had <code>content-type</code> and <code>content-length</code>).
-These headers are added by the STOMP broker and provides additional metadata about the messages. We will explore some of them later in <a data-type="xref" href="#ch_advanced_stomp">#ch_advanced_stomp</a> and <a data-type="xref" href="#ch_beyond_stomp">#ch_beyond_stomp</a>.</p>
+These headers are added by the STOMP broker and provides additional metadata about the messages. We will explore some of them later in <a data-type="xref" href="#ch_advanced_stomp"></a> and <a data-type="xref" href="#ch_beyond_stomp"></a>.</p>
 
 </div>
 
@@ -1063,9 +1084,10 @@ These headers are added by the STOMP broker and provides additional metadata abo
 
 <p>The <code>MWMViewController</code> interface will be declared as both the data source and delegate of the table. Open the <code>MWMViewController.m</code> file, make the <code>MWMViewController</code> interface conform to the <code>UITableViewDataSource</code> and <code>UITableViewDelegate</code> protocols and add an outlet property for the table.</p>
 <div data-type="example">
-<h5><span data-type="label">Example 1-9. </span></h5>
+<h5></h5>
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">@interface MWMViewController () &lt;CLLocationManagerDelegate, UITableViewDataSource, UITableViewDelegate&gt;
+
+<pre data-type="programlisting" data-code-language="objc">@interface MWMViewController () &lt;CLLocationManagerDelegate, UITableViewDataSource, UITableViewDelegate&gt;
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
@@ -1101,7 +1123,7 @@ These headers are added by the STOMP broker and provides additional metadata abo
 protocol. Let’s just add a comment to the <code>MWMViewController</code> implementation to remember that.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">#pragma mark - UITableViewDelegate
+<pre data-type="programlisting" data-code-language="objc">#pragma mark - UITableViewDelegate
 
 // no delegate actions</pre>
 
@@ -1109,7 +1131,7 @@ protocol. Let’s just add a comment to the <code>MWMViewController</code> imple
 <p>The controller is also the <code>dataSource</code> of the table. We will keep a list of the texts in memory in an array. Let’s add a <code>texts</code> array to the <code>MWMViewController</code> implementation and instatiate it in its <code>viewDidLoad</code> method.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">@implementation MWMViewController
+<pre data-type="programlisting" data-code-language="objc">@implementation MWMViewController
 
 // the texts are stored in an array of NSString.
 NSMutableArray *texts;
@@ -1131,7 +1153,7 @@ NSMutableArray *texts;
 Let’s implement the required <code>UITableViewDataSource</code> methods.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">#pragma mark - UITableViewDataSource protocol
+<pre data-type="programlisting" data-code-language="objc">#pragma mark - UITableViewDataSource protocol
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -1174,11 +1196,11 @@ Let’s implement the required <code>UITableViewDataSource</code> methods.</p>
 
 <p>To consume messages, a STOMP client must:</p>
 <ol>
-
-<li><p>connect to the broker</p>
+<li>
+<p>connect to the broker</p>
 </li>
-
-<li><p>subscribe to the destination it wants to consume messages from.</p>
+<li>
+<p>subscribe to the destination it wants to consume messages from.</p>
 </li>
 
 </ol>
@@ -1199,22 +1221,21 @@ Let’s implement the required <code>UITableViewDataSource</code> methods.</p>
 
 <p>This method takes 3 parameters:</p>
 <ul>
-
-<li><p>the <code>destination</code> that the client wants to consume from. In our case it is the destination <code>/queue/device.XXX.text</code> (we prepended the destination with the <code>/queue/</code> prefix according to ActiveMQ naming convention).</p>
+<li>
+<p>the <code>destination</code> that the client wants to consume from. In our case it is the destination <code>/queue/device.XXX.text</code> (we prepended the destination with the <code>/queue/</code> prefix according to ActiveMQ naming convention).</p>
 </li>
-
-<li><p>a dictionary of <code>headers</code> to pass additional metadata to the connection process. Since we do not have any such header for the time being, we will pass a empty dictionary</p>
+<li>
+<p>a dictionary of <code>headers</code> to pass additional metadata to the connection process. Since we do not have any such header for the time being, we will pass a empty dictionary</p>
 </li>
-
-<li><p>a <code>STOMPMessageHandler</code> block with a <code>STOMPMessage</code> parameter that will be called every time the broker sends a messages to the client to consume it. In our case, we just have to get the <code>NSString</code> text from the message <code>body</code> property and add it to the <code>texts</code> array.</p>
+<li>
+<p>a <code>STOMPMessageHandler</code> block with a <code>STOMPMessage</code> parameter that will be called every time the broker sends a messages to the client to consume it. In our case, we just have to get the <code>NSString</code> text from the message <code>body</code> property and add it to the <code>texts</code> array.</p>
 </li>
-
 </ul>
 
 <p>We will add a method named <code>subscribe</code> to the <code>MWMViewController</code> implementation:</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">#pragma mark - Messaging
+<pre data-type="programlisting" data-code-language="objc">#pragma mark - Messaging
 
 - (void)subscribe
 {
@@ -1241,7 +1262,7 @@ Let’s implement the required <code>UITableViewDataSource</code> methods.</p>
 <p>We declare this object in the <code>MWMViewController</code>'s implementation.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">@implementation MWMViewController
+<pre data-type="programlisting" data-code-language="objc">@implementation MWMViewController
 
 STOMPSubscription *subscription;</pre>
 
@@ -1249,7 +1270,7 @@ STOMPSubscription *subscription;</pre>
 <p>We need to call this <code>subscribe</code> method as soon as the client is connected to the STOMP broker. The correct location is inside the <code>completionHandler</code> block of the <code>connect</code> method that will be called when the client is <em>successfully</em> connected to the STOMP broker:</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">#pragma mark - Messaging
+<pre data-type="programlisting" data-code-language="objc">#pragma mark - Messaging
 
 - (void)connect
 {
@@ -1297,7 +1318,7 @@ STOMPSubscription *subscription;</pre>
 <p>We do not need to explicitly unsubscribe from the destination when we disconnect from the broker but it is a good practice to do so. To unsubscribe, we just need to call the <code>unsubscribe</code> method on the <code>subscription</code> object that was created when we subscribed to the text destination. We will unsubscribe just prior to disconnecting from the broker in the <code>viewDidDisappear:</code> method.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">- (void)viewDidDisappear:(BOOL)animated
+<pre data-type="programlisting" data-code-language="objc">- (void)viewDidDisappear:(BOOL)animated
 {
     [self stopUpdatingCurrentLocation];
     [subscription unsubscribe];
@@ -1330,7 +1351,7 @@ STOMPSubscription *subscription;</pre>
 <p>Fill the text area with a plain text string and set the <code>body format</code> to <code>Plain Text</code></p>
 
 
-<pre data-type="programlisting" class="programlisting">Hello, where are you?</pre>
+<pre data-type="programlisting">Hello, where are you?</pre>
 
 
 <figure id="img_mobile_stomp_21">
@@ -1343,7 +1364,7 @@ STOMPSubscription *subscription;</pre>
 <p>We see in the application log that a STOMP message has been received and that the <code>text</code> was extracted from the message’s body.</p>
 
 
-<pre data-type="programlisting" class="programlisting">2014-03-14 14:24:19.807 Locations[86050:3903] received message MESSAGE
+<pre data-type="programlisting">2014-03-14 14:24:19.807 Locations[86050:3903] received message MESSAGE
 priority:0
 destination:/queue/device.2262EC25-E9FD-4578-BADE-4E113DE45934.text
 timestamp:1394803459806
@@ -1360,7 +1381,7 @@ Hello, where are you?
 <p>Let’s fix that by calling <code>reloadData</code> on the <code>tableView</code> property from the <code>STOMPMessageHandler</code> block.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">- (void)subscribe
+<pre data-type="programlisting" data-code-language="objc">- (void)subscribe
 {
     // susbscribes to the device text queue:
     NSString *destination = [NSString stringWithFormat:@"/queue/device.%@.text", self.deviceID];
@@ -1413,35 +1434,34 @@ Hello, where are you?
 
 <p>To send a message, the application must:</p>
 <ol>
-
-<li><p>connect to the STOMP broker</p>
+<li>
+<p>connect to the STOMP broker</p>
 </li>
-
-<li><p>send the message to the destination</p>
+<li>
+<p>send the message to the destination</p>
 </li>
 
 </ol>
 
 <p>To consume a message, the application must</p>
 <ol>
-
-<li><p>connect to the STOMP broker</p>
+<li>
+<p>connect to the STOMP broker</p>
 </li>
-
-<li><p>subscribe to the destination and pass a block that is called every time a message is received. This block is executed on GCD global queue. If there are any code that changes the user interface, it must be wrapped in a block executed on the main queue.</p>
+<li>
+<p>subscribe to the destination and pass a block that is called every time a message is received. This block is executed on GCD global queue. If there are any code that changes the user interface, it must be wrapped in a block executed on the main queue.</p>
 </li>
 
 </ol>
 
 <p>We use two different types of message payloads:</p>
 <ul>
-
-<li><p>a JSON payload by using its string representation for the message body and specifying <code>application/json; charset=utf-8</code> in its <code>content-type</code> header</p>
+<li>
+<p>a JSON payload by using its string representation for the message body and specifying <code>application/json; charset=utf-8</code> in its <code>content-type</code> header</p>
 </li>
-
-<li><p>a simple plain text payload without any <code>content-type</code> header</p>
+<li>
+<p>a simple plain text payload without any <code>content-type</code> header</p>
 </li>
-
 </ul>
 
 <p>Sending and consuming messages are only possible once the client is <em>successfully</em> connected to the STOMP broker. Due to the event-driven design of StompKit, this is the case when the completionHandler block is executed without an error in <code>connectWithHeaders:completionHandler:</code>.</p>

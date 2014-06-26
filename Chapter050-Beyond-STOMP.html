@@ -2,7 +2,7 @@
 <h1>Beyond STOMP</h1>
 
 
-<p>STOMP provides a simple yet flexible messaging protocol.
+<p class="lead">STOMP provides a simple yet flexible messaging protocol.
 It also offers an extensible way for brokers to provide additional features beyond the ones specified in the protocol.</p>
 
 <p>In this chapter, we will show how to leverage broker features with STOMP headers. Until this chapter, all STOMP brokers could be used to send and receive messages
@@ -31,7 +31,7 @@ broker was crashed. Once the broker is up again, the device will send updated po
 We could declare these messages as persistent in the <code>locations.html</code> Web application to ensure that they survive a broker crash.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="js">var order = "XXX";
+<pre data-type="programlisting" data-code-language="js">var order = "XXX";
 client.send("/topic/mytopic", { persistent: true}, order);</pre>
 
 
@@ -40,7 +40,7 @@ client.send("/topic/mytopic", { persistent: true}, order);</pre>
 <p>Persisting messages adds a significant cost: the broker must write the message to a durable support (on a file system or in a database) and wait for the operating system to effectively write it (some operating system will buffer data before writtent them to disk).
 The broker must also have sufficient space on the durable support to write the  persistent messages (once a persistent message has been delivered to all its consumers, the broker can safely discard it from the durable support).</p>
 
-<p>To add further reliability, the client could use receipts (as described in <a data-type="xref" href="#ch_advanced_stomp_receipts">#ch_advanced_stomp_receipts</a>) to wait until the broker has processed its message (and persisted it). Once the receipt is received, the client is guaranteed that the message would survive a server crash. Without a receipt, there is a small window for failure if the server crash <em>after</em> receiving the message but <em>before</em> storing it on its durable support.</p>
+<p>To add further reliability, the client could use receipts (as described in <a data-type="xref" href="#ch_advanced_stomp_receipts"></a>) to wait until the broker has processed its message (and persisted it). Once the receipt is received, the client is guaranteed that the message would survive a server crash. Without a receipt, there is a small window for failure if the server crash <em>after</em> receiving the message but <em>before</em> storing it on its durable support.</p>
 </section>
 
 
@@ -74,7 +74,7 @@ If we want to filter out messages, we can put interesting information in the hea
 <p>For example, we could add a <code>country</code> header when a location message is sent by the <code>Location</code> iOS application. The value of this header would correspond to the country where the device is located (for example <code>FR</code> for France, <code>DE</code> for Germany, <code>IT</code> for Italy, etc.).</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">- (void)sendLocation:(CLLocation *)location
+<pre data-type="programlisting" data-code-language="objc">- (void)sendLocation:(CLLocation *)location
 {
     // ...
 
@@ -96,7 +96,7 @@ If we want to filter out messages, we can put interesting information in the hea
 <p>If we want to receive only messages from France, Germany and Italy, we just need to add a <code>selector</code> header when the consumer subscribes to the destination.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="js">client.subscribe(destination, function(message) {
+<pre data-type="programlisting" data-code-language="js">client.subscribe(destination, function(message) {
   // Only messages with the country header with the value FR, DE, or IT will
   // be delivered to the client.
   // ...
@@ -144,7 +144,7 @@ If we were using a single channel for both kind of messages, we could give the t
 may be deliver ahead of messages with normal priority.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="js">client.send(destination, { priority: 7 }, text);</pre>
+<pre data-type="programlisting" data-code-language="js">client.send(destination, { priority: 7 }, text);</pre>
 
 </section>
 
@@ -172,7 +172,7 @@ may be deliver ahead of messages with normal priority.</p>
 <p>For example, if we want to expire messages ten minutes after they are sent by the <code>Locations</code> applications, we need to add an <code>expires</code> header whose value is the number of milliseconds since the Unix time and ten minutes after now.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">- (void)sendLocation:(CLLocation *)location
+<pre data-type="programlisting" data-code-language="objc">- (void)sendLocation:(CLLocation *)location
 {
     // ...
 
@@ -213,19 +213,18 @@ However if they know that the data sent in their messages has a limited lifetime
 
 <p>Based on the ActiveMQ broker, we see that STOMP can be extended:</p>
 <ul>
-
-<li><p>to support persistent messages by passing a <code>persistent</code> header set to <code>true</code> when messages are sent.</p>
+<li>
+<p>to support persistent messages by passing a <code>persistent</code> header set to <code>true</code> when messages are sent.</p>
 </li>
-
-<li><p>to have consumer uses a <code>selector</code> filter to receive only messages whose headers match the filter.</p>
+<li>
+<p>to have consumer uses a <code>selector</code> filter to receive only messages whose headers match the filter.</p>
 </li>
-
-<li><p>to send messages with a higher or lower priority using the <code>priority</code> header.</p>
+<li>
+<p>to send messages with a higher or lower priority using the <code>priority</code> header.</p>
 </li>
-
-<li><p>to expire messages after a expiration date so that broker will not deliver messages after this date.</p>
+<li>
+<p>to expire messages after a expiration date so that broker will not deliver messages after this date.</p>
 </li>
-
 </ul>
 
 <p>Depending on the STOMP broker you use, you may be able to use these features or others to improve the design of your architecture and reduce the network bandwidth, the CPU and battery usage so that producers and consumers only deal with relevant messages and ignore the others.</p>

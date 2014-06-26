@@ -2,9 +2,9 @@
 <h1>Mobile Messaging with MQTT</h1>
 
 
-<p>In this chapter, we will write an iOS application using the <code>MQTTKit</code> library to send and receive messages using the MQTT protocol.</p>
+<p class="lead">In this chapter, we will write an iOS application using the <code>MQTTKit</code> library to send and receive messages using the MQTT protocol.</p>
 
-<p>In <a data-type="xref" href="#ch_introduction_mqtt_example">#ch_introduction_mqtt_example</a>, we described the <code>Motions</code> application. In this chapter, we will write the iOS application that broadcasts the device motion data and receives alert messages.</p>
+<p>In <a data-type="xref" href="#ch_introduction_mqtt_example"></a>, we described the <code>Motions</code> application. In this chapter, we will write the iOS application that broadcasts the device motion data and receives alert messages.</p>
 
 <figure id="img_mobile_mqtt_1">
 <img src="images/Chapter060/mqtt_ios_app.png" alt="Diagram of the Motions+ iOS application"></img>
@@ -81,15 +81,16 @@
 <section data-type="sect1" id="_create_the_podfile">
 <h1>Create the Podfile</h1>
 
-<p>We will again use CocoaPods to manage the project dependencies (as explained in <a data-type="xref" href="#ch_mobile_stomp_cocoapods">#ch_mobile_stomp_cocoapods</a> for the STOMP example).</p>
+<p>We will again use CocoaPods to manage the project dependencies (as explained in <a data-type="xref" href="#ch_mobile_stomp_cocoapods"></a> for the STOMP example).</p>
 
 <p>We close Xcode because CocoaPods will modify the project settings to import the dependencies.</p>
 
 <p>We create a file named <strong><code>Podfile</code></strong> at the root of the project (in the same directory as <code>Motions.xcodeproj</code>).</p>
 <div id="ex_mobile_mqtt_1" data-type="example">
-<h5><span data-type="label">Example 1-12. </span><code>Motions</code>'s Podfile</h5>
+<h5><code>Motions</code>'s Podfile</h5>
 
-<pre data-type="programlisting" class="programlisting">xcodeproj 'Motions.xcodeproj'
+
+<pre data-type="programlisting">xcodeproj 'Motions.xcodeproj'
 
 pod 'MQTTKit', :git =&gt; 'https://github.com/mobile-web-messaging/MQTTKit.git'
 
@@ -98,9 +99,10 @@ platform :ios, '5.0'</pre>
 
 <p>After saving this file, run the <strong><code>pod install</code></strong> command.</p>
 <div id="ex_mobile_mqtt_2" data-type="example">
-<h5><span data-type="label">Example 1-13. </span>Install <code>Motions</code> Dependencies</h5>
+<h5>Install <code>Motions</code> Dependencies</h5>
 
-<pre data-type="programlisting" class="programlisting">$ pod install
+
+<pre data-type="programlisting">$ pod install
 Analyzing dependencies
 Pre-downloading: `MQTTKit` from `https://github.com/mobile-web-messaging/MQTTKit.git`
 Downloading dependencies
@@ -143,7 +145,7 @@ Command symbol is not displayed in PDF.
 <section data-type="sect1" id="_identify_the_device">
 <h1>Identify the Device</h1>
 
-<p>This step is similar to the <code>Locations</code> iOS application that is described in <a data-type="xref" href="#ch_mobile_stomp_deviceID">#ch_mobile_stomp_deviceID</a>.</p>
+<p>This step is similar to the <code>Locations</code> iOS application that is described in <a data-type="xref" href="#ch_mobile_stomp_deviceID"></a>.</p>
 
 <p>We will generate an unique identifier for the iOS device and display it in the view.</p>
 
@@ -160,7 +162,7 @@ Command symbol is not displayed in PDF.
 We also add a <code>deviceID</code> string to store the device identifier.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">@interface MWMViewController ()
+<pre data-type="programlisting" data-code-language="objc">@interface MWMViewController ()
 
 @property (weak, nonatomic) IBOutlet UILabel *deviceIDLabel;
 
@@ -179,7 +181,7 @@ We also add a <code>deviceID</code> string to store the device identifier.</p>
 <p>The device identifier is generated in the <code>MWMViewController</code> implementation when the view is loaded and stored in the <code>deviceID</code> property. We also set the <code>deviceIDLabel</code>'s <code>text</code> to this identifier.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">- (void)viewDidLoad
+<pre data-type="programlisting" data-code-language="objc">- (void)viewDidLoad
 {
     [super viewDidLoad];
 
@@ -218,7 +220,7 @@ To have some graphical feedback as we move the device, we will add three <code>U
 <p>We create three outlet properties in the <code>MWMViewController</code> private interface for these labels.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">@interface MWMViewController ()
+<pre data-type="programlisting" data-code-language="objc">@interface MWMViewController ()
 
 @property (weak, nonatomic) IBOutlet UILabel *deviceIDLabel;
 @property (weak, nonatomic) IBOutlet UILabel *pitchLabel;
@@ -273,7 +275,7 @@ To have some graphical feedback as we move the device, we will add three <code>U
 <p>We will also define a <code>motionManager</code> property in <code>MWMViewController</code> private interface to use <code>CoreMotion</code>.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">#import &lt;CoreMotion/CoreMotion.h&gt;
+<pre data-type="programlisting" data-code-language="objc">#import &lt;CoreMotion/CoreMotion.h&gt;
 
 @interface MWMViewController ()
 
@@ -292,7 +294,7 @@ periodically in a block. We create a new <code>NSOperationQueue</code> to receiv
 <p>All this logic can be written in <code>viewDidLoad</code> so that the motion manager will start receiving updates when the view is loaded.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">- (void)viewDidLoad
+<pre data-type="programlisting" data-code-language="objc">- (void)viewDidLoad
 {
     [super viewDidLoad];
 
@@ -325,7 +327,7 @@ periodically in a block. We create a new <code>NSOperationQueue</code> to receiv
 <p>We also need to notify the <code>motionManager</code> that we no longer want to receive updates when the view is no longer used. We need to call its <code>stopDeviceMotionUpdates</code> method inside the view controller’s <code>dealloc</code> method.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">- (void)dealloc
+<pre data-type="programlisting" data-code-language="objc">- (void)dealloc
 {
     [self.motionManager stopDeviceMotionUpdates];
 }</pre>
@@ -369,7 +371,7 @@ periodically in a block. We create a new <code>NSOperationQueue</code> to receiv
 <p>We also define a constant to represent the hostname of the MQTT broker we are using <code>iot.eclipse.org</code>.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">#import &lt;MQTTKit/MQTTKit.h&gt;
+<pre data-type="programlisting" data-code-language="objc">#import &lt;MQTTKit/MQTTKit.h&gt;
 
 #define kMqttHost @"iot.eclipse.org"
 
@@ -385,7 +387,7 @@ A <code>MQTTClient</code> must be uniquely identified for the MQTT brokers it co
 We can use the <code>deviceID</code> as its client identifier.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">- (void)viewDidLoad
+<pre data-type="programlisting" data-code-language="objc">- (void)viewDidLoad
 {
     [super viewDidLoad];
 
@@ -419,7 +421,7 @@ Since <code>MQTTKit</code> is event-driven, the client will be <em>effectively</
 <p>We will encapsulate this code in a <code>connect</code> method.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">#pragma mark - MQTTKit Actions
+<pre data-type="programlisting" data-code-language="objc">#pragma mark - MQTTKit Actions
 
 - (void)connect
 {
@@ -438,7 +440,7 @@ Since <code>MQTTKit</code> is event-driven, the client will be <em>effectively</
 <p>We will call this method from <code>viewDidLoad</code> to connect to the MQTT broker as soon as the view is loaded.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">- (void)viewDidLoad
+<pre data-type="programlisting" data-code-language="objc">- (void)viewDidLoad
 {
     [super viewDidLoad];
 
@@ -474,7 +476,7 @@ Since <code>MQTTKit</code> is event-driven, the client will be <em>effectively</
 <p>The <code>completionHandler</code> block as a <code>code</code> parameter that will be <code>0</code> if the disconnection was successful.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">- (void)disconnect
+<pre data-type="programlisting" data-code-language="objc">- (void)disconnect
 {
     [self.client disconnectWithCompletionHandler:^(NSUInteger code) {
         if (code == 0) {
@@ -489,7 +491,7 @@ Since <code>MQTTKit</code> is event-driven, the client will be <em>effectively</
 <p>We want to disconnect from the MQTT broker when the <code>MWMViewController</code> is no longer used. We will call the <code>disconnect</code> method from <code>dealloc</code>.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">- (void)dealloc
+<pre data-type="programlisting" data-code-language="objc">- (void)dealloc
 {
     [self.motionManager stopDeviceMotionUpdates];
     [self disconnect];
@@ -518,13 +520,12 @@ Next step is to send messages every time the device motion values are updated.</
 <p>The MQTT protocol is a binary protocol. The message payload must be encoded as binary data to be sent.
 The <code>MQTTKit</code> library provides two methods to send messages:</p>
 <ul>
-
-<li><p>The <code>publishData:toTopic:withQos:retain:</code> method expects a <code>NSData</code> object as the message payload and its <code>bytes</code> will be used.</p>
+<li>
+<p>The <code>publishData:toTopic:withQos:retain:</code> method expects a <code>NSData</code> object as the message payload and its <code>bytes</code> will be used.</p>
 </li>
-
-<li><p>The <code>publishString:toTopic:withQos:retain:</code> method can also be used for the common case of sending a text message. Internally, the <code>NSString</code> that is passed in parameter is encoded as a <code>NSData</code> using the UTF-8 encoding.</p>
+<li>
+<p>The <code>publishString:toTopic:withQos:retain:</code> method can also be used for the common case of sending a text message. Internally, the <code>NSString</code> that is passed in parameter is encoded as a <code>NSData</code> using the UTF-8 encoding.</p>
 </li>
-
 </ul>
 
 <p>In the <code>Motions</code> iOS application, we send a message with a binary payload composed of three 64-bit floats for the <code>pitch</code>, <code>roll</code>, and <code>yaw</code> values contained in a <code>CMAttitude</code> object. We will build the payload’s <code>NSData</code> by converting the double values to a platform-independent format using the <code>CFConvertDoubleHostToSwapped</code> function.</p>
@@ -532,7 +533,7 @@ The <code>MQTTKit</code> library provides two methods to send messages:</p>
 <p>The other three parameters to the <code>publish…</code> methods are the same for both the binary and text payload version.</p>
 
 <p>The <code>topic</code> parameter is the name of the topic to send the message.
-According to <a data-type="xref" href="#ch_introduction_mqtt_example_topology">#ch_introduction_mqtt_example_topology</a>, the name of the topic is <code>/mwm/XXX/motion</code> where XXX is the device identifier.</p>
+According to <a data-type="xref" href="#ch_introduction_mqtt_example_topology"></a>, the name of the topic is <code>/mwm/XXX/motion</code> where XXX is the device identifier.</p>
 
 <p>The <code>qos</code> parameter corresponds to the <em>Quality of Service</em> (or QoS) to use to deliver the messages to the consumers.</p>
 
@@ -548,16 +549,15 @@ According to <a data-type="xref" href="#ch_introduction_mqtt_example_topology">#
 
 <p>The MQTT protocol defines three levels of Quality of Service:</p>
 <ul>
-
-<li><p>At Most Once (with the value <code>0</code> represented by <code>AtMostOnce</code> in <code>MQTTKit</code>)</p>
+<li>
+<p>At Most Once (with the value <code>0</code> represented by <code>AtMostOnce</code> in <code>MQTTKit</code>)</p>
 </li>
-
-<li><p>At Least Once (with the value <code>1</code> represented by <code>AtLeastOnce</code> in <code>MQTTKit</code>)</p>
+<li>
+<p>At Least Once (with the value <code>1</code> represented by <code>AtLeastOnce</code> in <code>MQTTKit</code>)</p>
 </li>
-
-<li><p>Exactly Once (with the value <code>2</code> represented by <code>ExactlyOnce</code> in <code>MQTTKit</code>)</p>
+<li>
+<p>Exactly Once (with the value <code>2</code> represented by <code>ExactlyOnce</code> in <code>MQTTKit</code>)</p>
 </li>
-
 </ul>
 
 <p>These levels of QoS determine the guarantee that the MQTT broker will accept to deliver a message.
@@ -601,25 +601,24 @@ This example is a bit of a stretch. A more interesting example would be an appli
 
 <p>To sum up, the <code>Motions</code> application will send a message:</p>
 <ul>
-
-<li><p>with a binary payload composed of three 64-bits floats for the device’s <code>pitch</code>, <code>roll</code>, and <code>yaw</code> values</p>
+<li>
+<p>with a binary payload composed of three 64-bits floats for the device’s <code>pitch</code>, <code>roll</code>, and <code>yaw</code> values</p>
 </li>
-
-<li><p>to the device motion topic <code>/mwm/XXX/motion</code> where <code>XXX</code> is the device identifier</p>
+<li>
+<p>to the device motion topic <code>/mwm/XXX/motion</code> where <code>XXX</code> is the device identifier</p>
 </li>
-
-<li><p>with a QoS ot <code>AtMostOnce</code> since we accept that a published message may not be delivered</p>
+<li>
+<p>with a QoS ot <code>AtMostOnce</code> since we accept that a published message may not be delivered</p>
 </li>
-
-<li><p>with <code>retain</code> set to <code>YES</code> so that the broker will retain the Last Known Good message to deliver it to new subscribers.</p>
+<li>
+<p>with <code>retain</code> set to <code>YES</code> so that the broker will retain the Last Known Good message to deliver it to new subscribers.</p>
 </li>
-
 </ul>
 
 <p>We will encapsulate this code in a <code>send:</code> method taking a <code>CMAttitude</code> parameter.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">- (void)send:(CMAttitude *)attitude
+<pre data-type="programlisting" data-code-language="objc">- (void)send:(CMAttitude *)attitude
 {
     uint64_t values[3] = {
         CFConvertDoubleHostToSwapped(attitude.pitch).v,
@@ -641,7 +640,7 @@ This example is a bit of a stretch. A more interesting example would be an appli
 <p>Finally, the last step is to call this method every time a device motion value is updated by the <code>motionManger</code>. This occurs in the <code>viewDidLoad</code> method inside the <code>handler</code> block passed to the <code>motionManger</code>'s <code>startDeviceMotionUpdatesToQueue:withHandler:</code> method.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">- (void)viewDidLoad
+<pre data-type="programlisting" data-code-language="objc">- (void)viewDidLoad
 {
     [super viewDidLoad];
 
@@ -679,12 +678,12 @@ This example is a bit of a stretch. A more interesting example would be an appli
 
 <p>Conversely to <code>STOMP</code>, <code>MQTT</code> is a binary protocol and we can not use a simple <code>telnet</code> client to create a consumer and receive messages sent by the application.</p>
 
-<p>However the <a href="http://mosquitto.org">Mosquitto broker</a> provides simple command-line tool to send and receive message from a MQTT broker. The <a data-type="xref" href="#appendix_mosquitto">#appendix_mosquitto</a> explains how to download and install the Mosquitto broker. After it is done, we can use its <code>mosquitto_sub</code> command line tool to connect to a MQTT broker (hosted at <code>iot.eclipse.org</code>) and subscribe to the device motion topic (in my case <code>/mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/motion</code>, you will have to replace it using your own device identifier).</p>
+<p>However the <a href="http://mosquitto.org">Mosquitto broker</a> provides simple command-line tool to send and receive message from a MQTT broker. The <a data-type="xref" href="#appendix_mosquitto"></a> explains how to download and install the Mosquitto broker. After it is done, we can use its <code>mosquitto_sub</code> command line tool to connect to a MQTT broker (hosted at <code>iot.eclipse.org</code>) and subscribe to the device motion topic (in my case <code>/mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/motion</code>, you will have to replace it using your own device identifier).</p>
 
 <p>This tool will display the message payload. Since we are sending binary payload, we will pipe the command into the <code>hexdump</code> tool to display the hexadecimal representation of the binary payload.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="bash">$ mosquitto_sub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/motion | hexdump
+<pre data-type="programlisting" data-code-language="bash">$ mosquitto_sub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/motion | hexdump
 ...
 0000050 aa b0 4c 3f 9b 41 0c 6b 08 35 d3 3f d2 4b 23 f2
 0000060 71 1e 47 0a 3f d5 05 6a c4 37 52 16 3f d8 f7 b5
@@ -718,21 +717,21 @@ This example is a bit of a stretch. A more interesting example would be an appli
 <section data-type="sect1" id="ch_mobile_mqtt_receive">
 <h1>Receive MQTT Messages</h1>
 
-<p>As described in <a data-type="xref" href="#ch_introduction_mqtt_example">#ch_introduction_mqtt_example</a>, the <code>Motions</code> iOS application is also a consumer from the topic <code>/mwm/XXX/alert</code>. When it receives a message from this topic, it must change its background color to "alert" the user.</p>
+<p>As described in <a data-type="xref" href="#ch_introduction_mqtt_example"></a>, the <code>Motions</code> iOS application is also a consumer from the topic <code>/mwm/XXX/alert</code>. When it receives a message from this topic, it must change its background color to "alert" the user.</p>
 
 <p>Let’s write the method that aler the user by changing the background color first. This <code>warnUser:</code> method takes a <code>NSString</code> parameter that should correspond to a color. Using <code>UIKit</code> animations, we will:</p>
 <ol>
-
-<li><p>animate the controller’s view to change its background color from its original color to the one created from the <code>NSString</code> parameter</p>
+<li>
+<p>animate the controller’s view to change its background color from its original color to the one created from the <code>NSString</code> parameter</p>
 </li>
-
-<li><p>we wait two seconds after the first animation is completed to revert back to the original background color.</p>
+<li>
+<p>we wait two seconds after the first animation is completed to revert back to the original background color.</p>
 </li>
 
 </ol>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc"># pragma mark - UI Actions
+<pre data-type="programlisting" data-code-language="objc"># pragma mark - UI Actions
 
 // Warn the user by changing the view's background color to the specified color during 2 seconds
 - (void)warnUser:(NSString *)colorStr
@@ -769,11 +768,11 @@ This example is a bit of a stretch. A more interesting example would be an appli
 
 <p>To consumer messages from a MQTT broker, the <code>client</code> must:</p>
 <ol>
-
-<li><p>subscribe to its topic of interest</p>
+<li>
+<p>subscribe to its topic of interest</p>
 </li>
-
-<li><p>set its <code>messageHandler</code> property that will be called every time a message is delivered.</p>
+<li>
+<p>set its <code>messageHandler</code> property that will be called every time a message is delivered.</p>
 </li>
 
 </ol>
@@ -795,7 +794,7 @@ This example is a bit of a stretch. A more interesting example would be an appli
 <p>The first parameter is the device alert topic. We will define it at the top of the <code>MWMViewController.m</code> file.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">#define kAlertTopic @"/mwm/%@/alert"</pre>
+<pre data-type="programlisting" data-code-language="objc">#define kAlertTopic @"/mwm/%@/alert"</pre>
 
 
 <p>The <code>subscribe:withQos:completionHandler:</code> method takes a <code>qos</code> that correspond to the quality of service that the consumer is requesting for message delivered from the topic.</p>
@@ -806,7 +805,7 @@ For example, a producer may publish a message with a QoS of <code>ExactlyOnce</c
 <p>In our case, we will request to have messages delivered with a <code>qos</code> set to <code>AtLeastOnce</code> as we do not want to lose messages but can accept duplicate messages.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">- (void)subscribe
+<pre data-type="programlisting" data-code-language="objc">- (void)subscribe
 {
     NSString *topic = [NSString stringWithFormat:kAlertTopic, self.deviceID];
     [self.client subscribe:topic withQos:AtLeastOnce completionHandler:^(NSArray *grantedQos) {
@@ -818,7 +817,7 @@ For example, a producer may publish a message with a QoS of <code>ExactlyOnce</c
 <p>We will subscribe to the alert topic as soon as the <code>client</code> is connected to the MQTT broker by calling this <code>subscribe</code> method from inside the <code>completionHandler</code> in the <code>connect</code> method.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">- (void)connect
+<pre data-type="programlisting" data-code-language="objc">- (void)connect
 {
     NSLog(@"Connecting to %@...", kMqttHost);
     [self.client connectToHost:kMqttHost
@@ -854,7 +853,7 @@ The second parameter is a completion handler that is called back when the client
 We do not have any need for this information so we just pass <code>nil</code> as the handler.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">- (void)unsubscribe
+<pre data-type="programlisting" data-code-language="objc">- (void)unsubscribe
 {
     NSString *topic = [NSString stringWithFormat:kAlertTopic, self.deviceID];
     [self.client unsubscribe:topic withCompletionHandler:nil];
@@ -864,7 +863,7 @@ We do not have any need for this information so we just pass <code>nil</code> as
 <p>We will call this <code>unsubscribe</code> method just before disconnecting from the MQTT broker from the <code>dealloc</code> method.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">- (void)dealloc
+<pre data-type="programlisting" data-code-language="objc">- (void)dealloc
 {
     [self.motionManager stopDeviceMotionUpdates];
     [self unsubscribe];
@@ -896,19 +895,18 @@ We do not have any need for this information so we just pass <code>nil</code> as
 
 <p>The <code>MQTTMessage</code> interface defines four properties corresponding to the message data:</p>
 <ul>
-
-<li><p><code>mid</code> is a <code>unsigned short</code> corresponding to the <em>message ID</em>.</p>
+<li>
+<p><code>mid</code> is a <code>unsigned short</code> corresponding to the <em>message ID</em>.</p>
 </li>
-
-<li><p><code>topic</code> is the name of the topic that this message is coming from. If the client is subscribed to many topics, we must use this property to determine which topic the received message is coming from.</p>
+<li>
+<p><code>topic</code> is the name of the topic that this message is coming from. If the client is subscribed to many topics, we must use this property to determine which topic the received message is coming from.</p>
 </li>
-
-<li><p><code>retained</code> is a <code>BOOL</code> to check whether the message was retained (and contains the last known good value) or not (it is a <em>fresh</em> message)</p>
+<li>
+<p><code>retained</code> is a <code>BOOL</code> to check whether the message was retained (and contains the last known good value) or not (it is a <em>fresh</em> message)</p>
 </li>
-
-<li><p><code>payload</code> is a <code>NSData</code> object containing the binary content of the message payload.</p>
+<li>
+<p><code>payload</code> is a <code>NSData</code> object containing the binary content of the message payload.</p>
 </li>
-
 </ul>
 
 <p>Since sending and receiving text message is very common, the <code>MQTTMessage</code> interface also defines a <code>payloadString</code> method that returns a <code>NSString</code> decoded from the message binary payload using UTF-8.</p>
@@ -919,7 +917,7 @@ We do not have any need for this information so we just pass <code>nil</code> as
 We will do that in the <code>viewDidLoad</code> method just after creating the <code>client</code> instance.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="objc">- (void)viewDidLoad
+<pre data-type="programlisting" data-code-language="objc">- (void)viewDidLoad
 {
     [super viewDidLoad];
 
@@ -956,7 +954,7 @@ We then call the <code>warnUser:</code> method in a block that is run on the mai
 <p>The <code>mosquitto_pub</code> can send a text payload using the <code>-m</code> option. We will use this option to pass the background color (for example <code>green</code>).</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="bash">$ mosquitto_pub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/alert -m green</pre>
+<pre data-type="programlisting" data-code-language="bash">$ mosquitto_pub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/alert -m green</pre>
 
 
 <p>After this message is sent, the device will receive it and change its background color to green.</p>
@@ -992,38 +990,37 @@ We then call the <code>warnUser:</code> method in a block that is run on the mai
 
 <p>To send a message, the application must:</p>
 <ol>
-
-<li><p>connect to the MQTT broker</p>
+<li>
+<p>connect to the MQTT broker</p>
 </li>
-
-<li><p>send the message to the topic</p>
+<li>
+<p>send the message to the topic</p>
 </li>
 
 </ol>
 
 <p>To consume a message, the application must</p>
 <ol>
-
-<li><p>connect to the MQTT broker</p>
+<li>
+<p>connect to the MQTT broker</p>
 </li>
-
-<li><p>subscribe to the topic</p>
+<li>
+<p>subscribe to the topic</p>
 </li>
-
-<li><p>define a message handler block that is called every time a message is received. This block is executed on a dispath queue. If there are any code that changes the user interface, it must be wrapped in a block executed on the main queue.</p>
+<li>
+<p>define a message handler block that is called every time a message is received. This block is executed on a dispath queue. If there are any code that changes the user interface, it must be wrapped in a block executed on the main queue.</p>
 </li>
 
 </ol>
 
 <p>We used two different types of message payloads:</p>
 <ul>
-
-<li><p>a binary payload to send the device motions values as three 64-bit floats</p>
+<li>
+<p>a binary payload to send the device motions values as three 64-bit floats</p>
 </li>
-
-<li><p>a text payload to extract a background color from the messages received on the alert topic.</p>
+<li>
+<p>a text payload to extract a background color from the messages received on the alert topic.</p>
 </li>
-
 </ul>
 </section>
 

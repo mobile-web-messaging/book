@@ -2,7 +2,7 @@
 <h1>Web Messaging with MQTT</h1>
 
 
-<p>In this chapter, we will write a Web application that sends and receives messages using the MQTT protocol over HTML5 Web Sockets.</p>
+<p class="lead">In this chapter, we will write a Web application that sends and receives messages using the MQTT protocol over HTML5 Web Sockets.</p>
 
 <figure id="img_web_mqtt_1">
 <img src="images/Chapter070/mqtt_web_app.png" alt="The +Motions+ Web application that displays data for two devices."></img>
@@ -25,7 +25,7 @@
 <section data-type="sect1" id="_eclipse_paho_javascript_client">
 <h1>Eclipse Paho JavaScript Client</h1>
 
-<p>In <a data-type="xref" href="#ch_mobile_mqtt_paho">#ch_mobile_mqtt_paho</a>, we mentioned that <a href="http://iot.eclipse.org">iot.eclipse.org</a> provides a public MQTT broker that we use for our MQTT applications.
+<p>In <a data-type="xref" href="#ch_mobile_mqtt_paho"></a>, we mentioned that <a href="http://iot.eclipse.org">iot.eclipse.org</a> provides a public MQTT broker that we use for our MQTT applications.
 Eclipse also provides a variety of MQTT clients for different languages and platforms. In particular, it has a JavaScript client for Web browser that uses HTML5 Web Sockets.</p>
 
 <p>The source code of the project is hosted in this  <a href="http://git.eclipse.org/c/paho/org.eclipse.paho.mqtt.javascript.git/">Git repository</a>.</p>
@@ -46,7 +46,7 @@ Eclipse also provides a variety of MQTT clients for different languages and plat
 <section data-type="sect1" id="_bootstrap_the_code_motions_html_code_web_application">
 <h1>Bootstrap the <code>motions.html</code> Web Application</h1>
 
-<p>As we explained in <a data-type="xref" href="#ch_introduction_mqtt_example">#ch_introduction_mqtt_example</a>, this Web application will display on a Web page the motion data sent by the devices using the <code>Motions</code> iOS application written in the previous chapter.
+<p>As we explained in <a data-type="xref" href="#ch_introduction_mqtt_example"></a>, this Web application will display on a Web page the motion data sent by the devices using the <code>Motions</code> iOS application written in the previous chapter.
 Additionnally, the Web application will also be able to send alert messages to the devices.</p>
 
 <p>It will be a very simple one-page Web application that can be run from a Web server serving static pages. It does not require
@@ -58,9 +58,10 @@ any server-side runtime as all the code will be executed inside the Web browser 
 
 <p>Let’s bootstrap the Web application by creating a <code>motions.html</code> page.</p>
 <div id="ex_web_mqtt_1" data-type="example">
-<h5><span data-type="label">Example 1-14. </span>Template for the <code>locations.html</code> Web Application</h5>
+<h5>Template for the <code>locations.html</code> Web Application</h5>
 
-<pre data-type="programlisting" class="programlisting" data-code-language="html">&lt;!DOCTYPE html&gt;
+
+<pre data-type="programlisting" data-code-language="html">&lt;!DOCTYPE html&gt;
 &lt;html&gt;
 &lt;head&gt;
   &lt;meta content="width=device-width" name="viewport"&gt;
@@ -110,13 +111,13 @@ $(document).ready(function() {
 
 <p>When the browser loads this page, we will create a MQTT client using the JavaScript library.</p>
 
-<p>To create the client we must pass the MQTT broker host and port. In our case, it is respectively <code>iot.eclipse.org</code> and <code>80</code>. Note than in <a data-type="xref" href="#ch_mobile_mqtt_client">#ch_mobile_mqtt_client</a>, the <code>Motions</code> iOS application was connecting to <code>iot.eclipse.org</code> on its default port <code>1883</code>. This default port expects a TCP socket connection. Since the Web application uses HTML5 Web Sockets, it must connect to the <code>80</code> port that will handle the HTTP Upgrade process from the initial HTTP connection.</p>
+<p>To create the client we must pass the MQTT broker host and port. In our case, it is respectively <code>iot.eclipse.org</code> and <code>80</code>. Note than in <a data-type="xref" href="#ch_mobile_mqtt_client"></a>, the <code>Motions</code> iOS application was connecting to <code>iot.eclipse.org</code> on its default port <code>1883</code>. This default port expects a TCP socket connection. Since the Web application uses HTML5 Web Sockets, it must connect to the <code>80</code> port that will handle the HTTP Upgrade process from the initial HTTP connection.</p>
 
 <p>We also need to configure a <code>clientID</code> that identifies the MQTT client.
 In our case, we will just use a random String.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="js">$(document).ready(function() {
+<pre data-type="programlisting" data-code-language="js">$(document).ready(function() {
 
   var host = "iot.eclipse.org";
   var port = 80;
@@ -147,23 +148,23 @@ In our case, we will just use a random String.</p>
 <p>Once the <code>client</code> is created, the next step is to connect to the MQTT broker.
 There are four steps to achieve that in a proper fashion:</p>
 <ol>
-
-<li><p>define a <code>onConnectionLost</code> handler that will be called back if the connection is lost <em>after the client has been successfully connected</em>.</p>
+<li>
+<p>define a <code>onConnectionLost</code> handler that will be called back if the connection is lost <em>after the client has been successfully connected</em>.</p>
 </li>
-
-<li><p>define a <code>onSuccess</code> handler that will be called if the client is successfully connected</p>
+<li>
+<p>define a <code>onSuccess</code> handler that will be called if the client is successfully connected</p>
 </li>
-
-<li><p>define a <code>onFailure</code> handler that will be called if the client fails to connect to the broker.</p>
+<li>
+<p>define a <code>onFailure</code> handler that will be called if the client fails to connect to the broker.</p>
 </li>
-
-<li><p>call <code>client.connect()</code> and pass the <code>onSuccess</code> and <code>onFailure</code> handlers in an object parameter.</p>
+<li>
+<p>call <code>client.connect()</code> and pass the <code>onSuccess</code> and <code>onFailure</code> handlers in an object parameter.</p>
 </li>
 
 </ol>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="js">client.onConnectionLost = function(response) {
+<pre data-type="programlisting" data-code-language="js">client.onConnectionLost = function(response) {
   if (response.errorCode !== 0) {
     alert(response.errorMessage + "\nclientID = " + client.clientID + " [" + response.errorCode + "]\n");
   }
@@ -241,7 +242,7 @@ Single-level wildcard <code>+</code>
 <p>Note that it would not have been a good idea to use the more general wildcard <code>/mwm/#</code> (using the multi-level wildcard) as it would have matched both <code>/mwm/XXX/motion</code> <em>and</em> <code>/mwm/XXX/alert</code>. The Web application is not interested by the alert sent to the devices. It is better to subscribe to the most specific wildcard topic instead of being too general and filters out message later. This also preserve network bandwith and CPU usage that the broker will not deliver messages to the client that would have to process them before discarding them anyhow.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="js">client.connect({onSuccess: function(frame) {
+<pre data-type="programlisting" data-code-language="js">client.connect({onSuccess: function(frame) {
      // once the client is successfully connected,
      // subscribe to all the motions topics
     client.subscribe("/mwm/+/motion");
@@ -259,23 +260,22 @@ delivered this message. Since we have chosen to use a meaningful topic names of 
 
 <p>The <code>message</code> object defines two properties to receive its payload content:</p>
 <ul>
-
-<li><p><code>payloadBytes</code> corresponds to a <code>ArrayBuffer</code> representation of the message payload</p>
+<li>
+<p><code>payloadBytes</code> corresponds to a <code>ArrayBuffer</code> representation of the message payload</p>
 </li>
-
-<li><p><code>payloadString</code> corresponds to a UTF-8 string representation of the message payload. This property can only be used if the payload is composed of valid UTF-8 characters.</p>
+<li>
+<p><code>payloadString</code> corresponds to a UTF-8 string representation of the message payload. This property can only be used if the payload is composed of valid UTF-8 characters.</p>
 </li>
-
 </ul>
 
-<p>In <a data-type="xref" href="#ch_introduction_mqtt_example_message">#ch_introduction_mqtt_example_message</a>, we decided to send the device motions data as an array of 3 64-bit floats corresponding to the motions pitch, roll, and yaw values.</p>
+<p>In <a data-type="xref" href="#ch_introduction_mqtt_example_message"></a>, we decided to send the device motions data as an array of 3 64-bit floats corresponding to the motions pitch, roll, and yaw values.</p>
 
 <p>To be able to get these values, we must use the <code>payloadBytes</code> property and use a <code>DataView</code> to retrieve the three values for this array.</p>
 
 <p>Once we got these <code>pitch</code>, <code>roll</code>, and <code>yaw</code> values, we call the <code>updateSparklines()</code> method to udpate the sparkline for the given <code>deviceID</code></p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="js">// subscription callback
+<pre data-type="programlisting" data-code-language="js">// subscription callback
 client.onMessageArrived = function(message) {
   // get the device's id from the message's destination
   var deviceID = message.destinationName.split("/")[2];
@@ -321,22 +321,21 @@ It will create the HTML elements to display the data and use jQuery Sparklines t
 
 <p>We will create three separate sparklines for:</p>
 <ul>
-
-<li><p><code>pitch</code> (displayed in red)</p>
+<li>
+<p><code>pitch</code> (displayed in red)</p>
 </li>
-
-<li><p><code>roll</code> (diplayed in green)</p>
+<li>
+<p><code>roll</code> (diplayed in green)</p>
 </li>
-
-<li><p><code>yaw</code> (displayed in blue)</p>
+<li>
+<p><code>yaw</code> (displayed in blue)</p>
 </li>
-
 </ul>
 
 <p>These three sparkline will be composited in a single canvas that is drawn in the <code>&lt;div class="data"&gt;</code> elment created inside the <code>&lt;div&gt;</code> element identified by the <code>deviceID</code>.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="js">function updateSparklines(deviceID, pitch, yaw, roll) {
+<pre data-type="programlisting" data-code-language="js">function updateSparklines(deviceID, pitch, yaw, roll) {
   var values = devices[deviceID];
   // if the device is not known, create the UI for it
   if (!values) {
@@ -434,7 +433,7 @@ It will create the HTML elements to display the data and use jQuery Sparklines t
 <p>Finally last step is to call <code>client.send()</code> and pass it the <code>message</code> to send it to the topic. Note that the <code>client</code> is already connected when the page was loaded.</p>
 
 
-<pre data-type="programlisting" class="programlisting" data-code-language="js">function sendAlert(deviceID) {
+<pre data-type="programlisting" data-code-language="js">function sendAlert(deviceID) {
   // create a message with an empty payload
   var message = new Messaging.Message("red");
   message.destinationName = "/mwm/" + deviceID + "/alert";
@@ -442,7 +441,7 @@ It will create the HTML elements to display the data and use jQuery Sparklines t
 }</pre>
 
 
-<p>If we reload the web application and clicks on an "Alert!" button, the corresponding device will receive the message from its alert topic and the code that we wrote in <a data-type="xref" href="#ch_mobile_mqtt_receive">#ch_mobile_mqtt_receive</a> will be executed to change temporarily the background color of the device.</p>
+<p>If we reload the web application and clicks on an "Alert!" button, the corresponding device will receive the message from its alert topic and the code that we wrote in <a data-type="xref" href="#ch_mobile_mqtt_receive"></a> will be executed to change temporarily the background color of the device.</p>
 
 <figure id="img_web_mqtt_3">
 <img src="images/Chapter070/app_red.png" alt="The +Motions+ application background becomes red when an alert is received from its alert topic."></img>
@@ -469,33 +468,32 @@ It will create the HTML elements to display the data and use jQuery Sparklines t
 
 <p>We use two different types of message payload:</p>
 <ul>
-
-<li><p>a binary payload composed of three 64-bit floats</p>
+<li>
+<p>a binary payload composed of three 64-bit floats</p>
 </li>
-
-<li><p>a UTF-8 string payload</p>
+<li>
+<p>a UTF-8 string payload</p>
 </li>
-
 </ul>
 
 <p>To send a message, the application must:</p>
 <ol>
-
-<li><p>connect to the MQTT broker</p>
+<li>
+<p>connect to the MQTT broker</p>
 </li>
-
-<li><p>send the message to a topic</p>
+<li>
+<p>send the message to a topic</p>
 </li>
 
 </ol>
 
 <p>To consume a message, the application must</p>
 <ol>
-
-<li><p>connect to the STOMP broker</p>
+<li>
+<p>connect to the STOMP broker</p>
 </li>
-
-<li><p>subscribe to a (potentially wildcard) topic and set a handler that is called every time a message is received.</p>
+<li>
+<p>subscribe to a (potentially wildcard) topic and set a handler that is called every time a message is received.</p>
 </li>
 
 </ol>
