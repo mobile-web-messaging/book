@@ -1,8 +1,8 @@
-<section data-type="chapter" id="ch_introduction">
+<section xmlns="http://www.w3.org/1999/xhtml" data-type="chapter" id="ch_introduction">
 <h1>Introduction</h1>
 
 
-<p class="lead">In this chapter, I present the main concepts of messaging protocols.
+<p>In this chapter, I present the main concepts of messaging protocols.
 To illustrate their use on mobile and Web platforms, we will write two applications (one for each messaging protocol that are described, STOMP and MQTT). This chapter will present the overal design of these two applications that will be written in the subsequent chapters.</p>
 
 
@@ -15,36 +15,37 @@ To illustrate their use on mobile and Web platforms, we will write two applicati
 
 <p>In the preface, I introduced messaging protocols in two sentences and five concepts:</p>
 <ul>
-<li>
-<p>An application <em>produces</em> a <em>message</em> to a <em>destination</em> on a <em>broker</em>.</p>
+
+<li><p>An application <em>produces</em> a <em>message</em> to a <em>destination</em> on a <em>broker</em>.</p>
 </li>
-<li>
-<p>An application subscribes to this same destination to <em>consume</em> the message.</p>
+
+<li><p>An application subscribes to this same destination to <em>consume</em> the message.</p>
 </li>
+
 </ul>
 
-<p>Let&#8217;s now define these five concepts:</p>
+<p>Let’s now define these five concepts:</p>
 <ol>
-<li>
-<p>A <em>message</em> is the data exchanged between applications</p>
+
+<li><p>A <em>message</em> is the data exchanged between applications</p>
 </li>
-<li>
-<p>A <em>destination</em> is a type of address that is used to exchange messages</p>
+
+<li><p>A <em>destination</em> is a type of address that is used to exchange messages</p>
 </li>
-<li>
-<p>A <em>producer</em> is an application that sends <em>messages</em> <strong>to</strong> a <em>destination</em></p>
+
+<li><p>A <em>producer</em> is an application that sends <em>messages</em> <strong>to</strong> a <em>destination</em></p>
 </li>
-<li>
-<p>A <em>consumer</em> is an application that consumes <em>messages</em> <strong>from</strong> a <em>destination</em></p>
+
+<li><p>A <em>consumer</em> is an application that consumes <em>messages</em> <strong>from</strong> a <em>destination</em></p>
 </li>
-<li>
-<p>A <em>broker</em> is the server entity that will handle messages from producers and deliver them to the consumers according to their destinations.</p>
+
+<li><p>A <em>broker</em> is the server entity that will handle messages from producers and deliver them to the consumers according to their destinations.</p>
 </li>
 
 </ol>
 
 <figure id="img_preface_messaging_concepts">
-<img src="images/Chapter010/messaging_concepts.png" alt="Diagram of the messaging concepts"/>
+<img src="images/Chapter010/messaging_concepts.png" alt="Diagram of the messaging concepts"></img>
 <figcaption>Messaging Concepts</figcaption>
 </figure>
 
@@ -87,12 +88,13 @@ There may be one or many consumers that will receive the message. It also possib
 
 <p>There are two main messaging models:</p>
 <ul>
-<li>
-<p>Point-to-Point</p>
+
+<li><p>Point-to-Point</p>
 </li>
-<li>
-<p>Publish/Subscribe</p>
+
+<li><p>Publish/Subscribe</p>
 </li>
+
 </ul>
 
 
@@ -108,10 +110,10 @@ There may be one or many consumers that will receive the message. It also possib
 <p>In a Point-to-Point messaging model, a message sent by a producer will be routed to a single consumer.</p>
 
 <p>The producer sends a message to a destination identified as a <em>queue</em> in that messaging model. There can be zero, one or many consumers subscribed (or <em>bound</em>) to this queue and the messaging broker will route incoming messages to only one of these consumers to deliver the message.
-As illustrated in <a data-type="xref" href="#img_intro_point_to_point"/>, when the producer sends a message to the queue, only one of the consumers that are subscribed receives the message.</p>
+As illustrated in <a data-type="xref" href="#img_intro_point_to_point"></a>, when the producer sends a message to the queue, only one of the consumers that are subscribed receives the message.</p>
 
 <figure id="img_intro_point_to_point">
-<img src="images/Chapter010/point_to_point.png" alt="Diagram of the Point-to-Point Topology"/>
+<img src="images/Chapter010/point_to_point.png" alt="Diagram of the Point-to-Point Topology"></img>
 <figcaption>Diagram of the Point-to-Point Topology</figcaption>
 </figure>
 
@@ -141,10 +143,10 @@ Some messaging brokers allow to <em>expire</em> messages if they remain in the q
 <p>In a Publish/Subscribe messaging model (often shortened as pub/sub), a message sent by a producer is routed to many consumers.</p>
 
 <p>The producer sends a message to a destination identified as a <em>topic</em> in that messaging model. There can be zero or many consumers subscribed to this topic and the messaging broker will route incoming message to <em>all</em> these consumers to deliver the message. If there are no consumers bound to the topic, the broker may <em>not</em> retain the incoming messages.
-As illustrated in <a data-type="xref" href="#img_intro_pub_sub"/>, when the producer sends a message to the topic, all the consumers that are subscribed receive the message.</p>
+As illustrated in <a data-type="xref" href="#img_intro_pub_sub"></a>, when the producer sends a message to the topic, all the consumers that are subscribed receive the message.</p>
 
 <figure id="img_intro_pub_sub">
-<img src="images/Chapter010/pub_sub.png" alt="Diagram of the Point-to-Point Topology"/>
+<img src="images/Chapter010/pub_sub.png" alt="Diagram of the Point-to-Point Topology"></img>
 <figcaption>Diagram of the Publish/Subscribe Topology</figcaption>
 </figure>
 
@@ -183,7 +185,7 @@ As illustrated in <a data-type="xref" href="#img_intro_pub_sub"/>, when the prod
 <p>A message is composed of three separate data: destination, headers, and body</p>
 
 <figure id="img_intro_message_representation">
-<img src="images/Chapter010/message_representation.png" alt="Diagram of a Message"/>
+<img src="images/Chapter010/message_representation.png" alt="Diagram of a Message"></img>
 <figcaption>Diagram of a Message</figcaption>
 </figure>
 
@@ -213,6 +215,345 @@ Headers are specific to messaging protocols. Some messaging protocols (such as S
 <h1>Examples</h1>
 
 <p>To illustrate the use of messaging protocols on mobile and Web platforms, we will build two set of applications in this book. Each set will be be composed of an iOS application and a web one. The first application will use STOMP and the second one MQTT.</p>
+
+
+
+
+
+
+
+
+<section data-type="sect2" id="ch_introduction_stomp_example">
+<h2><code>Locations</code> Application Using STOMP</h2>
+
+<p>Suppose that we work for a delivery company that uses a fleet of trucks to deliver packages to its clients.</p>
+
+<p>Each truck is responsible for the delivery of packages and they receive orders from their headquarters. To efficiently manage all the trucks, the company headquarter want to monitor the truck’s positions and be able to send them orders on-the-go.</p>
+
+<p>We will build a very simple application named <code>Locations</code> that looks similar to this example.</p>
+
+<p>The "truck" will use an iOS application to broadcast the device’s geolocation data using its GPS sensor and display text messages that it receives from the headquarters. The "headquarter" will use a Web application to display the locations of all the "trucks" on a map. It will also be used to send text messages to a given truck on their devices:</p>
+<ol>
+
+<li><p>In <a data-type="xref" href="#ch_mobile_stomp"></a>, we will write the <code>Locations</code> iOS application using the STOMP protocol to send GPS data and receive text from an iOS device.</p>
+</li>
+
+<li><p>In <a data-type="xref" href="#ch_web_stomp"></a>, we will write the Web application using STOMP protocol over Web Sockets to receive GPS data in a Web browser and send text to the devices.</p>
+</li>
+
+</ol>
+
+<figure id="img_example_app_1">
+<img src="images/Chapter011/stomp_app_diagram_1.png" alt="Diagram of the Locations application with two devices, AAA and BBB, and two web applications"></img>
+<figcaption>Diagram of the <code>Locations</code> application with two devices, <code>AAA</code> and <code>BBB</code>, and two web applications.</figcaption>
+</figure>
+
+<p>Before introducing STOMP, the messaging protocol that will be used by the application, we can already define the application’s messaging models and how the different parts of the application will exchange messages.</p>
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" id="ch_introduction_stomp_example_topology">
+<h3><code>Locations</code> Messaging Models</h3>
+
+<p>In this application, we will use two destinations, one with a Publish/Subscribe model to broadcast the device GPS data and one with a Point-to-Point model for the text messages:</p>
+<ul>
+
+<li><p><code>device.XXX.location</code> is the <em>topic</em> to broadcast its GPS geolocation data where <code>XXX</code> is the device identifier (Publish/Subscribe model)</p>
+</li>
+
+<li><p><code>device.XXX.text</code> is the <em>queue</em> to receive simple text message  (Point-to-Point model)</p>
+</li>
+
+</ul>
+
+<p>A topic is used to send the GPS data as this allows potentially many consumers to receive the information.
+However a queue is used to handle the device’s text as only one single device will consume messages from this destination.</p>
+
+<p>Each device (identified by an unique identifier <code>XXX</code>) running the <code>Locations</code> application will be:</p>
+<ul>
+
+<li><p>a <em>producer</em> of messages to the topic <code>device.XXX.location</code></p>
+</li>
+
+<li><p>the only <em>consumer</em> of messages from the queue <code>device.XXX.text</code></p>
+</li>
+
+</ul>
+
+<p>Conversely, the Web application will be:</p>
+<ul>
+
+<li><p>a <em>consumer</em> of messages from <em>all</em> the topics of the form <code>device.XXX.location</code></p>
+</li>
+
+<li><p>a <em>producer</em> of message to <em>all</em> the queues of the form <code>device.XXX.text</code></p>
+</li>
+
+</ul>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" id="ch_introduction_stomp_example_message">
+<h3><code>Locations</code> Message Representation</h3>
+
+<p>There will be two types of exchanged messages:</p>
+<ul>
+
+<li><p>one to represent GPS data (exhanged on the topics <code>device.XXX.location</code>)</p>
+</li>
+
+<li><p>one to represent orders (exchanged on the queues <code>device.XXX.text</code>)</p>
+</li>
+
+</ul>
+
+<p>The <code>Locations</code> iOS application will send the GPS data using a JSON representation in the message payload:</p>
+<div id="ex_example_gps_data" data-type="example">
+<h5><span data-type="label">Example 1-1. </span>Geolocation Message Payload</h5>
+
+<pre data-type="programlisting" class="programlisting">{
+  "deviceID": "BBB",<b>(1)</b>
+  "lat": 48.8581,<b>(2)</b>
+  "lng": 2.2946,<b>(3)</b>
+  "ts": "2013-09-23T08:43Z"<b>(4)</b>
+}</pre>
+
+<ol class="calloutlist">
+<li><p>➊ <code>deviceID</code> is the identifier of the device that sends its position</p>
+</li>
+<li><p>➋ <code>lat</code> is a number representing the position’s <em>latitude</em></p>
+</li>
+<li><p>➌ <code>lng</code> is a number representing the position’s <em>longitude</em></p>
+</li>
+<li><p>➍ <code>ts</code> is a string representing the time when the position was taken (using the <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a> format)</p>
+</li>
+
+</ol></div>
+
+<p>The text messages that will be consumed by the <code>Locations</code> iOS application will
+be represented as a simple plain text string.</p>
+<div id="ex_example_text" data-type="example">
+<h5><span data-type="label">Example 1-2. </span>Text Message Payload</h5>
+
+<pre data-type="programlisting" class="programlisting">"Where are you heading to?"</pre>
+</div>
+
+<p>A more realistic representation of this message would also contain additional information such the identifier of the headquarter sending the message, etc.
+We are using a plain text version as this format is enough to provide a first version.</p>
+
+<p>With the messaging topology and data representation known, we can now refine the <code>Locations</code> application diagram.</p>
+
+<figure id="img_example_app_2">
+<img src="images/Chapter011/stomp_app_diagram_2.png" alt="Diagram of the Locations application"></img>
+<figcaption>Diagram of the <code>Locations</code> application with its messaging models and representations</figcaption>
+</figure>
+</section>
+
+
+
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect2" id="ch_introduction_mqtt_example">
+<h2><code>Motions</code> Application Using MQTT</h2>
+
+<p>Most mobile devices contain sensor that allows to track the device motions (and to a certain extent the motion of its owner). Using additional sensors, we could even imagine having access to the owner’s health data (heart rate, hydration, blood glucose level, etc.). This type of information could be sent to a centralized application that would be able to track the data and extract personal information about them to report to the owner.</p>
+
+<p>We will write a simple application, <code>Motions</code> that follows this model to illustrate the use of MQTT protocol. The iOS application will track the device motion and change its background color to "alert" its user when an alert message is received.</p>
+
+<p>Device motion will be represented by three values corresponding to its pitch, roll and yaw values as shown in the illustration below.</p>
+
+<figure id="img_mqtt_example_app_0">
+<img src="images/Chapter012/pitch_roll_yaw.png" alt="The pitch" width="roll and yaw values represents the device motion"></img>
+<figcaption>The <code>pitch</code>, <code>roll</code> and <code>yaw</code> values represents the device motion.</figcaption>
+</figure>
+
+<p>The pending Web application will display the motions of all devices that broadcast them and be able to send alert messages to them:</p>
+<ol>
+
+<li><p>In <a data-type="xref" href="#ch_mobile_mqtt"></a>, we will write the <code>Motions</code> iOS application using the MQTT protocol to send data about the device motions and receive alerts.</p>
+</li>
+
+<li><p>In <a data-type="xref" href="#ch_web_mqtt"></a>, we will write a Web application using MQTT protocol over Web Sockets to receive all the device motions data and display them. The Web application will also be able to send alert messages to any devices sending its motions data.</p>
+</li>
+
+</ol>
+
+<figure id="img_mqtt_example_app_1">
+<img src="images/Chapter012/mqtt_app_diagram_1.png" alt="Diagram of the +Motions+ application"></img>
+<figcaption>The <code>Motions</code> application with two clients, <code>AAA</code> and <code>BBB</code> and two Web applications monitoring them.</figcaption>
+</figure>
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" id="ch_introduction_mqtt_example_topology">
+<h3><code>Motions</code> Messaging Models</h3>
+
+<p>In this application we will use two destination with the Publish/Subscribe model:</p>
+<ul>
+
+<li><p><code>/mwm/XXX/motion</code> (where <code>XXX</code> is the device identifier) is the topic to broadcast the device motion data (Publish/Subscribe model)</p>
+</li>
+
+<li><p><code>/mwm/XXX/alert</code> is the topic to exchange alert messages for a given device (Publish/Subscribe model)</p>
+</li>
+
+</ul>
+
+<p>Each device running the <code>Motions</code> application will be:</p>
+<ul>
+
+<li><p>a <em>producer</em> of messages to the topic <code>/mwm/XXX/motion</code></p>
+</li>
+
+<li><p>a <em>consumer</em> of messages from the topic <code>/mwm/XXX/alert</code></p>
+</li>
+
+</ul>
+
+<p>Conversely, the Web application will be:</p>
+<ul>
+
+<li><p>a <em>consumer</em> of messages from all the topics of the form <code>/mwm/XXX/motion</code></p>
+</li>
+
+<li><p>a <em>producer</em> of message to all the topics of the form <code>/mwm/XXX/alert</code></p>
+</li>
+
+</ul>
+<div data-type="note">
+
+
+<p>MQTT only supports the <em>Publish/Subscribe</em> messaging model. Ideally, the alert destination would be better modeled as a queue (one per device). Since MQTT does not have support for queues, we will work around that by using one topic for each device and only have the corresponding device subscribes to it.</p>
+
+</div>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" id="ch_introduction_mqtt_example_message">
+<h3><code>Motions</code> Message Representation</h3>
+
+<p>There will be two types of exchanged messages:</p>
+<ul>
+
+<li><p>one to represent device motion data (exhanged on the topics <code>/mwm/XXX/motion</code>)</p>
+</li>
+
+<li><p>one to represent alerts (exchanged on the topics <code>/mwm/XXX/alert</code>)</p>
+</li>
+
+</ul>
+
+<p>The <code>Motions</code> iOS application will send the device motions data in a binary message where its payload will be composed of three 64-bit floats representing the device’s pitch, roll and yaw values.</p>
+<div id="ex_example_motion_data" data-type="example">
+<h5><span data-type="label">Example 1-3. </span>Device Motion Message Paylaod</h5>
+
+<pre data-type="programlisting" class="programlisting">&lt;&lt; 1.6 -0.1 0.8 &gt;&gt; <b>(1)</b></pre>
+
+<ol class="calloutlist">
+<li><p>➊ The message is composed of three 64-bit floats for the <code>pitch</code>, <code>roll</code>, and <code>yaw</code> values</p>
+</li>
+
+</ol></div>
+
+<p>The alert messages that will be consumed by the <code>Motions</code> iOS application will
+be represented as a simple plain text string corresponding to a color. The <code>Motions</code> application will use this payload to change temporarily its background color to <em>alert</em> the user.</p>
+<div id="ex_example_alert_data" data-type="example">
+<h5><span data-type="label">Example 1-4. </span>Alert Message Payload</h5>
+
+<pre data-type="programlisting" class="programlisting">"red" <b>(1)</b></pre>
+
+<ol class="calloutlist">
+<li><p>➊ The message is composed of a string containing the name of a simple color.</p>
+</li>
+
+</ol></div>
+
+<p>With the messaging topology and data representation known, we can now refine the <code>Motions</code> application diagram.</p>
+
+<figure id="img_mqtt_example_app_2">
+<img src="images/Chapter012/mqtt_app_diagram_2.png" alt="Diagram of the Motions application"></img>
+<figcaption>Diagram of the <code>Motions</code> application with its messaging models and representations.</figcaption>
+</figure>
+</section>
+
+
+
+</section>
+
+
+
+
+
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" id="_summary">
+<h1>Summary</h1>
+
+<p>In this chapter, we learnt about the messaging protocols and how they differ from request/reply protocols. We introduced two messaging models - <em>Point-to-Point</em> and <em>Publish/Subscribe</em> - and the parts that compose a message - <em>destination</em>, <em>headers</em>, and <em>payload</em>.</p>
+
+<p>We have also described the two applications with their messaging models and representation that will be written in the subsequent chapters: the <code>Locations</code> application that uses STOMP and the <code>Motions</code> applications that uses MQTT.</p>
+
+<p>In the next chapter, we will start writing the <code>Locations</code> application running on iOS devices. If you are more interested by learning about MQTT, you can go directly to <a data-type="xref" href="#ch_mobile_mqtt"></a> to start writing the <code>Motions</code> application.</p>
 </section>
 
 

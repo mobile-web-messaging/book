@@ -1,13 +1,13 @@
-<section data-type="chapter" id="ch_web_stomp">
+<section xmlns="http://www.w3.org/1999/xhtml" data-type="chapter" id="ch_web_stomp">
 <h1>Web Messaging with STOMP</h1>
 
 
-<p class="lead">In this chapter, we will write a Web application that sends and receives messages using the STOMP protocol over HTML5 Web Sockets.</p>
+<p>In this chapter, we will write a Web application that sends and receives messages using the STOMP protocol over HTML5 Web Sockets.</p>
 
-<p>In <a data-type="xref" href="#ch_introduction_stomp_example"/>, we described the <code>Locations</code> application. In this chapter, we will write the Web application that consumes the device&#8217;s GPS position to display them on a map and sends text messages to the devices.</p>
+<p>In <a data-type="xref" href="#ch_introduction_stomp_example"></a>, we described the <code>Locations</code> application. In this chapter, we will write the Web application that consumes the device’s GPS position to display them on a map and sends text messages to the devices.</p>
 
 <figure id="img_web_stomp_1">
-<img src="images/Chapter030/stomp_web_app.png" alt="Diagram of the +Locations+ Web application"/>
+<img src="images/Chapter030/stomp_web_app.png" alt="Diagram of the +Locations+ Web application"></img>
 <figcaption>Diagram of the <code>Locations</code> Web application</figcaption>
 </figure>
 
@@ -41,7 +41,7 @@
 
 <p>Web Sockets is a recent features of Web browser that provides a bi-directional and full-duplex communication channel over a single TCP connection between the Web browser and the Web server.
 Before Web Sockets, communication was only one-way: the browser initiates the communication by sending a HTTP request to the Web server which replies with a HTTP response. The server could not send data to the browser without the browser having first sent a request.
-There exists some techniques to provide a bi-directional HTTP (such as HTTP long polling and HTTP streaming) but they have significant issues as described in <a data-type="xref" href="#rfc6202"/>.</p>
+There exists some techniques to provide a bi-directional HTTP (such as HTTP long polling and HTTP streaming) but they have significant issues as described in <a data-type="xref" href="#rfc6202"></a>.</p>
 
 <p>Thanks to HTML5 Web Sockets, it is now possible to have two-way communication between the browser and the server. The server can send data to the browser without waiting for a request first. This enables to deliver messages from the Web server to the browser.</p>
 
@@ -51,7 +51,7 @@ There exists some techniques to provide a bi-directional HTTP (such as HTTP long
 
 <p>Web Sockets have many use cases in addition to messaging. In some simple cases, sending data on Web Sockets without using a messaging protocol could be enough.</p>
 
-<p>For further information, the <a data-type="xref" href="#highperfbrowser"/> book contains a thorough introduction to Web Sockets.</p>
+<p>For further information, the <a data-type="xref" href="#highperfbrowser"></a> book contains a thorough introduction to Web Sockets.</p>
 
 </div>
 </section>
@@ -107,12 +107,11 @@ The significant difference between them is that a Web Socket is created by sendi
 <p>It will be a very simple one-page Web application that can be run from a Web server serving static pages. It does not require
 any server-side runtime as all the code will be executed inside the Web browser using JavaScript.</p>
 
-<p>Let&#8217;s bootstrap the Web application by creating a <code>locations.html</code> page.</p>
+<p>Let’s bootstrap the Web application by creating a <code>locations.html</code> page.</p>
 <div id="ex_web_stomp_1" data-type="example">
-<h5>Template for the <code>locations.html</code> Web Application</h5>
+<h5><span data-type="label">Example 1-10. </span>Template for the <code>locations.html</code> Web Application</h5>
 
-
-<pre data-type="programlisting" data-code-language="html">&lt;!DOCTYPE html&gt;
+<pre data-type="programlisting" class="programlisting" data-code-language="html">&lt;!DOCTYPE html&gt;
 &lt;html lang="en"&gt;
   &lt;head&gt;
     &lt;meta content="width=device-width" name="viewport"&gt;
@@ -178,12 +177,12 @@ $(document).ready(function() {
 <section data-type="sect1" id="_create_a_stomp_client_with_code_stomp_js_code">
 <h1>Create a Stomp Client with <code>stomp.js</code></h1>
 
-<p>The STOMP client will be used for both consuming messages (from the device&#8217; location destination) and producing them (to the device&#8217;s text destination).</p>
+<p>The STOMP client will be used for both consuming messages (from the device’ location destination) and producing them (to the device’s text destination).</p>
 
 <p>We will declare the <code>client</code> variable to use it throughout our script.</p>
 
 
-<pre data-type="programlisting" data-code-language="js">$(document).ready(function() {
+<pre data-type="programlisting" class="programlisting" data-code-language="js">$(document).ready(function() {
 
   var client; // keep a reference on the Stomp client that we will create
 
@@ -193,7 +192,7 @@ $(document).ready(function() {
 <p>When the user click on the <code>Connect</code> button, the URL is retrieved from the <code>connect_url</code> input element and passed to the <code>connect</code> method. In this method, we will create the <code>client</code> and connect to the STOMP broker.</p>
 
 
-<pre data-type="programlisting" data-code-language="js">// handles the connect_form
+<pre data-type="programlisting" class="programlisting" data-code-language="js">// handles the connect_form
 $('#connect_form').submit(function() {
   var url = $("#connect_url").val();
 
@@ -215,25 +214,24 @@ $('#connect_form').submit(function() {
 
 
 
-<section data-type="sect1" id="_connect_to_a_stomp_broker">
+<section data-type="sect1" id="_connect_to_a_stomp_broker_2">
 <h1>Connect to a STOMP Broker</h1>
 
 <p>In the <code>connect</code> method, we create the STOMP client by calling <code>Stomp.client(url)</code>.
 Once we have the <code>client</code> object, we call its <code>connect</code> method to connect to the STOMP broker. This method takes at least two arguments:</p>
 <ol>
-<li>
-<p>a set of headers containing additional metadata that the STOMP broker can use during the connection process. In our case, we have no such header so we will pass an empty JavaScript literal object <code>{}</code>.</p>
+
+<li><p>a set of headers containing additional metadata that the STOMP broker can use during the connection process. In our case, we have no such header so we will pass an empty JavaScript literal object <code>{}</code>.</p>
 </li>
-<li>
-<p>a <code>connectedCallback</code> function that is called back when the client is successfully connected to the STOMP broker.</p>
+
+<li><p>a <code>connectedCallback</code> function that is called back when the client is successfully connected to the STOMP broker.</p>
 </li>
 
 </ol>
 <div id="ex_web_stomp_2" data-type="example">
-<h5></h5>
+<h5><span data-type="label">Example 1-10. </span></h5>
 
-
-<pre data-type="programlisting" data-code-language="js">// Connection to the STOMP broker
+<pre data-type="programlisting" class="programlisting" data-code-language="js">// Connection to the STOMP broker
 // and subscription to the device's position destinations.
 //
 // the url paramater is the Web Socket URL of the STOMP broker
@@ -255,7 +253,7 @@ function connect(url) {
 <p>The <code>connectedCallback</code> is called when the client is successfully connected to the STOMP broker. At this stage, we can clean up the user interface by hiding the <code>Connect</code> button, showing the <code>Disconnect</code> button and the form to send text messages to the devices.</p>
 
 
-<pre data-type="programlisting" data-code-language="js">var connectedCallback =  function(frame) {
+<pre data-type="programlisting" class="programlisting" data-code-language="js">var connectedCallback =  function(frame) {
   client.debug("connected to Stomp");
   // disable the connect button
   $("#connect_button").prop("disabled",true);
@@ -271,10 +269,9 @@ function connect(url) {
 
 <p>If we want to be notified when the connection is <strong>unsuccesful</strong>, we can pass an additional argument to the <code>connect</code> method which is a function that is called back if the connection is <em>not</em> successful.</p>
 <div id="ex_web_stomp_3" data-type="example">
-<h5></h5>
+<h5><span data-type="label">Example 1-10. </span></h5>
 
-
-<pre data-type="programlisting" data-code-language="js">client.connect({}, connectedCallback,
+<pre data-type="programlisting" class="programlisting" data-code-language="js">client.connect({}, connectedCallback,
   function(frame) {
     // this function is executed if the connection to the STOMP broker failed.
 });</pre>
@@ -293,39 +290,39 @@ function connect(url) {
 
 
 
-<section data-type="sect1" id="_receive_stomp_messages">
+<section data-type="sect1" id="_receive_stomp_messages_2">
 <h1>Receive STOMP Messages</h1>
 
 <p>Once the client is connected successfully to the STOMP broker, it can subscribe to a destination using the <code>subscribe</code> method which takes two parameters:</p>
 <ol>
-<li>
-<p>the name of the destination</p>
+
+<li><p>the name of the destination</p>
 </li>
-<li>
-<p>a function that is called back every time the broker delivers a message to the client.</p>
+
+<li><p>a function that is called back every time the broker delivers a message to the client.</p>
 </li>
 
 </ol>
 <div id="ex_web_stomp_4" data-type="example">
-<h5></h5>
+<h5><span data-type="label">Example 1-10. </span></h5>
 
-
-<pre data-type="programlisting" data-code-language="js">client.subscribe(destination, function(message) {
+<pre data-type="programlisting" class="programlisting" data-code-language="js">client.subscribe(destination, function(message) {
   // this function is executed every time a message is consumed
 });</pre>
 </div>
 
 <p>The <code>message</code> parameter that is passed to the subscription callback corresponds to a STOMP message and has 3 properties:</p>
 <ul>
-<li>
-<p><code>command</code> - the command of the STOMP frame (when a message is receives, it will always be <code>MESSAGE</code>)</p>
+
+<li><p><code>command</code> - the command of the STOMP frame (when a message is receives, it will always be <code>MESSAGE</code>)</p>
 </li>
-<li>
-<p><code>headers</code> - a JavaScript object containing all the frame headers. It can be empty if the message has no headers</p>
+
+<li><p><code>headers</code> - a JavaScript object containing all the frame headers. It can be empty if the message has no headers</p>
 </li>
-<li>
-<p><code>body</code> - a string representing the message&#8217;s payload. It can be <code>null</code> if the message has no payload.</p>
+
+<li><p><code>body</code> - a string representing the message’s payload. It can be <code>null</code> if the message has no payload.</p>
 </li>
+
 </ul>
 
 
@@ -347,7 +344,7 @@ However, that implies that the Web application must now have a way to know this 
 <p>The pseudo code for it would look like:</p>
 
 
-<pre data-type="programlisting" data-code-language="js">var listURL = "...";
+<pre data-type="programlisting" class="programlisting" data-code-language="js">var listURL = "...";
 var deviceIDs = fetch(listURL);
 var callback = function(message) {
   // we use the same callback for every subscription
@@ -363,23 +360,26 @@ We would have to periodically fetch the list of device IDs and check whether the
 
 <p>Fortunately, the flexibility of STOMP protocol comes handy to manage this in a simpler fashion. STOMP defines very loosely the notion of destination:</p>
 <blockquote data-type="epigraph">
+
 <p>A STOMP server is modelled as a set of destinations to which messages can be sent. The STOMP protocol treats destinations as opaque string and their syntax is server implementation specific. Additionally STOMP does not define what the delivery semantics of destinations should be. The delivery, or “message exchange”, semantics of destinations can vary from server to server and even from destination to destination. This allows servers to be creative with the semantics that they can support with STOMP.</p>
-<p data-type="attribution">&#8212; STOMP 1.2 Protocol</p>
+<p data-type="attribution">— STOMP 1.2 Protocol</p>
+
 </blockquote>
 
 <p>Until now, we have used <em>simple</em> destinations such as <code>/topic/device.2262EC25-E9FD-4578-BADE-4E113DE45934.location</code> or <code>/queue/device.2262EC25-E9FD-4578-BADE-4E113DE45934.text</code> that are straightforward to understand.</p>
 
 <p>We will now use a feature from our STOMP broker, ActiveMQ, that allows to use <a href="http://activemq.apache.org/wildcards.html"><em>wildcard</em> destinations</a>.</p>
 <ul>
-<li>
-<p><code>.</code> is used to separate names in a path</p>
+
+<li><p><code>.</code> is used to separate names in a path</p>
 </li>
-<li>
-<p><code>*</code> is used to match any name in a path</p>
+
+<li><p><code>*</code> is used to match any name in a path</p>
 </li>
-<li>
-<p><code>&gt;</code> is used to recursively match any destination starting from this name</p>
+
+<li><p><code>&gt;</code> is used to recursively match any destination starting from this name</p>
 </li>
+
 </ul>
 
 <p>With our example using ActiveMQ, we can use this notation to subscribe to any
@@ -388,7 +388,7 @@ device location topic by using the <code>/topic/device.*.location</code> wildcar
 <p>The subscription code becomes simpler:</p>
 
 
-<pre data-type="programlisting" data-code-language="js">// we use a wildcard destination to register to any
+<pre data-type="programlisting" class="programlisting" data-code-language="js">// we use a wildcard destination to register to any
 // destination that matches this pattern.
 var destination = "/topic/device.*.location";
 client.subscribe(destination, function(message) {
@@ -398,21 +398,21 @@ client.subscribe(destination, function(message) {
 <div data-type="note">
 
 
-<p>Since the semantic of STOMP destinations are specific to the STOMP broker, you have to check its documentation to know if they support wildcard destinations or similar concepts. If it does not, you have to revert to the first idea to fetch the list of devices and subscribe to each of the destination&#8230; or use another STOMP broker that supports this feature.</p>
+<p>Since the semantic of STOMP destinations are specific to the STOMP broker, you have to check its documentation to know if they support wildcard destinations or similar concepts. If it does not, you have to revert to the first idea to fetch the list of devices and subscribe to each of the destination… or use another STOMP broker that supports this feature.</p>
 
 </div>
 
 <p>Since we no longer know <em>a priori</em> which device location we are receiving, we need a new way to determine which device has broadcast it.
 There are two pieces of information we can use. When a consumer receives a STOMP message, the message always have a <code>destination</code> header that corresponds to the <em>actual</em> destination that the client consumed consume from.</p>
 
-<p>Since we are subscribing to the wildcard address <code>/topic/device.*.location</code>, the actual destination we consume from will be stored in the received message&#8217;s headers in <code>message.headers["destination"]</code>.
+<p>Since we are subscribing to the wildcard address <code>/topic/device.*.location</code>, the actual destination we consume from will be stored in the received message’s headers in <code>message.headers["destination"]</code>.
 In my case, the value of this header would <code>/topic/device.2262EC25-E9FD-4578-BADE-4E113DE45934.location</code>.
 However, we would then have to parse this <code>destination</code> to extract the device ID from it and write brittle code for that.</p>
 
-<p>If we look back at <a data-type="xref" href="#ch_introduction_stomp_example_message"/>, the message representation for the location also contains the device ID in the <code>deviceID</code> property:</p>
+<p>If we look back at <a data-type="xref" href="#ch_introduction_stomp_example_message"></a>, the message representation for the location also contains the device ID in the <code>deviceID</code> property:</p>
 
 
-<pre data-type="programlisting" data-code-language="js">{
+<pre data-type="programlisting" class="programlisting" data-code-language="js">{
   "deviceID": "BBB",
   "lat": 48.8581,
   "lng": 2.2946,
@@ -423,7 +423,7 @@ However, we would then have to parse this <code>destination</code> to extract th
 <p>The message is <em>self-contained</em> and defines all the interesting information that a consumer may need. When we receive such a location message, we know which device is sending it by simply looking at the <code>deviceID</code> property from the JSON object created from  the message body.</p>
 
 
-<pre data-type="programlisting" data-code-language="js">var destination = "/topic/device.*.location";
+<pre data-type="programlisting" class="programlisting" data-code-language="js">var destination = "/topic/device.*.location";
 client.subscribe(destination, function(message) {
   // this function is called every time a message is received
   // create an object from the JSON string contained in the message body
@@ -440,7 +440,7 @@ client.subscribe(destination, function(message) {
 <p>The whole code to connect to the STOMP broker and subscribe to the wildcard destination is shown below.</p>
 
 
-<pre data-type="programlisting" data-code-language="js">// Connection to the STOMP broker
+<pre data-type="programlisting" class="programlisting" data-code-language="js">// Connection to the STOMP broker
 // and subscription to the device's position destinations.
 //
 // the url paramater is the Web Socket URL of the STOMP broker
@@ -506,12 +506,12 @@ function connect(url) {
 <section data-type="sect1" id="_draw_the_device_locations_on_a_map">
 <h1>Draw the Device Locations on a Map</h1>
 
-<p>The Web application is now receiving the GPS coordinates of any devices that send them. We could just display them as text like we did for the iOS application in <a data-type="xref" href="#ch_mobile_stomp_display_position"/> but we can make it prettier by drawing them on a map instead by using Google Maps API.</p>
+<p>The Web application is now receiving the GPS coordinates of any devices that send them. We could just display them as text like we did for the iOS application in <a data-type="xref" href="#ch_mobile_stomp_display_position"></a> but we can make it prettier by drawing them on a map instead by using Google Maps API.</p>
 
-<p>In <a data-type="xref" href="#ex_web_stomp_1"/> template, we already added the scripts to use Google Maps API. We now need to create the map and initialize it.</p>
+<p>In <a data-type="xref" href="#ex_web_stomp_1"></a> template, we already added the scripts to use Google Maps API. We now need to create the map and initialize it.</p>
 
 
-<pre data-type="programlisting" data-code-language="js">$(document).ready(function() {
+<pre data-type="programlisting" class="programlisting" data-code-language="js">$(document).ready(function() {
 
   // Google map and the trackers to follow the trucks
   var map, trackers = {};
@@ -536,7 +536,7 @@ function connect(url) {
 <p>We have called a <code>show()</code> method in the subscription handler. We can now implement it now to display the device on the map using its coordinates.</p>
 
 
-<pre data-type="programlisting" data-code-language="js">// show the device at the given latitude and longitude
+<pre data-type="programlisting" class="programlisting" data-code-language="js">// show the device at the given latitude and longitude
 function show(deviceID, lat, lng) {
   var position = new google.maps.LatLng(lat, lng);
   // lazy instantiation of the map
@@ -569,21 +569,21 @@ function show(deviceID, lat, lng) {
 
 <p>If we open now this <code>locations.html</code> file in a Web browser, we will see a map of the whole world displayed.</p>
 
-<figure id="img_web_stomp_12">
-<img src="images/Chapter030/locations_web_app.png" alt="The Locations Web application"/>
+<figure id="img_web_stomp_1">
+<img src="images/Chapter030/locations_web_app.png" alt="The Locations Web application"></img>
 <figcaption>The <code>Locations</code> Web application.</figcaption>
 </figure>
 
 <p>If we click on the <code>Connect</code> button, markers will appear on the map for each device that broadcasts its coordinates.</p>
 
-<p>In my case, I am using the <code>iOS simulator</code> to run the mobile application developed in the previous chapter and use its <code>Location</code> tool to simulate a freeway drive (as explained in <a data-type="xref" href="#ch_mobile_stomp_location_simulator"/>).</p>
+<p>In my case, I am using the <code>iOS simulator</code> to run the mobile application developed in the previous chapter and use its <code>Location</code> tool to simulate a freeway drive (as explained in <a data-type="xref" href="#ch_mobile_stomp_location_simulator"></a>).</p>
 
 <figure id="img_web_stomp_2">
-<img src="images/Chapter030/freeway_drive.png" alt="Simulate a freeway drive"/>
+<img src="images/Chapter030/freeway_drive.png" alt="Simulate a freeway drive"></img>
 <figcaption>Simulate a freeway drive.</figcaption>
 </figure>
 
-<p>The position of the device is updated every time the Web application receives a STOMP message from the device&#8217;s position destination and we see it move on the map.</p>
+<p>The position of the device is updated every time the Web application receives a STOMP message from the device’s position destination and we see it move on the map.</p>
 
 <p>At this stage, the Web application receives STOMP messages to display the position of the devices. We now need to write the code to send texts to the devices.</p>
 </section>
@@ -600,38 +600,39 @@ function show(deviceID, lat, lng) {
 
 
 
-<section data-type="sect1" id="_send_stomp_messages">
+<section data-type="sect1" id="_send_stomp_messages_2">
 <h1>Send STOMP Messages</h1>
 
 <p>The STOMP client can send messages to the broker using its <code>send</code> method which takes three parameters:</p>
 <ul>
-<li>
-<p><code>destination</code> - the name of the destination</p>
+
+<li><p><code>destination</code> - the name of the destination</p>
 </li>
-<li>
-<p><code>headers</code> - a JavaScript object containing any additional headers</p>
+
+<li><p><code>headers</code> - a JavaScript object containing any additional headers</p>
 </li>
-<li>
-<p><code>body</code> - a string corresponding to the message payload.</p>
+
+<li><p><code>body</code> - a string corresponding to the message payload.</p>
 </li>
+
 </ul>
 
 <p>Both <code>headers</code> and <code>body</code> are optional and can be omitted. However if you want to set the message body, you must also specify the headers (using an empty
 JavaScript literal if you have no header to set).</p>
 
 
-<pre data-type="programlisting" data-code-language="js">client.send(destination, {}, body);</pre>
+<pre data-type="programlisting" class="programlisting" data-code-language="js">client.send(destination, {}, body);</pre>
 
 
-<p>As we described in <a data-type="xref" href="#ch_introduction_stomp_example_topology"/>, we use a queue to send orders to a given device and the destination for this is named <code>/queue/device.XXX.text</code></p>
+<p>As we described in <a data-type="xref" href="#ch_introduction_stomp_example_topology"></a>, we use a queue to send orders to a given device and the destination for this is named <code>/queue/device.XXX.text</code></p>
 
 <p>The text is sent in the STOMP message body as a plain text string.</p>
 
 
-<pre data-type="programlisting">Hello, Where are you?</pre>
+<pre data-type="programlisting" class="programlisting">Hello, Where are you?</pre>
 
 
-<p>We must respect this message format as it is the format expected by the iOS application to handle the texts and display them (we wrote this code in <a data-type="xref" href="#ch_mobile_stomp_subscribe"/>).</p>
+<p>We must respect this message format as it is the format expected by the iOS application to handle the texts and display them (we wrote this code in <a data-type="xref" href="#ch_mobile_stomp_subscribe"></a>).</p>
 
 <p>We added a HTML <code>&lt;form&gt;</code> element with the id <code>text_form</code> to send a text message. The device identifier is taken from the selected option in the <code>&lt;select&gt;</code> element identified by <code>deviceID</code>. The text itself is taken from the <code>&lt;input&gt;</code> element identified by <code>text</code>.</p>
 
@@ -640,7 +641,7 @@ JavaScript literal if you have no header to set).</p>
 <p>Piecing everything together, the code to send a STOMP message looks like:</p>
 
 
-<pre data-type="programlisting" data-code-language="js">// Send a text to a device
+<pre data-type="programlisting" class="programlisting" data-code-language="js">// Send a text to a device
 $('#text_form').submit(function() {
   var deviceID = $("#deviceID").val();
   var text = $("#text").val();
@@ -657,17 +658,17 @@ $('#text_form').submit(function() {
 
 <p>If we reload the <code>locations.html</code> file after adding this code, we can now send any text message to a device by selecting it in the list in the <code>Send Text</code> form.</p>
 
-<p>Let&#8217;s type a text such as <code>Hello, Where are you?</code> and click on the <code>Send</code> button.</p>
+<p>Let’s type a text such as <code>Hello, Where are you?</code> and click on the <code>Send</code> button.</p>
 
 <figure id="img_web_stomp_3">
-<img src="images/Chapter030/send_text.png" alt="Send a text message to a device"/>
+<img src="images/Chapter030/send_text.png" alt="Send a text message to a device"></img>
 <figcaption>Send a text message to a device.</figcaption>
 </figure>
 
 <p>The message is sent when you click on the <code>Send</code> button. Since the <code>Locations</code> iOS application is subscribed to this destination, it will receive the message and display it in its table.</p>
 
 <figure id="img_web_stomp_4">
-<img src="images/Chapter030/ios_app_received_text.png" alt="The Locations iOS application received the text"/>
+<img src="images/Chapter030/ios_app_received_text.png" alt="The Locations iOS application received the text"></img>
 <figcaption>The <code>Locations</code> iOS application received the text.</figcaption>
 </figure>
 </section>
@@ -694,7 +695,7 @@ $('#text_form').submit(function() {
 <p>In this callback, we clean up the trackers that are displayed on the map so that nothing is shown after the user is disconnected. We also revert the user interface by hiding the <code>Disconnect</code> button and the text form and showing the <code>Connect</code> button.</p>
 
 
-<pre data-type="programlisting" data-code-language="js">function disconnect() {
+<pre data-type="programlisting" class="programlisting" data-code-language="js">function disconnect() {
   // disconnect from the broker
   client.disconnect(function() {
     // once we are successfully disconnected, clear out all the trackers from the map
@@ -713,7 +714,7 @@ $('#text_form').submit(function() {
 <p>Finally, we need to call this <code>disconnect</code> method when the <code>Disconnect</code> button is clicked.</p>
 
 
-<pre data-type="programlisting" data-code-language="js">$('#disconnect_button').click(function() {
+<pre data-type="programlisting" class="programlisting" data-code-language="js">$('#disconnect_button').click(function() {
   disconnect();
   return false;
 });</pre>
@@ -732,7 +733,7 @@ $('#text_form').submit(function() {
 
 
 
-<section data-type="sect1" id="_summary">
+<section data-type="sect1" id="_summary_3">
 <h1>Summary</h1>
 
 <p>In this chapter, we learn to use <code>stomp.js</code> to send and receive STOMP messages from a Web application.</p>
@@ -741,22 +742,22 @@ $('#text_form').submit(function() {
 
 <p>To send a message, the application must:</p>
 <ol>
-<li>
-<p>connect to the STOMP broker</p>
+
+<li><p>connect to the STOMP broker</p>
 </li>
-<li>
-<p>send the message to the destination</p>
+
+<li><p>send the message to the destination</p>
 </li>
 
 </ol>
 
 <p>To consume a message, the application must</p>
 <ol>
-<li>
-<p>connect to the STOMP broker</p>
+
+<li><p>connect to the STOMP broker</p>
 </li>
-<li>
-<p>subscribe to the destination and pass a callback that is called every time a message is received.</p>
+
+<li><p>subscribe to the destination and pass a callback that is called every time a message is received.</p>
 </li>
 
 </ol>

@@ -1,0 +1,92 @@
+<div xmlns="http://www.w3.org/1999/xhtml" data-type="part" id="part_stomp">
+<h1>STOMP</h1>
+
+<div class="partintro">
+
+<p>For the next four chapters, we will use the STOMP protocol to build our applications.</p>
+
+<p>This book covers the latest released version of the protocol at the time of this writing: STOMP 1.2 <a data-type="xref" href="#stomp1.2"></a>.</p>
+
+<p>STOMP is a simple text-based messaging protocol that is well suited to develop lightweight messaging applications on any platforms. It provides an interoperable wire format so that any client can communicate with any message broker.
+The simplicity of the protocol ensures that it is straightforward to have interoperability between client and brokers.</p>
+
+<p>STOMP does not define the semantic of the destination, they depend on the STOMP broker you are using.</p>
+
+<p>There are some conventions shared by STOMP brokers (for example, prefixing a destination by <code>/queue/</code> to use a queue and by <code>/topic/</code> to use a topic) but you need to consult your broker documentation to check which messaging model are supported (including <em>Point-to-Point</em> and <em>Publish/Subscribe</em>) and how to use them.</p>
+
+<p>STOMP is based on text and a few parsing rules which makes it simple to use from any platform able to read and write text and open a network connection.
+However, being text-based means that the protocol is not the most efficient to use as it requires more network bandwidth and memory than corresponding binary-based protocols.
+If your applications can work with these constraints, STOMP is a a good messaging protocol to use.</p>
+<div data-type="note">
+<h1>Install and Configure a STOMP Broker</h1>
+
+<p>Before using a STOMP client, a broker must be installed and
+configured to be able to exchange messages.</p>
+
+<p>In this book, we use Apache ActiveMQ as the messaging broker. The <a data-type="xref" href="#appendix_activemq"></a> shows how to install and configure ActiveMQ.</p>
+
+<p>Once ActiveMQ is started, it will accept STOMP connections on the <code>61613</code> port.</p>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>

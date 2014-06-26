@@ -1,8 +1,8 @@
-<section data-type="appendix" id="appendix_activemq">
+<section xmlns="http://www.w3.org/1999/xhtml" data-type="appendix" id="appendix_activemq">
 <h1>Apache ActiveMQ</h1>
 
 
-<p class="lead">In this appendix, we describe how to install and configure <a href="http://activemq.apache.org">Apache ActiveMQ</a> to
+<p>In this appendix, we describe how to install and configure <a href="http://activemq.apache.org">Apache ActiveMQ</a> to
 support STOMP and MQTT protocols.</p>
 
 <p>Apache ActiveMQ is a popular and powerful Open Source messaging server. It is fast, supports many cross Language clients and protocols.
@@ -25,7 +25,7 @@ In this book, we will connect to it from the Objective-C and JavaScript language
 <p>Once you have download the archive for ActiveMQ, it can be installed and started by running the commands:</p>
 
 
-<pre data-type="programlisting" data-code-language="sh">$ tar zxvf apache-activemq-5.9.0-bin.tar.gz
+<pre data-type="programlisting" class="programlisting" data-code-language="sh">$ tar zxvf apache-activemq-5.9.0-bin.tar.gz
 $ cd apache-activemq-5.9.0
 $ mkdir ~/mobilewebmsg/
 $ ./bin/activemq create ~/mobilewebmsg/mybroker
@@ -42,7 +42,7 @@ $ tail data/activemq.log
 <p>To stop the broker, run the following command:</p>
 
 
-<pre data-type="programlisting" data-code-language="sh">$ ./bin/mybroker stop
+<pre data-type="programlisting" class="programlisting" data-code-language="sh">$ ./bin/mybroker stop
 ...
 Stopping broker: mybroker
 .... FINISHED</pre>
@@ -69,28 +69,29 @@ Stopping broker: mybroker
 <p>Once you are logged in, you can check the <code>mybroker</code> resource in the ActiveMQ tree.</p>
 
 <figure id="img_app_activemq_1">
-<img src="images/AppendixA/ActiveMQ_console.png" alt="The mybroker resource in ActiveMQ Web console"/>
+<img src="images/AppendixA/ActiveMQ_console.png" alt="The mybroker resource in ActiveMQ Web console"></img>
 <figcaption>The mybroker Resource in ActiveMQ Web Console</figcaption>
 </figure>
 
 <p>One interesting attribute is <code>transportConnectors</code>. If you click on the attribute value, a pop up screen opens and display all the protocols supported by ActiveMQ out of the box.</p>
 
 <figure id="img_app_activemq_2">
-<img src="images/AppendixA/transport_connectors.png" alt="ActiveMQ Default Transport Connectors"/>
+<img src="images/AppendixA/transport_connectors.png" alt="ActiveMQ Default Transport Connectors"></img>
 <figcaption>ActiveMQ Default Transport Connectors.</figcaption>
 </figure>
 
 <p>For this book, the important ones are:</p>
 <ul>
-<li>
-<p>Stomp: <code>stomp://jeff.local:61613</code></p>
+
+<li><p>Stomp: <code>stomp://jeff.local:61613</code></p>
 </li>
-<li>
-<p>Mqtt: <code>mqtt://jeff.local:1883</code></p>
+
+<li><p>Mqtt: <code>mqtt://jeff.local:1883</code></p>
 </li>
-<li>
-<p>Ws: <code>ws://jeff.local:61614</code></p>
+
+<li><p>Ws: <code>ws://jeff.local:61614</code></p>
 </li>
+
 </ul>
 
 <p>They mean that to connect to ActiveMQ using the STOMP protocol we must connect to the <code>jeff.local</code> host - this is the name of my machine on my local network, your ActiveMQ installation will have another value - on the port <code>61613</code>.</p>
