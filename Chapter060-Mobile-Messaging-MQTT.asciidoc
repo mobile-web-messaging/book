@@ -52,7 +52,7 @@ We will use https://developer.apple.com/xcode/[Xcode] to create the +Locations+ 
 
 Once Xcode is installed and started, we select +Create a new Xcode project+ from its launch screen. The application will be composed of a single view so we select the +Single View Application+ template in +iOS > Application+ from the template screen.
 
-[[img_mobile_mqtt_1]]
+[[img_mobile_mqtt_12]]
 .Select +Single View Application+ from the template screen.
 image::images/Chapter060/template_screen.png["XCode template screen"]
 
@@ -752,7 +752,7 @@ $ mosquitto_pub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/
 
 After this message is sent, the device will receive it and change its background color to green.
 
-[[img_mobile_mqtt_2]]
+[[img_mobile_mqtt_22]]
 .Alert message is received by the +Motions+ iOS application
 image::images/Chapter060/background_color_change.png[Alert message is received by the Motions iOS application]
 

@@ -442,7 +442,7 @@ function show(deviceID, lat, lng) {
 
 If we open now this +locations.html+ file in a Web browser, we will see a map of the whole world displayed.
 
-[[img_web_stomp_1]]
+[[img_web_stomp_12]]
 .The +Locations+ Web application.
 image::images/Chapter030/locations_web_app.png[The Locations Web application]
 
