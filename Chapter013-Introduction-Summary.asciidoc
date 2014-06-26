@@ -1,7 +1,0 @@
-=== Summary
-
-In this chapter, we learnt about the messaging protocols and how they differ from request/reply protocols. We introduced two messaging models - _Point-to-Point_ and _Publish/Subscribe_ - and the parts that compose a message - _destination_, _headers_, and _payload_.
-
-We have also described the two applications with their messaging models and representation that will be written in the subsequent chapters: the +Locations+ application that uses STOMP and the +Motions+ applications that uses MQTT.
-
-In the next chapter, we will start writing the +Locations+ application running on iOS devices. If you are more interested by learning about MQTT, you can go directly to <<ch_mobile_mqtt>> to start writing the +Motions+ application.
