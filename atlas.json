@@ -1,0 +1,47 @@
+{
+  "branch": "master",
+  "files": [
+    "titlepage.html",
+    "copyright.html",
+    "toc.html",
+    "Dedication.html",
+    "Preface.html",
+    "Chapter010-Introduction.html",
+    "Chapter011-Introduction-STOMP-Example.html",
+    "Chapter012-Introduction-MQTT-Example.html",
+    "Chapter013-Introduction-Summary.html",
+    "Chapter020-Mobile-Messaging-STOMP.html",
+    "Chapter030-Web-Messaging-STOMP.html",
+    "Chapter040-Avdanced-STOMP.html",
+    "Chapter050-Beyond-STOMP.html",
+    "Chapter060-Mobile-Messaging-MQTT.html",
+    "Chapter070-Web-Messaging-MQTT.html",
+    "Chapter080-Advanced-MQTT.html",
+    "AppendixA-ActiveMQ.html",
+    "AppendixB-Mosquitto.html",
+    "Bibliography.html",
+    "ix.html"
+  ],
+  "formats": {
+    "pdf": {
+      "version": "web",
+      "index": true,
+      "toc": true
+    },
+    "epub": {
+      "index": false,
+      "toc": false,
+      "epubcheck": false
+    },
+    "mobi": {
+      "index": false,
+      "toc": false
+    },
+    "html": {
+      "index": false,
+      "toc": false
+    }
+  },
+  "theme": "oreillymedia/animal_theme",
+  "title": "mobile and web messaging"
+}
