@@ -1,0 +1,410 @@
+<section data-type="preface" id="_preface">
+<h1>Preface</h1>
+
+
+
+
+
+
+
+<section data-type="sect1" id="_what_this_book_is_about">
+<h1>What This Book is About</h1>
+
+<p>This is a book about messaging protocols and how software developers can use them to build more responsive, resilient applications running on mobile devices and Web browsers.</p>
+
+<p>Messaging protocols are nothing new. They have been used with success in enterprise software for many years. They have been one of the building blocks that let different services and platforms communicate with each other.
+Their designs make them well suited to build applications for mobile devices and the Web.</p>
+
+<p>Nowadays, HTTP has emerged as the mainstream transport protocol and is extensively used to communicate between any clients (from web browsers of course but also from desktop and mobile applications, backend services, etc.) and web servers. It has replaced almost all proprietary or non standard protocols and is likely to be the de facto choice if your application needs to communicate with any remote endpoint.</p>
+
+<p>Messaging protocols complement HTTP and this book will show cases where a messaging protocol is better suited than HTTP (or any other request/reply transport protocol) to build mobile or web applications.</p>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" id="_what_this_book_is_em_not_em_about">
+<h1>What This Book is <em>Not</em> About</h1>
+
+<p><em>Messaging</em> is an overloaded term that can mean many different things in software development. In this book, we will only talk about <em>application messaging protocols</em>.</p>
+
+<p>This book is not about <em>messaging applications</em> like Apple&#8217;s <code>Messages</code> or <code>WhatsApp</code>. These applications can be built on top of messaging protocols and this book may be a good introduction if you intend to build one. However there are many other features expected in messaging applications that will not be covered in this book.</p>
+
+<p>This book is also not about <em>programming language or framework messaging</em> (as used in Objective-C to invoke methods on a object or in Erlang to communicate between processes).</p>
+
+<p>In the rest of this book, we will use the term <em>messaging</em> in the context of application messaging protocol.</p>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" id="_messaging_is_simple">
+<h1>Messaging is Simple</h1>
+
+<p>At its core, the concept of a messaging protocol is simple:</p>
+<ul>
+<li>
+<p>An application <em>produces</em> a <em>message</em> to a <em>destination</em> on a <em>broker</em>.</p>
+</li>
+<li>
+<p>An application subscribes to this same destination to <em>consume</em> the message.</p>
+</li>
+</ul>
+
+<p>In these two sentences, I introduced the five concepts that are (almost) all there is to know about messaging.</p>
+
+<p>A messaging protocol is a simple idea. Most of the complexity of using one is figuring out the best suited <em>model</em> for your applications (how the producers and consumers will exchanges messages). This book will show the two models that are most commonly used: <em>point-to-point</em> and <em>publish/subscribe</em>.</p>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" id="_enterprise_messaging_is_not_so_simple">
+<h1>Enterprise Messaging Is Not So Simple</h1>
+
+<p>When companies are acquired or merged, they need a way to enable communication between their systems. Messaging is one approach to achieve this integration in a unobstrusive way (as much as it is possible).
+The systems must agree on the data representation (transmitted in the <em>message</em>) and the <em>destination</em> (or the topic of interest shared by the different systems).</p>
+
+<p>With its use in enterprise software, messaging protocols became increasingly complex to meet enterprise requirements (high-availability, failover, load-balancing, etc.).</p>
+
+<p>Besides, the integrated applications must often agree on a messaging system to use throughout the company. In the Java world, the specification that deals with messaging is called Java Message Service <a data-type="xref" href="#jms"/>. It defines a set of interfaces that a Java application can use to send and receive messages. However, JMS does not define any protocol (how the bytes are sent over the wire) and leave this implementation detail to the JMS brokers that implement the API. This means that JMS implementations are not interoperable: one must use the broker&#8217;s client implementation to send a message to the broker. If applications were using different JMS brokers, they had interoperability issues and must use <em>bridges</em> to transfer messages from one JMS broker to another. This lack of interoperability brings complexity as you need to add servers to host the bridges, make them redundant for high-availability, etc.</p>
+
+<p>Over time, we have seen the appearances of enterprise messaging protocols such as the Advanced Message Queuing Protocol <a data-type="xref" href="#amqp"/> that handles enterprise features and interoperability. This leads to complex protocols that are difficult to implement and whose interoperability is subjective (backwards compatibility is not guaranteed, different implementations may not implement the whole specification leading to interoperability issues).</p>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" id="_mobile_messaging_is_simple_again">
+<h1>Mobile Messaging Is Simple Again</h1>
+
+<p>The increasing complexity of messaging protocols used in enterprise software makes them difficult to implement and they are not best suited for constrained environments such as mobile devices.</p>
+
+<p>Mobile devices requires messaging protocols with more constrained goals that turns out to be simpler and more efficient to use without draining battery or requiring always-on network connections.</p>
+
+<p>While these simpler protocols do not provide all the features offered by enterprise-class messaging protocols, they are a good fit for mobile and Web platforms.</p>
+
+<p>In this book, I will talk about two of them, STOMP and MQTT.</p>
+
+<p>STOMP really shines for its simplicity if you need to send one text message from any system (operating system, virtual machines, web browsers) to another.
+It is simple enough that a network client such as <code>telnet</code> <em>is</em> a STOMP client.</p>
+
+<p>MQTT was created to broadcast data from small devices with low power usage and constrained memory resources. It is well suited for mobile devices as it preserves battery life and memory.</p>
+
+<p>These protocols are simple to understand and implement. Messaging brokers often provide both of them. For example, a desktop application can use STOMP to send a message and another mobile application can consume the same message using MQTT. The applications are free to use the most appropriate messaging protocol for their needs and rely on the broker implementations for interoperability.</p>
+
+<p>With the advent of mobile devices, we can use these simple messaging protocols to build more reactive, efficient applications. Since these protocols are available both for mobile and web platformss, choosing between these two plaftorms is not constrained by using a messaging protocol.</p>
+
+<p>At the same time, we can leverage these messaging protocols to integrate with legacy systems too. If the messaging broker also supports an enterprise-class messaging API (such as JMS) or protocols (such as AMQP), we can build mobile and Web applications that can consume messages sent from legacy systems.</p>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" id="_what_s_in_this_book">
+<h1>What&#8217;s in This Book</h1>
+
+<p>In this book, I will introduce messaging protocols for mobile devices and Web applications.</p>
+<dl>
+<dt>Chapter 1, Introduction</dt>
+<dd>
+<p>In this chapter, I introduce the concepts of messaging protocols, their models and message representation.
+To illustrate the use of messaging protocols on mobile and Web platforms, we will build two applications, one using STOMP and the other MQTT.
+Both applications will come in two parts: one will run on mobile devices, the other inside a Web browser and they will communicate using messages. This chapter explains the overall design of these two example applications.</p>
+</dd>
+<dt>Chapter 2, Mobile Messaging With STOMP</dt>
+<dd>
+<p>In this chapter, I present STOMP, a simple text-based messaging protocol. I use StompKit, an iOS library for STOMP, to build the <code>Locations</code> application that sends GPS data from the device and receives text messages.</p>
+</dd>
+<dt>Chapter 3, Web Messaging With STOMP</dt>
+<dd>
+<p>In this chapter, I introduce stomp.js, a JavaScript library for STOMP, and write a Web application that receives messages with the GPS datat from the <code>Locations</code> application on iOS devices and display them on a map. This Web application will also send text messages to the iOS application.</p>
+</dd>
+<dt>Chapter 4, Advanced STOMP</dt>
+<dd>
+<p>In this chapter, I present the advanced features of STOMP that we did not use in the previous chapters to build our applications. These advanced features are not always used by messaging applications but they may prove useful as the applications grow in complexity.</p>
+</dd>
+<dt>Chapter 5, Beyond STOMP</dt>
+<dd>
+<p>In this chapter, I present features that are not part of STOMP but available from some STOMP brokers. These features often help solve common issues and reduce code complexity by leveraging the brokers.</p>
+</dd>
+<dt>Chapter 6, Mobile Messaging With MQTT</dt>
+<dd>
+<p>In this chapter, I introduce MQTT, a binary messaging protocol well suited to broadcast data from mobile or embedded devices and write a mobile application, <code>Motions</code>, on iOS that uses MQTT to broadcast data about the device motion using the MQTTKit libary and listen for alerts to change the color of the application.</p>
+</dd>
+<dt>Chapter 7, Web Messaging With MQTT</dt>
+<dd>
+<p>In this chapter, I use MQTT over Web Socket to write a Web application that
+receives the device motion data sent by the <code>Motions</code> application to display them and sends alerts to the devices to change their color.</p>
+</dd>
+<dt>Chapter 8, Advanced MQTT</dt>
+<dd>
+<p>In this chapter, I present the advanced features of MQTT that were not used in the previous chapters.</p>
+</dd>
+<dt>Appendix A, ActiveMQ</dt>
+<dd>
+<p>In this appendix, we explain how to install and configure the messaging broker, Apache ActiveMQ, that is used in the book to run the STOMP examples.</p>
+</dd>
+<dt>Appendix B, Mosquitto</dt>
+<dd>
+<p>In this appendix, we explain how to install and configure the Mosquitto broker and its command-line tools that are used in the book to send and receive MQTT messages.</p>
+</dd>
+</dl>
+<div data-type="note">
+<h1>What Should I Read?</h1>
+
+<p>The book is organized to be read in order but some chapters can be skipped depending on your experience.
+The Chapter 1 introduces all the concepts discussed throughout the book.</p>
+
+<p>If you are interested in mobile applications, you can focus on Chapters 2 and 6 that present two different messaging protocols for mobile devices.
+If you are writing Web applications, Chapters 3 and 7 are the most relevant.</p>
+
+<p>If you are interested by the STOMP protocol, Chapters 2, 3, 4, and 5 and the most relevant. If you are interested by MQTT, you can read Chapters 6, 7, and 8 instead.</p>
+
+</div>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" id="_target_audience">
+<h1>Target Audience</h1>
+
+<p>This book is an introduction to the STOMP and MQTT messaging protocols and assumes no prior experience with them.
+This book explains in detail the messaging protocols. Each platform&#8217;s clients may provide a different API to deal with the protocols but the underlying concepts remain the same.
+For both protocols, we will see two different libraries: an Objective-C library for iOS and a JavaScript library for Web applications.</p>
+
+<p>Basic programming skills are required. The examples in the book runs on different platforms and we used the programming language that made the most sense for each of them.</p>
+
+<p>The mobile applications on iOS will be written in Objective-C.
+The graphical application requires minimal knowledge of Xcode and Interface Builder but all the changes are described step by step in the book.</p>
+
+<p>The Web applications use the JavaScript language. We leverage <a href="http://jquery.com">jQuery</a> to make the Web applications interactive and manipulate the page elements but the messaging code is independent of any JavaScript frameworks.</p>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" id="_conventions_used_in_this_book">
+<h1>Conventions Used in This Book</h1>
+
+<p>The following typographical conventions are used in this book:</p>
+<dl>
+<dt><em>Italic</em></dt>
+<dd>
+<p>Indicates new terms, URLs, email addresses, filenames, and file extensions.</p>
+</dd>
+<dt><code>Constant width</code></dt>
+<dd>
+<p>Used for program listings, as well as within paragraphs to refer to program elements such as variable or function names, databases, data types, environment variables, statements, and keywords.</p>
+</dd>
+<dt><strong><code>Constant width bold</code></strong></dt>
+<dd>
+<p>Shows commands or other text that should be typed literally by the user.</p>
+</dd>
+<dt><em><code>Constant width italic</code></em></dt>
+<dd>
+<p>Shows text that should be replaced with user-supplied values or by values determined by context.</p>
+</dd>
+</dl>
+<div data-type="tip">
+
+
+<p>This icon signifies a tip, suggestion, or general note.</p>
+
+</div>
+<div data-type="warning">
+
+
+<p>This icon indicates a warning or caution.</p>
+
+</div>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" id="_using_code_examples">
+<h1>Using Code Examples</h1>
+
+<p>Supplemental material (code examples, exercises, etc.) is available for download at <a href="https://github.com/mobile-web-messaging/code/"><em class="hyperlink">https://github.com/mobile-web-messaging/code/</em></a>.</p>
+
+<p>The book contains all the code required to run the examples and the general instructions to setup the user interface of the iOS applications.</p>
+
+<p>This book is here to help you get your job done. In general, if example code is offered with this book, you may use it in your programs and documentation. You do not need to contact us for permission unless you’re reproducing a significant portion of the code. For example, writing a program that uses several chunks of code from this book does not require permission. Selling or distributing a CD-ROM of examples from O’Reilly books does require permission. Answering a question by citing this book and quoting example code does not require permission. Incorporating a significant amount of example code from this book into your product’s documentation does require permission.</p>
+
+<p>We appreciate, but do not require, attribution. An attribution usually includes the title, author, publisher, and ISBN. For example: “<em>Book Title</em> by Some Author (O’Reilly). Copyright 2012 Some Copyright Holder, 978-0-596-xxxx-x.”</p>
+
+<p>If you feel your use of code examples falls outside fair use or the permission given above, feel free to contact us at <a xmlns="http://www.w3.org/1999/xhtml" class="email" href="mailto:permissions@oreilly.com"><em>permissions@oreilly.com</em></a>.</p>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" id="_safari_books_online">
+<h1>Safari® Books Online</h1>
+<div data-type="note" class="safarienabled">
+
+
+<p><a xmlns="http://www.w3.org/1999/xhtml" href="http://my.safaribooksonline.com/?portal=oreilly" class="orm:hideurl:ital"><em class="hyperlink">Safari Books Online</em></a> is an on-demand digital library that delivers expert <a xmlns="http://www.w3.org/1999/xhtml" href="http://www.safaribooksonline.com/content" class="orm:hideurl">content</a> in both book and video form from the world&#8217;s leading authors in technology and business.</p>
+
+</div>
+
+<p>Technology professionals, software developers, web designers, and business and creative professionals use Safari Books Online as their primary resource for research, problem solving, learning, and certification training.</p>
+
+<p>Safari Books Online offers a range of <a xmlns="http://www.w3.org/1999/xhtml" href="http://www.safaribooksonline.com/subscriptions" class="orm:hideurl">product mixes</a> and pricing programs for <a xmlns="http://www.w3.org/1999/xhtml" href="http://www.safaribooksonline.com/organizations-teams" class="orm:hideurl">organizations</a>, <a xmlns="http://www.w3.org/1999/xhtml" href="http://www.safaribooksonline.com/government" class="orm:hideurl">government agencies</a>, and <a xmlns="http://www.w3.org/1999/xhtml" href="http://www.safaribooksonline.com/individuals" class="orm:hideurl">individuals</a>. Subscribers have access to thousands of books, training videos, and prepublication manuscripts in one fully searchable database from publishers like O’Reilly Media, Prentice Hall Professional, Addison-Wesley Professional, Microsoft Press, Sams, Que, Peachpit Press, Focal Press, Cisco Press, John Wiley &amp; Sons, Syngress, Morgan Kaufmann, IBM Redbooks, Packt, Adobe Press, FT Press, Apress, Manning, New Riders, McGraw-Hill, Jones &amp; Bartlett, Course Technology, and dozens <a xmlns="http://www.w3.org/1999/xhtml" href="http://www.safaribooksonline.com/publishers" class="orm:hideurl">more</a>. For more information about Safari Books Online, please visit us <a xmlns="http://www.w3.org/1999/xhtml" href="http://www.safaribooksonline.com/" class="orm:hideurl">online</a>.</p>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" id="_how_to_contact_us">
+<h1>How to Contact Us</h1>
+
+<p>Please address comments and questions concerning this book to the publisher:</p>
+<ul xmlns="http://www.w3.org/1999/xhtml" class="simplelist">
+  <li>O’Reilly Media, Inc.</li>
+  <li>1005 Gravenstein Highway North</li>
+  <li>Sebastopol, CA 95472</li>
+  <li>800-998-9938 (in the United States or Canada)</li>
+  <li>707-829-0515 (international or local)</li>
+  <li>707-829-0104 (fax)</li>
+</ul>
+
+<p>We have a web page for this book, where we list errata, examples, and any additional information. You can access this page at <a href="http://www.oreilly.com/catalog/&lt;catalog page&gt;"><em class="hyperlink">http://www.oreilly.com/catalog/&lt;catalog page&gt;</em></a>.</p>
+<!--Don't forget to update the link above.-->
+
+<p>To comment or ask technical questions about this book, send email to <a xmlns="http://www.w3.org/1999/xhtml" class="email" href="mailto:bookquestions@oreilly.com"><em>bookquestions@oreilly.com</em></a>.</p>
+
+<p>For more information about our books, courses, conferences, and news, see our website at <a href="http://www.oreilly.com"><em class="hyperlink">http://www.oreilly.com</em></a>.</p>
+
+<p>Find us on Facebook: <a href="http://facebook.com/oreilly"><em class="hyperlink">http://facebook.com/oreilly</em></a></p>
+
+<p>Follow us on Twitter: <a href="http://twitter.com/oreillymedia"><em class="hyperlink">http://twitter.com/oreillymedia</em></a></p>
+
+<p>Watch us on YouTube: <a href="http://www.youtube.com/oreillymedia"><em class="hyperlink">http://www.youtube.com/oreillymedia</em></a></p>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect1" id="_acknowledgments">
+<h1>Acknowledgments</h1>
+
+<p>I’d like to thank the many people who contributed to this book. I hope I have not forgotten anyone, but I probably have.</p>
+
+<p>My colleagues at Red Hat provided help and support in innumerable ways. This list of people is necessarily very incomplete: Bill Burke (I should have listened to you: writing a book is a tiring experience!), Clebert Suconic and Andy Taylor for their messaging expertise, Mark Little for his support. A special thanks to Dimitris Andreadis for his trust and letting me spend a part of my work time on this book. Thanks to my teammates in the WildFly and EAP teams (Jason Greene, David M. Lloyd, Brian Stansberry, Kabir Khan, Tomaz Cerar, Emanuel Muckenhuber and all those I have pleasure to work with daily) that helped me lessen my workload so that I could focus on writing this book.</p>
+
+<p>Andy Piper, Clebert Suconic, and Dejan Bosanac helped tremendously by reviewing this book. It is much better thanks to their comments and critics.</p>
+
+<p>The people at O’Reilly were extremely helpful. It was a pleasure working with Allyson McDonald, Rebecca Demarest, and Simon St.Laurent.</p>
+
+<p>Thanks to all developers that reported issues on this book and the code examples.</p>
+</section>
+
+
+
+
+
+
+
+</section>

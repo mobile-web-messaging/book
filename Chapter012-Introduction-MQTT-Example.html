@@ -1,0 +1,142 @@
+<section data-type="sect2" id="ch_introduction_mqtt_example">
+<h2><code>Motions</code> Application Using MQTT</h2>
+
+<p>Most mobile devices contain sensor that allows to track the device motions (and to a certain extent the motion of its owner). Using additional sensors, we could even imagine having access to the owner&#8217;s health data (heart rate, hydration, blood glucose level, etc.). This type of information could be sent to a centralized application that would be able to track the data and extract personal information about them to report to the owner.</p>
+
+<p>We will write a simple application, <code>Motions</code> that follows this model to illustrate the use of MQTT protocol. The iOS application will track the device motion and change its background color to "alert" its user when an alert message is received.</p>
+
+<p>Device motion will be represented by three values corresponding to its pitch, roll and yaw values as shown in the illustration below.</p>
+
+<figure id="img_mqtt_example_app_0">
+<img src="images/Chapter012/pitch_roll_yaw.png" alt="The pitch" width="roll and yaw values represents the device motion"/>
+<figcaption>The <code>pitch</code>, <code>roll</code> and <code>yaw</code> values represents the device motion.</figcaption>
+</figure>
+
+<p>The pending Web application will display the motions of all devices that broadcast them and be able to send alert messages to them:</p>
+<ol>
+<li>
+<p>In <a data-type="xref" href="#ch_mobile_mqtt"/>, we will write the <code>Motions</code> iOS application using the MQTT protocol to send data about the device motions and receive alerts.</p>
+</li>
+<li>
+<p>In <a data-type="xref" href="#ch_web_mqtt"/>, we will write a Web application using MQTT protocol over Web Sockets to receive all the device motions data and display them. The Web application will also be able to send alert messages to any devices sending its motions data.</p>
+</li>
+
+</ol>
+
+<figure id="img_mqtt_example_app_1">
+<img src="images/Chapter012/mqtt_app_diagram_1.png" alt="Diagram of the +Motions+ application"/>
+<figcaption>The <code>Motions</code> application with two clients, <code>AAA</code> and <code>BBB</code> and two Web applications monitoring them.</figcaption>
+</figure>
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" id="ch_introduction_mqtt_example_topology">
+<h3><code>Motions</code> Messaging Models</h3>
+
+<p>In this application we will use two destination with the Publish/Subscribe model:</p>
+<ul>
+<li>
+<p><code>/mwm/XXX/motion</code> (where <code>XXX</code> is the device identifier) is the topic to broadcast the device motion data (Publish/Subscribe model)</p>
+</li>
+<li>
+<p><code>/mwm/XXX/alert</code> is the topic to exchange alert messages for a given device (Publish/Subscribe model)</p>
+</li>
+</ul>
+
+<p>Each device running the <code>Motions</code> application will be:</p>
+<ul>
+<li>
+<p>a <em>producer</em> of messages to the topic <code>/mwm/XXX/motion</code></p>
+</li>
+<li>
+<p>a <em>consumer</em> of messages from the topic <code>/mwm/XXX/alert</code></p>
+</li>
+</ul>
+
+<p>Conversely, the Web application will be:</p>
+<ul>
+<li>
+<p>a <em>consumer</em> of messages from all the topics of the form <code>/mwm/XXX/motion</code></p>
+</li>
+<li>
+<p>a <em>producer</em> of message to all the topics of the form <code>/mwm/XXX/alert</code></p>
+</li>
+</ul>
+<div data-type="note">
+
+
+<p>MQTT only supports the <em>Publish/Subscribe</em> messaging model. Ideally, the alert destination would be better modeled as a queue (one per device). Since MQTT does not have support for queues, we will work around that by using one topic for each device and only have the corresponding device subscribes to it.</p>
+
+</div>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section data-type="sect3" id="ch_introduction_mqtt_example_message">
+<h3><code>Motions</code> Message Representation</h3>
+
+<p>There will be two types of exchanged messages:</p>
+<ul>
+<li>
+<p>one to represent device motion data (exhanged on the topics <code>/mwm/XXX/motion</code>)</p>
+</li>
+<li>
+<p>one to represent alerts (exchanged on the topics <code>/mwm/XXX/alert</code>)</p>
+</li>
+</ul>
+
+<p>The <code>Motions</code> iOS application will send the device motions data in a binary message where its payload will be composed of three 64-bit floats representing the device&#8217;s pitch, roll and yaw values.</p>
+<div id="ex_example_motion_data" data-type="example">
+<h5>Device Motion Message Paylaod</h5>
+
+
+<pre data-type="programlisting">&lt;&lt; 1.6 -0.1 0.8 &gt;&gt; <b>(1)</b></pre>
+
+<ol class="calloutlist">
+<li><p>&#x278a; The message is composed of three 64-bit floats for the <code>pitch</code>, <code>roll</code>, and <code>yaw</code> values</p>
+</li>
+
+</ol></div>
+
+<p>The alert messages that will be consumed by the <code>Motions</code> iOS application will
+be represented as a simple plain text string corresponding to a color. The <code>Motions</code> application will use this payload to change temporarily its background color to <em>alert</em> the user.</p>
+<div id="ex_example_alert_data" data-type="example">
+<h5>Alert Message Payload</h5>
+
+
+<pre data-type="programlisting">"red" <b>(1)</b></pre>
+
+<ol class="calloutlist">
+<li><p>&#x278a; The message is composed of a string containing the name of a simple color.</p>
+</li>
+
+</ol></div>
+
+<p>With the messaging topology and data representation known, we can now refine the <code>Motions</code> application diagram.</p>
+
+<figure id="img_mqtt_example_app_2">
+<img src="images/Chapter012/mqtt_app_diagram_2.png" alt="Diagram of the Motions application"/>
+<figcaption>Diagram of the <code>Motions</code> application with its messaging models and representations.</figcaption>
+</figure>
+</section>
+
+
+
+</section>
