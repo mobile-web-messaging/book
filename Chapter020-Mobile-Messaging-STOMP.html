@@ -8,7 +8,7 @@ We will use STOMP to send and receive messages using the Objective-C library Sto
 <p>In <a data-type="xref" href="#ch_introduction_stomp_example">#ch_introduction_stomp_example</a>, we described the <code>Locations</code> application. In this chapter, we will write the iOS application that broadcasts the device’s  position and receive text messages.</p>
 
 <figure id="img_mobile_stomp_1">
-<img src="images/Chapter020/stomp_ios_app.png" alt="Diagram of the Locations iOS application"/>
+<img src="images/mawm_0201.png" alt="Diagram of the Locations iOS application"/>
 <figcaption>Diagram of the Locations iOS application</figcaption>
 </figure>
 <div data-type="note">
@@ -53,21 +53,21 @@ We will use STOMP to send and receive messages using the Objective-C library Sto
 <p>Once Xcode is installed and started, we create a new project from its launch screen:</p>
 
 <figure id="img_mobile_stomp_125">
-<img src="images/Chapter020/xcode_launch_screen.png" alt="XCode Launch screen"/>
+<img src="images/mawm_0202.png" alt="XCode Launch screen"/>
 <figcaption>Select Create a new Xcode project from Xcode launch screen.</figcaption>
 </figure>
 
 <p>The application consists in a single view so we choose the <code>Single View Application</code> template in <code>iOs &gt; Application</code> from the template screen.</p>
 
 <figure id="img_mobile_stomp_2">
-<img src="images/Chapter020/template_screen.png" alt="XCode template screen"/>
+<img src="images/mawm_0203.png" alt="XCode template screen"/>
 <figcaption>Select Single View Application from the template screen</figcaption>
 </figure>
 
 <p>We will call the project <code>Locations</code> and select to build it only for iPhone devices.</p>
 
 <figure id="img_mobile_stomp_3">
-<img src="images/Chapter020/project_options_screen.png" alt="XCode project options screen"/>
+<img src="images/mawm_0204.png" alt="XCode project options screen"/>
 <figcaption>XCode project options screen</figcaption>
 </figure>
 
@@ -124,7 +124,7 @@ Integrating client project
 <p>We can now open again Xcode but we must do it using the <em>Workspace</em> file named <code>Locations.xcworkspace</code>, and not the <em>Project</em> file named <code>Locations.xcodeproj</code>.</p>
 
 <figure id="img_mobile_stomp_4">
-<img src="images/Chapter020/open_worskpace.png" alt="Open the Workspace file"/>
+<img src="images/mawm_0205.png" alt="Open the Workspace file"/>
 <figcaption>Open the Workspace file</figcaption>
 </figure>
 
@@ -138,7 +138,7 @@ Command symbol is not displayed in PDF.
 <p>If we run the application by selecting <strong><code>Product</code></strong> &gt; <strong><code>Run</code></strong> (or pressing <code>⌘+R</code>), the iOS simulator starts and opens the application which is composed of a blank view.</p>
 
 <figure id="img_mobile_stomp_5">
-<img src="images/Chapter020/blank_view.png" alt="Locations Blank View"/>
+<img src="images/mawm_0206.png" alt="Locations Blank View"/>
 <figcaption>Locations Blank View</figcaption>
 </figure>
 
@@ -167,7 +167,7 @@ Command symbol is not displayed in PDF.
 <p>Click on <strong><code>Main.storyboard</code></strong> to open it. From the <code>Object</code> library, drag a <code>Label</code> on the <code>View</code>'s window. Place it at the top of the view and change the text to <code>Device ID</code>.</p>
 
 <figure id="img_mobile_stomp_6">
-<img src="images/Chapter020/deviceID_label.png" alt="Add the Device ID label"/>
+<img src="images/mawm_0207.png" alt="Add the Device ID label"/>
 <figcaption>Add the Device ID label.</figcaption>
 </figure>
 <div data-type="note">
@@ -182,7 +182,7 @@ Command symbol is not displayed in PDF.
 <p>The UUID that we will generate is quite long so we will change its appearance by setting its <code>Font</code> to <code>System 13.0</code> and its <code>Alignment</code> to <code>centered</code> to fit the screen.</p>
 
 <figure id="img_mobile_stomp_7">
-<img src="images/Chapter020/deviceID_label_options.png" alt="Change the appearance of the device ID label"/>
+<img src="images/mawm_0208.png" alt="Change the appearance of the device ID label"/>
 <figcaption>Change the appearance of the device ID label.</figcaption>
 </figure>
 
@@ -203,7 +203,7 @@ Command symbol is not displayed in PDF.
 <p>Open the <code>Main.storyboard</code> and control-click on <code>View Controller</code> to see its connection panel. Drag from <code>deviceIDLabel</code> to the <code>UILabel</code> to connect it.</p>
 
 <figure id="img_mobile_stomp_8">
-<img src="images/Chapter020/deviceIDLabel_connection.png" alt="Connect the deviceIDLabel outlet property to the device ID UILabel"/>
+<img src="images/mawm_0209.png" alt="Connect the deviceIDLabel outlet property to the device ID UILabel"/>
 <figcaption>Connect the deviceIDLabel outlet property to the device ID UILabel.</figcaption>
 </figure>
 
@@ -239,7 +239,7 @@ Command symbol is not displayed in PDF.
 <p>If we run the application, we will see the device ID displayed instead of <code>Device ID</code> in the view.</p>
 
 <figure id="img_mobile_stomp_9">
-<img src="images/Chapter020/view_with_deviceID.png" alt="Display the device ID"/>
+<img src="images/mawm_0210.png" alt="Display the device ID"/>
 <figcaption>Display the device ID.</figcaption>
 </figure>
 
@@ -272,14 +272,14 @@ Command symbol is not displayed in PDF.
 <p>To display the geolocation data, we will add a <code>UILabel</code> to the view and change its text to <code>Current position: ???</code></p>
 
 <figure id="img_mobile_stomp_10">
-<img src="images/Chapter020/currentPosition_label.png" alt="Add the current position label"/>
+<img src="images/mawm_0211.png" alt="Add the current position label"/>
 <figcaption>Add the current position label</figcaption>
 </figure>
 
 <p>We will change its appearance to match the <code>deviceID</code> label by setting its <code>Font</code> to <code>System 13.0</code> and its <code>Alignment</code> to centered.</p>
 
 <figure id="img_mobile_stomp_11">
-<img src="images/Chapter020/currentPosition_label_options.png" alt="Change the current position label appearance"/>
+<img src="images/mawm_0212.png" alt="Change the current position label appearance"/>
 <figcaption>Change the appearance of the current position label.</figcaption>
 </figure>
 
@@ -292,7 +292,7 @@ Command symbol is not displayed in PDF.
 <p>We then bind this property to the label. Open the <code>Main.storyboard</code> and control-click on <code>View Controller</code> to see its connection panel. Drag from <code>currentPositionLabel</code> to the label to connect it.</p>
 
 <figure id="img_mobile_stomp_12">
-<img src="images/Chapter020/currentPositionLabel_connection.png" alt="Connect the currentPositionLabel outlet property to the current position UILabel"/>
+<img src="images/mawm_0213.png" alt="Connect the currentPositionLabel outlet property to the current position UILabel"/>
 <figcaption>Connect the currentPositionLabel outlet property to the current position UILabel.</figcaption>
 </figure>
 
@@ -319,7 +319,7 @@ Command symbol is not displayed in PDF.
 <p>We need to add it to the libraries linked by the application. Click on the <code>Locations</code> project and then the <code>Locations</code> target. In the <code>General</code> tab, under the <code>Linked Frameworks and Libraries</code> section, click on the <code>+</code> button. In the selection window, type <strong><code>CoreLocation</code></strong>, select the <code>CoreLocation.framework</code> and click on the <code>Add</code> button.</p>
 
 <figure id="img_mobile_stomp_13">
-<img src="images/Chapter020/CoreLocation_framework.png" alt="Add the CoreLocation framework"/>
+<img src="images/mawm_0214.png" alt="Add the CoreLocation framework"/>
 <figcaption>Add the CoreLocation framework.</figcaption>
 </figure>
 
@@ -452,14 +452,14 @@ coordinates from the <code>newLocation</code>'s <code>coordinate</code>.</p>
 <p>The first time the application asks the <code>locationManager</code> to start updating the device location, the user will see an alert view asking his or her permission to access the device location.</p>
 
 <figure id="img_mobile_stomp_14">
-<img src="images/Chapter020/current_location_permission.png" alt="Permission to use the current location"/>
+<img src="images/mawm_0215.png" alt="Permission to use the current location"/>
 <figcaption>Permission to use the current location.</figcaption>
 </figure>
 
 <p>If the user taps <code>OK</code>, the <code>locationManager</code> will start update the device location and the label for its current position will be updated with the latitude and longitude.</p>
 
 <figure id="img_mobile_stomp_15">
-<img src="images/Chapter020/current_position.png" alt="Display the current position of the device"/>
+<img src="images/mawm_0216.png" alt="Display the current position of the device"/>
 <figcaption>Display the current position of the device.</figcaption>
 </figure>
 
@@ -934,7 +934,7 @@ content-length:122
 <p>To check whether the broker is receiving the messages on this destination, the attribute to check is <code>Enqueue count</code>. It corresponds to the messages that has been <em>enqueued</em> (or in other word, <em>sent</em>) to the destination. We see that this value is growing over time (it was at <code>113</code> when the screenshot below was captured). This confirms that the broker is actually receiving the messages sent by the mobule application.</p>
 
 <figure id="img_mobile_stomp_16">
-<img src="images/Chapter020/activemq_admin_console_topic_enqueue_count.png" alt="Check the number of messages sent to a destination in ActiveMQ admin console"/>
+<img src="images/mawm_0217.png" alt="Check the number of messages sent to a destination in ActiveMQ admin console"/>
 <figcaption>Check the number of messages sent to a destination in ActiveMQ admin console</figcaption>
 </figure>
 
@@ -1064,21 +1064,21 @@ These headers are added by the STOMP broker and provides additional metadata abo
 <p>Click on <code>Main.storyboard</code> to open it. From the <code>Object</code> library, drag a <code>Table View</code> on the View’s window. Place it below the current position <code>UILabel</code>.</p>
 
 <figure id="img_mobile_stomp_162">
-<img src="images/Chapter020/table_view.png" alt="Add a Table View"/>
+<img src="images/mawm_0218.png" alt="Add a Table View"/>
 <figcaption>Add a Table View</figcaption>
 </figure>
 
 <p>From the <code>Object</code> library, drag a <code>Table View Cell</code> inside the <code>Table View</code>.</p>
 
 <figure id="img_mobile_stomp_17">
-<img src="images/Chapter020/table_view_cell.png" alt="Add a Table View Cell"/>
+<img src="images/mawm_0219.png" alt="Add a Table View Cell"/>
 <figcaption>Add a Table View Cell</figcaption>
 </figure>
 
 <p>We will change the <code>Table View Cell</code> properties by setting its <code>Style</code> to <code>Basic</code> and its <code>Identifier</code> to <code>TextCell</code>.</p>
 
 <figure id="img_mobile_stomp_18">
-<img src="images/Chapter020/table_view_cell_options.png" alt="Edit the Table View Cell Properties"/>
+<img src="images/mawm_0220.png" alt="Edit the Table View Cell Properties"/>
 <figcaption>Edit the Table View Cell Properties</figcaption>
 </figure>
 
@@ -1097,7 +1097,7 @@ These headers are added by the STOMP broker and provides additional metadata abo
 <p>We need to bind this outlet property to the table view. Open the <code>Main.storyboard</code> and control-click on <code>View Controller</code> to see its connection panel. Drag from <code>tableView</code> to the table to connect it.</p>
 
 <figure id="img_mobile_stomp_182">
-<img src="images/Chapter020/table_view_connection.png" alt="Connect the tableView outlet property to the Table View"/>
+<img src="images/mawm_0221.png" alt="Connect the tableView outlet property to the Table View"/>
 <figcaption>Connect the tableView outlet property to the Table View.</figcaption>
 </figure>
 
@@ -1106,14 +1106,14 @@ These headers are added by the STOMP broker and provides additional metadata abo
 <p>Open the <code>Main.storyboard</code> and control-click on <code>Table View</code> to see its connection panel. Drag from <code>dataSource</code> to the <code>View Controller</code> to connect it.</p>
 
 <figure id="img_mobile_stomp_19">
-<img src="images/Chapter020/table_view_dataSource_connection.png" alt="Connect the Table View's dataSource to the View Controller"/>
+<img src="images/mawm_0222.png" alt="Connect the Table View's dataSource to the View Controller"/>
 <figcaption>Connect the Table View's dataSource to the View Controller.</figcaption>
 </figure>
 
 <p>We do the same operation to connect the <code>Table View</code>'s <code>delegate</code> property to the <code>View Controller</code>.</p>
 
 <figure id="img_mobile_stomp_20">
-<img src="images/Chapter020/table_view_delegate_connection.png" alt="Connect the Table View's delegate to the View Controller"/>
+<img src="images/mawm_0223.png" alt="Connect the Table View's delegate to the View Controller"/>
 <figcaption>Connect the Table View's delegate to the View Controller.</figcaption>
 </figure>
 
@@ -1355,7 +1355,7 @@ STOMPSubscription *subscription;</pre>
 
 
 <figure id="img_mobile_stomp_21">
-<img src="images/Chapter020/activemq_admin_send_message.png" alt="Send a Message using ActiveMQ Admin Console"/>
+<img src="images/mawm_0224.png" alt="Send a Message using ActiveMQ Admin Console"/>
 <figcaption>Send a Message using ActiveMQ Admin Console.</figcaption>
 </figure>
 
@@ -1410,7 +1410,7 @@ Hello, where are you?
 <p>If we restart the application and send another message on the destination with ActiveMQ admin console, the table will display the text as soon as it is received.</p>
 
 <figure id="img_mobile_stomp_22">
-<img src="images/Chapter020/received_message.png" alt="The Received Text is Displayed in the Table"/>
+<img src="images/mawm_0225.png" alt="The Received Text is Displayed in the Table"/>
 <figcaption>The Received Text is Displayed in the Table.</figcaption>
 </figure>
 </section>

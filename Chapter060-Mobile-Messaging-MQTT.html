@@ -7,7 +7,7 @@
 <p>In <a data-type="xref" href="#ch_introduction_mqtt_example">#ch_introduction_mqtt_example</a>, we described the <code>Motions</code> application. In this chapter, we will write the iOS application that broadcasts the device motion data and receives alert messages.</p>
 
 <figure id="img_mobile_mqtt_1">
-<img src="images/Chapter060/mqtt_ios_app.png" alt="Diagram of the Motions+ iOS application"/>
+<img src="images/mawm_0601.png" alt="Diagram of the Motions+ iOS application"/>
 <figcaption>Diagram of the Motions iOS application</figcaption>
 </figure>
 <div data-type="note">
@@ -52,14 +52,14 @@
 <p>Once Xcode is installed and started, we select <code>Create a new Xcode project</code> from its launch screen. The application will be composed of a single view so we select the <code>Single View Application</code> template in <code>iOS &gt; Application</code> from the template screen.</p>
 
 <figure id="img_mobile_mqtt_125">
-<img src="images/Chapter060/template_screen.png" alt="XCode template screen"/>
+<img src="images/mawm_0602.png" alt="XCode template screen"/>
 <figcaption>Select Single View Application from the template screen.</figcaption>
 </figure>
 
 <p>We will call the project <code>Motions</code> and select to build it only for iPhone devices.</p>
 
 <figure id="img_mobile_mqtt_2">
-<img src="images/Chapter060/project_options_screen.png" alt="XCode project options screen"/>
+<img src="images/mawm_0603.png" alt="XCode project options screen"/>
 <figcaption>XCode project options screen</figcaption>
 </figure>
 
@@ -116,7 +116,7 @@ Integrating client project
 <p>We can now open again Xcode but we must do it using the <em>Workspace</em> file named <code>Motions.xcworkspace</code>, and not the <em>Project</em> file named <code>Motions.xcodeproj</code>.</p>
 
 <figure id="img_mobile_mqtt_3">
-<img src="images/Chapter060/open_workspace.png" alt="Open the workspace file"/>
+<img src="images/mawm_0604.png" alt="Open the workspace file"/>
 <figcaption>Open the workspace file</figcaption>
 </figure>
 
@@ -152,7 +152,7 @@ Command symbol is not displayed in PDF.
 <p>Click on <strong><code>Main.storyboard</code></strong> to open it. From the <code>Object</code> library, drag a <code>Label</code> on the <code>View</code>'s window. Place it at the top of the view and change the text to <code>Device ID</code>.</p>
 
 <figure id="img_mobile_mqtt_4">
-<img src="images/Chapter060/deviceID_label.png" alt="Add the Device ID label"/>
+<img src="images/mawm_0605.png" alt="Add the Device ID label"/>
 <figcaption>Add the Device ID label.</figcaption>
 </figure>
 
@@ -174,7 +174,7 @@ We also add a <code>deviceID</code> string to store the device identifier.</p>
 <p>Open the <code>Main.storyboard</code> and control-click on <code>View Controller</code> to see its connection panel. Drag from <code>deviceIDLabel</code> to the <code>UILabel</code> to connect it.</p>
 
 <figure id="img_mobile_mqtt_5">
-<img src="images/Chapter060/deviceIDLabel_connection.png" alt="Connect the deviceIDLabel outlet property to the device ID UILabel"/>
+<img src="images/mawm_0606.png" alt="Connect the deviceIDLabel outlet property to the device ID UILabel"/>
 <figcaption>Connect the deviceIDLabel outlet property to the device ID UILabel.</figcaption>
 </figure>
 
@@ -213,7 +213,7 @@ To have some graphical feedback as we move the device, we will add three <code>U
 <p>Click on <strong><code>Main.storyboard</code></strong> to open it. From the <code>Object</code> library, drag three <code>Labels</code> on the <code>View</code>'s window below the Device ID label. Change their respective text to <code>pitch</code>, <code>roll</code>, and <code>yaw</code>.</p>
 
 <figure id="img_mobile_mqtt_6">
-<img src="images/Chapter060/motions_labels.png" alt="Add three labels to display the device's pitch, roll and yaw values."/>
+<img src="images/mawm_0607.png" alt="Add three labels to display the device's pitch, roll and yaw values."/>
 <figcaption>Add three labels to display the device’s pitch, roll and yaw values.</figcaption>
 </figure>
 
@@ -237,7 +237,7 @@ To have some graphical feedback as we move the device, we will add three <code>U
 <p>Open the <code>Main.storyboard</code> and control-click on <code>View Controller</code> to see its connection panel. Drag from its <code>pitchLabel</code> property to the corresponding pitch <code>UILabel</code> to connect it.</p>
 
 <figure id="img_mobile_mqtt_7">
-<img src="images/Chapter060/pitchLabel_connection.png" alt="Connect the pitchLabel outlet property to the pitch UILabel"/>
+<img src="images/mawm_0608.png" alt="Connect the pitchLabel outlet property to the pitch UILabel"/>
 <figcaption>Connect the pitchLabel outlet property to the pitch UILabel.</figcaption>
 </figure>
 
@@ -266,7 +266,7 @@ To have some graphical feedback as we move the device, we will add three <code>U
 <p>We need to add it to the libraries linked by the application. Click on the <code>Motions</code> project and then the <code>Motions</code> target. In the <code>General</code> tab, under the <code>Linked Frameworks and Libraries</code> section, click on the <code>+</code> button. In the selection window, type <strong><code>CoreMotion</code></strong>, select the <code>CoreMotion.framework</code> and click on the <code>Add</code> button.</p>
 
 <figure>
-<img src="images/Chapter060/CoreMotion_framework.png" alt="Add the CoreMotion framework"/>
+<img src="images/mawm_0609.png" alt="Add the CoreMotion framework"/>
 <figcaption>Add the CoreMotion framework.</figcaption>
 </figure>
 
@@ -336,7 +336,7 @@ periodically in a block. We create a new <code>NSOperationQueue</code> to receiv
 <p>At this stage, if you run the <code>Motions</code> application on your iPhone and move it, the pitch, roll, and yaw labels will be updated to reflect the changes in the device motions.</p>
 
 <figure id="img_mobile_mqtt_8">
-<img src="images/Chapter060/app.png" alt="The motion values change when the device moves."/>
+<img src="images/mawm_0610.png" alt="The motion values change when the device moves."/>
 <figcaption>The motion values change when the device moves.</figcaption>
 </figure>
 <div data-type="note">
@@ -960,7 +960,7 @@ We then call the <code>warnUser:</code> method in a block that is run on the mai
 <p>After this message is sent, the device will receive it and change its background color to green.</p>
 
 <figure id="img_mobile_mqtt_225">
-<img src="images/Chapter060/background_color_change.png" alt="Alert message is received by the Motions iOS application"/>
+<img src="images/mawm_0611.png" alt="Alert message is received by the Motions iOS application"/>
 <figcaption>Alert message is received by the Motions iOS application</figcaption>
 </figure>
 </section>
