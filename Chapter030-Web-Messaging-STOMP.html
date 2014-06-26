@@ -4,7 +4,7 @@
 
 <p>In this chapter, we will write a Web application that sends and receives messages using the STOMP protocol over HTML5 Web Sockets.</p>
 
-<p>In <a data-type="xref" href="#ch_introduction_stomp_example"></a>, we described the <code>Locations</code> application. In this chapter, we will write the Web application that consumes the device’s GPS position to display them on a map and sends text messages to the devices.</p>
+<p>In <a data-type="xref" href="#ch_introduction_stomp_example">#ch_introduction_stomp_example</a>, we described the <code>Locations</code> application. In this chapter, we will write the Web application that consumes the device’s GPS position to display them on a map and sends text messages to the devices.</p>
 
 <figure id="img_web_stomp_1">
 <img src="images/Chapter030/stomp_web_app.png" alt="Diagram of the +Locations+ Web application"></img>
@@ -41,7 +41,7 @@
 
 <p>Web Sockets is a recent features of Web browser that provides a bi-directional and full-duplex communication channel over a single TCP connection between the Web browser and the Web server.
 Before Web Sockets, communication was only one-way: the browser initiates the communication by sending a HTTP request to the Web server which replies with a HTTP response. The server could not send data to the browser without the browser having first sent a request.
-There exists some techniques to provide a bi-directional HTTP (such as HTTP long polling and HTTP streaming) but they have significant issues as described in <a data-type="xref" href="#rfc6202"></a>.</p>
+There exists some techniques to provide a bi-directional HTTP (such as HTTP long polling and HTTP streaming) but they have significant issues as described in <a data-type="xref" href="#rfc6202">#rfc6202</a>.</p>
 
 <p>Thanks to HTML5 Web Sockets, it is now possible to have two-way communication between the browser and the server. The server can send data to the browser without waiting for a request first. This enables to deliver messages from the Web server to the browser.</p>
 
@@ -51,7 +51,7 @@ There exists some techniques to provide a bi-directional HTTP (such as HTTP long
 
 <p>Web Sockets have many use cases in addition to messaging. In some simple cases, sending data on Web Sockets without using a messaging protocol could be enough.</p>
 
-<p>For further information, the <a data-type="xref" href="#highperfbrowser"></a> book contains a thorough introduction to Web Sockets.</p>
+<p>For further information, the <a data-type="xref" href="#highperfbrowser">#highperfbrowser</a> book contains a thorough introduction to Web Sockets.</p>
 
 </div>
 </section>
@@ -409,7 +409,7 @@ There are two pieces of information we can use. When a consumer receives a STOMP
 In my case, the value of this header would <code>/topic/device.2262EC25-E9FD-4578-BADE-4E113DE45934.location</code>.
 However, we would then have to parse this <code>destination</code> to extract the device ID from it and write brittle code for that.</p>
 
-<p>If we look back at <a data-type="xref" href="#ch_introduction_stomp_example_message"></a>, the message representation for the location also contains the device ID in the <code>deviceID</code> property:</p>
+<p>If we look back at <a data-type="xref" href="#ch_introduction_stomp_example_message">#ch_introduction_stomp_example_message</a>, the message representation for the location also contains the device ID in the <code>deviceID</code> property:</p>
 
 
 <pre data-type="programlisting" class="programlisting" data-code-language="js">{
@@ -506,9 +506,9 @@ function connect(url) {
 <section data-type="sect1" id="_draw_the_device_locations_on_a_map">
 <h1>Draw the Device Locations on a Map</h1>
 
-<p>The Web application is now receiving the GPS coordinates of any devices that send them. We could just display them as text like we did for the iOS application in <a data-type="xref" href="#ch_mobile_stomp_display_position"></a> but we can make it prettier by drawing them on a map instead by using Google Maps API.</p>
+<p>The Web application is now receiving the GPS coordinates of any devices that send them. We could just display them as text like we did for the iOS application in <a data-type="xref" href="#ch_mobile_stomp_display_position">#ch_mobile_stomp_display_position</a> but we can make it prettier by drawing them on a map instead by using Google Maps API.</p>
 
-<p>In <a data-type="xref" href="#ex_web_stomp_1"></a> template, we already added the scripts to use Google Maps API. We now need to create the map and initialize it.</p>
+<p>In <a data-type="xref" href="#ex_web_stomp_1">#ex_web_stomp_1</a> template, we already added the scripts to use Google Maps API. We now need to create the map and initialize it.</p>
 
 
 <pre data-type="programlisting" class="programlisting" data-code-language="js">$(document).ready(function() {
@@ -576,7 +576,7 @@ function show(deviceID, lat, lng) {
 
 <p>If we click on the <code>Connect</code> button, markers will appear on the map for each device that broadcasts its coordinates.</p>
 
-<p>In my case, I am using the <code>iOS simulator</code> to run the mobile application developed in the previous chapter and use its <code>Location</code> tool to simulate a freeway drive (as explained in <a data-type="xref" href="#ch_mobile_stomp_location_simulator"></a>).</p>
+<p>In my case, I am using the <code>iOS simulator</code> to run the mobile application developed in the previous chapter and use its <code>Location</code> tool to simulate a freeway drive (as explained in <a data-type="xref" href="#ch_mobile_stomp_location_simulator">#ch_mobile_stomp_location_simulator</a>).</p>
 
 <figure id="img_web_stomp_2">
 <img src="images/Chapter030/freeway_drive.png" alt="Simulate a freeway drive"></img>
@@ -624,7 +624,7 @@ JavaScript literal if you have no header to set).</p>
 <pre data-type="programlisting" class="programlisting" data-code-language="js">client.send(destination, {}, body);</pre>
 
 
-<p>As we described in <a data-type="xref" href="#ch_introduction_stomp_example_topology"></a>, we use a queue to send orders to a given device and the destination for this is named <code>/queue/device.XXX.text</code></p>
+<p>As we described in <a data-type="xref" href="#ch_introduction_stomp_example_topology">#ch_introduction_stomp_example_topology</a>, we use a queue to send orders to a given device and the destination for this is named <code>/queue/device.XXX.text</code></p>
 
 <p>The text is sent in the STOMP message body as a plain text string.</p>
 
@@ -632,7 +632,7 @@ JavaScript literal if you have no header to set).</p>
 <pre data-type="programlisting" class="programlisting">Hello, Where are you?</pre>
 
 
-<p>We must respect this message format as it is the format expected by the iOS application to handle the texts and display them (we wrote this code in <a data-type="xref" href="#ch_mobile_stomp_subscribe"></a>).</p>
+<p>We must respect this message format as it is the format expected by the iOS application to handle the texts and display them (we wrote this code in <a data-type="xref" href="#ch_mobile_stomp_subscribe">#ch_mobile_stomp_subscribe</a>).</p>
 
 <p>We added a HTML <code>&lt;form&gt;</code> element with the id <code>text_form</code> to send a text message. The device identifier is taken from the selected option in the <code>&lt;select&gt;</code> element identified by <code>deviceID</code>. The text itself is taken from the <code>&lt;input&gt;</code> element identified by <code>text</code>.</p>
 

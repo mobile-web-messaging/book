@@ -25,7 +25,7 @@
 <section data-type="sect1" id="_eclipse_paho_javascript_client">
 <h1>Eclipse Paho JavaScript Client</h1>
 
-<p>In <a data-type="xref" href="#ch_mobile_mqtt_paho"></a>, we mentioned that <a href="http://iot.eclipse.org">iot.eclipse.org</a> provides a public MQTT broker that we use for our MQTT applications.
+<p>In <a data-type="xref" href="#ch_mobile_mqtt_paho">#ch_mobile_mqtt_paho</a>, we mentioned that <a href="http://iot.eclipse.org">iot.eclipse.org</a> provides a public MQTT broker that we use for our MQTT applications.
 Eclipse also provides a variety of MQTT clients for different languages and platforms. In particular, it has a JavaScript client for Web browser that uses HTML5 Web Sockets.</p>
 
 <p>The source code of the project is hosted in this  <a href="http://git.eclipse.org/c/paho/org.eclipse.paho.mqtt.javascript.git/">Git repository</a>.</p>
@@ -46,7 +46,7 @@ Eclipse also provides a variety of MQTT clients for different languages and plat
 <section data-type="sect1" id="_bootstrap_the_code_motions_html_code_web_application">
 <h1>Bootstrap the <code>motions.html</code> Web Application</h1>
 
-<p>As we explained in <a data-type="xref" href="#ch_introduction_mqtt_example"></a>, this Web application will display on a Web page the motion data sent by the devices using the <code>Motions</code> iOS application written in the previous chapter.
+<p>As we explained in <a data-type="xref" href="#ch_introduction_mqtt_example">#ch_introduction_mqtt_example</a>, this Web application will display on a Web page the motion data sent by the devices using the <code>Motions</code> iOS application written in the previous chapter.
 Additionnally, the Web application will also be able to send alert messages to the devices.</p>
 
 <p>It will be a very simple one-page Web application that can be run from a Web server serving static pages. It does not require
@@ -110,7 +110,7 @@ $(document).ready(function() {
 
 <p>When the browser loads this page, we will create a MQTT client using the JavaScript library.</p>
 
-<p>To create the client we must pass the MQTT broker host and port. In our case, it is respectively <code>iot.eclipse.org</code> and <code>80</code>. Note than in <a data-type="xref" href="#ch_mobile_mqtt_client"></a>, the <code>Motions</code> iOS application was connecting to <code>iot.eclipse.org</code> on its default port <code>1883</code>. This default port expects a TCP socket connection. Since the Web application uses HTML5 Web Sockets, it must connect to the <code>80</code> port that will handle the HTTP Upgrade process from the initial HTTP connection.</p>
+<p>To create the client we must pass the MQTT broker host and port. In our case, it is respectively <code>iot.eclipse.org</code> and <code>80</code>. Note than in <a data-type="xref" href="#ch_mobile_mqtt_client">#ch_mobile_mqtt_client</a>, the <code>Motions</code> iOS application was connecting to <code>iot.eclipse.org</code> on its default port <code>1883</code>. This default port expects a TCP socket connection. Since the Web application uses HTML5 Web Sockets, it must connect to the <code>80</code> port that will handle the HTTP Upgrade process from the initial HTTP connection.</p>
 
 <p>We also need to configure a <code>clientID</code> that identifies the MQTT client.
 In our case, we will just use a random String.</p>
@@ -268,7 +268,7 @@ delivered this message. Since we have chosen to use a meaningful topic names of 
 
 </ul>
 
-<p>In <a data-type="xref" href="#ch_introduction_mqtt_example_message"></a>, we decided to send the device motions data as an array of 3 64-bit floats corresponding to the motions pitch, roll, and yaw values.</p>
+<p>In <a data-type="xref" href="#ch_introduction_mqtt_example_message">#ch_introduction_mqtt_example_message</a>, we decided to send the device motions data as an array of 3 64-bit floats corresponding to the motions pitch, roll, and yaw values.</p>
 
 <p>To be able to get these values, we must use the <code>payloadBytes</code> property and use a <code>DataView</code> to retrieve the three values for this array.</p>
 
@@ -442,7 +442,7 @@ It will create the HTML elements to display the data and use jQuery Sparklines t
 }</pre>
 
 
-<p>If we reload the web application and clicks on an "Alert!" button, the corresponding device will receive the message from its alert topic and the code that we wrote in <a data-type="xref" href="#ch_mobile_mqtt_receive"></a> will be executed to change temporarily the background color of the device.</p>
+<p>If we reload the web application and clicks on an "Alert!" button, the corresponding device will receive the message from its alert topic and the code that we wrote in <a data-type="xref" href="#ch_mobile_mqtt_receive">#ch_mobile_mqtt_receive</a> will be executed to change temporarily the background color of the device.</p>
 
 <figure id="img_web_mqtt_3">
 <img src="images/Chapter070/app_red.png" alt="The +Motions+ application background becomes red when an alert is received from its alert topic."></img>

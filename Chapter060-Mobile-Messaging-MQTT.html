@@ -4,7 +4,7 @@
 
 <p>In this chapter, we will write an iOS application using the <code>MQTTKit</code> library to send and receive messages using the MQTT protocol.</p>
 
-<p>In <a data-type="xref" href="#ch_introduction_mqtt_example"></a>, we described the <code>Motions</code> application. In this chapter, we will write the iOS application that broadcasts the device motion data and receives alert messages.</p>
+<p>In <a data-type="xref" href="#ch_introduction_mqtt_example">#ch_introduction_mqtt_example</a>, we described the <code>Motions</code> application. In this chapter, we will write the iOS application that broadcasts the device motion data and receives alert messages.</p>
 
 <figure id="img_mobile_mqtt_1">
 <img src="images/Chapter060/mqtt_ios_app.png" alt="Diagram of the Motions+ iOS application"></img>
@@ -81,7 +81,7 @@
 <section data-type="sect1" id="_create_the_podfile">
 <h1>Create the Podfile</h1>
 
-<p>We will again use CocoaPods to manage the project dependencies (as explained in <a data-type="xref" href="#ch_mobile_stomp_cocoapods"></a> for the STOMP example).</p>
+<p>We will again use CocoaPods to manage the project dependencies (as explained in <a data-type="xref" href="#ch_mobile_stomp_cocoapods">#ch_mobile_stomp_cocoapods</a> for the STOMP example).</p>
 
 <p>We close Xcode because CocoaPods will modify the project settings to import the dependencies.</p>
 
@@ -143,7 +143,7 @@ Command symbol is not displayed in PDF.
 <section data-type="sect1" id="_identify_the_device">
 <h1>Identify the Device</h1>
 
-<p>This step is similar to the <code>Locations</code> iOS application that is described in <a data-type="xref" href="#ch_mobile_stomp_deviceID"></a>.</p>
+<p>This step is similar to the <code>Locations</code> iOS application that is described in <a data-type="xref" href="#ch_mobile_stomp_deviceID">#ch_mobile_stomp_deviceID</a>.</p>
 
 <p>We will generate an unique identifier for the iOS device and display it in the view.</p>
 
@@ -532,7 +532,7 @@ The <code>MQTTKit</code> library provides two methods to send messages:</p>
 <p>The other three parameters to the <code>publish…</code> methods are the same for both the binary and text payload version.</p>
 
 <p>The <code>topic</code> parameter is the name of the topic to send the message.
-According to <a data-type="xref" href="#ch_introduction_mqtt_example_topology"></a>, the name of the topic is <code>/mwm/XXX/motion</code> where XXX is the device identifier.</p>
+According to <a data-type="xref" href="#ch_introduction_mqtt_example_topology">#ch_introduction_mqtt_example_topology</a>, the name of the topic is <code>/mwm/XXX/motion</code> where XXX is the device identifier.</p>
 
 <p>The <code>qos</code> parameter corresponds to the <em>Quality of Service</em> (or QoS) to use to deliver the messages to the consumers.</p>
 
@@ -679,7 +679,7 @@ This example is a bit of a stretch. A more interesting example would be an appli
 
 <p>Conversely to <code>STOMP</code>, <code>MQTT</code> is a binary protocol and we can not use a simple <code>telnet</code> client to create a consumer and receive messages sent by the application.</p>
 
-<p>However the <a href="http://mosquitto.org">Mosquitto broker</a> provides simple command-line tool to send and receive message from a MQTT broker. The <a data-type="xref" href="#appendix_mosquitto"></a> explains how to download and install the Mosquitto broker. After it is done, we can use its <code>mosquitto_sub</code> command line tool to connect to a MQTT broker (hosted at <code>iot.eclipse.org</code>) and subscribe to the device motion topic (in my case <code>/mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/motion</code>, you will have to replace it using your own device identifier).</p>
+<p>However the <a href="http://mosquitto.org">Mosquitto broker</a> provides simple command-line tool to send and receive message from a MQTT broker. The <a data-type="xref" href="#appendix_mosquitto">#appendix_mosquitto</a> explains how to download and install the Mosquitto broker. After it is done, we can use its <code>mosquitto_sub</code> command line tool to connect to a MQTT broker (hosted at <code>iot.eclipse.org</code>) and subscribe to the device motion topic (in my case <code>/mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/motion</code>, you will have to replace it using your own device identifier).</p>
 
 <p>This tool will display the message payload. Since we are sending binary payload, we will pipe the command into the <code>hexdump</code> tool to display the hexadecimal representation of the binary payload.</p>
 
@@ -718,7 +718,7 @@ This example is a bit of a stretch. A more interesting example would be an appli
 <section data-type="sect1" id="ch_mobile_mqtt_receive">
 <h1>Receive MQTT Messages</h1>
 
-<p>As described in <a data-type="xref" href="#ch_introduction_mqtt_example"></a>, the <code>Motions</code> iOS application is also a consumer from the topic <code>/mwm/XXX/alert</code>. When it receives a message from this topic, it must change its background color to "alert" the user.</p>
+<p>As described in <a data-type="xref" href="#ch_introduction_mqtt_example">#ch_introduction_mqtt_example</a>, the <code>Motions</code> iOS application is also a consumer from the topic <code>/mwm/XXX/alert</code>. When it receives a message from this topic, it must change its background color to "alert" the user.</p>
 
 <p>Let’s write the method that aler the user by changing the background color first. This <code>warnUser:</code> method takes a <code>NSString</code> parameter that should correspond to a color. Using <code>UIKit</code> animations, we will:</p>
 <ol>

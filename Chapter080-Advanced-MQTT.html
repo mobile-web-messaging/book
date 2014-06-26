@@ -179,7 +179,7 @@ There are no standard values for the code and you will have to consult your MQTT
 <section data-type="sect2" id="__code_mqttws31_js_code_example_2">
 <h2><code>mqttws31.js</code> Example</h2>
 
-<p>In <a data-type="xref" href="#ch_mobile_mqtt_connect"></a>, we already set a <code>onConnectionLost</code> callback on the <code>client</code> to be notified in case of connection error. The callback has a single <code>response</code> parameter object. This parameter is composed of two properties:</p>
+<p>In <a data-type="xref" href="#ch_mobile_mqtt_connect">#ch_mobile_mqtt_connect</a>, we already set a <code>onConnectionLost</code> callback on the <code>client</code> to be notified in case of connection error. The callback has a single <code>response</code> parameter object. This parameter is composed of two properties:</p>
 <ul>
 
 <li><p><code>errorCode</code>, a numerical representation of the type of connection error</p>
@@ -622,7 +622,7 @@ client.connect({onSuccess: function(frame) {
 
 <p>This impacts the expressiveness of the messages that are delivered using MQTT. As a simple example, the absence of headers mean that there is no way to know what type of data to expect from the payload. HTTP and STOMP defines a <code>content-type</code> header that can be queried to know the MIME type of the payload and extract it accordingly. MQTT does not allow this and the consumer must have <em>a priori</em> knowledge of the payload type for a message before being able to read it.</p>
 
-<p>The absence of headers also imply that the MQTT broker can not provide additional features not covered by the protocol in an unobtrusive way. As we saw in <a data-type="xref" href="#ch_beyond_stomp"></a>, STOMP brokers can provide additional features such as persistence, priority, expiration, etc. and the client can use them by adding headers to the messages. There is no such mechanism for MQTT in its current version. There are some ongoing discussion to add application-specific headers in a future version of the protocol but no agreement has been reached at the time of this writing.</p>
+<p>The absence of headers also imply that the MQTT broker can not provide additional features not covered by the protocol in an unobtrusive way. As we saw in <a data-type="xref" href="#ch_beyond_stomp">#ch_beyond_stomp</a>, STOMP brokers can provide additional features such as persistence, priority, expiration, etc. and the client can use them by adding headers to the messages. There is no such mechanism for MQTT in its current version. There are some ongoing discussion to add application-specific headers in a future version of the protocol but no agreement has been reached at the time of this writing.</p>
 
 <p>If you plan to use MQTT in your applications, you should consider carefully whether its features match your requirements.</p>
 
