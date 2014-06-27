@@ -1,0 +1,72 @@
+Mobile and Web Messaging, 1E / 9781491944806
+RT #182565
+
+Stylesheet: animal_theme
+Toolchain: Atlas V2
+
+Atlas URL: https://atlas.oreilly.com/oreillymedia/mobile-and-web-messaging
+
+Incoming format: AsciiDoc
+Outgoing format: HTMLBook
+
+Preliminary pagecount (with draft figs): 184
+  
+Is this book in Early Release? Yes (produced in Atlas V1)
+
+Resources
+=========
+** Intake PDF: 
+   (Git repo) pdf/drafts/intake.pdf
+
+** Illustrations is still working on the figs. 55 total in the book. 
+
+** Intake Report:
+   (Git repo) tools/intakereport.txt
+
+Notes from Tools:
+=================
+** Syntax highlighting: applied to 122 out of 147 code listings.
+
+** The animal_theme CSS for V2 does not yet have bibliography styling. The content is readable, so you can proceed with PDF review; it just doesn’t have a PDF bookmark and the TOC entry is wonky. I’ve asked Ron to fix it for all formats by July 18th. Details in https://intranet.oreilly.com/jira/browse/STYL-48.
+
+** I’ve added placeholder text nodes in xrefs (e.g., <a data-type="xref" href="#figure-2-1">#figure-2-1</a>) to avoid the bug where self-closing tags are dropped when switching between Visual Editor and Code Editor. These will render correctly, so you can ignore this section of warnings in the build log:
+
+"Warning: the following XREFs already have content in their text nodes, which will be overwritten..."
+
+Let me know if you have any questions about this.
+
+** There is one warning in the build log that is legitimate, re: an xref that points to a non-existent ID:
+
+WARNING: Unable to locate target for XREF with @href value: #ch_mobile_mqtt_paho
+
+** Please let Tools know ASAP if there are any other global problems for which we can help automate a fix.
+
+Notes from Dan:
+==================
+Ready for intake. Please move this to Atlas 2 for production. Converting this to HTMLBook for production would be ideal, but if you see anything that would complicate this, let me know.
+
+[Converted to HTMLBook at intake.--TOOLS]
+
+ESL: will need a heavy copyedit.
+
+Please strip inline formatting from headings.
+
+[Done at intake.--TOOLS]
+
+Bibliography styling in the ToC isn't right. Probably an issue with the Bibliography markup.
+
+[Ron is on the case. See my note above.—TOOLS]
+
+Prod: I've asked for this to be moved to Atlas 2. The Animal stylesheet in Av2 has not been tested to the same extent as the Av1 version, so cast your eye over everything and be critical. Don't trust things to work.
+
+I noticed hard-coded cross-references.
+
+Prod: the author left this comment in Chapter 2 and 6. Please follow up on it: Command symbol is not displayed in PDF.
+
+[I added a font fallback for this symbol, but please double-check that it’s rendering correctly.—TOOLS]
+
+Many long code lines.
+==================
+
+Thanks,
+Sarah
