@@ -44,23 +44,24 @@ Each frame is composed of 3 elements:</p>
 <h5>STOMP Frame Structure</h5>
 
 
-<pre data-type="programlisting">COMMAND<b>(1)</b>
-header1:value1<b>(2)</b>
+<pre data-type="programlisting">COMMAND<a class="co" id="co_ch4-co-1" href="#callout_ch4-co-1"><img src="callouts/1.png" alt="1"/></a>
+header1:value1<a class="co" id="co_ch4-co-2" href="#callout_ch4-co-2"><img src="callouts/2.png" alt="2"/></a>
 header2:value2
-<b>(3)</b>
-payload^@<b>(4)</b></pre>
+<a class="co" id="co_ch4-co-3" href="#callout_ch4-co-3"><img src="callouts/3.png" alt="3"/></a>
+payload^@<a class="co" id="co_ch4-co-4" href="#callout_ch4-co-4"><img src="callouts/4.png" alt="4"/></a></pre>
 
-<ol class="calloutlist">
-<li><p>➊ A frame starts with a command string followed by an end-of-line (EOL)</p>
-</li>
-<li><p>➋ Header entries followed the format <code>&lt;key&gt;:&lt;value&gt;</code> and is ended by EOL</p>
-</li>
-<li><p>➌ A blank line separates the set of headers from the payload</p>
-</li>
-<li><p>➍ A frame is ended by a NULL octet (represented by <code>^@</code> in ASCII)</p>
-</li>
 
-</ol></div>
+<dl class="calloutlist">
+<dt><a class="co" id="callout_ch4-co-1" href="#co_ch4-co-1"><img src="callouts/1.png" alt="1"/></a></dt><dd><p>A frame starts with a command string followed by an end-of-line (EOL)</p>
+</dd>
+<dt><a class="co" id="callout_ch4-co-2" href="#co_ch4-co-2"><img src="callouts/2.png" alt="2"/></a></dt><dd><p>Header entries followed the format <code>&lt;key&gt;:&lt;value&gt;</code> and is ended by EOL</p>
+</dd>
+<dt><a class="co" id="callout_ch4-co-3" href="#co_ch4-co-3"><img src="callouts/3.png" alt="3"/></a></dt><dd><p>A blank line separates the set of headers from the payload</p>
+</dd>
+<dt><a class="co" id="callout_ch4-co-4" href="#co_ch4-co-4"><img src="callouts/4.png" alt="4"/></a></dt><dd><p>A frame is ended by a NULL octet (represented by <code>^@</code> in ASCII)</p>
+</dd>
+</dl>
+</div>
 
 <p>STOMP is based on text (using UTF-8 for its default encoding)
 but it can also transmit binary data in its payload by specifying an alternative encoding.</p>

@@ -325,23 +325,19 @@ However a queue is used to handle the device’s text as only one single device 
 
 
 <pre data-type="programlisting">{
-  "deviceID": "BBB",<b>(1)</b>
-  "lat": 48.8581,<b>(2)</b>
-  "lng": 2.2946,<b>(3)</b>
-  "ts": "2013-09-23T08:43Z"<b>(4)</b>
+  "deviceID": "BBB",<a class="co" id="co_ch1-co-1" href="#callout_ch1-co-1"><img src="callouts/1.png" alt="1"/></a>
+  "lat": 48.8581,<a class="co" id="co_ch1-co-2" href="#callout_ch1-co-2"><img src="callouts/2.png" alt="2"/></a>
+  "lng": 2.2946,<a class="co" id="co_ch1-co-3" href="#callout_ch1-co-3"><img src="callouts/3.png" alt="3"/></a>
+  "ts": "2013-09-23T08:43Z"<a class="co" id="co_ch1-co-4" href="#callout_ch1-co-4"><img src="callouts/4.png" alt="4"/></a>
 }</pre>
 
-<ol class="calloutlist">
-<li><p>➊ <code>deviceID</code> is the identifier of the device that sends its position</p>
-</li>
-<li><p>➋ <code>lat</code> is a number representing the position’s <em>latitude</em></p>
-</li>
-<li><p>➌ <code>lng</code> is a number representing the position’s <em>longitude</em></p>
-</li>
-<li><p>➍ <code>ts</code> is a string representing the time when the position was taken (using the <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a> format)</p>
-</li>
-
-</ol></div>
+<dl class="calloutlist">
+<dt><a class="co" id="callout_ch1-co-1" href="#co_ch1-co-1"><img src="callouts/1.png" alt="1"/></a></dt><dd><p><code>deviceID</code> is the identifier of the device that sends its position</p></dd>
+<dt><a class="co" id="callout_ch1-co-2" href="#co_ch1-co-2"><img src="callouts/2.png" alt="2"/></a></dt><dd><p><code>lat</code> is a number representing the position’s <em>latitude</em></p></dd>
+<dt><a class="co" id="callout_ch1-co-3" href="#co_ch1-co-3"><img src="callouts/3.png" alt="3"/></a></dt><dd><p><code>lng</code> is a number representing the position’s <em>longitude</em></p></dd>
+<dt><a class="co" id="callout_ch1-co-4" href="#co_ch1-co-4"><img src="callouts/4.png" alt="4"/></a></dt><dd><p><code>ts</code> is a string representing the time when the position was taken (using the <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a> format)</p></dd>
+</dl>
+</div>
 
 <p>The text messages that will be consumed by the <code>Locations</code> iOS application will
 be represented as a simple plain text string.</p>
@@ -389,7 +385,7 @@ We are using a plain text version as this format is enough to provide a first ve
 <p>Device motion will be represented by three values corresponding to its pitch, roll and yaw values as shown in the illustration below.</p>
 
 <figure id="img_mqtt_example_app_0">
-<img src="images/mawm_0107.png" alt="The pitch" width="roll and yaw values represents the device motion"/>
+<img src="images/mawm_0107.png" alt="The pitch, roll and yaw values represents the device motion"/>
 <figcaption>The pitch, roll and yaw values represents the device motion.</figcaption>
 </figure>
 
@@ -488,13 +484,13 @@ We are using a plain text version as this format is enough to provide a first ve
 <h5>Device Motion Message Paylaod</h5>
 
 
-<pre data-type="programlisting">&lt;&lt; 1.6 -0.1 0.8 &gt;&gt; <b>(1)</b></pre>
+<pre data-type="programlisting">&lt;&lt; 1.6 -0.1 0.8 &gt;&gt; <a class="co" id="co_ch1-co-5" href="#callout_ch1-co-5"><img src="callouts/1.png" alt="1"/></a>
+</pre>
 
-<ol class="calloutlist">
-<li><p>➊ The message is composed of three 64-bit floats for the <code>pitch</code>, <code>roll</code>, and <code>yaw</code> values</p>
-</li>
-
-</ol></div>
+<dl class="calloutlist">
+<dt><a class="co" id="callout_ch1-co-5" href="#co_ch1-co-5"><img src="callouts/1.png" alt="1"/></a></dt><dd><p>The message is composed of three 64-bit floats for the <code>pitch</code>, <code>roll</code>, and <code>yaw</code> values</dd>
+</dl>
+</div>
 
 <p>The alert messages that will be consumed by the <code>Motions</code> iOS application will
 be represented as a simple plain text string corresponding to a color. The <code>Motions</code> application will use this payload to change temporarily its background color to <em>alert</em> the user.</p>
@@ -502,13 +498,12 @@ be represented as a simple plain text string corresponding to a color. The <code
 <h5>Alert Message Payload</h5>
 
 
-<pre data-type="programlisting">"red" <b>(1)</b></pre>
+<pre data-type="programlisting">"red" <a class="co" id="co_ch1-co-6" href="#callout_ch1-co-6"><img src="callouts/1.png" alt="1"/></a></pre>
 
-<ol class="calloutlist">
-<li><p>➊ The message is composed of a string containing the name of a simple color.</p>
-</li>
-
-</ol></div>
+<dl class="calloutlist">
+<dt><a class="co" id="callout_ch1-co-6" href="#co_ch1-co-6"><img src="callouts/1.png" alt="1"/></a></dt><dd>The message is composed of a string containing the name of a simple color.</p></dd>
+</dl>
+</div>
 
 <p>With the messaging topology and data representation known, we can now refine the <code>Motions</code> application diagram.</p>
 
