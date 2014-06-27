@@ -7,6 +7,44 @@
 
 pre, code { font-family: UbuntuMono, Symbola, monospace }
 
+/* Callout hacks for pdf */
+a[class="co"] img {
+  display: none;
+}
+
+pre[data-type="programlisting"] a.co:nth-of-type(1):before {
+  content: url("../../images/callouts/1.pdf");
+}
+
+pre[data-type="programlisting"] a.co:nth-of-type(2):before {
+  content: url("../../images/callouts/2.pdf");
+}
+
+pre[data-type="programlisting"] a.co:nth-of-type(3):before {
+  content: url("../../images/callouts/3.pdf");
+}
+
+pre[data-type="programlisting"] a.co:nth-of-type(4):before {
+  content: url("../../images/callouts/4.pdf");
+}
+
+dl.calloutlist dt:nth-of-type(1) a.co:before {
+  content: url("../../images/callouts/1.pdf");
+}
+
+dl.calloutlist dt:nth-of-type(2) a.co:before {
+  content: url("../../images/callouts/2.pdf");
+}
+
+dl.calloutlist dt:nth-of-type(3) a.co:before {
+  content: url("../../images/callouts/3.pdf");
+}
+
+dl.calloutlist dt:nth-of-type(4) a.co:before {
+  content: url("../../images/callouts/4.pdf");
+}
+
+
 /*----Uncomment to turn OFF automatic code wrapping (it's on by default in the new toolchain)
 
 pre {
