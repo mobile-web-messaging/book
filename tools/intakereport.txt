@@ -27,9 +27,9 @@ Notes from Tools:
 =================
 ** Syntax highlighting: applied to 122 out of 147 code listings.
 
-** The animal_theme CSS for V2 does not yet have bibliography styling. The content is readable, so you can proceed with PDF review; it just doesn’t have a PDF bookmark and the TOC entry is wonky. I’ve asked Ron to fix it for all formats by July 18th. Details in https://intranet.oreilly.com/jira/browse/STYL-48.
+** The animal_theme CSS for V2 does not yet have bibliography styling. The content is readable, so you can proceed with review; it just doesn't have a PDF bookmark and the TOC entry is wonky. I've asked Ron to fix it for all formats by July 18th. Details in https://intranet.oreilly.com/jira/browse/STYL-48.
 
-** I’ve added placeholder text nodes in xrefs (e.g., <a data-type="xref" href="#figure-2-1">#figure-2-1</a>) to avoid the bug where self-closing tags are dropped when switching between Visual Editor and Code Editor. These will render correctly, so you can ignore this section of warnings in the build log:
+** I've added placeholder text nodes in xrefs (e.g., <a data-type="xref" href="#figure-2-1">#figure-2-1</a>) to avoid the bug where self-closing tags are dropped when switching between Visual Editor and Code Editor. These will render correctly, so you can ignore this section of warnings in the build log:
 
 "Warning: the following XREFs already have content in their text nodes, which will be overwritten..."
 
@@ -55,7 +55,7 @@ Please strip inline formatting from headings.
 
 Bibliography styling in the ToC isn't right. Probably an issue with the Bibliography markup.
 
-[Ron is on the case. See my note above.—TOOLS]
+[Ron is on the case. See my note above.--TOOLS]
 
 Prod: I've asked for this to be moved to Atlas 2. The Animal stylesheet in Av2 has not been tested to the same extent as the Av1 version, so cast your eye over everything and be critical. Don't trust things to work.
 
@@ -63,7 +63,7 @@ I noticed hard-coded cross-references.
 
 Prod: the author left this comment in Chapter 2 and 6. Please follow up on it: Command symbol is not displayed in PDF.
 
-[I added a font fallback for this symbol, but please double-check that it’s rendering correctly.—TOOLS]
+[I added a font fallback for this symbol, but please double-check that it's rendering correctly.--TOOLS]
 
 Many long code lines.
 ==================
