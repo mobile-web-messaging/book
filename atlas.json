@@ -20,7 +20,8 @@
     "AppendixA-ActiveMQ.html",
     "AppendixB-Mosquitto.html",
     "Bibliography.html",
-    "ix.html"
+    "ix.html",
+    "colo.html"
   ],
   "formats": {
     "pdf": {
