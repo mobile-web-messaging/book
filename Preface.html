@@ -97,68 +97,66 @@ This book provides an introduction to the messaging protocols to help software d
 <dl>
 	<dt class="hdlist">Chapter 1, Introduction</dt>
 	<dd>
-	<p>In this chapter, I introduce the concepts of messaging protocols, their models, and message representation. To illustrate the use of messaging protocols on mobile and Web platforms, we will build two applications, one using STOMP and the other MQTT. Both applications will come in two parts--one will run on mobile devices, the other inside a web browser and they will communicate using messages. This chapter explains the overall design of these two example applications.</p>
+	<p>In this chapter, I introduce the concepts of messaging protocols, their models, and message representation. To illustrate the use of messaging protocols on mobile and web platforms, we will build two applications, one using STOMP and the other MQTT. Both applications will come in two parts--one will run on mobile devices, the other inside a web browser; they will communicate using messages. This chapter explains the overall design of these two example applications.</p>
 	</dd>
 	<dt class="hdlist">Chapter 2, Mobile Messaging With STOMP</dt>
 	<dd>
-	<p>In this chapter, I present STOMP, a simple text-based messaging protocol. I use StompKit, an iOS library for STOMP, to build the <code>Locations</code> application that sends GPS data from the device and receives text messages.</p>
+	<p>In this chapter, I present STOMP, a simple text-based messaging protocol. I use StompKit, an iOS library for STOMP, to build the Locations application that sends GPS data from the device and receives text messages.</p>
 	</dd>
 	<dt class="hdlist">Chapter 3, Web Messaging With STOMP</dt>
 	<dd>
-	<p>In this chapter, I introduce stomp.js, a JavaScript library for STOMP, and write a Web application that receives messages with the GPS datat from the <code>Locations</code> application on iOS devices and display them on a map. This Web application will also send text messages to the iOS application.</p>
+	<p>In this chapter, I introduce stomp.js, a JavaScript library for STOMP. I'll present a web application that receives messages from the Locations iOS application and displays the collected GPS data on a map. This web application will also send text messages to the iOS application.</p>
 	</dd>
 	<dt class="hdlist">Chapter 4, Advanced STOMP</dt>
 	<dd>
-	<p>In this chapter, I present the advanced features of STOMP that we did not use in the previous chapters to build our applications. These advanced features are not always used by messaging applications but they may prove useful as the applications grow in complexity.</p>
+	<p>In this chapter, I present the advanced features of STOMP that we did not use when building our applications in Chapters 2 and 3. These advanced features are not always used by messaging applications, but they may prove useful as the applications grow in complexity.</p>
 	</dd>
 	<dt class="hdlist">Chapter 5, Beyond STOMP</dt>
 	<dd>
-	<p>In this chapter, I present features that are not part of STOMP but available from some STOMP brokers. These features often help solve common issues and reduce code complexity by leveraging the brokers.</p>
+	<p>In this chapter, I discuss features that are not part of STOMP, but are available from some STOMP brokers. These features often help solve common issues and reduce code complexity by leveraging the brokers.</p>
 	</dd>
 	<dt class="hdlist">Chapter 6, Mobile Messaging With MQTT</dt>
 	<dd>
-	<p>In this chapter, I introduce MQTT, a binary messaging protocol well suited to broadcast data from mobile or embedded devices and write a mobile application, <code>Motions</code>, on iOS that uses MQTT to broadcast data about the device motion using the MQTTKit libary and listen for alerts to change the color of the application.</p>
+	<p>In this chapter, I introduce MQTT, a binary messaging protocol well suited to broadcast data from mobile or embedded devices. We'll take a look at a mobile iOS application, <code>Motions</code>, that uses MQTT to broadcast data about the device motion using the MQTTKit libary and listen for alerts to change the color of the application.</p>
 	</dd>
 	<dt class="hdlist">Chapter 7, Web Messaging With MQTT</dt>
 	<dd>
-	<p>In this chapter, I use MQTT over Web Socket to write a Web application that receives the device motion data sent by the <code>Motions</code> application to display them and sends alerts to the devices to change their color.</p>
+	<p>In this chapter, I use MQTT over Web Sockets to write a web application that communicates with the Motions application to display the device motion data and sends alerts to the devices to change their color.</p>
 	</dd>
 	<dt class="hdlist">Chapter 8, Advanced MQTT</dt>
 	<dd>
-	<p>In this chapter, I present the advanced features of MQTT that were not used in the previous chapters.</p>
+	<p>In this chapter, I present the advanced features of MQTT that were not used in Chapters 6 and 7.</p>
 	</dd>
 	<dt class="hdlist">Appendix A, ActiveMQ</dt>
 	<dd>
-	<p>In this appendix, we explain how to install and configure the messaging broker, Apache ActiveMQ, that is used in the book to run the STOMP examples.</p>
+	<p>In this appendix, we explain how to install and configure the messaging broker, Apache ActiveMQ messaging broker, which is used in the book to run the STOMP examples.</p>
 	</dd>
 	<dt class="hdlist">Appendix B, Mosquitto</dt>
 	<dd>
-	<p>In this appendix, we explain how to install and configure the Mosquitto broker and its command-line tools that are used in the book to send and receive MQTT messages.</p>
+	<p>In this appendix, we explain how to install and configure the Mosquitto broker and its command-line tools. Mosquitto is used throughout the book to send and receive MQTT messages.</p>
 	</dd>
 </dl>
 </div>
 
 <div data-type="note">
-<h1>What Should I Read?</h1>
+<p>The book is organized to be read in order, but some chapters can be skipped depending on your experience. Chapter 1 introduces all the concepts discussed throughout the book.</p>
 
-<p>The book is organized to be read in order but some chapters can be skipped depending on your experience. The Chapter 1 introduces all the concepts discussed throughout the book.</p>
+<p>If you are interested in mobile applications, you can focus on Chapters 2 and 6, which present two different messaging protocols for mobile devices. If you are writing web applications, Chapters 3 and 7 are the most relevant.</p>
 
-<p>If you are interested in mobile applications, you can focus on Chapters 2 and 6 that present two different messaging protocols for mobile devices. If you are writing Web applications, Chapters 3 and 7 are the most relevant.</p>
-
-<p>If you are interested by the STOMP protocol, Chapters 2, 3, 4, and 5 and the most relevant. If you are interested by MQTT, you can read Chapters 6, 7, and 8 instead.</p>
+<p>If you are mainly interested in the STOMP protocol, Chapters 2, 3, 4, and 5 and the most relevant. If you are focused on MQTT, you can read Chapters 6, 7, and 8 instead.</p>
 </div>
 </section>
 
 <section data-type="sect1" id="_target_audience">
 <h1>Target Audience</h1>
 
-<p>This book is an introduction to the STOMP and MQTT messaging protocols and assumes no prior experience with them. This book explains in detail the messaging protocols. Each platform&rsquo;s clients may provide a different API to deal with the protocols but the underlying concepts remain the same. For both protocols, we will see two different libraries: an Objective-C library for iOS and a JavaScript library for Web applications.</p>
+<p>This book is an introduction to the STOMP and MQTT messaging protocols and assumes no prior experience with them. This book explains in detail the messaging protocols. Each platform&rsquo;s clients may provide a different API to deal with the protocols, but the underlying concepts remain the same. For both protocols, we will see two different libraries: an Objective-C library for iOS and a JavaScript library for web applications.</p>
 
-<p>Basic programming skills are required. The examples in the book runs on different platforms and we used the programming language that made the most sense for each of them.</p>
+<p>Basic programming skills are required. The examples in the book run on different platforms and I have used the programming language that makes the most sense for each of them.</p>
 
-<p>The mobile applications on iOS will be written in Objective-C. The graphical application requires minimal knowledge of Xcode and Interface Builder but all the changes are described step by step in the book.</p>
+<p>The mobile applications on iOS will be written in Objective-C. The graphical application requires minimal knowledge of Xcode and Interface Builder, but all the changes are described step by step in the book.</p>
 
-<p>The Web applications use the JavaScript language. We leverage <a href="http://jquery.com">jQuery</a> to make the Web applications interactive and manipulate the page elements but the messaging code is independent of any JavaScript frameworks.</p>
+<p>The web applications use the JavaScript language. We leverage <a href="http://jquery.com">jQuery</a> to make the Web applications interactive and manipulate the page elements, but the messaging code is independent of any JavaScript frameworks.</p>
 </section>
 
 <section data-type="sect1" id="_conventions_used_in_this_book">
@@ -205,7 +203,7 @@ This book provides an introduction to the messaging protocols to help software d
 
 <p>This book is here to help you get your job done. In general, if example code is offered with this book, you may use it in your programs and documentation. You do not need to contact us for permission unless you&rsquo;re reproducing a significant portion of the code. For example, writing a program that uses several chunks of code from this book does not require permission. Selling or distributing a CD-ROM of examples from O&rsquo;Reilly books does require permission. Answering a question by citing this book and quoting example code does not require permission. Incorporating a significant amount of example code from this book into your product&rsquo;s documentation does require permission.</p>
 
-<p>We appreciate, but do not require, attribution. An attribution usually includes the title, author, publisher, and ISBN. For example: &ldquo;<em>Book Title</em> by Some Author (O&rsquo;Reilly). Copyright 2012 Some Copyright Holder, 978-0-596-xxxx-x.&rdquo;</p>
+<p>We appreciate, but do not require, attribution. An attribution usually includes the title, author, publisher, and ISBN. For example: &ldquo;<em>Mobile and Web Messaging</em> by Jeff Mesnil (O&rsquo;Reilly). Copyright 2014 Jeff Mesnil, 978-1-491-94480-6.&rdquo;</p>
 
 <p>If you feel your use of code examples falls outside fair use or the permission given above, feel free to contact us at <a class="email" href="mailto:permissions@oreilly.com"><em>permissions@oreilly.com</em></a>.</p>
 </section>
@@ -236,7 +234,7 @@ This book provides an introduction to the messaging protocols to help software d
 	<li>707-829-0104 (fax)</li>
 </ul>
 
-<p>We have a web page for this book, where we list errata, examples, and any additional information. You can access this page at <a href="http://www.oreilly.com/catalog/&lt;catalog page&gt;"><em class="hyperlink">http://www.oreilly.com/catalog/&lt;catalog page&gt;</em></a>.</p>
+<p>We have a web page for this book, where we list errata, examples, and any additional information. You can access this page at <a href="http://bit.ly/mw-messaging"><em class="hyperlink">http://bit.ly/mw-messaging</em></a>.</p>
 <!--Don't forget to update the link above.-->
 
 <p>To comment or ask technical questions about this book, send email to <a class="email" href="mailto:bookquestions@oreilly.com"><em>bookquestions@oreilly.com</em></a>.</p>
@@ -255,11 +253,11 @@ This book provides an introduction to the messaging protocols to help software d
 
 <p>I&rsquo;d like to thank the many people who contributed to this book. I hope I have not forgotten anyone, but I probably have.</p>
 
-<p>My colleagues at Red Hat provided help and support in innumerable ways. This list of people is necessarily very incomplete: Bill Burke (I should have listened to you: writing a book is a tiring experience!), Clebert Suconic and Andy Taylor for their messaging expertise, Mark Little for his support. A special thanks to Dimitris Andreadis for his trust and letting me spend a part of my work time on this book. Thanks to my teammates in the WildFly and EAP teams (Jason Greene, David M. Lloyd, Brian Stansberry, Kabir Khan, Tomaz Cerar, Emanuel Muckenhuber and all those I have pleasure to work with daily) that helped me lessen my workload so that I could focus on writing this book.</p>
+<p>My colleagues at Red Hat provided help and support in innumerable ways. This list of people is necessarily very incomplete: Bill Burke (I should have listened to you: writing a book is a tiring experience!), Clebert Suconic and Andy Taylor for their messaging expertise, Mark Little for his support. A special thanks to Dimitris Andreadis for his trust and letting me spend part of my work time on this book. Thanks to my teammates in the WildFly and EAP teams (Jason Greene, David M. Lloyd, Brian Stansberry, Kabir Khan, Tomaz Cerar, Emanuel Muckenhuber, and all those I have the pleasure to work with on a daily basis) that helped me lessen my workload so that I could focus on writing this book.</p>
 
 <p>Andy Piper, Clebert Suconic, and Dejan Bosanac helped tremendously by reviewing this book. It is much better thanks to their comments and critics.</p>
 
-<p>The people at O&rsquo;Reilly were extremely helpful. It was a pleasure working with Allyson McDonald, Rebecca Demarest, and Simon St.Laurent.</p>
+<p>The people at O&rsquo;Reilly were extremely helpful. It was a pleasure working with Allyson McDonald, Nicole Shelby, Rebecca Demarest, Jasmine Kwityn, and Simon St.Laurent.</p>
 
 <p>Thanks to all developers that reported issues on this book and the code examples.</p>
 </section>
