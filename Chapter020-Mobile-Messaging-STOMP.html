@@ -240,10 +240,7 @@ interface MWMViewController () &lt;CLLocationManagerDelegate&gt;
 
 <p>We will define two methods to start and stop updating the current location. When the app starts updating the current location in <code>startUpdatingCurrentLocation</code>, it creates the <code>locationManager</code> if it is not already created and designates the controller as the <code>locationManager</code>&rsquo;s <code>delegate</code>. Because the geolocation data will be used to follow the device as it moves, we set the <code>locationManager</code>&rsquo;s <code>desiredAccuracy</code> to <code>kCLLocationAccuracyBestForNavigation</code>.</p>
 
-<p>Finally, the application will start listening for the device location by calling <code>locationManager</code>&rsquo;s <code>startUpdatingLocation</code> method (Example 2-3).</p>
-
-<div data-type="example">
-<h5>&nbsp;</h5>
+<p>Finally, the application will start listening for the device location by calling <code>locationManager</code>&rsquo;s <code>startUpdatingLocation</code> method:</p>
 
 <pre data-code-language="objc" data-type="programlisting">
 #pragma mark - CoreLocation actions
@@ -270,26 +267,18 @@ interface MWMViewController () &lt;CLLocationManagerDelegate&gt;
     // start updating the location
     [self.locationManager startUpdatingLocation];
 }</pre>
-</div>
 
-<p>To stop receiving the device location in <code>stopUpdatingCurrentLocation</code>, we simply call <code>locationManager</code>&rsquo;s <code>stopUpdatingLocation</code> method (Example 2-4).</p>
-
-<div data-type="example">
-<h5>&nbsp;</h5>
+<p>To stop receiving the device location in <code>stopUpdatingCurrentLocation</code>, we simply call <code>locationManager</code>&rsquo;s <code>stopUpdatingLocation</code> method:</p>
 
 <pre data-code-language="objc" data-type="programlisting">
 - (void)stopUpdatingCurrentLocation
 {
     [self.locationManager stopUpdatingLocation];
 }</pre>
-</div>
 
 <p>The location of the device will be received by the designated <code>CLLocationManagerDelegate</code> (in our case, the <code>MWMViewController</code> implementation itself). We need to implement the <code>locationManager:didUpdateToLocation:fromLocation:</code> method and extract the coordinates from the <code>newLocation</code>'s <code>coordinate</code>.</p>
 
-<p>Once we have them, we can update the <code>currentPositionLabel</code>'s <code>text</code> to display them (Example 2-5).</p>
-
-<div data-type="example">
-<h5>&nbsp;</h5>
+<p>Once we have them, we can update the <code>currentPositionLabel</code>'s <code>text</code> to display them:</p>
 
 <pre data-code-language="objc" data-type="programlisting">
 #pragma mark - CLLocationManagerDelegate protocol
@@ -306,12 +295,8 @@ interface MWMViewController () &lt;CLLocationManagerDelegate&gt;
     CLLocationCoordinate2D coord = [newLocation coordinate];
     self.currentPositionLabel.text = [NSString stringWithFormat:@&quot;&phi;:%.4F, &lambda;:%.4F&quot;, coord.latitude, coord.longitude];
 }</pre>
-</div>
 
-<p>If there is any problem with the <code>locationManager</code>, we want to warn the user about it and stop updating the location. To do so, we implement the <code>CLLocationManagerDelegate</code>'s <code>locationManager:didFailWithError:</code> method to display a warning to the user (Example 2-6):</p>
-
-<div data-type="example">
-<h5>&nbsp;</h5>
+<p>If there is any problem with the <code>locationManager</code>, we want to warn the user about it and stop updating the location. To do so, we implement the <code>CLLocationManagerDelegate</code>'s <code>locationManager:didFailWithError:</code> method to display a warning to the user:</p>
 
 <pre data-code-language="objc" data-type="programlisting">
 - (void)locationManager:(CLLocationManager *)manager
@@ -327,12 +312,8 @@ interface MWMViewController () &lt;CLLocationManagerDelegate&gt;
     [alert addButtonWithTitle:@&quot;OK&quot;];
     [alert show];
 }</pre>
-</div>
 
-<p>Now that the code related to <code>CoreLocation</code> is in place, we just need to call the <code>startUpdatingCurrentLocation</code> method when the view will appear (Example 2-7).</p>
-
-<div data-type="example">
-<h5>&nbsp;</h5>
+<p>Now that the code related to <code>CoreLocation</code> is in place, we just need to call the <code>startUpdatingCurrentLocation</code> method when the view will appear:</p>
 
 <pre data-code-language="objc" data-type="programlisting">
 - (void)viewWillAppear:(BOOL)animated
@@ -341,19 +322,15 @@ interface MWMViewController () &lt;CLLocationManagerDelegate&gt;
 
     [self startUpdatingCurrentLocation];
 }</pre>
-</div>
 
-<p>As shown in Example 2-8, we also need to stop updating the location when the view disappears in <code>viewDidDisappear:</code>.</p>
 
-<div data-type="example">
-<h5>&nbsp;</h5>
+<p>We also need to stop updating the location when the view disappears in <code>viewDidDisappear:</code>.</p>
 
 <pre data-code-language="objc" data-type="programlisting">
 - (void)viewDidDisappear:(BOOL)animated
 {
     [self stopUpdatingCurrentLocation];
 }</pre>
-</div>
 
 <p>The first time the application asks the <code>locationManager</code> to start updating the device location, the user will see an alert view asking for permission to access the device location (Figure 2-15).</p>
 
@@ -383,10 +360,7 @@ interface MWMViewController () &lt;CLLocationManagerDelegate&gt;
 
 <p>Before sending any messages, we must first import the StompKit library that we added to the <em>Podfile</em> file at the beginning of this chapter.</p>
 
-<p>We must import its header file <em>StompKit.h</em> at the top of the <em>MWMViewController.m</em> file and add a <code>STOMPClient</code> property named <code>client</code> to the <code>MWMViewController</code> private interface (Example 2-9).</p>
-
-<div data-type="example">
-<h5>&nbsp;</h5>
+<p>We must import its header file <em>StompKit.h</em> at the top of the <em>MWMViewController.m</em> file and add a <code>STOMPClient</code> property named <code>client</code> to the <code>MWMViewController</code> private interface:</p>
 
 <pre data-code-language="objc" data-type="programlisting">
 #import &lt;StompKit.h&gt;
@@ -396,7 +370,6 @@ interface MWMViewController () &lt;CLLocationManagerDelegate&gt;
 @property (nonatomic, strong) STOMPClient *client;
 
 @end</pre>
-</div>
 
 <p>The <code>client</code> property will be used to communicate with the STOMP broker after it is created and connected.</p>
 
