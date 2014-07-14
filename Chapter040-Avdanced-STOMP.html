@@ -309,8 +309,8 @@ If the acknowledgment type is <code>auto</code> (or if it is not specified at al
 <p>The <code>Locations</code> iOS application is also consuming messages from the device’s text queue.
 These messages may be more important to acknowledge explicitly. We could enhance the application by letting the user confirm that it has read the message’s text and the message would be acknowledged after this confirmation only.</p>
 
-<p>We could also let the user reject it by negatively acknowledged the message.
-In that case, these <em>nacked</em> messages would be handled back by the STOMP broker. Depending on the broker you use, it may provide additional features to handle these messages. A common feature is to use a "dead letter queue" where messages that are nacked multiple times from a destination are sent to a dead letter queue. An administrator can then inspect this dead letter queue to determine what to do with these messages. For example, it can send them to another device, send alerts about the device that rejected them, etc.</p>
+<p>We could also let the user reject it by negatively acknowledging the message.
+In that case, these <em>nacked</em> messages would be handled back by the STOMP broker. Depending on the broker you use, it may provide additional features to handle these messages. Messages that are nacked multiple times from a destination are commonly sent to a dead letter queue. An administrator can then inspect this dead letter queue to determine what to do with these messages. For example, it can send them to another device, send alerts about the device that rejected them, and so on.</p>
 </section>
 
 
@@ -337,31 +337,31 @@ In that case, these <em>nacked</em> messages would be handled back by the STOMP 
 <p>STOMP has basic support for transactions.</p>
 
 <p>Sending a message or acknowledging the consumption of messages can be performed inside a transaction.
-This means that the messages and acknowledgements are not processed by the broker when it receives the corresponding frames but when the transaction completes. If the client does not complete the transaction or aborts it, the broker will not process the frames that it received inside  the transaction and will just discard them. Transactions ensure that messages and acknowledgement processing is <em>atomic</em>. <em>All</em> transacted messages and acknowledgements will be processed by the broker when the transaction is committed or <em>none</em> will be if the transaction is aborted.</p>
+This means that the messages and acknowledgments are not processed by the broker when it receives the corresponding frames but when the transaction completes. If the client does not complete the transaction or aborts it, the broker will not process the frames that it received inside  the transaction and will just discard them. Transactions ensure that messages and acknowledgment processing is <em>atomic</em>. <em>All</em> transacted messages and acknowledgments will be processed by the broker when the transaction is committed or <em>none</em> will be if the transaction is aborted.</p>
 
 <p>A transaction is started by the client by sending a <code>BEGIN</code> frame to the broker. This frame must have a <code>transaction</code> header whose value is a transaction identifier that must be unique within a STOMP connection.</p>
 
 <p>Sending a message can then be part of this transaction by adding a <code>transaction</code> header to its <code>SEND</code> frames set to the same transaction identifier.
-If a consumer is subscribed to a STOMP destination with <code>client</code> or <code>client-individual</code> acknowledgement modes, it can also make the message acknowledgement (or nack) inside a transaction by setting the <code>transaction</code> header on the <code>ACK</code> (or <code>NACK</code>) frame.</p>
+If a consumer is subscribed to a STOMP destination with <code>client</code> or <code>client-individual</code> acknowledgment modes, it can also make the message acknowledgment (or nack) inside a transaction by setting the <code>transaction</code> header on the <code>ACK</code> (or <code>NACK</code>) frame.</p>
 <div data-type="note">
 
 
-<p>By default, STOMP consumers use <code>auto</code> acknowledgement. In that case, the message acknowledgement is performed automatically by the STOMP broker when the message is delivered to the client and the acknowledgement can <strong>not</strong> be put inside a transaction.</p>
+<p>By default, STOMP consumers use <code>auto</code> acknowledgment. In that case, the message acknowledgment is performed automatically by the STOMP broker when the message is delivered to the client and the acknowledgment <em>cannot</em> be put inside a transaction.</p>
 
 </div>
 
-<p>To complete this active transaction and allows the broker to process it, the client must send a <code>COMMIT</code> frame with the same <code>transaction</code> header than in the corresponding <code>BEGIN</code> frame that started the transaction.
-To abort (or roll back) a transaction and discard any messages or acknowledgements sent inside it, the client must send instead an <code>ABORT</code> frame with this <code>transaction</code> header.</p>
+<p>To complete this active transaction and allow the broker to process it, the client must send a <code>COMMIT</code> frame with the same <code>transaction</code> header as in the corresponding <code>BEGIN</code> frame that started the transaction.
+To abort (or roll back) a transaction and discard any messages or acknowledgments sent inside it, the client must send instead an <code>ABORT</code> frame with this <code>transaction</code> header.</p>
 <div data-type="warning">
 
 
-<p>Beginning a transaction is not sufficient to send subsequent messages inside it. If a transaction is begun, the message to send must have its <code>transaction</code> header set to the transaction identifier. Otherwise, the STOMP broker will not consider that the message is part of the transaction and will process it when it receives it instead of waiting for the transaction completion. If the client decides to abort the transaction, the message will have already been processed by the broker and will not be discarded.</p>
+<p>Beginning a transaction is not sufficient to send subsequent messages inside it. If a transaction is begun, the message to send must have its <code>transaction</code> header set to the transaction identifier. Otherwise, the STOMP broker will not consider that the message is part of the transaction and will process it when it receives it instead of waiting for the transaction to complete. If the client decides to abort the transaction, the message will have already been processed by the broker and will not be discarded.</p>
 
 </div>
 
 <p>STOMP does not provide a transaction timeout that would abort the transaction if it is not completed in a timely fashion.
 The transaction lifecycle (controlled by <code>BEGIN</code> and <code>COMMIT</code>/<code>ABORT</code> frames) is the responsibility of the client.
-However the broker will automatically abort any active transaction if the client send a <code>DISCONNECT</code> frame or if the underlying TCP connection fails.</p>
+However, the broker will automatically abort any active transaction if the client sends a <code>DISCONNECT</code> frame or if the underlying TCP connection fails.</p>
 
 
 
@@ -373,12 +373,12 @@ However the broker will automatically abort any active transaction if the client
 <section data-type="sect2" id="__code_stompkit_code_example_3">
 <h2>StompKit Example</h2>
 
-<p>The <code>STOMPClient</code> can begin a transaction by calling its <code>begin:</code> method and passing a <code>NSString</code> that will be used to identify the transaction. Alternatively, you can call its <code>begin</code> method (without any parameter) and a transaction identifier will be automatically generated. Both <code>begin:</code> and <code>begin</code> methods returns a <code>STOMPTransaction</code> object.
-This object as a <code>identifier</code> property that contains the transaction identifier.</p>
+<p>The <code>STOMPClient</code> can begin a transaction by calling its <code>begin:</code> method and passing an <code>NSString</code> that will be used to identify the transaction. Alternatively, you can call its <code>begin</code> method (without any parameter) and a transaction identifier will be automatically generated. Both <code>begin:</code> and <code>begin</code> methods returns a <code>STOMPTransaction</code> object.
+This object has a <code>identifier</code> property that contains the transaction identifier.</p>
 
-<p>Sending a message, acknowledging, or nacking it can then be part of a transaction by adding a <code>transaction</code> header set to the transaction identifier (<code>StompKit.h</code> defines a <code>kHeaderTransaction</code> to represent this <code>transaction</code> header).</p>
+<p>Sending, acknowledging, or nacking a message can then be part of a transaction by adding a <code>transaction</code> header set to the transaction identifier (StompKit.h defines a <code>kHeaderTransaction</code> to represent this <code>transaction</code> header).</p>
 
-<p>Finally the <code>STOMPTransaction</code> object has two methods <code>commit</code> and <code>abort</code> to respectively commit or rollback the transaction.</p>
+<p>Finally, the <code>STOMPTransaction</code> object has two methods, <code>commit</code> and <code>abort</code>, to commit or rollback the transaction, respectively:</p>
 
 
 <pre data-type="programlisting" data-code-language="objc">// begin a transaction
