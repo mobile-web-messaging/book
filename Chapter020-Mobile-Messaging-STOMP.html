@@ -813,33 +813,33 @@ priority:4
 <p>We need to bind this outlet property to the table view. Open the <em>Main.storyboard</em> and control-click on View Controller to see its connection panel. Drag from tableView to the table to connect it. See Figure 2-21.</p>
 
 <figure id="img_mobile_stomp_182"><img alt="Connect the tableView outlet property to the Table View" src="images/mawm_0221.png" />
-<figcaption>Connect the tableView outlet property to the Table View.</figcaption>
+<figcaption>Connect the tableView outlet property to the Table View</figcaption>
 </figure>
 
-<p>We also need to connect the <code>View Controller</code> to the <code>Table View</code> and declare it as it <code>dataSource</code> and <code>delegate</code>.</p>
+<p>We also need to connect the View Controller to the Table View and declare it as its dataSource and delegate.</p>
 
-<p>Open the <code>Main.storyboard</code> and control-click on <code>Table View</code> to see its connection panel. Drag from <code>dataSource</code> to the <code>View Controller</code> to connect it.</p>
+<p>Open the <em>Main.storyboard</em> and control-click on Table View to see its connection panel. Drag from dataSource to the View Controller to connect it (Figure 2-22).</p>
 
 <figure id="img_mobile_stomp_19"><img alt="Connect the Table View's dataSource to the View Controller" src="images/mawm_0222.png" />
-<figcaption>Connect the Table View's dataSource to the View Controller.</figcaption>
+<figcaption>Connect the Table View's dataSource to the View Controller</figcaption>
 </figure>
 
-<p>We do the same operation to connect the <code>Table View</code>'s <code>delegate</code> property to the <code>View Controller</code>.</p>
+<p>We do the same operation to connect the Table View's delegate property to the View Controller (Figure 2-23).</p>
 
 <figure id="img_mobile_stomp_20"><img alt="Connect the Table View's delegate to the View Controller" src="images/mawm_0223.png" />
-<figcaption>Connect the Table View's delegate to the View Controller.</figcaption>
+<figcaption>Connect the Table View's delegate to the View Controller</figcaption>
 </figure>
 
-<p>The graphical objects are now properly connected to the properties. Next step is to make the <code>MWMViewController</code> implementation comply to the <code>UITableViewDataSource</code> and <code>UITableViewDelegate</code> protocols.</p>
+<p>The graphical objects are now properly connected to the properties. The next step is to make the <code>MWMViewController</code> implementation comply to the <code>UITableViewDataSource</code> and <code>UITableViewDelegate</code> protocols.</p>
 
-<p>The table will only display the received text messages. As there is no interaction with the table, we do not need to add any methods from the <code>UITableViewDelegate</code> protocol. Let&rsquo;s just add a comment to the <code>MWMViewController</code> implementation to remember that.</p>
+<p>The table will only display the received text messages. As there is no interaction with the table, we do not need to add any methods from the <code>UITableViewDelegate</code> protocol. Let&rsquo;s just add a comment to the <code>MWMViewController</code> implementation to remember that:</p>
 
 <pre data-code-language="objc" data-type="programlisting">
 #pragma mark - UITableViewDelegate
 
 // no delegate actions</pre>
 
-<p>The controller is also the <code>dataSource</code> of the table. We will keep a list of the texts in memory in an array. Let&rsquo;s add a <code>texts</code> array to the <code>MWMViewController</code> implementation and instatiate it in its <code>viewDidLoad</code> method.</p>
+<p>The controller is also the <code>dataSource</code> of the table. We will keep a list of the texts in memory in an array. Let&rsquo;s add a <code>texts</code> array to the <code>MWMViewController</code> implementation and instantiate it in its <code>viewDidLoad</code> method:</p>
 
 <pre data-code-language="objc" data-type="programlisting">
 @implementation MWMViewController
@@ -859,12 +859,13 @@ NSMutableArray *texts;
     texts = [[NSMutableArray alloc] init];
 }</pre>
 
-<p>This <code>texts</code> array will be used as the source of data for the table. Let&rsquo;s implement the required <code>UITableViewDataSource</code> methods.</p>
+<p>This <code>texts</code> array will be used as the source of data for the table. Let&rsquo;s implement the required <code>UITableViewDataSource</code> methods:</p>
 
 <pre data-code-language="objc" data-type="programlisting">
 #pragma mark - UITableViewDataSource protocol
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+- (NSInteger)tableView:(UITableView *)tableView 
+numberOfRowsInSection:(NSInteger)section
 {
     return [texts count];
 }
@@ -876,49 +877,50 @@ NSMutableArray *texts;
     // Table View Cell properties in the story board.
     static NSString *CellIdentifier = @&quot;TextCell&quot;;
 
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    UITableViewCell *cell = [tableView 
+    dequeueReusableCellWithIdentifier:CellIdentifier];
 
     cell.textLabel.text = [texts objectAtIndex:indexPath.row];
     return cell;
 }</pre>
 
-<p>With these methods implemented, the table will displayed all the texts that are stored in the <code>texts</code> array.</p>
+<p>With these methods implemented, the table will display all the texts that are stored in the <code>texts</code> array.</p>
 </section>
 
 <section data-type="sect1" id="_receive_stomp_messages">
 <h1>Receive STOMP Messages</h1>
 
-<p>Now that we are ready to display the table, next step is to subscribe to the device&rsquo;s text destination to consume STOMP messages and store their text payload in the <code>texts</code> array.</p>
+<p>Now that we are ready to display the table, the next step is to subscribe to the device&rsquo;s text destination to consume STOMP messages and store their text payload in the <code>texts</code> array.</p>
 
 <p>To consume messages, a STOMP client must:</p>
 
 <ol>
 	<li>
-	<p>connect to the broker</p>
+	<p>Connect to the broker.</p>
 	</li>
 	<li>
-	<p>subscribe to the destination it wants to consume messages from.</p>
+	<p>Subscribe to the destination it wants to consume messages from.</p>
 	</li>
 </ol>
 
 <section data-type="sect2" id="ch_mobile_stomp_subscribe">
 <h2>Subscribe to a STOMP Destination</h2>
 
-<p>We already took care of step (1) by calling <code>STOMPClient</code>'s <code>connectWithHeaders:completionHandler:</code> in <code>MWMViewController</code>'s <code>connect</code> method.</p>
+<p>We already took care of the first step by calling <code>STOMPClient</code>'s <code>connectWithHeaders:completionHandler:</code> in <code>MWMViewController</code>'s <code>connect</code> method.</p>
 
-<p>Step (2) is handled in STOMPKit by calling <code>STOMPClient</code>'s <code>subscribeTo:headers:messageHandler:</code> method.</p>
+<p>Step 2 is handled in StompKit by calling <code>STOMPClient</code>'s <code>subscribeTo:headers:messageHandler:</code> method.</p>
 
-<p>This method takes 3 parameters:</p>
+<p>This method takes three parameters:</p>
 
 <ul>
 	<li>
-	<p>the <code>destination</code> that the client wants to consume from. In our case it is the destination <code>/queue/device.XXX.text</code> (we prepended the destination with the <code>/queue/</code> prefix according to ActiveMQ naming convention).</p>
+	<p>The <code>destination</code> that the client wants to consume from. In our case, it is the destination <code>/queue/device.XXX.text</code> (we prepended the destination with the <code>/queue/</code> prefix according to ActiveMQ naming convention).</p>
 	</li>
 	<li>
-	<p>a dictionary of <code>headers</code> to pass additional metadata to the connection process. Since we do not have any such header for the time being, we will pass a empty dictionary</p>
+	<p>A dictionary of <code>headers</code> to pass additional metadata to the connection process. Because we do not have any such header for the time being, we will pass an empty dictionary.</p>
 	</li>
 	<li>
-	<p>a <code>STOMPMessageHandler</code> block with a <code>STOMPMessage</code> parameter that will be called every time the broker sends a messages to the client to consume it. In our case, we just have to get the <code>NSString</code> text from the message <code>body</code> property and add it to the <code>texts</code> array.</p>
+	<p>A <code>STOMPMessageHandler</code> block with a <code>STOMPMessage</code> parameter that will be called every time the broker sends a messages to the client to consume it. In our case, we just have to get the <code>NSString</code> text from the message <code>body</code> property and add it to the <code>texts</code> array.</p>
 	</li>
 </ul>
 
@@ -938,7 +940,7 @@ NSMutableArray *texts;
                              messageHandler:^(STOMPMessage *message) {
         // called every time a message is consumed from the destination
         NSLog(@&quot;received message %@&quot;, message);
-        // the text is send in a plain String, we use it as is.
+        // the text is sent in a plain string; we use it as is.
         NSString *text = message.body;
         NSLog(@&quot;adding text = %@&quot;, text);
         [texts addObject:text];
@@ -946,9 +948,9 @@ NSMutableArray *texts;
     }];
 }</pre>
 
-<p><code>subscription</code> is a object returned by the <code>subscribe</code> method that identifies the STOMP subscription and can be used to <em>unsubscribe</em>.</p>
+<p><code>subscription</code> is an object returned by the <code>subscribe</code> method that identifies the STOMP subscription and can be used to <em>unsubscribe</em>.</p>
 
-<p>We declare this object in the <code>MWMViewController</code>'s implementation.</p>
+<p>We declare this object in the <code>MWMViewController</code>'s implementation:</p>
 
 <pre data-code-language="objc" data-type="programlisting">
 @implementation MWMViewController
@@ -970,12 +972,13 @@ STOMPSubscription *subscription;</pre>
                           // Let's log the error
                           NSLog(@&quot;Error during connection: %@&quot;, error);
                       } else {
-                          // we are connected to the STOMP broker without an error
+                          // we are connected to the STOMP broker 
+                          // without an error
                           NSLog(@&quot;Connected&quot;);
                           [self subscribe];
                       }
                   }];
-    // when the method returns, we can not assume that the client is connected
+    // when the method returns, we cannot assume that the client is connected
 }</pre>
 </section>
 </section>
@@ -985,7 +988,7 @@ STOMPSubscription *subscription;</pre>
 
 <p>The application will consume messages from the destination as long as it remains connected to the STOMP broker.</p>
 
-<p>We do not need to explicitly unsubscribe from the destination when we disconnect from the broker but it is a good practice to do so. To unsubscribe, we just need to call the <code>unsubscribe</code> method on the <code>subscription</code> object that was created when we subscribed to the text destination. We will unsubscribe just prior to disconnecting from the broker in the <code>viewDidDisappear:</code> method.</p>
+<p>We do not need to explicitly unsubscribe from the destination when we disconnect from the broker, but it is a good practice to do so. To unsubscribe, we just need to call the <code>unsubscribe</code> method on the <code>subscription</code> object that was created when we subscribed to the text destination. We will unsubscribe just prior to disconnecting from the broker in the <code>viewDidDisappear:</code> method:</p>
 
 <pre data-code-language="objc" data-type="programlisting">
 - (void)viewDidDisappear:(BOOL)animated
@@ -1003,20 +1006,17 @@ STOMPSubscription *subscription;</pre>
 
 <p>Run the application in the iOS simulator or on your device.</p>
 
-<p>Go to the ActiveMQ admin console and browse to the device text destination (in my case, its name is <code>device.2262EC25-E9FD-4578-BADE-4E113DE45934.text</code>) and click on the <code>Send</code> tab.</p>
+<p>Go to the ActiveMQ admin console and browse to the device text destination (in my case, its name is device.2262EC25-E9FD-4578-BADE-4E113DE45934.text) and click on the Send tab.</p>
 
-<p>Fill the text area with a plain text string and set the <code>body format</code> to <code>Plain Text</code></p>
-
-<pre data-type="programlisting">
-Hello, where are you?</pre>
+<p>As illustrated in Figure 2-24, fill the text area with a plain-text string (e.g., "Hello, where are you?") and set the body format to Plain Text.</p>
 
 <figure id="img_mobile_stomp_21"><img alt="Send a Message using ActiveMQ Admin Console" src="images/mawm_0224.png" />
-<figcaption>Send a Message using ActiveMQ Admin Console.</figcaption>
+<figcaption>Send a message using the ActiveMQ Admin Console</figcaption>
 </figure>
 
-<p>Click on the <code>Send Message</code> button to send the message on the destination.</p>
+<p>Click on the Send Message button to send the message on the destination.</p>
 
-<p>We see in the application log that a STOMP message has been received and that the <code>text</code> was extracted from the message&rsquo;s body.</p>
+<p>We see in the application log that a STOMP message has been received and that the <code>text</code> was extracted from the message&rsquo;s body:</p>
 
 <pre data-type="programlisting">
 2014-03-14 14:24:19.807 Locations[86050:3903] received message MESSAGE
@@ -1032,7 +1032,7 @@ Hello, where are you?
 
 <p>However, nothing is displayed in the application. We forgot to reload the table to display the received orders.</p>
 
-<p>Let&rsquo;s fix that by calling <code>reloadData</code> on the <code>tableView</code> property from the <code>STOMPMessageHandler</code> block.</p>
+<p>Let&rsquo;s fix that by calling <code>reloadData</code> on the <code>tableView</code> property from the <code>STOMPMessageHandler</code> block:</p>
 
 <pre data-code-language="objc" data-type="programlisting">
 - (void)subscribe
@@ -1046,7 +1046,7 @@ Hello, where are you?
                              messageHandler:^(STOMPMessage *message) {
         // called every time a message is consumed from the destination
         NSLog(@&quot;received message %@&quot;, message);
-        // the text is send in a plain String, we use it as is.
+        // the text is sent in a plain string; we use it as is.
         NSString *text = message.body;
         NSLog(@&quot;adding text = %@&quot;, text);
         [texts addObject:text];
@@ -1058,39 +1058,39 @@ Hello, where are you?
 
 <p>Note that we did not call directly <code>[self.tableView reloadData];</code> from the <code>STOMPMessageHandler</code> block.</p>
 
-<p>STOMPKit uses Grand-Central Dispatch&rsquo;s global queue to handle the communication between the client and the STOMP brokers. The <code>STOMPMessageHandler</code> block is called on that queue. However any code that deals with <code>UIKit</code> (such as reloading the <code>tableView</code>) <strong>must</strong> be executed on the queue bound to the main thread. This is why we must wrap the <code>reloadData</code> call into a block executed on the main queue.</p>
+<p>StompKit uses Grand Central Dispatch&rsquo;s global queue to handle the communication between the client and the STOMP brokers. The <code>STOMPMessageHandler</code> block is called on that queue. However, any code that deals with <code>UIKit</code> (such as reloading the <code>tableView</code>) <em>must</em> be executed on the queue bound to the main thread. This is why we must wrap the <code>reloadData</code> call into a block executed on the main queue.</p>
 
-<p>If we restart the application and send another message on the destination with ActiveMQ admin console, the table will display the text as soon as it is received.</p>
+<p>If we restart the application and send another message on the destination with the ActiveMQ admin console, the table will display the text as soon as it is received. See Figure 2-25.</p>
 
 <figure id="img_mobile_stomp_22"><img alt="The Received Text is Displayed in the Table" src="images/mawm_0225.png" />
-<figcaption>The Received Text is Displayed in the Table.</figcaption>
+<figcaption>The received text is displayed in the table</figcaption>
 </figure>
 </section>
 
 <section data-type="sect1" id="_summary_2">
 <h1>Summary</h1>
 
-<p>In this chapter, we learn to use <code>StompKit</code> to send and receive STOMP messages from an iOS application.</p>
+<p>In this chapter, we learned to use StompKit to send and receive STOMP messages from an iOS application.</p>
 
-<p>To send a message, the application must:</p>
+<p>To send a message, the application must do the following:</p>
 
 <ol>
 	<li>
-	<p>connect to the STOMP broker</p>
+	<p>Connect to the STOMP broker.</p>
 	</li>
 	<li>
-	<p>send the message to the destination</p>
+	<p>Send the message to the destination.</p>
 	</li>
 </ol>
 
-<p>To consume a message, the application must</p>
+<p>To consume a message, the application must do the following:</p>
 
 <ol>
 	<li>
-	<p>connect to the STOMP broker</p>
+	<p>Connect to the STOMP broker.</p>
 	</li>
 	<li>
-	<p>subscribe to the destination and pass a block that is called every time a message is received. This block is executed on GCD global queue. If there are any code that changes the user interface, it must be wrapped in a block executed on the main queue.</p>
+	<p>Subscribe to the destination and pass a block that is called every time a message is received. This block is executed on the Grand Central Dispatch global queue. If there is any code that changes the user interface, it must be wrapped in a block executed on the main queue.</p>
 	</li>
 </ol>
 
@@ -1098,13 +1098,13 @@ Hello, where are you?
 
 <ul>
 	<li>
-	<p>a JSON payload by using its string representation for the message body and specifying <code>application/json; charset=utf-8</code> in its <code>content-type</code> header</p>
+	<p>A JSON payload by using its string representation for the message body and specifying <code>application/json; charset=utf-8</code> in its <code>content-type</code> header</p>
 	</li>
 	<li>
-	<p>a simple plain text payload without any <code>content-type</code> header</p>
+	<p>A simple plain-text payload without any <code>content-type</code> header</p>
 	</li>
 </ul>
 
-<p>Sending and consuming messages are only possible once the client is <em>successfully</em> connected to the STOMP broker. Due to the event-driven design of StompKit, this is the case when the completionHandler block is executed without an error in <code>connectWithHeaders:completionHandler:</code>.</p>
+<p>Sending and consuming messages is only possible once the client is <em>successfully</em> connected to the STOMP broker. Due to the event-driven design of StompKit, this is the case when the <code>completionHandler</code> block is executed without an error in <code>connectWithHeaders:completionHandler:</code>.</p>
 </section>
 </section>
