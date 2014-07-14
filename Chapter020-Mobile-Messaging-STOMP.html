@@ -2,21 +2,19 @@
 <h1>Mobile Messaging with STOMP</h1>
 
 
-<p class="lead">In this chapter, we will write our first messaging client: an native application running on an iPhone.
+<p class="lead">In this chapter, we will write our first messaging client: a native application running on an iPhone.
 We will use STOMP to send and receive messages using the Objective-C library StompKit.</p>
 
-<p>In <a data-type="xref" href="#ch_introduction_stomp_example">#ch_introduction_stomp_example</a>, we described the <code>Locations</code> application. In this chapter, we will write the iOS application that broadcasts the device’s  position and receive text messages.</p>
+<p>In <a data-type="xref" href="#ch_introduction_stomp_example">#ch_introduction_stomp_example</a>, we described the Locations application. In this chapter, we will write the iOS application that broadcasts the device’s  position and receive text messages (Figure 2-1).</p>
 
 <figure id="img_mobile_stomp_1">
 <img src="images/mawm_0201.png" alt="Diagram of the Locations iOS application"/>
 <figcaption>Diagram of the Locations iOS application</figcaption>
 </figure>
 <div data-type="note">
-<h1>About the Code</h1>
+<p>Throughout the chapter, we will show all the code required to run the application.</p>
 
-<p>All along the chapter, we will show all the code required to run the application.</p>
-
-<p>The whole application code can be retrieved from the <a href="https://github.com/mobile-web-messaging/code">GitHub repository</a> in the <code>stomp/ios/</code> directory.</p>
+<p>The whole application code can be retrieved from the <a href="https://github.com/mobile-web-messaging/code">GitHub repository</a> in the <em>stomp/ios/</em> directory.</p>
 
 </div>
 
@@ -28,7 +26,7 @@ We will use STOMP to send and receive messages using the Objective-C library Sto
 <section data-type="sect1" id="_stompkit">
 <h1>StompKit</h1>
 
-<p>To use STOMP on iOS, we will use the <code>StompKit</code> Objective-C library that implements the STOMP protocol in a modern event-driven way using ARC, Grand Central Dispatch and blocks.</p>
+<p>To use STOMP on iOS, we will use the StompKit Objective-C library that implements the STOMP protocol in a modern, event-driven way using ARC, Grand Central Dispatch, and blocks.</p>
 
 <p>The source code of this library project is hosted on <a href="https://github.com/mobile-web-messaging/StompKit/">GitHub</a>.</p>
 </section>
@@ -50,28 +48,28 @@ We will use STOMP to send and receive messages using the Objective-C library Sto
 
 <p>We will use <a href="https://developer.apple.com/xcode/">Xcode</a> to create the <code>Locations</code> iOS application.</p>
 
-<p>Once Xcode is installed and started, we create a new project from its launch screen:</p>
+<p>Once Xcode is installed and started, we create a new project from its launch screen, as illustrated in Figure 2-2:</p>
 
 <figure id="img_mobile_stomp_125">
 <img src="images/mawm_0202.png" alt="XCode Launch screen"/>
-<figcaption>Select Create a new Xcode project from Xcode launch screen.</figcaption>
+<figcaption>Select "Create a new Xcode project" from Xcode launch screen</figcaption>
 </figure>
 
-<p>The application consists in a single view so we choose the <code>Single View Application</code> template in <code>iOs &gt; Application</code> from the template screen.</p>
+<p>The application consists of a single view, so we choose the Single View Application template in iOs &#x2192; Application from the template screen, as illustrated in Figure 2-3.</p>
 
 <figure id="img_mobile_stomp_2">
 <img src="images/mawm_0203.png" alt="XCode template screen"/>
 <figcaption>Select Single View Application from the template screen</figcaption>
 </figure>
 
-<p>We will call the project <code>Locations</code> and select to build it only for iPhone devices.</p>
+<p>We will call the project Locations and select to build it only for iPhone devices, as illustrated in Figure 2-4.</p>
 
 <figure id="img_mobile_stomp_3">
 <img src="images/mawm_0204.png" alt="XCode project options screen"/>
 <figcaption>XCode project options screen</figcaption>
 </figure>
 
-<p>Finally we will save it in a folder on our machine.</p>
+<p>Finally, we will save it in a folder on our machine.</p>
 </section>
 
 
@@ -89,11 +87,11 @@ We will use STOMP to send and receive messages using the Objective-C library Sto
 <section data-type="sect1" id="ch_mobile_stomp_cocoapods">
 <h1>Create the Podfile</h1>
 
-<p>To import the library that we will use to send and receive messages, we will setup the project to use <a href="http://cocoapods.org">CocoaPods</a>, an Objective-C Library Manager.</p>
+<p>To import the library that we will use to send and receive messages, we will set up the project to use <a href="http://cocoapods.org">CocoaPods</a>, an Objective-C Library Manager.</p>
 
-<p>First we need to close Xcode because we will modify the project structure to import our dependencies.</p>
+<p>First, we need to close Xcode, because we will modify the project structure to import our dependencies.</p>
 
-<p>After installing CocoaPods by following the <a href="http://guides.cocoapods.org/using/getting-started.html#getting-started">instructions on its web site</a>, we create a file named <strong><code>Podfile</code></strong> at the root of the project (in the same directory than <code>Locations.xcodeproj</code>).</p>
+<p>After installing CocoaPods by following the <a href="http://guides.cocoapods.org/using/getting-started.html#getting-started">instructions on its website</a>, we create a file named <em>Podfile</em> at the root of the project (in the same directory than <em>Locations.xcodeproj</em>). See Example 2-1.</p>
 <div id="ex_mobile_stomp_1" data-type="example">
 <h5>Locations' Podfile</h5>
 
@@ -105,7 +103,7 @@ pod 'StompKit', '~&gt; 0.1'
 platform :ios, '5.0'</pre>
 </div>
 
-<p>After saving this file, run the <strong><code>pod install</code></strong> command.</p>
+<p>After saving this file, run the <strong><code>pod install</code></strong> command, shown in Example 2-2.</p>
 <div id="ex_mobile_stomp_2" data-type="example">
 <h5>Install Locations dependencies</h5>
 
@@ -121,28 +119,28 @@ Integrating client project
 [!] From now on use `Locations.xcworkspace`.</pre>
 </div>
 
-<p>We can now open again Xcode but we must do it using the <em>Workspace</em> file named <code>Locations.xcworkspace</code>, and not the <em>Project</em> file named <code>Locations.xcodeproj</code>.</p>
+<p>We can now open Xcode again, but we must do it using the <em>workspace</em> file named <em>Locations.xcworkspace</em>, and not the <em>project</em> file named <em>Locations.xcodeproj</em> (Figure 2-5).</p>
 
 <figure id="img_mobile_stomp_4">
 <img src="images/mawm_0205.png" alt="Open the Workspace file"/>
 <figcaption>Open the Workspace file</figcaption>
 </figure>
 
-<p>First, we will verify that the project is setup correctly and that the application can run in the iOS simulator.</p>
+<p>First, we will verify that the project is set up correctly and that the application can run in the iOS simulator.</p>
 
-<p>We will simulate the latest iPhone devices by selecting <code>Product &gt; Destination &gt; iPhone Retina (4-inch 64-bit)</code> from Xcode menu bar.</p>
+<p>We will simulate the latest iPhone devices by selecting Product &#x2192; Destination &#x2192; iPhone Retina (4-inch 64-bit) from the Xcode menu bar.</p>
 <!--
 Command symbol is not displayed in PDF.
 -->
 
-<p>If we run the application by selecting <strong><code>Product</code></strong> &gt; <strong><code>Run</code></strong> (or pressing <code>⌘+R</code>), the iOS simulator starts and opens the application which is composed of a blank view.</p>
+<p>If we run the application by selecting Product &#x2192; Run (or pressing <code>⌘+R</code>), the iOS simulator starts and opens the application, which is composed of a blank view (Figure 2-6).</p>
 
 <figure id="img_mobile_stomp_5">
 <img src="images/mawm_0206.png" alt="Locations Blank View"/>
-<figcaption>Locations Blank View</figcaption>
+<figcaption>Blank view of the Locations application</figcaption>
 </figure>
 
-<p>Nothing is displayed but it confirms that the project and its dependencies are  successfully compiled and launched.</p>
+<p>Nothing is displayed, but it confirms that the project and its dependencies are  successfully compiled and launched.</p>
 </section>
 
 
@@ -160,7 +158,7 @@ Command symbol is not displayed in PDF.
 <section data-type="sect1" id="ch_mobile_stomp_deviceID">
 <h1>Identify the Device</h1>
 
-<p>The iPhone device is will broadcast its position. The first thing to do is identify the device. To keep the example simple, we will use a <em>universal unique identifier</em> (or UUID) as the device identifier and display it in the view.</p>
+<p>The iPhone device will broadcast its position. The first thing to do is identify the device. To keep the example simple, we will use a <em>universal unique identifier</em> (or UUID) as the device identifier and display it in the view.</p>
 
 <p>Since the application will run only on iPhone devices, all the user interface will be setup in the <strong><code>Main.storyboard</code></strong> file.</p>
 
