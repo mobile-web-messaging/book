@@ -2,18 +2,18 @@
 <h1>Advanced STOMP</h1>
 
 
-<p class="lead">In the two previous chapters, we have used STOMP to send and receive messages from a native iOS application and a Web application.
-STOMP provides additional features that we did not use to write these applications. In this chapter, we will make a tour of all the features provided by STOMP.</p>
+<p class="lead">In Chapters 2 and 3, we used STOMP to send and receive messages from a native iOS application and a web application.
+STOMP provides additional features that we did not use to write these applications. In this chapter, we will take a tour of all the features provided by STOMP.</p>
 
-<p>This chapter covers the latest version of the protocol when this book was written:
-<a href="http://stomp.github.io/stomp-specification-1.2.html">STOMP 1.2</a> that was released on 2012, October 22<sup>nd</sup>.</p>
+<p>This chapter covers the latest version of the protocol at the time of this writing (i.e.,
+<a href="http://stomp.github.io/stomp-specification-1.2.html">STOMP 1.2</a>, which was released on October 22, 2012).</p>
 
-<p>As we present these features, we will show how to use them from either <code>StompKit</code> or <code>stomp.js</code>. The API may vary depending on the platform and language but the concept remains the same. If you have ever to use STOMP from another language or platform, you will have to adapt to the library API but the underlying concept will still apply.</p>
+<p>As we present these features, we will show how to use them from either StompKit or stomp.js. The API may vary depending on the platform and language, but the concept remains the same. If you ever need to use STOMP from another language or platform, you will have to adapt to the library API but the underlying concept will still apply.</p>
 
 <p>Clients and brokers can use these features by sending additional frames (defined in the protocol) or by using message headers.
-The STOMP protocol defines frames to provide transactions, a combination of frames and headers for message acknowledgement and headers for hearbeat negotiation.</p>
+The STOMP protocol defines frames to provide transactions, a combination of frames and headers for message acknowledgment, and headers for hearbeat negotiation.</p>
 
-<p>In this chapter, we will describe the features provided by the STOMP protocol that client and broker must support to be compliant.</p>
+<p>In this chapter, we will describe the features provided by the STOMP protocol that the client and broker must support to be compliant.</p>
 
 <p>STOMP is also extensible and clients and brokers can support additional features by using headers not defined in the protocol. We will describe such additional features in the next chapter.</p>
 
@@ -27,28 +27,28 @@ The STOMP protocol defines frames to provide transactions, a combination of fram
 <section data-type="sect1" id="ch_adv_stomp_frame">
 <h1>Frame Representation</h1>
 
-<p>All data exchanged between a client and a broker is done using STOMP frames. STOMP is modelled on HTTP and its frames follows a similar structure.
-Each frame is composed of 3 elements:</p>
+<p>All data exchanged between a client and a broker is done using STOMP frames. STOMP is modeled on HTTP and its frames follow a similar structure.
+Each frame is composed of three elements (Example 4-1):</p>
 <ul>
 <li>
-<p>a <em>command</em></p>
+<p>A <em>command</em></p>
 </li>
 <li>
-<p>an (optional) set of <em>headers</em></p>
+<p>A set of <em>headers</em></p>
 </li>
 <li>
-<p>an (optional) <em>payload</em></p>
+<p>A <em>payload</em> (optional)</p>
 </li>
 </ul>
 <div id="ex_stomp_frame" data-type="example">
 <h5>STOMP Frame Structure</h5>
 
 
-<pre data-type="programlisting">COMMAND<a class="co" id="co_ch4-co-1" href="#callout_ch4-co-1"><img src="images/callouts/1.png" alt="1"/></a>
-header1:value1<a class="co" id="co_ch4-co-2" href="#callout_ch4-co-2"><img src="images/callouts/2.png" alt="2"/></a>
-header2:value2
+<pre data-type="programlisting">COMMAND <a class="co" id="co_ch4-co-1" href="#callout_ch4-co-1"><img src="images/callouts/1.png" alt="1"/></a>
+header1:value1 <a class="co" id="co_ch4-co-2" href="#callout_ch4-co-2"><img src="images/callouts/2.png" alt="2"/></a>
+header2:value2 
 <a class="co" id="co_ch4-co-3" href="#callout_ch4-co-3"><img src="images/callouts/3.png" alt="3"/></a>
-payload^@<a class="co" id="co_ch4-co-4" href="#callout_ch4-co-4"><img src="images/callouts/4.png" alt="4"/></a></pre>
+payload^@ <a class="co" id="co_ch4-co-4" href="#callout_ch4-co-4"><img src="images/callouts/4.png" alt="4"/></a></pre>
 
 
 <dl class="calloutlist">
@@ -59,10 +59,10 @@ payload^@<a class="co" id="co_ch4-co-4" href="#callout_ch4-co-4"><img src="image
 </dl>
 </div>
 
-<p>STOMP is based on text (using UTF-8 for its default encoding)
+<p>STOMP is based on text (using UTF-8 for its default encoding),
 but it can also transmit binary data in its payload by specifying an alternative encoding.</p>
 
-<p>In the two previous chapters, we were sending JSON data in the messages. We were setting the string representation of the JSON structure in the message body and setting the <code>content-type</code> header to <code>application/json; charset=utf-8</code>.</p>
+<p>In Chapters 2 and 3, we were sending JSON data in the messages. We were setting the string representation of the JSON structure in the message body and setting the <code>content-type</code> header to <code>application/json; charset=utf-8</code>.</p>
 
 <p>STOMP uses frames not only to send messages (with the <code>SEND</code> command) and receive them (with the <code>MESSAGE</code> command) but also for all its operation comands (such as <code>CONNECT</code>, <code>DISCONNECT</code>, <code>SUBSCRIBE</code>, etc.).</p>
 
@@ -78,9 +78,9 @@ but it can also transmit binary data in its payload by specifying an alternative
 
 <p>STOMP defines only a handful of headers for its different frames.</p>
 
-<p>It is also possible to add other headers when sending a frame as long as it does not collide with the headers already specified in the STOMP protocol.</p>
+<p>It is also possible to add other headers when sending a frame, as long as it does not collide with the headers already specified in the STOMP protocol.</p>
 
-<p>An application may use headers instead of the message’s payload to transmit data. The fundamental difference between headers and payload is that  headers can be read (and modified) by the STOMP brokers. Payload is treated a  a black box and the broker never reads or modifies it.</p>
+<p>An application may use headers instead of the message’s payload to transmit data. The fundamental difference between headers and payload is that  headers can be read (and modified) by the STOMP brokers. Payload is treated as a black box and the broker never reads or modifies it.</p>
 
 <p>In practice, headers are most often used to specify additional features or constraints to the message processing.</p>
 </section>
@@ -106,13 +106,11 @@ but it can also transmit binary data in its payload by specifying an alternative
 <section data-type="sect1" id="_authentication">
 <h1>Authentication</h1>
 
-<p>In the two previous chapters, the STOMP clients are connected to the broker <em>anonymously</em>. We do not pass any user credentials that the broker could use to authenticate the user and check whether he or she could send and/or receive messages.</p>
+<p>In Chapters 2 and 3, the STOMP clients are connected to the broker <em>anonymously</em>. We do not pass any user credentials that the broker could use to authenticate the user and check whether he or she could send and/or receive messages.</p>
 
 <p>If the STOMP broker is configured to accept secured connections, the client needs to pass <code>login</code> and <code>passcode</code> parameters when it connects to the STOMP broker.</p>
 <div data-type="note">
-<h1>ActiveMQ Authentication</h1>
-
-<p>By default, ActiveMQ accepts anonymous connections. To change its security settings to authenticate users and grant them restricted priviledges (so that they can only receive messages from example), consult its <a href="http://activemq.apache.org/security.html">security documentation page</a>.</p>
+<p>By default, ActiveMQ accepts anonymous connections. To change its security settings to authenticate users and grant them restricted privileges (so that they can only receive messages from example), consult its <a href="http://activemq.apache.org/security.html">security documentation page</a>.</p>
 
 </div>
 
@@ -126,7 +124,7 @@ but it can also transmit binary data in its payload by specifying an alternative
 <section data-type="sect2" id="__code_stompkit_code_example">
 <h2>StompKit Example</h2>
 
-<p>To use an authenticated connection with <code>StompKit</code>, you need to pass the login and passcode parameters to the headers dictionary when calling the <code>connectWithHeaders:completionHandler</code> method on the <code>STOMPClient</code>. <code>StompKit</code> defines the <code>kHeaderLogin</code> and <code>kHeaderPasscode</code> constants to represent the headers keys.</p>
+<p>To use an authenticated connection with <code>StompKit</code>, you need to pass the login and passcode parameters to the headers dictionary when calling the <code>connectWithHeaders:completionHandler</code> method on the <code>STOMPClient</code>. <code>StompKit</code> defines the <code>kHeaderLogin</code> and <code>kHeaderPasscode</code> constants to represent the headers keys:</p>
 
 
 <pre data-type="programlisting" data-code-language="objc">- (void)connect
@@ -138,7 +136,8 @@ but it can also transmit binary data in its payload by specifying an alternative
     [self.client connectWithHeaders:@{ @"client-id": self.deviceID,
                                        kHeaderLogin: login,
                                        kHeaderPasscode: passcode}
-                  completionHandler:^(STOMPFrame *connectedFrame, NSError *error) {
+                  completionHandler:^(STOMPFrame *connectedFrame, 
+                  NSError *error) {
                       ...
 }</pre>
 
@@ -159,7 +158,7 @@ but it can also transmit binary data in its payload by specifying an alternative
 <section data-type="sect2" id="__code_stomp_js_code_example">
 <h2>stomp.js Example</h2>
 
-<p>A <code>stomp.js</code> client can be authenticated by adding the <code>login</code> and <code>passcode</code> headers to the first parameter of its <code>connect</code> method.</p>
+<p>A stomp.js client can be authenticated by adding the <code>login</code> and <code>passcode</code> headers to the first parameter of its <code>connect</code> method:</p>
 
 
 <pre data-type="programlisting" data-code-language="js">function connect(url) {
@@ -202,20 +201,20 @@ but it can also transmit binary data in its payload by specifying an alternative
 
 
 <section data-type="sect1" id="_message_acknowledgement">
-<h1>Message Acknowledgement</h1>
+<h1>Message Acknowledgment</h1>
 
-<p>Message acknowledgement is a feature available to STOMP <em>consumers</em>.</p>
+<p>Message acknowledgment is a feature available to STOMP <em>consumers</em>.</p>
 
-<p>When the broker delivers a message to a consumer, there is a transfer of responsibility between the broker and the consumer to determine which is the <em>owner</em> of the message. The consumer becomes responsible of the message by <em>acknowledging</em> the message.</p>
+<p>When the broker delivers a message to a consumer, there is a transfer of responsibility between the broker and the consumer to determine which is the <em>owner</em> of the message. The consumer becomes responsible for the message by <em>acknowledging</em> the message.</p>
 
-<p>By default, the STOMP broker will consider that the consumer automatically acknowledge the message when it is delivered to the consumer.</p>
+<p>By default, the STOMP broker will consider the message automatically acknowledged when it is delivered to the consumer.</p>
 
-<p>However there are cases where the consumer may prefer to acknowledge explicity the message. It leaves a window of opportunity to determine whether it can handle the message or not.
+<p>However, there are cases in which the consumer may prefer to explicitly acknowledge the message. It leaves a window of opportunity to determine whether it can handle the message or not.
 For example, the client needs to write the message payload in a data store.
-There may be issues with opening a connection to the data store and the client could chose to acknowledge the message only after having successfully written its body to the data store. In case of failure, it will instead <em>nack</em> the message (explicitly refuse to take ownership of it). When the STOMP broker is informed of this negatively acknowledgement, it may then decide to deliver the message to another consumer subscribed to the destination or try again some time later depending on its configuration.</p>
+There may be issues with opening a connection to the data store and the client could choose to acknowledge the message only after having successfully written its body to the data store. In case of failure, it will instead <em>nack</em> the message (explicitly refuse to take ownership of it). When the STOMP broker is informed of this negative acknowledgment, it may then decide to deliver the message to another consumer subscribed to the destination or try again some time later depending on its configuration.</p>
 
 <p>The consumer specifies its type of acknowledgement when it subscribes to a destination.
-STOMP supports 3 types of acknowledgements:</p>
+STOMP supports three types of acknowledgements:</p>
 <ul>
 <li>
 <p><code>auto</code> (by default)</p>
@@ -228,11 +227,11 @@ STOMP supports 3 types of acknowledgements:</p>
 </li>
 </ul>
 
-<p>If the client does not specify any type of acknowledgement or use <code>default</code>, it does not need to send any acknowledgement, the STOMP broker will consider the message acknowledged as soon as it is delivered to the client.</p>
+<p>If the client does not specify any type of acknowledgment or if it uses <code>default</code>, it does not need to send any acknowledgment; the STOMP broker will consider the message acknowledged as soon as it is delivered to the client.</p>
 
-<p>If <code>client</code> or <code>client-individual</code> is used, the consumer must send acknowledgements to the server with the <code>message-id</code> of the message that is acknowledged. The difference between <code>client</code> and <code>client-individual</code> is that <code>client</code> will acknowledged the message <em>and all other messages delivered to the consumer before</em>. Using <code>client-individual</code> will only acknowledge the message and no other messages. The consumer acknowledge a message by sending a <code>ACK</code> frame to the STOMP broker.</p>
+<p>If <code>client</code> or <code>client-individual</code> is used, the consumer must send acknowledgments to the server with the <code>message-id</code> of the message that is acknowledge. The difference between <code>client</code> and <code>client-individual</code> is that <code>client</code> will acknowledged the message <em>and all other messages delivered to the consumer before</em>. Using <code>client-individual</code> will only acknowledge the message and no other messages. The consumer acknowledges a message by sending an <code>ACK</code> frame to the STOMP broker.</p>
 
-<p>If <code>client</code> and <code>client-individual</code> is used, the consumer may explicitly refuse to handle the message by sending a <code>NACK</code> frame, a negative acknowledgement.</p>
+<p>If <code>client</code> and <code>client-individual</code> is used, the consumer may explicitly refuse to handle the message by sending a <code>NACK</code> frame, a negative acknowledgment.</p>
 
 
 
@@ -244,15 +243,15 @@ STOMP supports 3 types of acknowledgements:</p>
 <section data-type="sect2" id="__code_stompkit_code_example_2">
 <h2>StompKit Example</h2>
 
-<p>The message acknowledgement is specified when the <code>STOMPClient</code> subscribes to a destination by calling its <code>subscribeTo:headers:messageHandler:</code> method.
-To specify a <code>client</code> or <code>client-individual</code> acknowledgement, you must set a <code>ack</code> header. <code>StompKit.h</code> defines constants to represent the header name, <code>kHeaderAck</code> and its accepted values, <code>kAckAuto</code>, <code>kAckClient</code>, and <code>kAckClientIndividual</code>.</p>
+<p>The message acknowledgment is specified when the <code>STOMPClient</code> subscribes to a destination by calling its <code>subscribeTo:headers:messageHandler:</code> method.
+To specify a <code>client</code> or <code>client-individual</code> acknowledgment, you must set an <code>ack</code> header. <em>StompKit.h</em> defines constants to represent the header name, <code>kHeaderAck</code> and its accepted values, <code>kAckAuto</code>, <code>kAckClient</code>, and <code>kAckClientIndividual</code>.</p>
 
-<p>The <code>STOMPMessage</code> parameter of the <code>messageHandler</code> has two methods <code>ack</code> and <code>nack</code> to respectively acknowledge or nack the message.</p>
+<p>The <code>STOMPMessage</code> parameter of the <code>messageHandler</code> has two methods, <code>ack</code> and <code>nack</code>, to acknowledge or nack the message, respectively.</p>
 
-<p>If the <code>ack</code> header is not set or if it set to <code>auto</code>, message acknowledgement is performed by the broker and calling the <code>STOMPMessage</code>'s <code>ack</code> and <code>nack</code> methods will do nothing.</p>
+<p>If the <code>ack</code> header is not set or if it set to <code>auto</code>, message acknowledgment is performed by the broker and calling the <code>STOMPMessage</code>'s <code>ack</code> and <code>nack</code> methods will do nothing:</p>
 
 
-<pre data-type="programlisting" data-code-language="objc">// use client acknowledgement
+<pre data-type="programlisting" data-code-language="objc">// use client acknowledgment
 [self.client subscribeTo:destination
                  headers:@{kHeaderAck: kAckClient}
           messageHandler:^(STOMPMessage *message) {
@@ -282,10 +281,10 @@ To specify a <code>client</code> or <code>client-individual</code> acknowledgeme
 <section data-type="sect2" id="__code_stomp_js_code_example_2">
 <h2>stomp.js Example</h2>
 
-<p>The <code>client</code> can specify the type of acknowledgement by passing a dictionary with the <code>ack</code> header as the last parameter of its <code>subscribe</code> message.</p>
+<p>The <code>client</code> can specify the type of acknowledgment by passing a dictionary with the <code>ack</code> header as the last parameter of its <code>subscribe</code> message.</p>
 
-<p>The <code>message</code> parameter of the <code>subscribe</code> callback has two methods, <code>ack</code> and <code>nack</code> to respectively acknowledge or nack the message.
-If the acknowledgement type is <code>auto</code> (or if it is not specified at all), these <code>ack</code> and <code>nack</code> methods will do nothing.</p>
+<p>The <code>message</code> parameter of the <code>subscribe</code> callback has two methods, <code>ack</code> and <code>nack</code>, to acknowledge or nack the message, respectively.
+If the acknowledgment type is <code>auto</code> (or if it is not specified at all), these <code>ack</code> and <code>nack</code> methods will do nothing:</p>
 
 
 <pre data-type="programlisting" data-code-language="js">client.subscribe(destination,
@@ -301,11 +300,11 @@ If the acknowledgement type is <code>auto</code> (or if it is not specified at a
 );</pre>
 
 
-<p>There are many use cases where it is not necessary to use explicit acknowledgement.</p>
+<p>There are many use cases where it is not necessary to use explicit acknowledgment.</p>
 
-<p>For example, in the <code>locations.html</code> Web application, we do not need to acknowledge every message that we receive from the devices with their GPS position. At worst, there may be a problem to display the position but we know there are other messages that will come later to update the device’s position.</p>
+<p>For example, in the Locations web application, we do not need to acknowledge every message that we receive from the devices with their GPS position. At worst, there may be a problem to display the position, but we know there are other messages that will come later to update the device’s position.</p>
 
-<p>Besides, acknowledging every message would have a performance cost. Sending the acknowledgement back to the broker would involve an additional network trip for every message.</p>
+<p>Besides, acknowledging every message would have a performance cost. Sending the acknowledgment back to the broker would involve an additional network trip for every message.</p>
 
 <p>The <code>Locations</code> iOS application is also consuming messages from the device’s text queue.
 These messages may be more important to acknowledge explicitly. We could enhance the application by letting the user confirm that it has read the message’s text and the message would be acknowledged after this confirmation only.</p>
