@@ -2,50 +2,31 @@
 <h1>Web Messaging with STOMP</h1>
 
 
-<p class="lead">In this chapter, we will write a Web application that sends and receives messages using the STOMP protocol over HTML5 Web Sockets.</p>
+<p class="lead">In this chapter, we will write a web application that sends and receives messages using the STOMP protocol over HTML5 Web Sockets.</p>
 
-<p>In <a data-type="xref" href="#ch_introduction_stomp_example">#ch_introduction_stomp_example</a>, we described the <code>Locations</code> application. In this chapter, we will write the Web application that consumes the device’s GPS position to display them on a map and sends text messages to the devices.</p>
+<p>In <a data-type="xref" href="#ch_introduction_stomp_example">#ch_introduction_stomp_example</a>, we described the Locations application. In this chapter, we will write the web application (shown in Figure 3-1) that consumes the device’s GPS position to display them on a map and sends text messages to the devices.</p>
 
 <figure id="img_web_stomp_1">
 <img src="images/mawm_0301.png" alt="Diagram of the +Locations+ Web application"/>
-<figcaption>Diagram of the Locations Web application</figcaption>
+<figcaption>Diagram of the Locations web application</figcaption>
 </figure>
 
 
 
+<p>Throughout the chapter, we will show all the code required to run the application.</p>
 
-
-
-<section data-type="sect1" id="_about_the_code">
-<h1>About the Code</h1>
-
-<p>All along the chapter, we will show all the code required to run the application.</p>
-
-<p>The whole application code can be retrieved from the <a href="https://github.com/mobile-web-messaging/code">GitHub repository</a> in the <code>stomp/web/</code> directory.</p>
+<p>The whole application code can be retrieved from the <a href="https://github.com/mobile-web-messaging/code">GitHub repository</a> in the <em>stomp/web/</em> directory.</p>
 </section>
-
-
-
-
-
-
-
-
-
-
-
-
 
 <section data-type="sect1" id="_html5_web_sockets">
 <h1>HTML5 Web Sockets</h1>
 
-<p>Web Sockets is a recent features of Web browser that provides a bi-directional and full-duplex communication channel over a single TCP connection between the Web browser and the Web server.
-Before Web Sockets, communication was only one-way: the browser initiates the communication by sending a HTTP request to the Web server which replies with a HTTP response. The server could not send data to the browser without the browser having first sent a request.
-There exists some techniques to provide a bi-directional HTTP (such as HTTP long polling and HTTP streaming) but they have significant issues as described in <a href="#rfc6202">[rfc6202]</a>.</p>
+<p>Web Sockets is a recent protocol that provides a bidirectional and full-duplex communication channel over a single TCP connection between the web browser and the web server.
+Before Web Sockets, communication was only one way: the browser initiated communication by sending an HTTP request to the web server, which replied with an HTTP response. The server could not send data to the browser without the browser having first sent a request. Some techniques exist to provide a bidirectional HTTP (such as HTTP long polling and HTTP streaming), but they have significant issues, as described in <a href="#rfc6202">[rfc6202]</a>.</p>
 
-<p>Thanks to HTML5 Web Sockets, it is now possible to have two-way communication between the browser and the server. The server can send data to the browser without waiting for a request first. This enables to deliver messages from the Web server to the browser.</p>
+<p>Thanks to HTML5 Web Sockets, it is now possible to have two-way communication between the browser and the server. The server can send data to the browser without waiting for a request first. This enables us to deliver messages from the web server to the browser.</p>
 
-<p>We are no longer limited to pull-based messages where the browser need to regularly contact the server to know whether there are any available messages to consume. This preserves bandwidth (the browser no longer need to send periodic query requests) and battery on mobile devices.</p>
+<p>We are no longer limited to pull-based messages where the browser needs to regularly contact the server to know whether there are any available messages to consume. This preserves bandwidth (the browser no longer need to send periodic query requests) and battery on mobile devices.</p>
 <div data-type="note">
 
 
@@ -58,58 +39,37 @@ There exists some techniques to provide a bi-directional HTTP (such as HTTP long
 
 
 
-
-
-
-
-
-
-
-
-
-
 <section data-type="sect1" id="_stomp_js_stomp_over_web_sockets">
 <h1>stomp.js, STOMP Over Web Sockets</h1>
 
-<p>If your Web browser supports Web Sockets (and all modern browsers do), we can then use a STOMP client that leverages them to send and receive STOMP messages directly from the Web browser.</p>
+<p>If your web browser supports Web Sockets (and all modern browsers do), we can then use a STOMP client that leverages them to send and receive STOMP messages directly from the web browser.</p>
 
-<p>stomp.is is a small JavaScript library (8KiB for its minified version) that provides a full-featured STOMP 1.2 client.</p>
+<p>stomp.js is a small JavaScript library (8 kibibytes for its minified version) that provides a full-featured STOMP 1.2 client.</p>
 
-<p>It can run in multiple JavaScript platforms. Its main target is the Web browser (using Web Sockets as its transport protocol) but it can also be used on other JavaScript platforms such as <a href="http://nodejs.org">node.js</a> (using TCP sockets).</p>
+<p>It can run in multiple JavaScript platforms. Its main target is the web browser (using Web Sockets as its transport protocol) but it can also be used on other JavaScript platforms such as <a href="http://nodejs.org">node.js</a> (using TCP sockets).</p>
 <div data-type="warning">
 
 
-<p>A STOMP client running in a Web browser is similar to another STOMP client running on other platform with one exception: STOMP messages are transported by Web Sockets and not regular TCP sockets.
-The significant difference between them is that a Web Socket is created by sending a HTTP request with a <code>Upgrade: websocket</code> header. The STOMP broker must be able to handle such a HTTP request and upgrade the connection from HTTP to the STOMP protocol.</p>
+<p>A STOMP client running in a web browser is similar to another STOMP client running on another platform with one exception: STOMP messages are transported by Web Sockets and not regular TCP sockets.
+The significant difference between them is that a Web Socket is created by sending an HTTP request with an <code>Upgrade: websocket</code> header. The STOMP broker must be able to handle such an HTTP request and upgrade the connection from HTTP to the STOMP protocol.</p>
 
-<p>Web Sockets support is not part of the STOMP protocol. The most used STOMP brokers such as ActiveMQ (that is used in this book), HornetQ, or RabbitMQ  support it but you will have to consult your broker documentation to check if it does.</p>
+<p>Web Sockets support is not part of the STOMP protocol. The most used STOMP brokers--such as ActiveMQ (which is used in this book), HornetQ and RabbitMQ--support it, but you will have to consult your broker documentation to check if it does.</p>
 
 </div>
 </section>
 
 
-
-
-
-
-
-
-
-
-
-
-
 <section data-type="sect1" id="_bootstrap_the_code_locations_html_code_web_application">
-<h1>Bootstrap the locations.html Web Application</h1>
+<h1>Bootstrap the Locations Web Application</h1>
 
-<p>As we explained in the first chapter, this Web application will be use to display the locations of the devices and send them text messages.</p>
+<p>As we explained in the first chapter, this web application will be used to display the locations of the devices and send them text messages.</p>
 
-<p>It will be a very simple one-page Web application that can be run from a Web server serving static pages. It does not require
-any server-side runtime as all the code will be executed inside the Web browser using JavaScript.</p>
+<p>It will be a very simple one-page web application that can be run from a web server serving static pages. It does not require
+any server-side runtime, as all the code will be executed inside the web browser using JavaScript.</p>
 
-<p>Let’s bootstrap the Web application by creating a <code>locations.html</code> page.</p>
+<p>As shown in Example 3-1, let’s bootstrap the web application by creating a <em>locations.html</em> page.</p>
 <div id="ex_web_stomp_1" data-type="example">
-<h5>Template for the locations.html Web Application</h5>
+<h5>Template for the locations.html web application</h5>
 
 
 <pre data-type="programlisting" data-code-language="html">&lt;!DOCTYPE html&gt;
@@ -178,9 +138,9 @@ $(document).ready(function() {
 <section data-type="sect1" id="_create_a_stomp_client_with_code_stomp_js_code">
 <h1>Create a Stomp Client with stomp.js</h1>
 
-<p>The STOMP client will be used for both consuming messages (from the device’ location destination) and producing them (to the device’s text destination).</p>
+<p>The STOMP client will be used for both consuming messages (from the device’s location destination) and producing them (to the device’s text destination).</p>
 
-<p>We will declare the <code>client</code> variable to use it throughout our script.</p>
+<p>We will declare the <code>client</code> variable to use it throughout our script:</p>
 
 
 <pre data-type="programlisting" data-code-language="js">$(document).ready(function() {
@@ -190,7 +150,7 @@ $(document).ready(function() {
 }</pre>
 
 
-<p>When the user click on the <code>Connect</code> button, the URL is retrieved from the <code>connect_url</code> input element and passed to the <code>connect</code> method. In this method, we will create the <code>client</code> and connect to the STOMP broker.</p>
+<p>When the user clicks on the <code>Connect</code> button, the URL is retrieved from the <code>connect_url</code> input element and passed to the <code>connect</code> method. In this method, we will create the <code>client</code> and connect to the STOMP broker:</p>
 
 
 <pre data-type="programlisting" data-code-language="js">// handles the connect_form
@@ -222,16 +182,13 @@ $('#connect_form').submit(function() {
 Once we have the <code>client</code> object, we call its <code>connect</code> method to connect to the STOMP broker. This method takes at least two arguments:</p>
 <ol>
 <li>
-<p>a set of headers containing additional metadata that the STOMP broker can use during the connection process. In our case, we have no such header so we will pass an empty JavaScript literal object <code>{}</code>.</p>
+<p>A set of headers containing additional metadata that the STOMP broker can use during the connection process (in our case, we have no such header, so we will pass an empty JavaScript literal object <code>{}</code>)</p>
 </li>
 <li>
-<p>a <code>connectedCallback</code> function that is called back when the client is successfully connected to the STOMP broker.</p>
+<p>A <code>connectedCallback</code> function that is called back when the client is successfully connected to the STOMP broker)</p>
 </li>
 
 </ol>
-<div id="ex_web_stomp_2" data-type="example">
-<h5/>
-
 
 <pre data-type="programlisting" data-code-language="js">// Connection to the STOMP broker
 // and subscription to the device's position destinations.
@@ -250,9 +207,8 @@ function connect(url) {
   // and connects to the STOMP broker
   client.connect({}, connectedCallback);
 }</pre>
-</div>
 
-<p>The <code>connectedCallback</code> is called when the client is successfully connected to the STOMP broker. At this stage, we can clean up the user interface by hiding the <code>Connect</code> button, showing the <code>Disconnect</code> button and the form to send text messages to the devices.</p>
+<p>The <code>connectedCallback</code> is called when the client is successfully connected to the STOMP broker. At this stage, we can clean up the user interface by hiding the <code>Connect</code> button, showing the <code>Disconnect</code> button and the form to send text messages to the devices:</p>
 
 
 <pre data-type="programlisting" data-code-language="js">var connectedCallback =  function(frame) {
@@ -269,40 +225,25 @@ function connect(url) {
 };</pre>
 
 
-<p>If we want to be notified when the connection is <strong>unsuccesful</strong>, we can pass an additional argument to the <code>connect</code> method which is a function that is called back if the connection is <em>not</em> successful.</p>
-<div id="ex_web_stomp_3" data-type="example">
-<h5/>
-
+<p>If we want to be notified when the connection is <em>unsuccesful</em>, we can pass an additional argument to the <code>connect</code> method--a function that is called back if the connection is <em>not</em> successful.</p>
 
 <pre data-type="programlisting" data-code-language="js">client.connect({}, connectedCallback,
   function(frame) {
     // this function is executed if the connection to the STOMP broker failed.
 });</pre>
-</div>
 </section>
-
-
-
-
-
-
-
-
-
-
-
 
 
 <section data-type="sect1" id="_receive_stomp_messages_2">
 <h1>Receive STOMP Messages</h1>
 
-<p>Once the client is connected successfully to the STOMP broker, it can subscribe to a destination using the <code>subscribe</code> method which takes two parameters:</p>
+<p>Once the client is connected successfully to the STOMP broker, it can subscribe to a destination using the <code>subscribe</code> method, which takes two parameters:</p>
 <ol>
 <li>
-<p>the name of the destination</p>
+<p>The name of the destination</p>
 </li>
 <li>
-<p>a function that is called back every time the broker delivers a message to the client.</p>
+<p>A function that is called back every time the broker delivers a message to the client.</p>
 </li>
 
 </ol>
@@ -315,16 +256,16 @@ function connect(url) {
 });</pre>
 </div>
 
-<p>The <code>message</code> parameter that is passed to the subscription callback corresponds to a STOMP message and has 3 properties:</p>
+<p>The <code>message</code> parameter that is passed to the subscription callback corresponds to a STOMP message and has three properties:</p>
 <ul>
 <li>
-<p><code>command</code> - the command of the STOMP frame (when a message is receives, it will always be <code>MESSAGE</code>)</p>
+<p><code>command</code> The command of the STOMP frame (when a message is received, it will always be <code>MESSAGE</code>)</p>
 </li>
 <li>
-<p><code>headers</code> - a JavaScript object containing all the frame headers. It can be empty if the message has no headers</p>
+<p><code>headers</code> A JavaScript object containing all the frame headers; it can be empty if the message has no headers</p>
 </li>
 <li>
-<p><code>body</code> - a string representing the message’s payload. It can be <code>null</code> if the message has no payload.</p>
+<p><code>body</code> A string representing the message’s payload; it can be <code>null</code> if the message has no payload</p>
 </li>
 </ul>
 
