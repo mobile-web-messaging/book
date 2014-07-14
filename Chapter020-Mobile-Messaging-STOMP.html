@@ -373,14 +373,11 @@ interface MWMViewController () &lt;CLLocationManagerDelegate&gt;
 
 <p>The <code>client</code> property will be used to communicate with the STOMP broker after it is created and connected.</p>
 
-<p>We do not need to conform to any protocol to use <code>StompKit</code> as its API is based on <em>blocks</em> instead of protocol delegates.</p>
+<p>We do not need to conform to any protocol to use StompKit, as its API is based on <em>blocks</em> instead of protocol delegates.</p>
 
-<p>The <code>client</code> variable is created when the controller&rsquo;s view is loaded in <code>MWMViewController</code>'s <code>viewDidLoad</code> method implementation. To create it, we need to pass the host and port of the STOMP broker to connect to. These information depends on the broker you are using. If you have configured ActiveMQ on your machine as described in the appendix <a data-type="xref" href="#appendix_activemq">#appendix_activemq</a>, you will be able to connect on its <code>61613</code> port.</p>
+<p>The <code>client</code> variable is created when the controller&rsquo;s view is loaded in <code>MWMViewController</code>'s <code>viewDidLoad</code> method implementation. To create it, we need to pass the host and port of the STOMP broker to connect to. This information depends on the broker you are using. If you have configured ActiveMQ on your machine as described in <a data-type="xref" href="#appendix_activemq">#appendix_activemq</a>, you will be able to connect on its <code>61613</code> port.</p>
 
-<p>The host will depend on your network configuration. On my local network, my server has the IP address <code>192.168.1.25</code>. I will use this value for the example but you will have to replace this by your own server address to run the applications.</p>
-
-<div data-type="example">
-<h5>&nbsp;</h5>
+<p>The host will depend on your network configuration. On my local network, my server has the IP address <em>192.168.1.25</em>. I will use this value for the example, but you should replace this with your own server address to run the applications:</p>
 
 <pre data-code-language="objc" data-type="programlisting">
 #define kHost     @&quot;192.168.1.25&quot;
@@ -399,7 +396,6 @@ interface MWMViewController () &lt;CLLocationManagerDelegate&gt;
 
     self.client = [[STOMPClient alloc] initWithHost:kHost port:kPort];
 }</pre>
-</div>
 </section>
 
 <section data-type="sect1" id="_connect_to_a_stomp_broker">
