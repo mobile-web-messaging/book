@@ -56,10 +56,7 @@
 
 <p>First, we need to close Xcode, because we will modify the project structure to import our dependencies.</p>
 
-<p>After installing CocoaPods by following the <a href="http://guides.cocoapods.org/using/getting-started.html#getting-started">instructions on its website</a>, we create a file named <em>Podfile</em> at the root of the project (in the same directory than <em>Locations.xcodeproj</em>). See Example 2-1.</p>
-
-<div data-type="example" id="ex_mobile_stomp_1">
-<h5>Locations' Podfile</h5>
+<p>After installing CocoaPods by following the <a href="http://guides.cocoapods.org/using/getting-started.html#getting-started">instructions on its website</a>, we create a file named <em>Podfile</em> at the root of the project (in the same directory than <em>Locations.xcodeproj</em>):</p>
 
 <pre data-type="programlisting">
 xcodeproj 'Locations.xcodeproj'
@@ -67,12 +64,9 @@ xcodeproj 'Locations.xcodeproj'
 pod 'StompKit', '~&gt; 0.1'
 
 platform :ios, '5.0'</pre>
-</div>
 
-<p>After saving this file, run the <strong><code>pod install</code></strong> command, shown in Example 2-2.</p>
 
-<div data-type="example" id="ex_mobile_stomp_2">
-<h5>Install Locations dependencies</h5>
+<p>After saving this file, run the <strong><code>pod install</code></strong> command:</p>
 
 <pre data-type="programlisting">
 $ pod install
@@ -84,7 +78,6 @@ Generating Pods project
 Integrating client project
 
 [!] From now on use `Locations.xcworkspace`.</pre>
-</div>
 
 <p>We can now open Xcode again, but we must do it using the <em>workspace</em> file named <em>Locations.xcworkspace</em>, and not the <em>project</em> file named <em>Locations.xcodeproj</em> (Figure 2-5).</p>
 
