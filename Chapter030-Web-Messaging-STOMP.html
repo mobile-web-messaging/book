@@ -4,7 +4,7 @@
 
 <p class="lead">In this chapter, we will write a web application that sends and receives messages using the STOMP protocol over HTML5 Web Sockets.</p>
 
-<p>In <a data-type="xref" href="#ch_introduction_stomp_example">#ch_introduction_stomp_example</a>, we described the Locations application. In this chapter, we will write the web application (shown in Figure 3-1) that consumes the device’s GPS position to display them on a map and sends text messages to the devices.</p>
+<p>In <a data-type="xref" href="#ch_introduction_stomp_example">#ch_introduction_stomp_example</a>, we described the Locations application. In this chapter, we will write the web application (shown in <a data-type="xref" href="img_web_stomp_1"></a>) that consumes the device’s GPS position to display them on a map and sends text messages to the devices.</p>
 
 <figure id="img_web_stomp_1">
 <img src="images/mawm_0301.png" alt="Diagram of the +Locations+ Web application"/>
@@ -12,10 +12,11 @@
 </figure>
 
 
-
+<div data-type="note">
 <p>Throughout the chapter, we will show all the code required to run the application.</p>
 
 <p>The whole application code can be retrieved from the <a href="https://github.com/mobile-web-messaging/code">GitHub repository</a> in the <em>stomp/web/</em> directory.</p>
+</div>
 
 
 <section data-type="sect1" id="_html5_web_sockets">
@@ -67,7 +68,7 @@ The significant difference between them is that a Web Socket is created by sendi
 <p>It will be a very simple one-page web application that can be run from a web server serving static pages. It does not require
 any server-side runtime, as all the code will be executed inside the web browser using JavaScript.</p>
 
-<p>As shown in Example 3-1, let’s bootstrap the web application by creating a <em>locations.html</em> page.</p>
+<p>As shown in <a data-type="xref" href="ex_web_stomp_1"></a>, let’s bootstrap the web application by creating a <em>locations.html</em> page.</p>
 <div id="ex_web_stomp_1" data-type="example">
 <h5>Template for the locations.html web application</h5>
 
@@ -509,7 +510,7 @@ function show(deviceID, lat, lng) {
 }</pre>
 
 
-<p>If we now open this <em>locations.html</em> file in a web browser, we will see a map of the whole world displayed (Figure 3-2).</p>
+<p>If we now open this <em>locations.html</em> file in a web browser, we will see a map of the whole world displayed (<a data-type="xref" href="img_web_stomp_125"></a>).</p>
 
 <figure id="img_web_stomp_125">
 <img src="images/mawm_0302.png" alt="The Locations Web application"/>
@@ -518,7 +519,7 @@ function show(deviceID, lat, lng) {
 
 <p>If we click on the Connect button, markers will appear on the map for each device that broadcasts its coordinates.</p>
 
-<p>In my case, I am using the iOS simulator to run the mobile application developed in Chapter 2; I use the Location tool to simulate a freeway drive (as explained in <a data-type="xref" href="#ch_mobile_stomp_location_simulator">#ch_mobile_stomp_location_simulator</a>). See Figure 3-3.</p>
+<p>In my case, I am using the iOS simulator to run the mobile application developed in <a data-type="xref" href="ch_mobile_stomp"></a>; I use the Location tool to simulate a freeway drive (as explained in <a data-type="xref" href="#ch_mobile_stomp_location_simulator">#ch_mobile_stomp_location_simulator</a>). See <a data-type="xref" href="img_web_stomp_2"></a>.</p>
 
 <figure id="img_web_stomp_2">
 <img src="images/mawm_0303.png" alt="Simulate a freeway drive"/>
@@ -599,14 +600,14 @@ $('#text_form').submit(function() {
 
 <p>If we reload the <em>locations.html</em> file after adding this code, we can now send any text message to a device by selecting it in the list in the Send Text form.</p>
 
-<p>As illustrated in Figure 3-4, let's type text such as "Hello, where are you?" and click on the Send button.</p>
+<p>As illustrated in <a data-type="xref" href="img_web_stomp_3"></a>, let's type text such as "Hello, where are you?" and click on the Send button.</p>
 
 <figure id="img_web_stomp_3">
 <img src="images/mawm_0304.png" alt="Send a text message to a device"/>
 <figcaption>Send a text message to a device</figcaption>
 </figure>
 
-<p>The message is sent when you click on the Send button. The Locations iOS application is subscribed to this destination, so it will receive the message and display it in its table (Figure 3-5).</p>
+<p>The message is sent when you click on the Send button. The Locations iOS application is subscribed to this destination, so it will receive the message and display it in its table (<a data-type="xref" href="img_web_stomp_4"></a>).</p>
 
 <figure id="img_web_stomp_4">
 <img src="images/mawm_0305.png" alt="The Locations iOS application received the text"/>
