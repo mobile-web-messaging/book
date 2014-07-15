@@ -208,7 +208,7 @@ We also add a <code>deviceID</code> string to store the device identifier:</p>
 <p>The device motion will be identified using the pitch, roll, and yaw values.
 To have some graphical feedback as we move the device, we will add three <code>UILabel</code>s that show these three values.</p>
 
-<p>Click on <em>Main.storyboard</em> to open it. From the Object library, drag three Labels on the View's window below the Device ID label. Change their respective text to "pitch," "roll," and "yaw," as illustrated in Figure 6-7.</p>
+<p>Click on <em>Main.storyboard</em> to open it. From the Object library, drag three Labels on the View's window below the Device ID label. Change their respective text to "pitch," "roll," and "yaw," as illustrated in <a data-type="xref" href="img_mobile_mqtt_6"></a>.</p>
 
 <figure id="img_mobile_mqtt_6">
 <img src="images/mawm_0607.png" alt="Add three labels to display the device's pitch, roll and yaw values."/>
@@ -232,7 +232,7 @@ To have some graphical feedback as we move the device, we will add three <code>U
 
 <p>The next step is to connect the three labels in the <em>Main.storyboard</em> to these three outlet properties:</p>
 
-<p>Open the <em>Main.storyboard</em> and control-click on View Controller to see its connection panel. Drag from its pitchLabel property to the corresponding pitch UILabel to connect it (see Figure 6-8).</p>
+<p>Open the <em>Main.storyboard</em> and control-click on View Controller to see its connection panel. Drag from its pitchLabel property to the corresponding pitch UILabel to connect it (see <a data-type="xref" href="img_mobile_mqtt_7"></a>).</p>
 
 <figure id="img_mobile_mqtt_7">
 <img src="images/mawm_0608.png" alt="Connect the pitchLabel outlet property to the pitch UILabel"/>
@@ -334,7 +334,7 @@ periodically in a block. We create a new <code>NSOperationQueue</code> to receiv
 }</pre>
 
 
-<p>At this stage, if you run the Motions application on your iPhone and move it, the pitch, roll, and yaw labels will be updated to reflect the changes in the device motions (Figure 6-10).</p>
+<p>At this stage, if you run the Motions application on your iPhone and move it, the pitch, roll, and yaw labels will be updated to reflect the changes in the device motions (<a data-type="xref" href="img_mobile_mqtt_8"></a>).</p>
 
 <figure id="img_mobile_mqtt_8">
 <img src="images/mawm_0610.png" alt="The motion values change when the device moves."/>
@@ -963,7 +963,7 @@ We then call the <code>warnUser:</code> method in a block that is run on the mai
 <pre data-type="programlisting" data-code-language="bash">$ mosquitto_pub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/alert -m green</pre>
 
 
-<p>After this message is sent, the device will receive it and change its background color to green (Figure 6-11).</p>
+<p>After this message is sent, the device will receive it and change its background color to green (<a data-type="xref" href="img_mobile_mqtt_225"></a>).</p>
 
 <figure id="img_mobile_mqtt_225">
 <img src="images/mawm_0611.png" alt="Alert message is received by the Motions iOS application"/>
