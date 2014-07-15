@@ -3,7 +3,7 @@
 
 <p class="lead">In this chapter, we will write our first messaging client: a native application running on an iPhone. We will use STOMP to send and receive messages using the Objective-C library StompKit.</p>
 
-<p>In <a data-type="xref" href="#ch_introduction_stomp_example">#ch_introduction_stomp_example</a>, we described the Locations application. In this chapter, we will write the iOS application that broadcasts the device&rsquo;s position and receive text messages (Figure 2-1).</p>
+<p>In <a data-type="xref" href="#ch_introduction_stomp_example">#ch_introduction_stomp_example</a>, we described the Locations application. In this chapter, we will write the iOS application that broadcasts the device&rsquo;s position and receive text messages (<a data-type="xref" href="img_mobile_stomp_1"</a>).</p>
 
 <figure id="img_mobile_stomp_1"><img alt="Diagram of the Locations iOS application" src="images/mawm_0201.png" />
 <figcaption>Diagram of the Locations iOS application</figcaption>
@@ -28,19 +28,19 @@
 
 <p>We will use <a href="https://developer.apple.com/xcode/">Xcode</a> to create the <code>Locations</code> iOS application.</p>
 
-<p>Once Xcode is installed and started, we create a new project from its launch screen, as illustrated in Figure 2-2:</p>
+<p>Once Xcode is installed and started, we create a new project from its launch screen, as illustrated in <a data-type="xref" href="img_mobile_stomp_125"></a>:</p>
 
 <figure id="img_mobile_stomp_125"><img alt="XCode Launch screen" src="images/mawm_0202.png" />
 <figcaption>Select &quot;Create a new Xcode project&quot; from Xcode launch screen</figcaption>
 </figure>
 
-<p>The application consists of a single view, so we choose the Single View Application template in iOs &rarr; Application from the template screen, as illustrated in Figure 2-3.</p>
+<p>The application consists of a single view, so we choose the Single View Application template in iOs &rarr; Application from the template screen, as illustrated in <a data-type="xref" href="img_mobile_stomp_2"></a>.</p>
 
 <figure id="img_mobile_stomp_2"><img alt="XCode template screen" src="images/mawm_0203.png" />
 <figcaption>Select Single View Application from the template screen</figcaption>
 </figure>
 
-<p>We will call the project Locations and select to build it only for iPhone devices, as illustrated in Figure 2-4.</p>
+<p>We will call the project Locations and select to build it only for iPhone devices, as illustrated in <a data-type="xref" href="img_mobile_stomp_3"></a>.</p>
 
 <figure id="img_mobile_stomp_3"><img alt="XCode project options screen" src="images/mawm_0204.png" />
 <figcaption>XCode project options screen</figcaption>
@@ -79,7 +79,7 @@ Integrating client project
 
 [!] From now on use `Locations.xcworkspace`.</pre>
 
-<p>We can now open Xcode again, but we must do it using the <em>workspace</em> file named <em>Locations.xcworkspace</em>, and not the <em>project</em> file named <em>Locations.xcodeproj</em> (Figure 2-5).</p>
+<p>We can now open Xcode again, but we must do it using the <em>workspace</em> file named <em>Locations.xcworkspace</em>, and not the <em>project</em> file named <em>Locations.xcodeproj</em> (<a data-type="xref" href="img_mobile_stomp_4"></a>).</p>
 
 <figure id="img_mobile_stomp_4"><img alt="Open the Workspace file" src="images/mawm_0205.png" />
 <figcaption>Open the Workspace file</figcaption>
@@ -92,7 +92,7 @@ Integrating client project
 Command symbol is not displayed in PDF.
 -->
 
-<p>If we run the application by selecting Product &rarr; Run (or pressing <code>⌘+R</code>), the iOS simulator starts and opens the application, which is composed of a blank view (Figure 2-6).</p>
+<p>If we run the application by selecting Product &rarr; Run (or pressing <code>⌘+R</code>), the iOS simulator starts and opens the application, which is composed of a blank view (<a data-type="xref" href="img_mobile_stomp_5"></a>).</p>
 
 <figure id="img_mobile_stomp_5"><img alt="Locations Blank View" src="images/mawm_0206.png" />
 <figcaption>Blank view of the Locations application</figcaption>
@@ -108,7 +108,7 @@ Command symbol is not displayed in PDF.
 
 <p>Because the application will run only on iPhone devices,&nbsp;the entire user interface will be set up in the <em>Main.storyboard</em> file.</p>
 
-<p>Click on <em>Main.storyboard</em> to open it. From the Object library, drag a Label on the View's window. Place it at the top of the view and change the text to "Device ID," as illustrated in Figure 2-7.</p>
+<p>Click on <em>Main.storyboard</em> to open it. From the Object library, drag a Label on the View's window. Place it at the top of the view and change the text to "Device ID," as illustrated in <a data-type="xref" href="img_mobile_stomp_6"></a>.</p>
 
 <figure id="img_mobile_stomp_6"><img alt="Add the Device ID label" src="images/mawm_0207.png" />
 <figcaption>Add the Device ID label</figcaption>
@@ -120,7 +120,7 @@ Command symbol is not displayed in PDF.
 <p>However, the example code in the <a href="https://github.com/mobile-web-messaging/code">GitHib repository</a> is constrained correctly.</p>
 </div>
 
-<p>The UUID that we will generate is quite long, so we will change its appearance by setting its Font to System 13.0 and its Alignment to centered to fit the screen, as illustrated in Figure 2-8.</p>
+<p>The UUID that we will generate is quite long, so we will change its appearance by setting its Font to System 13.0 and its Alignment to centered to fit the screen, as illustrated in <a data-type="xref" href="img_mobile_stomp_7"></a>.</p>
 
 <figure id="img_mobile_stomp_7"><img alt="Change the appearance of the device ID label" src="images/mawm_0208.png" />
 <figcaption>Change the appearance of the device ID label</figcaption>
@@ -139,7 +139,7 @@ Command symbol is not displayed in PDF.
 
 @end</pre>
 
-<p>Open the <em>Main.storyboard</em> and control-click on View Controller to see its connection panel. Drag from deviceIDLabel to the UILabel to connect it. See Figure 2-9.</p>
+<p>Open the <em>Main.storyboard</em> and control-click on View Controller to see its connection panel. Drag from deviceIDLabel to the UILabel to connect it. See <a data-type="xref" href="img_mobile_stomp_8"></a>.</p>
 
 <figure id="img_mobile_stomp_8"><img alt="Connect the deviceIDLabel outlet property to the device ID UILabel" src="images/mawm_0209.png" />
 <figcaption>Connect the deviceIDLabel outlet property to the device ID UILabel</figcaption>
