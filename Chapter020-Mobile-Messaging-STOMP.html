@@ -188,13 +188,13 @@ Command symbol is not displayed in PDF.
 
 <p>We will retrieve the geolocation data from the device&rsquo;s GPS sensor to send them using STOMP messages. However, we also want to have some graphical feedback to show that the data changes over the time as we move with our device.</p>
 
-<p>To display the geolocation data, we will add a <code>UILabel</code> to the view and change its text to "Current position: ???" (Figure 2-11).</p>
+<p>To display the geolocation data, we will add a <code>UILabel</code> to the view and change its text to "Current position: ???" (<a data-type="xref" href="img_mobile_stomp_10"></a>).</p>
 
 <figure id="img_mobile_stomp_10"><img alt="Add the current position label" src="images/mawm_0211.png" />
 <figcaption>Add the current position label</figcaption>
 </figure>
 
-<p>We will change its appearance to match the <code>deviceID</code> label by setting its Font to System 13.0 and its Alignment to centered (Figure 2-12).</p>
+<p>We will change its appearance to match the <code>deviceID</code> label by setting its Font to System 13.0 and its Alignment to centered (<a data-type="xref" href="img_mobile_stomp_11"></a>).</p>
 
 <figure id="img_mobile_stomp_11"><img alt="Change the current position label appearance" src="images/mawm_0212.png" />
 <figcaption>Change the appearance of the current position label</figcaption>
@@ -205,7 +205,7 @@ Command symbol is not displayed in PDF.
 <pre data-code-language="objc" data-type="programlisting">
 @property (weak, nonatomic) IBOutlet UILabel *currentPositionLabel;</pre>
 
-<p>We then bind this property to the label. Open the <em>Main.storyboard</em> and control-click on View Controller to see its connection panel. Drag from currentPositionLabel to the label to connect it. See Figure 2-13.</p>
+<p>We then bind this property to the label. Open the <em>Main.storyboard</em> and control-click on View Controller to see its connection panel. Drag from currentPositionLabel to the label to connect it. See <a data-type="xref" href="img_mobile_stomp_12"></a>.</p>
 
 <figure id="img_mobile_stomp_12"><img alt="Connect the currentPositionLabel outlet property to the current position UILabel" src="images/mawm_0213.png" />
 <figcaption>Connect the currentPositionLabel outlet property to the current position UILabel</figcaption>
@@ -219,7 +219,7 @@ Command symbol is not displayed in PDF.
 
 <p>iOS provides the <code>CoreLocation</code> framework to access the location data.</p>
 
-<p>We need to add it to the libraries linked by the application. Click on the Locations project and then the Locations target. In the General tab, under the Linked Frameworks and Libraries section, click on the <code>+</code> button. In the selection window, type "CoreLocation," select the CoreLocation.framework, and click on the Add button (Figure 2-14).</p>
+<p>We need to add it to the libraries linked by the application. Click on the Locations project and then the Locations target. In the General tab, under the Linked Frameworks and Libraries section, click on the <code>+</code> button. In the selection window, type "CoreLocation," select the CoreLocation.framework, and click on the Add button (<a data-type="xref" href="img_mobile_stomp_13"></a>).</p>
 
 <figure id="img_mobile_stomp_13"><img alt="Add the CoreLocation framework" src="images/mawm_0214.png" />
 <figcaption>Add the CoreLocation framework</figcaption>
@@ -332,13 +332,13 @@ interface MWMViewController () &lt;CLLocationManagerDelegate&gt;
     [self stopUpdatingCurrentLocation];
 }</pre>
 
-<p>The first time the application asks the <code>locationManager</code> to start updating the device location, the user will see an alert view asking for permission to access the device location (Figure 2-15).</p>
+<p>The first time the application asks the <code>locationManager</code> to start updating the device location, the user will see an alert view asking for permission to access the device location (<a data-type="xref" href="img_mobile_stomp_14"></a>).</p>
 
 <figure id="img_mobile_stomp_14"><img alt="Permission to use the current location" src="images/mawm_0215.png" />
 <figcaption>Permission to use the current location</figcaption>
 </figure>
 
-<p>If the user taps OK, the <code>locationManager</code> will start updating the device location and the label for its current position will be updated with the latitude and longitude (Figure 2-16).</p>
+<p>If the user taps OK, the <code>locationManager</code> will start updating the device location and the label for its current position will be updated with the latitude and longitude (<a data-type="xref" href="img_mobile_stomp_15"></a>).</p>
 
 <figure id="img_mobile_stomp_15"><img alt="Display the current position of the device" src="images/mawm_0216.png" />
 <figcaption>Display the current position of the device</figcaption>
@@ -695,7 +695,7 @@ content-length:122
 
 <p>In the right side panel, select Attributes in the top menu to display all the attributes associated to this topic.</p>
 
-<p>To check whether the broker is receiving the messages on this destination, the check the Enqueue count attribute. It corresponds to the messages that have been <em>enqueued</em> (or, in other words, <em>sent</em>) to the destination. We see that this value is growing over time (it was at 113 when the screenshot in Figure 2-17 was captured). This confirms that the broker is actually receiving the messages sent by the mobile application.</p>
+<p>To check whether the broker is receiving the messages on this destination, the check the Enqueue count attribute. It corresponds to the messages that have been <em>enqueued</em> (or, in other words, <em>sent</em>) to the destination. We see that this value is growing over time (it was at 113 when the screenshot in <a data-type="xref" href="img_mobile_stomp_16"></a> was captured). This confirms that the broker is actually receiving the messages sent by the mobile application.</p>
 
 <figure id="img_mobile_stomp_16"><img alt="Check the number of messages sent to a destination in ActiveMQ admin console" src="images/mawm_0217.png" />
 <figcaption>Check the number of messages sent to a destination in the ActiveMQ admin console</figcaption>
@@ -783,19 +783,19 @@ priority:4
 
 <p>We will write the graphical part first by adding a <code>UITable</code> to the user interface.</p>
 
-<p>Click on <em>Main.storyboard</em> to open it. From the Object library, drag a Table View on the View&rsquo;s window. Place it below the Current Position UILabel (see Figure 2-18).</p>
+<p>Click on <em>Main.storyboard</em> to open it. From the Object library, drag a Table View on the View&rsquo;s window. Place it below the Current Position UILabel (see <a data-type="xref" href="img_mobile_stomp_162"></a>).</p>
 
 <figure id="img_mobile_stomp_162"><img alt="Add a Table View" src="images/mawm_0218.png" />
 <figcaption>Add a Table View</figcaption>
 </figure>
 
-<p>From the Object library, drag a Table View Cell inside the Table View (see Figure 2-19).</p>
+<p>From the Object library, drag a Table View Cell inside the Table View (see <a data-type="xref" href="img_mobile_stomp_17"></a>).</p>
 
 <figure id="img_mobile_stomp_17"><img alt="Add a Table View Cell" src="images/mawm_0219.png" />
 <figcaption>Add a Table View Cell</figcaption>
 </figure>
 
-<p>We will change the Table View Cell properties by setting its Style to Basic and its Identifier to TextCell (Figure 2-20).</p>
+<p>We will change the Table View Cell properties by setting its Style to Basic and its Identifier to TextCell (<a data-type="xref" href="img_mobile_stomp_18"></a>).</p>
 
 <figure id="img_mobile_stomp_18"><img alt="Edit the Table View Cell Properties" src="images/mawm_0220.png" />
 <figcaption>Edit the Table View Cell properties</figcaption>
@@ -810,7 +810,7 @@ priority:4
 
 @end</pre>
 
-<p>We need to bind this outlet property to the table view. Open the <em>Main.storyboard</em> and control-click on View Controller to see its connection panel. Drag from tableView to the table to connect it. See Figure 2-21.</p>
+<p>We need to bind this outlet property to the table view. Open the <em>Main.storyboard</em> and control-click on View Controller to see its connection panel. Drag from tableView to the table to connect it. See <a data-type="xref" href="img_mobile_stomp_182"></a>.</p>
 
 <figure id="img_mobile_stomp_182"><img alt="Connect the tableView outlet property to the Table View" src="images/mawm_0221.png" />
 <figcaption>Connect the tableView outlet property to the Table View</figcaption>
@@ -818,13 +818,13 @@ priority:4
 
 <p>We also need to connect the View Controller to the Table View and declare it as its dataSource and delegate.</p>
 
-<p>Open the <em>Main.storyboard</em> and control-click on Table View to see its connection panel. Drag from dataSource to the View Controller to connect it (Figure 2-22).</p>
+<p>Open the <em>Main.storyboard</em> and control-click on Table View to see its connection panel. Drag from dataSource to the View Controller to connect it (<a data-type="xref" href="img_mobile_stomp_19"></a>).</p>
 
 <figure id="img_mobile_stomp_19"><img alt="Connect the Table View's dataSource to the View Controller" src="images/mawm_0222.png" />
 <figcaption>Connect the Table View's dataSource to the View Controller</figcaption>
 </figure>
 
-<p>We do the same operation to connect the Table View's delegate property to the View Controller (Figure 2-23).</p>
+<p>We do the same operation to connect the Table View's delegate property to the View Controller (<a data-type="xref" href="img_mobile_stomp_20"></a>).</p>
 
 <figure id="img_mobile_stomp_20"><img alt="Connect the Table View's delegate to the View Controller" src="images/mawm_0223.png" />
 <figcaption>Connect the Table View's delegate to the View Controller</figcaption>
@@ -1008,7 +1008,7 @@ STOMPSubscription *subscription;</pre>
 
 <p>Go to the ActiveMQ admin console and browse to the device text destination (in my case, its name is device.2262EC25-E9FD-4578-BADE-4E113DE45934.text) and click on the Send tab.</p>
 
-<p>As illustrated in Figure 2-24, fill the text area with a plain-text string (e.g., "Hello, where are you?") and set the body format to Plain Text.</p>
+<p>As illustrated in <a data-type="xref" href="img_mobile_stomp_21"></a>, fill the text area with a plain-text string (e.g., "Hello, where are you?") and set the body format to Plain Text.</p>
 
 <figure id="img_mobile_stomp_21"><img alt="Send a Message using ActiveMQ Admin Console" src="images/mawm_0224.png" />
 <figcaption>Send a message using the ActiveMQ Admin Console</figcaption>
@@ -1060,7 +1060,7 @@ Hello, where are you?
 
 <p>StompKit uses Grand Central Dispatch&rsquo;s global queue to handle the communication between the client and the STOMP brokers. The <code>STOMPMessageHandler</code> block is called on that queue. However, any code that deals with <code>UIKit</code> (such as reloading the <code>tableView</code>) <em>must</em> be executed on the queue bound to the main thread. This is why we must wrap the <code>reloadData</code> call into a block executed on the main queue.</p>
 
-<p>If we restart the application and send another message on the destination with the ActiveMQ admin console, the table will display the text as soon as it is received. See Figure 2-25.</p>
+<p>If we restart the application and send another message on the destination with the ActiveMQ admin console, the table will display the text as soon as it is received. See Figure <a data-type="xref" href="img_mobile_stomp_22"></a>.</p>
 
 <figure id="img_mobile_stomp_22"><img alt="The Received Text is Displayed in the Table" src="images/mawm_0225.png" />
 <figcaption>The received text is displayed in the table</figcaption>
