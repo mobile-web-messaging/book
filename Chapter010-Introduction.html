@@ -293,7 +293,7 @@ However, a queue is used to handle the device’s text as only one single device
 </li>
 </ul>
 
-<p>The Locations iOS application will send the GPS data using a JSON representation in the message payload (Example 1-1).</p>
+<p>The Locations iOS application will send the GPS data using a JSON representation in the message payload (<a data-type="xref" href="ex_example_gps_data"</a>).</p>
 
 <div id="ex_example_gps_data" data-type="example">
 <h5>Geolocation message payload</h5>
@@ -323,7 +323,7 @@ be represented as a simple plain-text string:</p>
 <p>A more realistic representation of this message would also contain additional information such as the identifier of the headquarters sending the message.
 We are using a plain-text version, because this format is sufficient for our preliminary example.</p>
 
-<p>With the messaging topology and data representation known, we can now refine the Locations application diagram (Figure 1-6).</p>
+<p>With the messaging topology and data representation known, we can now refine the Locations application diagram (<a data-type="xref" href="img_example_app_2"</a>).</p>
 
 <figure id="img_example_app_2">
 <img src="images/mawm_0106.png" alt="Diagram of the Locations application"/>
@@ -354,14 +354,14 @@ We are using a plain-text version, because this format is sufficient for our pre
 
 <p>Following this model, we will write a simple application called Motions to illustrate the use of the MQTT protocol. The iOS application will track the device motion and change its background color to advise its user when an alert message is received.</p>
 
-<p>Device motion will be represented by three values corresponding to its pitch, roll, and yaw values, as shown in Figure 1-7.</p>
+<p>Device motion will be represented by three values corresponding to its pitch, roll, and yaw values, as shown in <a data-type="xref" href="img_mqtt_example_app_0"</a>.</p>
 
 <figure id="img_mqtt_example_app_0">
 <img src="images/mawm_0107.png" alt="The pitch, roll and yaw values represents the device motion"/>
 <figcaption>The pitch, roll, and yaw values represent the device motion</figcaption>
 </figure>
 
-<p>The pending web application will display the motions of all devices that broadcast them and be able to send alert messages to them (Figure 1-8):</p>
+<p>The pending web application will display the motions of all devices that broadcast them and be able to send alert messages to them (<a data-type="xref" href="img_mqtt_example_app_1"</a>):</p>
 <ol>
 <li>
 <p>In <a data-type="xref" href="#ch_mobile_mqtt">#ch_mobile_mqtt</a>, we will write the Motions iOS application using the MQTT protocol to send data about the device motions and receive alerts.</p>
@@ -451,7 +451,7 @@ We are using a plain-text version, because this format is sufficient for our pre
 </li>
 </ul>
 
-<p>The Motions iOS application will send the device motions data in a binary message where its payload will be composed of three 64-bit floats representing the device’s pitch, roll, and yaw values (Example 1-3).</p>
+<p>The Motions iOS application will send the device motions data in a binary message where its payload will be composed of three 64-bit floats representing the device’s pitch, roll, and yaw values (<a data-type="xref" href="ex_example_motion_data"</a>).</p>
 <div id="ex_example_motion_data" data-type="example">
 <h5>Device motion message paylaod</h5>
 
@@ -465,7 +465,7 @@ We are using a plain-text version, because this format is sufficient for our pre
 </div>
 
 <p>The alert messages that will be consumed by the Motions iOS application will
-be represented as a simple plain-text string corresponding to a color. The Motions application will use this payload to temporarily change its background color to alert the user (Example 1-4).</p>
+be represented as a simple plain-text string corresponding to a color. The Motions application will use this payload to temporarily change its background color to alert the user (<a data-type="xref" href="ex_example_alert_data"</a>).</p>
 <div id="ex_example_alert_data" data-type="example">
 <h5>Alert message payload</h5>
 
@@ -477,7 +477,7 @@ be represented as a simple plain-text string corresponding to a color. The Motio
 </dl>
 </div>
 
-<p>With the messaging topology and data representation known, we can now refine the Motions application diagram (Figure 1-9).</p>
+<p>With the messaging topology and data representation known, we can now refine the Motions application diagram (<a data-type="xref" href="img_mqtt_example_app_2"</a>).</p>
 
 <figure id="img_mqtt_example_app_2">
 <img src="images/mawm_0109.png" alt="Diagram of the Motions application"/>
