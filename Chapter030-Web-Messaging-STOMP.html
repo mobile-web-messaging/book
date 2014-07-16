@@ -547,17 +547,17 @@ function show(deviceID, lat, lng) {
 <h1>Send STOMP Messages</h1>
 
 <p>The STOMP client can send messages to the broker using its <code>send</code> method, which takes three parameters:</p>
-<ul>
-<li>
-<p><code>destination</code> The name of the destination</p>
-</li>
-<li>
-<p><code>headers</code> A JavaScript object containing any additional headers</p>
-</li>
-<li>
-<p><code>body</code> A string corresponding to the message payload</p>
-</li>
-</ul>
+
+<dl>
+<dt><code>destination</code></dt> 
+<dd>The name of the destination</dd>
+
+<dt><code>headers</code></dt>
+<dd>A JavaScript object containing any additional headers</dd>
+
+<dt><code>body</code></dt> 
+<dd>A string corresponding to the message payload</dd>
+</dl>
 
 <p>Both <code>headers</code> and <code>body</code> are optional and can be omitted. However, if you want to set the message body, you must also specify the headers (using an empty
 JavaScript literal if you have no header to set):</p>
