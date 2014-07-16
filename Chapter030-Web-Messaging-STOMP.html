@@ -181,7 +181,7 @@ $('#connect_form').submit(function() {
 
 <p>In the <code>connect</code> method, we create the STOMP client by calling <code>Stomp.client(url)</code>.
 Once we have the <code>client</code> object, we call its <code>connect</code> method to connect to the STOMP broker. This method takes at least two arguments:</p>
-<ol>
+<ul>
 <li>
 <p>A set of headers containing additional metadata that the STOMP broker can use during the connection process (in our case, we have no such header, so we will pass an empty JavaScript literal object <code>{}</code>)</p>
 </li>
@@ -189,7 +189,7 @@ Once we have the <code>client</code> object, we call its <code>connect</code> me
 <p>A <code>connectedCallback</code> function that is called back when the client is successfully connected to the STOMP broker)</p>
 </li>
 
-</ol>
+</ul>
 
 <pre data-type="programlisting" data-code-language="js">// Connection to the STOMP broker
 // and subscription to the device's position destinations.
