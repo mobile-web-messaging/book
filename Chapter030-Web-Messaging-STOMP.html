@@ -258,17 +258,17 @@ function connect(url) {
 </div>
 
 <p>The <code>message</code> parameter that is passed to the subscription callback corresponds to a STOMP message and has three properties:</p>
-<ul>
-<li>
-<p><code>command</code> The command of the STOMP frame (when a message is received, it will always be <code>MESSAGE</code>)</p>
-</li>
-<li>
-<p><code>headers</code> A JavaScript object containing all the frame headers; it can be empty if the message has no headers</p>
-</li>
-<li>
-<p><code>body</code> A string representing the message’s payload; it can be <code>null</code> if the message has no payload</p>
-</li>
-</ul>
+
+<dl>
+<dt><code>command</code></dt> 
+<dd>The command of the STOMP frame (when a message is received, it will always be <code>MESSAGE</code>)</dd></p>
+
+<dt><code>headers</code></dt>
+<dd>A JavaScript object containing all the frame headers; it can be empty if the message has no headers</dd>
+
+<dt><code>body</code></dt> 
+<dd>A string representing the message’s payload; it can be <code>null</code> if the message has no payload</dd>
+</dl>
 
 
 
