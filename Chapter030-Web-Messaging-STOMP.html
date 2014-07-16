@@ -188,7 +188,6 @@ Once we have the <code>client</code> object, we call its <code>connect</code> me
 <li>
 <p>A <code>connectedCallback</code> function that is called back when the client is successfully connected to the STOMP broker)</p>
 </li>
-
 </ul>
 
 <pre data-type="programlisting" data-code-language="js">// Connection to the STOMP broker
@@ -246,8 +245,8 @@ function connect(url) {
 <li>
 <p>A function that is called back every time the broker delivers a message to the client.</p>
 </li>
-
 </ul>
+
 <div id="ex_web_stomp_4" data-type="example">
 <h5/>
 
@@ -261,7 +260,7 @@ function connect(url) {
 
 <dl>
 <dt><code>command</code></dt> 
-<dd>The command of the STOMP frame (when a message is received, it will always be <code>MESSAGE</code>)</dd></p>
+<dd>The command of the STOMP frame (when a message is received, it will always be <code>MESSAGE</code>)</dd>
 
 <dt><code>headers</code></dt>
 <dd>A JavaScript object containing all the frame headers; it can be empty if the message has no headers</dd>
