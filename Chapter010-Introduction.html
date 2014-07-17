@@ -44,7 +44,7 @@
 <p>In this book, I will always use the general terms of <em>producer</em> and <em>consumer</em>.</p>
 </div>
 
-<p>One key aspect of messaging is that it loosely couples its participants. The producer and consumer know nothing about each other. When one application produces a message, it has no knowledge of when or where the message will be consumed. There may be one or many consumers that will receive the message. It is also possible that the message will not be consumed at all if nobody has registered any interest for it.</p>
+<p>One key aspect of messaging is that it loosely couples its participants. The producer and consumer know nothing about each other.<a contenteditable="false" data-primary="messaging" data-secondary="concepts" data-tertiary="loose coupling of participants" data-type="indexterm">&nbsp;</a> When one application produces a message, it has no knowledge of when or where the message will be consumed. There may be one or many consumers that will receive the message. It is also possible that the message will not be consumed at all if nobody has registered any interest for it.</p>
 
 <p>Likewise, when an application consumes a message, it does not know which application sent it, as they never communicate directly. The consumed message could contain enough information to identify the application, but that is not required (and more often than not, it is not necessary).</p>
 
