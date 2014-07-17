@@ -1,7 +1,7 @@
 <section data-type="chapter" id="ch_mobile_stomp" xmlns="http://www.w3.org/1999/xhtml">
 <h1>Mobile Messaging with STOMP</h1>
 
-<p class="lead">In this chapter, we will write our first messaging client: a native application running on an iPhone. <a contenteditable="false" data-primary="mobile messaging" data-secondary="using STOMP" data-type="indexterm" id="mobmessSTOMP">&nbsp;</a>We will use STOMP<a contenteditable="false" data-primary="STOMP" data-secondary="mobile messaging with" data-type="indexterm" id="STOMPmm">&nbsp;</a> to send and receive messages using the Objective-C library<a contenteditable="false" data-primary="StompKit library" data-type="indexterm">&nbsp;</a> StompKit.<a contenteditable="false" data-primary="Objective-C" data-secondary="StompKit library" data-type="indexterm">&nbsp;</a></p>
+<p class="lead">In this chapter, we will write our first messaging client: a native application running on an iPhone. We will use STOMP to send and receive messages using the Objective-C library StompKit.</p>
 
 <p>In <a data-type="xref" href="#ch_introduction_stomp_example">#ch_introduction_stomp_example</a>, we described the Locations application. In this chapter, we will write the iOS application that broadcasts the device&rsquo;s position and receive text messages ().</p>
 
@@ -26,7 +26,7 @@
 <section data-type="sect1" id="_create_the_code_locations_code_project_with_xcode">
 <h1>Create the Locations Project with Xcode</h1>
 
-<p>We will<a contenteditable="false" data-primary="Xcode" data-secondary="jusing to create Locations iOS application" data-type="indexterm">&nbsp;</a> use <a href="https://developer.apple.com/xcode/">Xcode</a> to create the <code>Locations</code> iOS <a contenteditable="false" data-primary="STOMP" data-secondary="mobile messaging with" data-tertiary="creating Locations project with Xcode" data-type="indexterm">&nbsp;</a>application.</p>
+<p>We will use <a href="https://developer.apple.com/xcode/">Xcode</a> to create the <code>Locations</code> iOS application.</p>
 
 <p>Once Xcode is installed and started, we create a new project from its launch screen, as illustrated in :</p>
 
@@ -52,7 +52,7 @@
 <section data-type="sect1" id="ch_mobile_stomp_cocoapods">
 <h1>Create the Podfile</h1>
 
-<p>To import the library that we will use to send and receive messages, we will set up the project to use <a href="http://cocoapods.org">CocoaPods</a>, an Objective-C Library Manager.</p>
+<p>To import the library that we will use to send and receive messages, we will set up the project to use <a href="http://cocoapods.org">CocoaPods</a>, an Objective-C Library Manager.<a contenteditable="false" data-primary="CocoaPods library manager" data-type="indexterm">&nbsp;</a></p>
 
 <p>First, we need to close Xcode, because we will modify the project structure to import our dependencies.</p>
 
@@ -1103,6 +1103,6 @@ Hello, where are you?
 	</li>
 </ul>
 
-<p>Sending and consuming messages is only possible once the client is <em>successfully</em> connected to the STOMP broker. Due to the event-driven design of StompKit, this is the case when the <a contenteditable="false" data-primary="mobile messaging" data-secondary="using STOMP" data-startref="mobmessSTOMP" data-type="indexterm">&nbsp;</a><code>completionHandler</code> block is executed <a contenteditable="false" data-primary="STOMP" data-secondary="mobile messaging with" data-startref="STOMPmm" data-type="indexterm">&nbsp;</a>without an error in <code>connectWithHeaders:completionHandler:</code>.</p>
+<p>Sending and consuming messages is only possible once the client is <em>successfully</em> connected to the STOMP broker. Due to the event-driven design of StompKit, this is the case when the <code>completionHandler</code> block is executed without an error in <code>connectWithHeaders:completionHandler:</code>.</p>
 </section>
 </section>
