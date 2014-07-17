@@ -80,7 +80,7 @@
 <figcaption>Diagram of the point-to-point topology</figcaption>
 </figure>
 
-<p>This is also called a <em>one-to-one messaging model</em>: for <em>one</em> message sent by a producer to the queue, there is only <em>one</em> consumer that will receive it.</p>
+<p>This is also called a <em>one-to-one messaging model</em>: for <em>one</em> message sent by a producer to the queue, there is only <em>one</em> consumer that will receive it.<a contenteditable="false" data-primary="one-to-one messaging model" data-see-also="point-to-point messaging model" data-type="indexterm">&nbsp;</a></p>
 
 <p>If there are no consumers bound to the queue, the broker will retain the incoming messages until a consumer subscribes and then deliver the message to this consumer. Some messaging brokers allow messages to <em>expire</em> if they remain in the queue for a certain amount of time. This can be useful to avoid having consumers receive a message corresponding to stale data.</p>
 
