@@ -1,9 +1,9 @@
 <section data-type="chapter" id="ch_mobile_stomp" xmlns="http://www.w3.org/1999/xhtml">
 <h1>Mobile Messaging with STOMP</h1>
 
-<p class="lead">In this chapter, we will write our first messaging client: a native application running on an iPhone. We will use STOMP to send and receive messages using the Objective-C library StompKit.</p>
+<p class="lead">In this chapter, we will write our first messaging client: a native application running on an iPhone. <a contenteditable="false" data-primary="mobile messaging" data-secondary="using STOMP" data-type="indexterm" id="mobmessSTOMP">&nbsp;</a>We will use STOMP to send and receive messages using the Objective-C library StompKit.</p>
 
-<p>In <a data-type="xref" href="#ch_introduction_stomp_example">#ch_introduction_stomp_example</a>, we described the Locations application. In this chapter, we will write the iOS application that broadcasts the device&rsquo;s position and receive text messages (<a data-type="xref" href="img_mobile_stomp_1"></a>).</p>
+<p>In <a data-type="xref" href="#ch_introduction_stomp_example">#ch_introduction_stomp_example</a>, we described the Locations application. In this chapter, we will write the iOS application that broadcasts the device&rsquo;s position and receive text messages ().</p>
 
 <figure id="img_mobile_stomp_1"><img alt="Diagram of the Locations iOS application" src="images/mawm_0201.png" />
 <figcaption>Diagram of the Locations iOS application</figcaption>
@@ -28,19 +28,19 @@
 
 <p>We will use <a href="https://developer.apple.com/xcode/">Xcode</a> to create the <code>Locations</code> iOS application.</p>
 
-<p>Once Xcode is installed and started, we create a new project from its launch screen, as illustrated in <a data-type="xref" href="img_mobile_stomp_125"></a>:</p>
+<p>Once Xcode is installed and started, we create a new project from its launch screen, as illustrated in :</p>
 
 <figure id="img_mobile_stomp_125"><img alt="XCode Launch screen" src="images/mawm_0202.png" />
 <figcaption>Select &quot;Create a new Xcode project&quot; from Xcode launch screen</figcaption>
 </figure>
 
-<p>The application consists of a single view, so we choose the Single View Application template in iOs &rarr; Application from the template screen, as illustrated in <a data-type="xref" href="img_mobile_stomp_2"></a>.</p>
+<p>The application consists of a single view, so we choose the Single View Application template in iOs &rarr; Application from the template screen, as illustrated in .</p>
 
 <figure id="img_mobile_stomp_2"><img alt="XCode template screen" src="images/mawm_0203.png" />
 <figcaption>Select Single View Application from the template screen</figcaption>
 </figure>
 
-<p>We will call the project Locations and select to build it only for iPhone devices, as illustrated in <a data-type="xref" href="img_mobile_stomp_3"></a>.</p>
+<p>We will call the project Locations and select to build it only for iPhone devices, as illustrated in .</p>
 
 <figure id="img_mobile_stomp_3"><img alt="XCode project options screen" src="images/mawm_0204.png" />
 <figcaption>XCode project options screen</figcaption>
@@ -65,7 +65,6 @@ pod 'StompKit', '~&gt; 0.1'
 
 platform :ios, '5.0'</pre>
 
-
 <p>After saving this file, run the <strong><code>pod install</code></strong> command:</p>
 
 <pre data-type="programlisting">
@@ -79,7 +78,7 @@ Integrating client project
 
 [!] From now on use `Locations.xcworkspace`.</pre>
 
-<p>We can now open Xcode again, but we must do it using the <em>workspace</em> file named <em>Locations.xcworkspace</em>, and not the <em>project</em> file named <em>Locations.xcodeproj</em> (<a data-type="xref" href="img_mobile_stomp_4"></a>).</p>
+<p>We can now open Xcode again, but we must do it using the <em>workspace</em> file named <em>Locations.xcworkspace</em>, and not the <em>project</em> file named <em>Locations.xcodeproj</em> ().</p>
 
 <figure id="img_mobile_stomp_4"><img alt="Open the Workspace file" src="images/mawm_0205.png" />
 <figcaption>Open the Workspace file</figcaption>
@@ -92,7 +91,7 @@ Integrating client project
 Command symbol is not displayed in PDF.
 -->
 
-<p>If we run the application by selecting Product &rarr; Run (or pressing <code>⌘+R</code>), the iOS simulator starts and opens the application, which is composed of a blank view (<a data-type="xref" href="img_mobile_stomp_5"></a>).</p>
+<p>If we run the application by selecting Product &rarr; Run (or pressing <code>⌘+R</code>), the iOS simulator starts and opens the application, which is composed of a blank view ().</p>
 
 <figure id="img_mobile_stomp_5"><img alt="Locations Blank View" src="images/mawm_0206.png" />
 <figcaption>Blank view of the Locations application</figcaption>
@@ -108,7 +107,7 @@ Command symbol is not displayed in PDF.
 
 <p>Because the application will run only on iPhone devices,&nbsp;the entire user interface will be set up in the <em>Main.storyboard</em> file.</p>
 
-<p>Click on <em>Main.storyboard</em> to open it. From the Object library, drag a Label on the View's window. Place it at the top of the view and change the text to "Device ID," as illustrated in <a data-type="xref" href="img_mobile_stomp_6"></a>.</p>
+<p>Click on <em>Main.storyboard</em> to open it. From the Object library, drag a Label on the View's window. Place it at the top of the view and change the text to &quot;Device ID,&quot; as illustrated in .</p>
 
 <figure id="img_mobile_stomp_6"><img alt="Add the Device ID label" src="images/mawm_0207.png" />
 <figcaption>Add the Device ID label</figcaption>
@@ -120,7 +119,7 @@ Command symbol is not displayed in PDF.
 <p>However, the example code in the <a href="https://github.com/mobile-web-messaging/code">GitHib repository</a> is constrained correctly.</p>
 </div>
 
-<p>The UUID that we will generate is quite long, so we will change its appearance by setting its Font to System 13.0 and its Alignment to centered to fit the screen, as illustrated in <a data-type="xref" href="img_mobile_stomp_7"></a>.</p>
+<p>The UUID that we will generate is quite long, so we will change its appearance by setting its Font to System 13.0 and its Alignment to centered to fit the screen, as illustrated in .</p>
 
 <figure id="img_mobile_stomp_7"><img alt="Change the appearance of the device ID label" src="images/mawm_0208.png" />
 <figcaption>Change the appearance of the device ID label</figcaption>
@@ -139,7 +138,7 @@ Command symbol is not displayed in PDF.
 
 @end</pre>
 
-<p>Open the <em>Main.storyboard</em> and control-click on View Controller to see its connection panel. Drag from deviceIDLabel to the UILabel to connect it. See <a data-type="xref" href="img_mobile_stomp_8"></a>.</p>
+<p>Open the <em>Main.storyboard</em> and control-click on View Controller to see its connection panel. Drag from deviceIDLabel to the UILabel to connect it. See .</p>
 
 <figure id="img_mobile_stomp_8"><img alt="Connect the deviceIDLabel outlet property to the device ID UILabel" src="images/mawm_0209.png" />
 <figcaption>Connect the deviceIDLabel outlet property to the device ID UILabel</figcaption>
@@ -170,7 +169,7 @@ Command symbol is not displayed in PDF.
     self.deviceIDLabel.text = self.deviceID;
 }</pre>
 
-<p>If we run the application, we will see the device ID displayed instead of <code>Device ID</code> in the view (<a data-type="xref" href="img_mobile_stomp_9"></a>).</p>
+<p>If we run the application, we will see the device ID displayed instead of <code>Device ID</code> in the view ().</p>
 
 <figure id="img_mobile_stomp_9"><img alt="Display the device ID" src="images/mawm_0210.png" />
 <figcaption>Display the device ID</figcaption>
@@ -188,13 +187,13 @@ Command symbol is not displayed in PDF.
 
 <p>We will retrieve the geolocation data from the device&rsquo;s GPS sensor to send them using STOMP messages. However, we also want to have some graphical feedback to show that the data changes over the time as we move with our device.</p>
 
-<p>To display the geolocation data, we will add a <code>UILabel</code> to the view and change its text to "Current position: ???" (<a data-type="xref" href="img_mobile_stomp_10"></a>).</p>
+<p>To display the geolocation data, we will add a <code>UILabel</code> to the view and change its text to &quot;Current position: ???&quot; ().</p>
 
 <figure id="img_mobile_stomp_10"><img alt="Add the current position label" src="images/mawm_0211.png" />
 <figcaption>Add the current position label</figcaption>
 </figure>
 
-<p>We will change its appearance to match the <code>deviceID</code> label by setting its Font to System 13.0 and its Alignment to centered (<a data-type="xref" href="img_mobile_stomp_11"></a>).</p>
+<p>We will change its appearance to match the <code>deviceID</code> label by setting its Font to System 13.0 and its Alignment to centered ().</p>
 
 <figure id="img_mobile_stomp_11"><img alt="Change the current position label appearance" src="images/mawm_0212.png" />
 <figcaption>Change the appearance of the current position label</figcaption>
@@ -205,7 +204,7 @@ Command symbol is not displayed in PDF.
 <pre data-code-language="objc" data-type="programlisting">
 @property (weak, nonatomic) IBOutlet UILabel *currentPositionLabel;</pre>
 
-<p>We then bind this property to the label. Open the <em>Main.storyboard</em> and control-click on View Controller to see its connection panel. Drag from currentPositionLabel to the label to connect it. See <a data-type="xref" href="img_mobile_stomp_12"></a>.</p>
+<p>We then bind this property to the label. Open the <em>Main.storyboard</em> and control-click on View Controller to see its connection panel. Drag from currentPositionLabel to the label to connect it. See .</p>
 
 <figure id="img_mobile_stomp_12"><img alt="Connect the currentPositionLabel outlet property to the current position UILabel" src="images/mawm_0213.png" />
 <figcaption>Connect the currentPositionLabel outlet property to the current position UILabel</figcaption>
@@ -219,7 +218,7 @@ Command symbol is not displayed in PDF.
 
 <p>iOS provides the <code>CoreLocation</code> framework to access the location data.</p>
 
-<p>We need to add it to the libraries linked by the application. Click on the Locations project and then the Locations target. In the General tab, under the Linked Frameworks and Libraries section, click on the <code>+</code> button. In the selection window, type "CoreLocation," select the CoreLocation.framework, and click on the Add button (<a data-type="xref" href="img_mobile_stomp_13"></a>).</p>
+<p>We need to add it to the libraries linked by the application. Click on the Locations project and then the Locations target. In the General tab, under the Linked Frameworks and Libraries section, click on the <code>+</code> button. In the selection window, type &quot;CoreLocation,&quot; select the CoreLocation.framework, and click on the Add button ().</p>
 
 <figure id="img_mobile_stomp_13"><img alt="Add the CoreLocation framework" src="images/mawm_0214.png" />
 <figcaption>Add the CoreLocation framework</figcaption>
@@ -323,7 +322,6 @@ interface MWMViewController () &lt;CLLocationManagerDelegate&gt;
     [self startUpdatingCurrentLocation];
 }</pre>
 
-
 <p>We also need to stop updating the location when the view disappears in <code>viewDidDisappear:</code>.</p>
 
 <pre data-code-language="objc" data-type="programlisting">
@@ -332,13 +330,13 @@ interface MWMViewController () &lt;CLLocationManagerDelegate&gt;
     [self stopUpdatingCurrentLocation];
 }</pre>
 
-<p>The first time the application asks the <code>locationManager</code> to start updating the device location, the user will see an alert view asking for permission to access the device location (<a data-type="xref" href="img_mobile_stomp_14"></a>).</p>
+<p>The first time the application asks the <code>locationManager</code> to start updating the device location, the user will see an alert view asking for permission to access the device location ().</p>
 
 <figure id="img_mobile_stomp_14"><img alt="Permission to use the current location" src="images/mawm_0215.png" />
 <figcaption>Permission to use the current location</figcaption>
 </figure>
 
-<p>If the user taps OK, the <code>locationManager</code> will start updating the device location and the label for its current position will be updated with the latitude and longitude (<a data-type="xref" href="img_mobile_stomp_15"></a>).</p>
+<p>If the user taps OK, the <code>locationManager</code> will start updating the device location and the label for its current position will be updated with the latitude and longitude ().</p>
 
 <figure id="img_mobile_stomp_15"><img alt="Display the current position of the device" src="images/mawm_0216.png" />
 <figcaption>Display the current position of the device</figcaption>
@@ -347,7 +345,7 @@ interface MWMViewController () &lt;CLLocationManagerDelegate&gt;
 <section data-type="sect2" id="ch_mobile_stomp_location_simulator">
 <h2>Simulate a Location with iOS Simulator</h2>
 
-<p>If you are running the application on an iPhone device, the real geolocation data from the device will be used. If you run the application using the iOS Simulator, you can simulate different locations in the Debug &#x2192; Location menu. For example, the Freeway Drive option will simulate a car driving on a freeway between Palo Alto and San Francisco.</p>
+<p>If you are running the application on an iPhone device, the real geolocation data from the device will be used. If you run the application using the iOS Simulator, you can simulate different locations in the Debug &rarr; Location menu. For example, the Freeway Drive option will simulate a car driving on a freeway between Palo Alto and San Francisco.</p>
 
 <p>Whether you are running the application on a device or in the simulator, you should see the <code>currentPositionLabel</code> be updated. The latitude and longitude numbers are difficult to interpret as such, but <a data-type="xref" href="#ch_web_stomp">#ch_web_stomp</a> we will be able to use them to draw the position on a map to locate the devices.</p>
 
@@ -663,7 +661,7 @@ NSDictionary *headers = @{
 
 <p>Every time the StompKit library sends a message to a STOMP broker, it logs the STOMP frame that is sent.</p>
 
-<p>To display them in the console, edit the file named <em>StompKit.m</em> in Xcode that is under the <em>Pods</em> project (its full path is Pods &#x2192; Pods &#x2192; StompKit &#x2192; StompKit.m in the Project Navigator view) and change the macro to activate logs by replacing the <code>0</code> by <code>1</code>:</p>
+<p>To display them in the console, edit the file named <em>StompKit.m</em> in Xcode that is under the <em>Pods</em> project (its full path is Pods &rarr; Pods &rarr; StompKit &rarr; StompKit.m in the Project Navigator view) and change the macro to activate logs by replacing the <code>0</code> by <code>1</code>:</p>
 
 <pre data-code-language="objc" data-type="programlisting">
 #pragma mark Logging macros
@@ -691,11 +689,11 @@ content-length:122
 
 <p>In <a data-type="xref" href="#app_activemq_admin_console">#app_activemq_admin_console</a>, we have used the ActiveMQ admin console to check the broker configuration. We can also use this console to check the destinations and their associated metrics.</p>
 
-<p>Go to the ActiveMQ admin console in your web browser at <a href="http://localhost:8161/hawtio"><em class="hyperlink">http://localhost:8161/hawtio</em></a> and navigate the ActiveMQ tree down to the postion topic in mybroker &#x2192; Topic &#x2192; device.2262EC25-E9FD-4578-BADE-4E113DE45934.location.</p>
+<p>Go to the ActiveMQ admin console in your web browser at <a href="http://localhost:8161/hawtio"><em class="hyperlink">http://localhost:8161/hawtio</em></a> and navigate the ActiveMQ tree down to the postion topic in mybroker &rarr; Topic &rarr; device.2262EC25-E9FD-4578-BADE-4E113DE45934.location.</p>
 
 <p>In the right side panel, select Attributes in the top menu to display all the attributes associated to this topic.</p>
 
-<p>To check whether the broker is receiving the messages on this destination, the check the Enqueue count attribute. It corresponds to the messages that have been <em>enqueued</em> (or, in other words, <em>sent</em>) to the destination. We see that this value is growing over time (it was at 113 when the screenshot in <a data-type="xref" href="img_mobile_stomp_16"></a> was captured). This confirms that the broker is actually receiving the messages sent by the mobile application.</p>
+<p>To check whether the broker is receiving the messages on this destination, the check the Enqueue count attribute. It corresponds to the messages that have been <em>enqueued</em> (or, in other words, <em>sent</em>) to the destination. We see that this value is growing over time (it was at 113 when the screenshot in was captured). This confirms that the broker is actually receiving the messages sent by the mobile application.</p>
 
 <figure id="img_mobile_stomp_16"><img alt="Check the number of messages sent to a destination in ActiveMQ admin console" src="images/mawm_0217.png" />
 <figcaption>Check the number of messages sent to a destination in the ActiveMQ admin console</figcaption>
@@ -731,12 +729,12 @@ Escape character is '^]'.
 <div data-type="caution">
 <p>A STOMP frame must be ended by a NULL octet.</p>
 
-<p><code>^@</code> is the ASCII character for a NULL octet. Type "ctrl + @" to enter it.</p>
+<p><code>^@</code> is the ASCII character for a NULL octet. Type &quot;ctrl + @&quot; to enter it.</p>
 </div>
 
 <p>Note also that there is a blank line between the <code>CONNECT</code> line and the NULL octet. This blank line is mandatory to separate the command name and the headers from the beginning of the optional payload (that is not present in the <code>CONNECT</code> frame).</p>
 
-<p>Once you type "ctrl + @," the messaging broker will process the <code>CONNECT</code> frame and reply with a <code>CONNECTED</code> frame:</p>
+<p>Once you type &quot;ctrl + @,&quot; the messaging broker will process the <code>CONNECT</code> frame and reply with a <code>CONNECTED</code> frame:</p>
 
 <pre data-type="programlisting">
 CONNECTED
@@ -783,19 +781,19 @@ priority:4
 
 <p>We will write the graphical part first by adding a <code>UITable</code> to the user interface.</p>
 
-<p>Click on <em>Main.storyboard</em> to open it. From the Object library, drag a Table View on the View&rsquo;s window. Place it below the Current Position UILabel (see <a data-type="xref" href="img_mobile_stomp_162"></a>).</p>
+<p>Click on <em>Main.storyboard</em> to open it. From the Object library, drag a Table View on the View&rsquo;s window. Place it below the Current Position UILabel (see ).</p>
 
 <figure id="img_mobile_stomp_162"><img alt="Add a Table View" src="images/mawm_0218.png" />
 <figcaption>Add a Table View</figcaption>
 </figure>
 
-<p>From the Object library, drag a Table View Cell inside the Table View (see <a data-type="xref" href="img_mobile_stomp_17"></a>).</p>
+<p>From the Object library, drag a Table View Cell inside the Table View (see ).</p>
 
 <figure id="img_mobile_stomp_17"><img alt="Add a Table View Cell" src="images/mawm_0219.png" />
 <figcaption>Add a Table View Cell</figcaption>
 </figure>
 
-<p>We will change the Table View Cell properties by setting its Style to Basic and its Identifier to TextCell (<a data-type="xref" href="img_mobile_stomp_18"></a>).</p>
+<p>We will change the Table View Cell properties by setting its Style to Basic and its Identifier to TextCell ().</p>
 
 <figure id="img_mobile_stomp_18"><img alt="Edit the Table View Cell Properties" src="images/mawm_0220.png" />
 <figcaption>Edit the Table View Cell properties</figcaption>
@@ -810,7 +808,7 @@ priority:4
 
 @end</pre>
 
-<p>We need to bind this outlet property to the table view. Open the <em>Main.storyboard</em> and control-click on View Controller to see its connection panel. Drag from tableView to the table to connect it. See <a data-type="xref" href="img_mobile_stomp_182"></a>.</p>
+<p>We need to bind this outlet property to the table view. Open the <em>Main.storyboard</em> and control-click on View Controller to see its connection panel. Drag from tableView to the table to connect it. See .</p>
 
 <figure id="img_mobile_stomp_182"><img alt="Connect the tableView outlet property to the Table View" src="images/mawm_0221.png" />
 <figcaption>Connect the tableView outlet property to the Table View</figcaption>
@@ -818,13 +816,13 @@ priority:4
 
 <p>We also need to connect the View Controller to the Table View and declare it as its dataSource and delegate.</p>
 
-<p>Open the <em>Main.storyboard</em> and control-click on Table View to see its connection panel. Drag from dataSource to the View Controller to connect it (<a data-type="xref" href="img_mobile_stomp_19"></a>).</p>
+<p>Open the <em>Main.storyboard</em> and control-click on Table View to see its connection panel. Drag from dataSource to the View Controller to connect it ().</p>
 
 <figure id="img_mobile_stomp_19"><img alt="Connect the Table View's dataSource to the View Controller" src="images/mawm_0222.png" />
 <figcaption>Connect the Table View's dataSource to the View Controller</figcaption>
 </figure>
 
-<p>We do the same operation to connect the Table View's delegate property to the View Controller (<a data-type="xref" href="img_mobile_stomp_20"></a>).</p>
+<p>We do the same operation to connect the Table View's delegate property to the View Controller ().</p>
 
 <figure id="img_mobile_stomp_20"><img alt="Connect the Table View's delegate to the View Controller" src="images/mawm_0223.png" />
 <figcaption>Connect the Table View's delegate to the View Controller</figcaption>
@@ -1008,7 +1006,7 @@ STOMPSubscription *subscription;</pre>
 
 <p>Go to the ActiveMQ admin console and browse to the device text destination (in my case, its name is device.2262EC25-E9FD-4578-BADE-4E113DE45934.text) and click on the Send tab.</p>
 
-<p>As illustrated in <a data-type="xref" href="img_mobile_stomp_21"></a>, fill the text area with a plain-text string (e.g., "Hello, where are you?") and set the body format to Plain Text.</p>
+<p>As illustrated in , fill the text area with a plain-text string (e.g., &quot;Hello, where are you?&quot;) and set the body format to Plain Text.</p>
 
 <figure id="img_mobile_stomp_21"><img alt="Send a Message using ActiveMQ Admin Console" src="images/mawm_0224.png" />
 <figcaption>Send a message using the ActiveMQ Admin Console</figcaption>
@@ -1060,7 +1058,7 @@ Hello, where are you?
 
 <p>StompKit uses Grand Central Dispatch&rsquo;s global queue to handle the communication between the client and the STOMP brokers. The <code>STOMPMessageHandler</code> block is called on that queue. However, any code that deals with <code>UIKit</code> (such as reloading the <code>tableView</code>) <em>must</em> be executed on the queue bound to the main thread. This is why we must wrap the <code>reloadData</code> call into a block executed on the main queue.</p>
 
-<p>If we restart the application and send another message on the destination with the ActiveMQ admin console, the table will display the text as soon as it is received. See Figure <a data-type="xref" href="img_mobile_stomp_22"></a>.</p>
+<p>If we restart the application and send another message on the destination with the ActiveMQ admin console, the table will display the text as soon as it is received. See Figure .</p>
 
 <figure id="img_mobile_stomp_22"><img alt="The Received Text is Displayed in the Table" src="images/mawm_0225.png" />
 <figcaption>The received text is displayed in the table</figcaption>
@@ -1105,6 +1103,6 @@ Hello, where are you?
 	</li>
 </ul>
 
-<p>Sending and consuming messages is only possible once the client is <em>successfully</em> connected to the STOMP broker. Due to the event-driven design of StompKit, this is the case when the <code>completionHandler</code> block is executed without an error in <code>connectWithHeaders:completionHandler:</code>.</p>
+<p>Sending and consuming messages is only possible once the client is <em>successfully</em> connected to the STOMP broker. Due to the event-driven design of StompKit, this is the case when the <a contenteditable="false" data-primary="mobile messaging" data-secondary="using STOMP" data-startref="mobmessSTOMP" data-type="indexterm">&nbsp;</a><code>completionHandler</code> block is executed without an error in <code>connectWithHeaders:completionHandler:</code>.</p>
 </section>
 </section>
