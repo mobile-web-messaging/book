@@ -325,14 +325,14 @@
 </ul>
 
 <div data-type="note">
-<p>MQTT only supports the publish/subscribe messaging model. Ideally, the alert destination would be better modeled as a queue (one per device). MQTT does not have support for queues, so we will work around that by using one topic for each device and only have the corresponding device subscribe to it.</p>
+<p>MQTT only supports the publish/subscribe messaging model. Ideally, the alert destination would be better modeled as a queue (one per device). MQTT <a contenteditable="false" data-primary="queues" data-secondary="MQTT and" data-type="indexterm">&nbsp;</a>does not have support for queues, so we will work around that by using one topic for each device and only have the corresponding device subscribe to it.</p>
 </div>
 </section>
 
 <section data-type="sect3" id="ch_introduction_mqtt_example_message">
 <h3>Message representation for the Motions application</h3>
 
-<p>There will be two types of exchanged messages:</p>
+<p>There will be two types of<a contenteditable="false" data-primary="messages" data-secondary="in Motions application (example)" data-type="indexterm">&nbsp;</a> exchanged messages:</p>
 
 <ul>
 	<li>
