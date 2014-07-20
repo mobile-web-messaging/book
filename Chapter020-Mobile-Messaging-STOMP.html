@@ -984,7 +984,7 @@ STOMPSubscription *subscription;</pre>
 <section data-type="sect1" id="_unsubscribe_from_the_destination">
 <h1>Unsubscribe from the Destination</h1>
 
-<p>The application will consume messages from the destination as long as it remains connected to the STOMP broker.</p>
+<p>The application will consume messages from the destination as long as it remains connected to the <a contenteditable="false" data-primary="publish/subscribe messaging model" data-secondary="unsubscribing from a STOMP destination" data-type="indexterm">&nbsp;</a>STOMP broker.<a contenteditable="false" data-primary="destinations" data-secondary="unsubscribing from a STOMP destination" data-type="indexterm">&nbsp;</a></p>
 
 <p>We do not need to explicitly unsubscribe from the destination when we disconnect from the broker, but it is a good practice to do so. To unsubscribe, we just need to call the <code>unsubscribe</code> method on the <code>subscription</code> object that was created when we subscribed to the text destination. We will unsubscribe just prior to disconnecting from the broker in the <code>viewDidDisappear:</code> method:</p>
 
