@@ -399,7 +399,7 @@ interface MWMViewController () &lt;CLLocationManagerDelegate&gt;
 <section data-type="sect1" id="_connect_to_a_stomp_broker">
 <h1>Connect to a STOMP Broker</h1>
 
-<p>When the <code>client</code> object is created, it is not connected to the STOMP broker yet. To connect, we must call its <code>connectWithHeaders:completionHandler:</code> method.</p>
+<p>When the <code>client</code> object is created, it is not connected to the STOMP broker yet.<a contenteditable="false" data-primary="brokers" data-secondary="connecting to a STOMP broker" data-type="indexterm">&nbsp;</a> To connect, we must call its <code>connectWithHeaders:completionHandler:</code> method.</p>
 
 <p>StompKit uses Grand Central Dispatch and blocks to provide an event-driven API. This means that the client is <em>not</em> connected when the call to its <code>connectWithHeaders:completionHandler:</code> method returns but when the <code>completionHandler</code> block is called.</p>
 
