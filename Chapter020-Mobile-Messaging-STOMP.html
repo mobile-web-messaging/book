@@ -516,7 +516,7 @@ error:nil];
 NSString *body =[[NSString alloc] initWithData:data 
 encoding:NSUTF8StringEncoding];</pre>
 
-<p>This body follows the JSON format. We will add a <code>content-type</code> header in the STOMP message and set it to <code>application/json; charset=utf-8</code> to let the STOMP brokers and the eventual consumers know that this message&rsquo;s payload can be read as JSON string encoded with UTF-8. Without such a <code>content-type</code>, the consumers would not necessarily know how to <em>read</em> the data in the body and interpret them.</p>
+<p>This body follows the JSON format.<a contenteditable="false" data-primary="JSON" data-secondary="STOMP message body" data-type="indexterm">&nbsp;</a> We will add a <code>content-type</code> header in the STOMP message and set it to <code>application/json; charset=utf-8</code> to let the STOMP brokers and the eventual consumers know that this message&rsquo;s payload can be read as JSON string encoded with UTF-8. Without such a <code>content-type</code>, the consumers would not necessarily know how to <em>read</em> the data in the body and interpret them.</p>
 
 <pre data-code-language="objc" data-type="programlisting">
 NSDictionary *headers = @{
