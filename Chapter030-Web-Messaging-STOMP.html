@@ -232,7 +232,7 @@ client.subscribe(destination, function(message) {
 <section data-type="sect2" id="_subscribe_to_a_wildcard_destination">
 <h2>Subscribe to a Wildcard Destination</h2>
 
-<p>This web application wants to receive the location of <em>any</em> devices that broadcast it. This means that we must subscribe to the <code>/topic/device.XXX.location</code> for every device where XXX is the device identifier.</p>
+<p>This web application wants to receive the location of <em>any</em> devices that broadcast it. This means that we must <a contenteditable="false" data-primary="destinations" data-secondary="subscribing to a wildcard STOMP destination" data-type="indexterm">&nbsp;</a>subscribe to the <code>/topic/device.XXX.location</code> for every device where XXX is the device identifier.</p>
 
 <p>There are two different ways to achieve this. The first way is to know beforehand all the device IDs and subscribe to their topics one after the other. We can use the same subscription callback for all of them. However, that implies that the web application must now have a way to know this list. For example, it could be a web service that returns such a list.</p>
 
