@@ -1,7 +1,7 @@
 <section data-type="chapter" id="ch_beyond_stomp" xmlns="http://www.w3.org/1999/xhtml">
 <h1>Beyond STOMP</h1>
 
-<p class="lead">STOMP provides a simple yet flexible messaging protocol. It also offers an extensible way for brokers to provide additional features beyond the ones specified in the protocol.</p>
+<p class="lead">STOMP provides a simple yet flexible messaging protocol.<a contenteditable="false" data-primary="STOMP" data-secondary="extending by using additional headers" data-type="indexterm" id="STOMPext">&nbsp;</a> It also offers an extensible way for brokers to provide additional features beyond the ones specified in the protocol.</p>
 
 <p>In this chapter, we will show how to leverage broker features with STOMP headers. Until this chapter, all STOMP brokers could be used to send and receive messages from our applications, but in this chapter, you will have to check your broker documentation to see if it provides these features (or others not covered by this chapter).</p>
 
@@ -101,7 +101,7 @@ client.send(destination, { priority: 7 }, text);</pre>
 
 <p>Some STOMP brokers allow messages to expire after a period of time. The broker will periodically check if messages held by its destinations have expired. If that is the case, it will discard them from the destinations and consumers will not receive them.</p>
 
-<p>ActiveMQ accepts an <code>expires</code> header when a message is sent by a STOMP producer to specify until which time the message is valid. The value is the number of milliseconds between the <a href="http://en.wikipedia.org/wiki/Unix_time">UNIX time</a> (00:00:00, Thursday, January 1, 1970 UTC) and the expiration date.</p>
+<p>ActiveMQ accepts an <code>expires</code> header when a message is sent by a STOMP producer to specify until which time the message is valid.<a contenteditable="false" data-primary="headers" data-secondary="expires headers" data-type="indexterm">&nbsp;</a> The value is the number of milliseconds between the <a href="http://en.wikipedia.org/wiki/Unix_time">UNIX time</a> (00:00:00, Thursday, January 1, 1970 UTC) and the expiration date.</p>
 
 <p>For example, if we want to expire messages 10 minutes after they are sent by the <code>Locations</code> applications, we need to add an <code>expires</code> header whose value is the number of milliseconds since the Unix time and ten minutes after now:</p>
 
@@ -148,6 +148,6 @@ client.send(destination, { priority: 7 }, text);</pre>
 	</li>
 </ul>
 
-<p>Depending on the STOMP broker you use, you may be able to use these features or others to improve the design of your architecture and reduce the network bandwidth, the CPU, and battery usage so that producers and consumers only deal with relevant messages and ignore the others.</p>
+<p>Depending on the STOMP broker you use, you may be able to use these features or others to improve the design of your architecture and reduce the network bandwidth, the CPU, and battery usage so that producers and consumers only deal with relevant messages and ignore the others.<a contenteditable="false" data-primary="STOMP" data-secondary="extending by using additional headers" data-startref="STOMPext" data-type="indexterm">&nbsp;</a></p>
 </section>
 </section>
