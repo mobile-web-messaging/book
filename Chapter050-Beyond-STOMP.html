@@ -38,7 +38,7 @@ client.send(&quot;/topic/mytopic&quot;, { persistent: true}, order);</pre>
 
 <p>A filter is similar to a <a href="http://en.wikipedia.org/wiki/SQL-92">SQL 92</a> conditional query using the message headers. The message payload is opaque for the STOMP broker and cannot be used by filters.</p>
 
-<p>It turns out that this can be quite powerful, because STOMP allows us to add any user-specified header. If we want to filter out messages, we can put interesting information in the headers (either by removing them from the payload or duplicating them).</p>
+<p>It turns out that this can be quite powerful, because STOMP allows us to add any user-specified header. If we want to filter out messages, we can put interesting information in the headers (either by removing them from the payload or duplicating them).<a contenteditable="false" data-primary="headers" data-secondary="using to filter STOMP messages" data-type="indexterm">&nbsp;</a></p>
 
 <p>For example, we could add a <code>country</code> header when a location message is sent by the Locations iOS application. The value of this header would correspond to the country where the device is located (e.g., <code>FR</code> for France, <code>DE</code> for Germany, <code>IT</code> for Italy, etc.):</p>
 
