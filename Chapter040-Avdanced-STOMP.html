@@ -539,7 +539,7 @@ client.subscribe(destination, function(message) {
 <section data-type="sect1" id="_heart_beating">
 <h1>Heart-beating</h1>
 
-<p>STOMP offers a mechanism to test the healthiness of a network connection between a STOMP client and a broker using heart-beating. In the absence of messages exchanged between the STOMP client and the broker, both can send a <em>heartbeat</em> periodically to inform the other that is alive but has no activity.</p>
+<p>STOMP offers a mechanism to test the healthiness of a network connection between a STOMP client and a broker<a contenteditable="false" data-primary="heart-beating (STOMP)" data-type="indexterm">&nbsp;</a> using heart-beating. <a contenteditable="false" data-primary="STOMP" data-secondary="advanced" data-tertiary="heart-beating" data-type="indexterm">&nbsp;</a>In the absence of messages exchanged between the STOMP client and the broker, both can send a <em>heartbeat</em> periodically to inform the other that is alive but has no activity.</p>
 
 <p>If heart-beating is enabled, this allows the client and the broker to be informed in case of network failures and act accordingly (the client could try to reconnect to the broker, the broker could clean up the resources created on behalf of the client, etc.).</p>
 
