@@ -196,7 +196,7 @@ client.connect({onSuccess: function(frame) {
 
 <p>If the device is offline, the consumer may want to be notified to discard the device position from the map or show it differently from other <em>live</em> devices.</p>
 
-<p>MQTT provides a <em>last will</em> feature that we could use to handle this use case.</p>
+<p>MQTT provides a <em>last will</em> feature that we could use to handle this use case.<a contenteditable="false" data-primary="last will (MQTT)" data-type="indexterm">&nbsp;</a></p>
 
 <p>When an MQTT client connects to the broker, it can specify a last will message that will be published to a last will topic by the broker <em>on behalf</em> of the client in case of unexpected disconnection. If the client disconnects normally, its last will message is not published. If the client uses heart-beating and the broker fails to receive its heart-beat in a timely fashion, this is considered as an unexpected disconnection and the last will message will be published.</p>
 
@@ -205,7 +205,7 @@ client.connect({onSuccess: function(frame) {
 <section data-type="sect2" id="__code_mqttkit_code_example_4">
 <h2>MQTTKit Example</h2>
 
-<p>The <code>STOMPClient</code> object has <code>setWill:toTopic:withQos:retain</code> and <code>setWillData:toTopic:withQos:retain</code> methods to specify the client&rsquo;s last will. The difference between the two methods is that the first one takes an <code>NSString</code> for the will message payload and the second takes an <code>NSData</code>. These methods must be called before the client connects to the MQTT broker to take effect.</p>
+<p>The <code>STOMPClient</code> object has <code>setWill:toTopic:withQos:retain</code> and <code>setWillData:toTopic:withQos:retain</code> methods to specify the client&rsquo;s last will. <a contenteditable="false" data-primary="MQTTKit" data-secondary="last will example" data-type="indexterm">&nbsp;</a><a contenteditable="false" data-primary="last will (MQTT)" data-secondary="MQTTKit example" data-type="indexterm">&nbsp;</a>The difference between the two methods is that the first one takes an <code>NSString</code> for the will message payload and the second takes an <code>NSData</code>. These methods must be called before the client connects to the MQTT broker to take effect.</p>
 
 <p>We could improve the <code>Motions</code> iOS application by specifying a last will to its <code>client</code> object in <em>MWMViewController.m</em> before it connects.</p>
 
