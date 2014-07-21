@@ -79,7 +79,7 @@ client.connect({onSuccess: function(frame) {
 <section data-type="sect2" id="__code_mqttkit_code_example_2">
 <h2>MQTTKit Example</h2>
 
-<p>The <code>MQTTClient</code> class has a <code>disconnectionHandler</code> property that can be set to handle any unexpected error leading to a disconnection.<a contenteditable="false" data-primary="MQTTKit" data-secondary="error handling example" data-type="indexterm">&nbsp;</a> The disconnection can be the consequence of the MQTT broker closing the network exception (in case of abnormal errors or an administrative operation) or the network connection can be directly broken (e.g., if a mobile device is no longer able to receive any signal).</p>
+<p>The <code>MQTTClient</code> class has a <code>disconnectionHandler</code> property that can be set to handle any unexpected error leading to a disconnection.<a contenteditable="false" data-primary="error handling" data-secondary="in MQTT" data-tertiary="MQTTKit example" data-type="indexterm">&nbsp;</a><a contenteditable="false" data-primary="MQTTKit" data-secondary="error handling example" data-type="indexterm">&nbsp;</a> The disconnection can be the consequence of the MQTT broker closing the network exception (in case of abnormal errors or an administrative operation) or the network connection can be directly broken (e.g., if a mobile device is no longer able to receive any signal).</p>
 
 <p>The <code>disconnectionHandler</code> is a block that takes an <code>NSUinteger code</code> parameter. There are no standard values for the code and you will have to consult your MQTT broker documentation if you need to act differently depending on the type of errors.</p>
 
