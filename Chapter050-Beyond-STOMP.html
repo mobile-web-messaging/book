@@ -80,7 +80,7 @@ client.subscribe(destination, function(message) {
 <section data-type="sect1" id="_priority">
 <h1>Priority</h1>
 
-<p>Messages sent to destinations are usually delivered to a consumer in the order of their arrival. <a contenteditable="false" data-primary="priority, messages" data-type="indexterm">&nbsp;</a>That means that if a producer sent messages A, B, and C in that order, a single consumer will receive the messages in the same order: A, B, and C.</p>
+<p>Messages sent to destinations are usually delivered to a<a contenteditable="false" data-primary="messages" data-secondary="priority" data-type="indexterm">&nbsp;</a> consumer in the order of their arrival. <a contenteditable="false" data-primary="priority, messages" data-type="indexterm">&nbsp;</a>That means that if a producer sent messages A, B, and C in that order, a single consumer will receive the messages in the same order: A, B, and C.</p>
 
 <p>However, there are cases where a producer wants to send a more <em>urgent</em> message that should take precedence over messages that it already sent.</p>
 
@@ -97,7 +97,7 @@ client.send(destination, { priority: 7 }, text);</pre>
 <section data-type="sect1" id="_expiration">
 <h1>Expiration</h1>
 
-<p>Messages can be valid for only a given duration, after which they are no longer relevant. For example, the locations messages sent by the Locations iOS application are valid for a short period of time, after which the device has likely moved to another location.</p>
+<p>Messages can be valid for only a given<a contenteditable="false" data-primary="messages" data-secondary="expiration" data-type="indexterm">&nbsp;</a> duration, after which they are no longer relevant.<a contenteditable="false" data-primary="expiration, messages" data-type="indexterm">&nbsp;</a> For example, the locations messages sent by the Locations iOS application are valid for a short period of time, after which the device has likely moved to another location.</p>
 
 <p>Some STOMP brokers allow messages to expire after a period of time. The broker will periodically check if messages held by its destinations have expired. If that is the case, it will discard them from the destinations and consumers will not receive them.</p>
 
