@@ -427,7 +427,7 @@ Command symbol is not displayed in PDF.
 <section data-type="sect2" id="_retained_message">
 <h2>Retained Message</h2>
 
-<p>The final parameter of the <code>publish&hellip;</code> methods is a boolean to specify whether the published message must be <em>retained</em> by the topic.</p>
+<p>The final parameter of the <code>publish&hellip;</code> methods is a boolean to specify whether the published message must be <em>retained</em> by the topic.<a contenteditable="false" data-primary="retained messages" data-type="indexterm">&nbsp;</a></p>
 
 <p>If this flag is set on the message, the broker will deliver the message to its subscribers and keep holding the message. If a new consumer subscribes to this topic, the broker will deliver the retained message to it. This is useful, as the new subscriber will not have to wait for a publisher to send a message to receive new data. The retained message contains the <em>Last Known Good</em> value.</p>
 
