@@ -671,7 +671,7 @@ $ mosquitto_sub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/
 <section data-type="sect2" id="_define_a_mqttmessage_handler">
 <h2>Define an MQTTMessage Handler</h2>
 
-<p>Subscribing to a topic is the first step to receive messages with MQTTKit. The second step is to define a block that will be called every time a message is received from a subscribed topic.</p>
+<p>Subscribing to a topic is the first step to receive messages with MQTTKit.<a contenteditable="false" data-primary="MQTTKit" data-secondary="defining MQTTMessageHandler" data-type="indexterm">&nbsp;</a> The second step is to define a block that will be called every time a message is received from a subscribed topic.<a contenteditable="false" data-primary="mobile messaging with MQTT" data-secondary="receiving MQTT messages" data-tertiary="defining MQTTMessageHandler" data-type="indexterm">&nbsp;</a></p>
 
 <p>The <code>client</code>'s <code>messageHandler</code> property defines an <code>MQTTMessageHandler</code> block. This block has an <code>MQTTMessage</code> parameter representing the MQTT message that is deliver to the client.</p>
 
