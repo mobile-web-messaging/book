@@ -342,7 +342,7 @@ tx.abort();</pre>
 <section data-type="sect2" id="__code_stompkit_code_example_4">
 <h2>StompKit Example</h2>
 
-<p>We will modify the <code>Locations</code> iOS application to handle errors and automatically reconnect to the STOMP broker<a contenteditable="false" data-primary="error handling in STOMP" data-secondary="StompKit example" data-type="indexterm">&nbsp;</a> after a delay.<a contenteditable="false" data-primary="StompKit" data-secondary="error handling example" data-type="indexterm">&nbsp;</a></p>
+<p>We will modify the <code>Locations</code> iOS application to handle errors and automatically reconnect to the STOMP broker<a contenteditable="false" data-primary="error handling" data-secondary="in STOMP" data-tertiary="StompKit example" data-type="indexterm">&nbsp;</a> after a delay.<a contenteditable="false" data-primary="StompKit" data-secondary="error handling example" data-type="indexterm">&nbsp;</a></p>
 
 <p>The <code>STOMPClient</code> has an <code>errorHandler</code> property that is called if the client encounters any error. Error can come from the STOMP protocol (when the broker delivers an <code>ERROR</code> frame) or from the underlying network connection (e.g., if the network is lost or if the broker closes the connection before any <code>ERROR</code> frame is delivered).</p>
 
