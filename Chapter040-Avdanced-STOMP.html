@@ -174,7 +174,7 @@ function connect(url) {
 <section data-type="sect2" id="__code_stompkit_code_example_2">
 <h2>StompKit Example</h2>
 
-<p>The message acknowledgment is specified when the <code>STOMPClient</code> subscribes to a destination by <a contenteditable="false" data-primary="StompKit" data-secondary="message acknowledgement example" data-type="indexterm">&nbsp;</a>calling its <code>subscribeTo:headers:messageHandler:</code> method. To specify a <code>client</code> or <code>client-individual</code> acknowledgment, you must set an <code>ack</code> header. <em>StompKit.h</em> defines constants to represent the header name, <code>kHeaderAck</code> and its accepted values, <code>kAckAuto</code>, <code>kAckClient</code>, and <code>kAckClientIndividual</code>.</p>
+<p>The message acknowledgment is specified when the <code>STOMPClient</code> subscribes to a destination<a contenteditable="false" data-primary="message acknowledgement in STOMP" data-secondary="StompKit example" data-type="indexterm">&nbsp;</a> by <a contenteditable="false" data-primary="StompKit" data-secondary="message acknowledgement example" data-type="indexterm">&nbsp;</a>calling its <code>subscribeTo:headers:messageHandler:</code> method. To specify a <code>client</code> or <code>client-individual</code> acknowledgment, you must set an <code>ack</code> header. <em>StompKit.h</em> defines constants to represent the header name, <code>kHeaderAck</code> and its accepted values, <code>kAckAuto</code>, <code>kAckClient</code>, and <code>kAckClientIndividual</code>.</p>
 
 <p>The <code>STOMPMessage</code> parameter of the <code>messageHandler</code> has two methods, <code>ack</code> and <code>nack</code>, to acknowledge or nack the message, respectively.</p>
 
@@ -198,7 +198,7 @@ function connect(url) {
 <section data-type="sect2" id="__code_stomp_js_code_example_2">
 <h2>stomp.js Example</h2>
 
-<p>The <code>client</code> can specify the type of acknowledgment by passing a dictionary with the <code>ack</code> header as the last parameter of its <code>subscribe</code> message.</p>
+<p>The <code>client</code> can specify the type of acknowledgment by passing a dictionary with the <code>ack</code> header <a contenteditable="false" data-primary="stomp.js" data-secondary="message acknowledgement example" data-type="indexterm">&nbsp;</a>as the <a contenteditable="false" data-primary="message acknowledgement in STOMP" data-secondary="stomp.js example" data-type="indexterm">&nbsp;</a>last parameter of its <code>subscribe</code> message.</p>
 
 <p>The <code>message</code> parameter of the <code>subscribe</code> callback has two methods, <code>ack</code> and <code>nack</code>, to acknowledge or nack the message, respectively. If the acknowledgment type is <code>auto</code> (or if it is not specified at all), these <code>ack</code> and <code>nack</code> methods will do nothing:</p>
 
