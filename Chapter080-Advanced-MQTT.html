@@ -343,7 +343,7 @@ $ mosquitto_sub -h iot.eclipse.org -t /mwm/lastWill/# -v
 <section data-type="sect2" id="__code_mqttkit_code_example_5">
 <h2>MQTTKit Example</h2>
 
-<p>By default, MQTT clients created using MQTTKit have the Clean Session flag set (their state is not stored by the broker after they disconnect).<a contenteditable="false" data-primary="clean session (MQTT)" data-secondary="MQTTKit example" data-type="indexterm">&nbsp;</a> It is also possible to change this behavior by using the <code>MQTTClient</code>'s <code>initWithClientID:cleanSession:</code> initializer and passing <code>NO</code> to its <code>cleanSession</code> parameter:</p>
+<p>By default, MQTT clients created using MQTTKit have the Clean Session flag set (their state is not stored by the broker after they disconnect).<a contenteditable="false" data-primary="MQTTKit" data-secondary="clean session example" data-type="indexterm">&nbsp;</a><a contenteditable="false" data-primary="clean session (MQTT)" data-secondary="MQTTKit example" data-type="indexterm">&nbsp;</a> It is also possible to change this behavior by using the <code>MQTTClient</code>'s <code>initWithClientID:cleanSession:</code> initializer and passing <code>NO</code> to its <code>cleanSession</code> parameter:</p>
 
 <pre data-code-language="objc" data-type="programlisting">
 - (void)viewDidLoad
