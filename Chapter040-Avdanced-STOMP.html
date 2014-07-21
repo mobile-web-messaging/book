@@ -253,7 +253,7 @@ client.subscribe(destination,
 <section data-type="sect2" id="__code_stompkit_code_example_3">
 <h2>StompKit Example</h2>
 
-<p>The <code>STOMPClient</code> can begin a transaction by calling its <code>begin:</code> method and passing an <code>NSString</code> that will be used to identify the transaction. Alternatively, you can call its <code>begin</code> method (without any parameter) and a transaction identifier will be automatically generated. Both <code>begin:</code> and <code>begin</code> methods returns a <code>STOMPTransaction</code> object. This object has a <code>identifier</code> property that contains the transaction identifier.</p>
+<p>The <code>STOMPClient</code> can begin a transaction by <a contenteditable="false" data-primary="transactions in STOMP" data-secondary="StompKit example" data-type="indexterm">&nbsp;</a>calling its <code>begin:</code> method and passing an <code>NSString</code> that will be used to identify the transaction.<a contenteditable="false" data-primary="StompKit" data-secondary="transaction example" data-type="indexterm">&nbsp;</a> Alternatively, you can call its <code>begin</code> method (without any parameter) and a transaction identifier will be automatically generated. Both <code>begin:</code> and <code>begin</code> methods returns a <code>STOMPTransaction</code> object. This object has a <code>identifier</code> property that contains the transaction identifier.</p>
 
 <p>Sending, acknowledging, or nacking a message can then be part of a transaction by adding a <code>transaction</code> header set to the transaction identifier (StompKit.h defines a <code>kHeaderTransaction</code> to represent this <code>transaction</code> header).</p>
 
