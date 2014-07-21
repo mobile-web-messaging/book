@@ -112,7 +112,7 @@ client.connect({onSuccess: function(frame) {
 <section data-type="sect2" id="__code_mqttws31_js_code_example_2">
 <h2>mqttws31.js Example</h2>
 
-<p>In <a data-type="xref" href="#ch_mobile_mqtt_connect">#ch_mobile_mqtt_connect</a>, we already set a <code>onConnectionLost</code> callback on the <code>client</code> to be notified in case of connection error. The callback has a single <code>response</code> parameter object. This parameter is composed of two properties:</p>
+<p>In <a data-type="xref" href="#ch_mobile_mqtt_connect">#ch_mobile_mqtt_connect</a>, we already set a <code>onConnectionLost</code> callback on the <code>client</code> to be notified in case of connection error.<a contenteditable="false" data-primary="mqttws31.js" data-secondary="error handling example" data-type="indexterm">&nbsp;</a> The callback has a single <code>response</code> parameter object. This parameter is composed of two properties:</p>
 
 <ul>
 	<li>
@@ -134,7 +134,7 @@ client.onConnectionLost = function(response) {
 <section data-type="sect1" id="_heart_beating_2">
 <h1>Heart-beating</h1>
 
-<p>MQTT offers a simple mechanism to test the healthiness of the network connection betwee a client and a broker using heart-beating.</p>
+<p>MQTT offers a simple mechanism to test the healthiness of the network connection betwee a client and a broker<a contenteditable="false" data-primary="MQTT" data-secondary="advanced" data-tertiary="heart-beating" data-type="indexterm">&nbsp;</a> using heart-beating.<a contenteditable="false" data-primary="heart-beating" data-secondary="in MQTT" data-type="indexterm">&nbsp;</a></p>
 
 <p>Heart-beating is enabled by specifying a <em>keep alive timer</em> when the client initially connects to the broker. This timer, measured in seconds, defines the maximum time interval between messages received from a client. It allows the client and broker to detect whether the network connection is broken without waiting for the long TCP/IP timeout. A timer value of <code>0</code> disables heart-beating.</p>
 
