@@ -301,7 +301,7 @@ Command symbol is not displayed in PDF.
 <section data-type="sect1" id="_connect_to_a_mqtt_broker">
 <h1>Connect to an MQTT Broker</h1>
 
-<p>An MQTTKit client will connect to the MQTT Broker when its <code>connectToHost:completionHandler:</code> method is called. MQTTKit is event-driven, so the client will be <em>effectively</em> connected when its <code>completionHandler</code> block is called and the return code <code>MQTTConnectionReturnCode</code> is equal to <code>ConnectionAccepted</code>.</p>
+<p>An MQTTKit client will connect to the MQTT Broker when its <code>connectToHost:completionHandler:</code> method<a contenteditable="false" data-primary="mobile messaging with MQTT" data-secondary="connecting to an MQTT broker" data-type="indexterm">&nbsp;</a> is called.<a contenteditable="false" data-primary="brokers" data-secondary="connecting to an MQTT broker" data-type="indexterm">&nbsp;</a> MQTTKit is event-driven, so the client will be <em>effectively</em> connected when its <code>completionHandler</code> block is called and the return code <code>MQTTConnectionReturnCode</code> is equal to <code>ConnectionAccepted</code>.</p>
 
 <p>You cannot assume that the client is connected when the <code>connectToHost:completionHandler:</code> method returns. Any actions that require the client to be connected must happen inside the <code>completionHandler</code> block.</p>
 
