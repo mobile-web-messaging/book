@@ -136,7 +136,7 @@ client.onConnectionLost = function(response) {
 
 <p>MQTT offers a simple mechanism to test the healthiness of the network connection betwee a client and a broker<a contenteditable="false" data-primary="MQTT" data-secondary="advanced" data-tertiary="heart-beating" data-type="indexterm">&nbsp;</a> using heart-beating.<a contenteditable="false" data-primary="heart-beating" data-secondary="in MQTT" data-type="indexterm">&nbsp;</a></p>
 
-<p>Heart-beating is enabled by specifying a <em>keep alive timer</em> when the client initially connects to the broker. This timer, measured in seconds, defines the maximum time interval between messages received from a client. It allows the client and broker to detect whether the network connection is broken without waiting for the long TCP/IP timeout. A timer value of <code>0</code> disables heart-beating.</p>
+<p>Heart-beating is enabled by specifying a <em>keep alive timer</em> when the client initially connects to the broker.<a contenteditable="false" data-primary="keep alive timer" data-type="indexterm">&nbsp;</a> This timer, measured in seconds, defines the maximum time interval between messages received from a client. It allows the client and broker to detect whether the network connection is broken without waiting for the long TCP/IP timeout. A timer value of <code>0</code> disables heart-beating.</p>
 
 <p>In the absence of regular messages exchanged between them, the client and the broker automatically send respective heart-beats (<code>PINGREQ</code> for the client and <code>PINGRESP</code> for the broker) based on the keep alive timer to check the healthiness of the network connection.</p>
 
