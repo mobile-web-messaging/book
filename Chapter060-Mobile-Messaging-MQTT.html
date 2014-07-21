@@ -1,7 +1,7 @@
 <section data-type="chapter" id="ch_mobile_mqtt" xmlns="http://www.w3.org/1999/xhtml">
 <h1>Mobile Messaging with MQTT</h1>
 
-<p class="lead">In this chapter, we will write an iOS application using the MQTTKit library to send and receive messages using the MQTT protocol.<a contenteditable="false" data-primary="MQTT" data-secondary="mobile messaging with" data-type="indexterm" id="MQTTmobmess">&nbsp;</a></p>
+<p class="lead">In this chapter, we will write an iOS application using the MQTTKit library to send and receive messages using<a contenteditable="false" data-primary="mobile messaging with MQTT" data-type="indexterm" id="mobmessMQTT">&nbsp;</a> the MQTT protocol.<a contenteditable="false" data-primary="MQTT" data-secondary="mobile messaging with" data-type="indexterm" id="MQTTmobmess">&nbsp;</a></p>
 
 <p>In <a data-type="xref" href="#ch_introduction_mqtt_example">#ch_introduction_mqtt_example</a>, we described the Motions application (). In this chapter, we will write the iOS application that broadcasts the device motion data and receives alert messages.</p>
 
@@ -18,7 +18,7 @@
 <section data-type="sect1" id="__code_mqttkit_code">
 <h1>MQTTKit</h1>
 
-<p>This book uses the MQTTKit library for iOS (and Mac OS X) applications. It is a modern Objective-C library that uses ARC and blocks to write messaging clients in a simple fashion. It is based on the <a href="http://mosquitto.org">Mosquitto</a> project that provides a lower-level C implementation of MQTT.</p>
+<p>This book uses the MQTTKit library for iOS (and Mac OS X) applications.<a contenteditable="false" data-primary="MQTTKit" data-type="indexterm">&nbsp;</a> It is a modern Objective-C library that uses ARC and blocks to write messaging clients in a simple fashion. It is based on the <a href="http://mosquitto.org">Mosquitto</a> project that provides a lower-level C implementation of MQTT.</p>
 
 <p>The source code of this library project is hosted on <a href="https://github.com/mobile-web-messaging/MQTTKit">GitHub</a>.</p>
 </section>
@@ -781,7 +781,7 @@ $ mosquitto_pub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/
 	<p>A binary payload to send the device motions values as three 64-bit floats.</p>
 	</li>
 	<li>
-	<p>A text payload to extract a background color from the messages received on the alert topic.<a contenteditable="false" data-primary="MQTT" data-secondary="mobile messaging with" data-startref="MQTTmobmess" data-type="indexterm">&nbsp;</a></p>
+	<p>A text payload to extract a background color from the messages received on the alert topic.<a contenteditable="false" data-primary="mobile messaging with MQTT" data-startref="mobmessMQTT" data-type="indexterm">&nbsp;</a><a contenteditable="false" data-primary="MQTT" data-secondary="mobile messaging with" data-startref="MQTTmobmess" data-type="indexterm">&nbsp;</a></p>
 	</li>
 </ul>
 </section>
