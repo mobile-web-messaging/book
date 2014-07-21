@@ -543,7 +543,7 @@ client.subscribe(destination, function(message) {
 
 <p>If heart-beating is enabled, this allows the client and the broker to be informed in case of network failures and act accordingly (the client could try to reconnect to the broker, the broker could clean up the resources created on behalf of the client, etc.).</p>
 
-<p>Heart-beating is negotiated between the client and the broker when the client connects to the broker (by sending a <code>CONNECT</code> frame) and the broker accepts the connection (by sending a <code>CONNECTED</code> frame to the client). Both frames accepts a <code>heart-beat</code> header whose value contains two integers separated by a comma:</p>
+<p>Heart-beating is negotiated between the client and the broker when the client connects to the broker (by sending a <code>CONNECT</code> frame) and the broker accepts the connection (by sending a <code>CONNECTED</code> frame to the client). Both frames accepts a <code>heart-beat</code> header whose value <a contenteditable="false" data-primary="headers" data-secondary="in STOMP frames" data-tertiary="heart-beat headers" data-type="indexterm">&nbsp;</a>contains two integers separated by a comma:</p>
 
 <pre data-type="programlisting">
 CONNECT
