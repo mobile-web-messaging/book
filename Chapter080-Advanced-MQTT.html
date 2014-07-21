@@ -332,7 +332,7 @@ $ mosquitto_sub -h iot.eclipse.org -t /mwm/lastWill/# -v
 <section data-type="sect1" id="_clean_session">
 <h1>Clean Session</h1>
 
-<p>When an MQTT client connects to the broker, it can specify whether the broker must store its state after it disconnects and until it reconnects. The client state that is store includes its subscriptions and any in-flight message with a QoS greater or equals to <code>1</code>. Messages with a QoS of <code>0</code> (<code>At Most Once</code>) are not stored, because they are delivered on a best effort basis.</p>
+<p>When an MQTT client connects to the broker, it can specify whether the broker must store its state after it disconnects and until it reconnects.<a contenteditable="false" data-primary="MQTT" data-secondary="advanced" data-tertiary="clean session" data-type="indexterm">&nbsp;</a><a contenteditable="false" data-primary="clean session (MQTT)" data-type="indexterm">&nbsp;</a> The client state that is store includes its subscriptions and any in-flight message with a QoS greater or equals to <code>1</code>. Messages with a QoS of <code>0</code> (<code>At Most Once</code>) are not stored, because they are delivered on a best effort basis.</p>
 
 <p>The client uses a Clean Session flag for this. If the flag is set, the broker will not store any state and the connection opened by the client will be <em>clean</em>. If the flag is not set, the broker will store the client state.</p>
 
