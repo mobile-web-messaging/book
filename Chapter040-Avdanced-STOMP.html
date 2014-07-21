@@ -322,7 +322,7 @@ tx.abort();</pre>
 <section data-type="sect1" id="_error_handling">
 <h1>Error Handling</h1>
 
-<p>Until now, we have used STOMP in a perfect world where no unexpected problems happened. Realistically, problems will occur. On mobile devices, the network will be lost and the connection to the STOMP broker will be broken.</p>
+<p>Until now, we have used STOMP in a perfect world where no unexpected problems happened. <a contenteditable="false" data-primary="STOMP" data-secondary="advanced" data-tertiary="error handling" data-type="indexterm">&nbsp;</a>Realistically, problems will occur. On mobile devices, the network will be lost and the connection to the STOMP broker will be broken.</p>
 
 <p>STOMP provides basic support to handle errors. The STOMP broker can inform the client that an error occurs by sending an <code>ERROR</code> frame to the client. This frame may contain a <code>message</code> header that contains a short description of the error. Most STOMP brokers deliver <code>ERROR</code> frames with a message payload containing more detailed information on the error.</p>
 
