@@ -79,9 +79,9 @@ $(document).ready(function() {
 <section data-type="sect1" id="_create_a_mqtt_client_with_code_mqttws31_js_code">
 <h1>Create an MQTT Client with mqttws31.js</h1>
 
-<p>When the browser loads this page, we will create an MQTT client using the JavaScript library.<a contenteditable="false" data-primary="web messaging with MQTT" data-secondary="creating an MQTT client with mqttws31.js" data-type="indexterm">&nbsp;</a></p>
+<p>When the browser loads this page, we will create an MQTT client using the JavaScript<a contenteditable="false" data-primary="mqttws31.js" data-type="indexterm">&nbsp;</a> library.<a contenteditable="false" data-primary="web messaging with MQTT" data-secondary="creating an MQTT client with mqttws31.js" data-type="indexterm">&nbsp;</a></p>
 
-<p>To create the client, we must pass the MQTT broker host and port (in our case, the host is <em>iot.eclipse.org</em> and the port is 80). Note that in <a data-type="xref" href="#ch_mobile_mqtt_client">#ch_mobile_mqtt_client</a>, the Motions iOS application was connecting to <em>iot.eclipse.org</em> on its default port 1883. This default port expects a TCP socket connection. Because the web application uses HTML5 Web Sockets, it must connect to the 80 port that will handle the HTTP Upgrade process from the initial HTTP connection.</p>
+<p>To create the <a contenteditable="false" data-primary="JavaScript" data-secondary="mqttws31.js library" data-type="indexterm">&nbsp;</a>client, we must pass the MQTT broker host and port (in our case, the host is <em>iot.eclipse.org</em> and the port is 80). Note that in <a data-type="xref" href="#ch_mobile_mqtt_client">#ch_mobile_mqtt_client</a>, the Motions iOS application was connecting to <em>iot.eclipse.org</em> on its default port 1883. This default port expects a TCP socket connection. Because the web application uses HTML5 Web Sockets, it must connect to the 80 port that will handle the HTTP Upgrade process from the initial HTTP connection.</p>
 
 <p>We also need to configure a <code>clientID</code> that identifies the MQTT client. In our case, we will just use a random String:</p>
 
