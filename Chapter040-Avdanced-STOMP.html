@@ -322,9 +322,9 @@ tx.abort();</pre>
 <section data-type="sect1" id="_error_handling">
 <h1>Error Handling</h1>
 
-<p>Until now, we have used STOMP in a perfect world where no unexpected problems happened. <a contenteditable="false" data-primary="STOMP" data-secondary="advanced" data-tertiary="error handling" data-type="indexterm">&nbsp;</a>Realistically, problems will occur. On mobile devices, the network will be lost and the connection to the STOMP broker will be broken.</p>
+<p>Until now, we have used STOMP in a perfect world <a contenteditable="false" data-primary="error handling in STOMP" data-type="indexterm">&nbsp;</a>where no unexpected problems happened. <a contenteditable="false" data-primary="STOMP" data-secondary="advanced" data-tertiary="error handling" data-type="indexterm">&nbsp;</a>Realistically, problems will occur. On mobile devices, the network will be lost and the connection to the STOMP broker will be broken.</p>
 
-<p>STOMP provides basic support to handle errors. The STOMP broker can inform the client that an error occurs by sending an <code>ERROR</code> frame to the client. This frame may contain a <code>message</code> header that contains a short description of the error. Most STOMP brokers deliver <code>ERROR</code> frames with a message payload containing more detailed information on the error.</p>
+<p>STOMP provides basic support to handle errors. The STOMP broker can inform the client that an error occurs by sending an <code>ERROR</code> frame to the client.<a contenteditable="false" data-primary="ERROR frame (STOMP)" data-type="indexterm">&nbsp;</a> This frame may contain a <code>message</code> header that contains a short description of the error. Most STOMP brokers deliver <code>ERROR</code> frames with a message payload containing more detailed information on the error.</p>
 
 <p>STOMP specifies that after delivering an <code>ERROR</code> frame to the client, the broker must close the connection. This means that STOMP is not resilient to error. If a single error occurs on the server, the broker will close the connection to the client. In addition, there is no guarantee that the client will be able to receive the <code>ERROR</code> frame before the connection is closed.</p>
 
