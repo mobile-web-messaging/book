@@ -3,7 +3,7 @@
 
 <p class="lead">In this chapter, we will write an iOS application using the MQTTKit library to send and receive messages using<a contenteditable="false" data-primary="mobile messaging with MQTT" data-type="indexterm" id="mobmessMQTT">&nbsp;</a> the MQTT protocol.<a contenteditable="false" data-primary="MQTT" data-secondary="mobile messaging with" data-type="indexterm" id="MQTTmobmess">&nbsp;</a></p>
 
-<p>In <a data-type="xref" href="#ch_introduction_mqtt_example">#ch_introduction_mqtt_example</a>, we described the Motions application (). In this chapter, we will write the iOS application that broadcasts the device motion data and receives alert messages.</p>
+<p>In <a data-type="xref" href="#ch_introduction_mqtt_example">#ch_introduction_mqtt_example</a>, we described the Motions application (). In this chapter, <a contenteditable="false" data-primary="mobile messaging with MQTT" data-secondary="Motions application (example)" data-type="indexterm">&nbsp;</a>we will write the iOS application that broadcasts the device motion data and receives alert messages.</p>
 
 <figure id="img_mobile_mqtt_1"><img alt="Diagram of the Motions+ iOS application" src="images/mawm_0601.png" />
 <figcaption>Diagram of the Motions iOS application</figcaption>
@@ -18,7 +18,7 @@
 <section data-type="sect1" id="__code_mqttkit_code">
 <h1>MQTTKit</h1>
 
-<p>This book uses the MQTTKit library for iOS (and Mac OS X) applications.<a contenteditable="false" data-primary="MQTTKit" data-type="indexterm">&nbsp;</a> It is a modern Objective-C library that uses ARC and blocks to write messaging clients in a simple fashion. It is based on the <a href="http://mosquitto.org">Mosquitto</a> project that provides a lower-level C implementation of MQTT.</p>
+<p>This book uses the MQTTKit library for iOS (and Mac OS X) applications.<a contenteditable="false" data-primary="MQTTKit" data-type="indexterm">&nbsp;</a> It is a modern Objective-C library that uses ARC and blocks to write messaging clients in a simple fashion.<a contenteditable="false" data-primary="Objective-C" data-secondary="MQTTKit library" data-type="indexterm">&nbsp;</a> It is based on the <a href="http://mosquitto.org">Mosquitto</a> project that provides a lower-level C implementation of MQTT.</p>
 
 <p>The source code of this library project is hosted on <a href="https://github.com/mobile-web-messaging/MQTTKit">GitHub</a>.</p>
 </section>
@@ -28,7 +28,7 @@
 
 <p>We will use <a href="https://developer.apple.com/xcode/">Xcode</a> to create the Locations iOS application.</p>
 
-<p>Once Xcode is installed and started, we select &quot;Create a new Xcode project&quot; from its launch screen. The application will be composed of a single view, so we select the Single View Application template in iOS &rarr; Application from the template screen, as illustrated in .</p>
+<p>Once Xcode is installed and started, we select &quot;Create a new Xcode project&quot; from its launch screen.<a contenteditable="false" data-primary="mobile messaging with MQTT" data-secondary="Motions application (example)" data-tertiary="creating Motions project with Xcode" data-type="indexterm">&nbsp;</a> The application will be composed of a single view, so we select the Single View Application template in iOS &rarr; Application from the template screen, as illustrated in .</p>
 
 <figure id="img_mobile_mqtt_125"><img alt="XCode template screen" src="images/mawm_0602.png" />
 <figcaption>Select Single View Application from the template screen</figcaption>
