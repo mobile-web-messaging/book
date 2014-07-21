@@ -646,7 +646,7 @@ $ mosquitto_sub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/
 <section data-type="sect2" id="_unsubscription">
 <h2>Unsubscription</h2>
 
-<p>To unsubscribe from a topic and stop receiving<a contenteditable="false" data-primary="mobile messaging with MQTT" data-secondary="receiving MQTT messages" data-tertiary="unsubscription" data-type="indexterm">&nbsp;</a> messages from it, we will call the <code>unsubscribe:withCompletionHandler:</code> method of the <code>client</code> where the first parameter is the topic to unsubscribe from (the alert topic in our case). The second parameter is a completion handler that is called back when the client has been acknowledged by the server that it is effectively unsubscribed. We do not have any need for this information so we just pass <code>nil</code> as the handler:</p>
+<p>To unsubscribe from a topic and<a contenteditable="false" data-primary="unsubscribing from MQTT topics" data-type="indexterm">&nbsp;</a> stop receiving<a contenteditable="false" data-primary="mobile messaging with MQTT" data-secondary="receiving MQTT messages" data-tertiary="unsubscription" data-type="indexterm">&nbsp;</a> messages from it, we will call the <code>unsubscribe:withCompletionHandler:</code> method of the <code>client</code> where the first parameter is the topic to unsubscribe from (the alert topic in our case). The second parameter is a completion handler that is called back when the client has been acknowledged by the server that it is effectively unsubscribed. We do not have any need for this information so we just pass <code>nil</code> as the handler:</p>
 
 <pre data-code-language="objc" data-type="programlisting">
 - (void)unsubscribe
