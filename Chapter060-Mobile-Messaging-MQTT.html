@@ -729,7 +729,7 @@ $ mosquitto_sub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/
 
 <p>To avoid a retain/release cycle between <code>self</code> and the <code>messageHandler</code> block, we need to create a <em>weak</em> reference of <code>self</code> to use it inside the block.</p>
 
-<p>How can we verify that the Motions application is effectively receiving alert messages? To verify that the application was sending messages, we used the <code>mosquitto_sub</code> tool. We will now use the opposite tool, <code>mosquitto_pub</code>, to publish a message on the alert topic and verify that the application background color changes.</p>
+<p>How can we verify that the Motions application is effectively receiving alert messages? To verify that the application was sending messages, we used the <code>mosquitto_sub</code> tool. We will now use the opposite tool, <code>mosquitto_pub</code>, to publish a message on the alert topic and verify that the application background color changes.<a contenteditable="false" data-primary="mosquitto_pub tool" data-type="indexterm">&nbsp;</a></p>
 
 <p>The <code>mosquitto_pub</code> can send a text payload using the <code>-m</code> option. We will use this option to pass the background color (in this case, <code>green</code>):</p>
 
