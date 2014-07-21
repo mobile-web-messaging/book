@@ -608,7 +608,7 @@ $ mosquitto_sub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/
 <pre data-code-language="objc" data-type="programlisting">
 #define kAlertTopic @&quot;/mwm/%@/alert&quot;</pre>
 
-<p>The <code>subscribe:withQos:completionHandler:</code> method takes a <code>qos</code> parameter that corresponds to the level of quality of service at which the consumer wants to recieve messages from the topic.</p>
+<p>The <code>subscribe:withQos:completionHandler:</code> method takes a <code>qos</code> parameter that corresponds to the level of quality of service at which the consumer wants to recieve messages from the topic.<a contenteditable="false" data-primary="Quality of Service (QoS)" data-secondary="receiving MQTT messages" data-type="indexterm">&nbsp;</a></p>
 
 <p>The completion handler will be called when the client is effectively subscribed to the topic. The handler has a <code>grantedQos</code> parameter that corresponds to the effective quality of service. The producer is responsible for determining the maximum quality of service that a message can be delivered at, but the consumer can decide to <em>downgrade</em> the quality of service according to its usage. For example, a producer may publish a message with a QoS of <code>ExactlyOnce</code>, but a consumer may decide that it is acceptable for it if there are message duplicates and downgrade its QoS to <code>At Least Once</code>.</p>
 
