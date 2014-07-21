@@ -1,66 +1,46 @@
-<section xmlns="http://www.w3.org/1999/xhtml" data-type="appendix" id="appendix_mosquitto">
+<section data-type="appendix" id="appendix_mosquitto" xmlns="http://www.w3.org/1999/xhtml">
 <h1>Mosquitto</h1>
 
-
-<p class="lead">In this appendix, we describe how to install the <a href="http://mosquitto.org">Mosquitto broker</a> and its tools to produce and consume MQTT messages from the command line.</p>
-
-
-
-
-
+<p class="lead">In this appendix, we describe how to install the <a href="http://mosquitto.org">Mosquitto broker</a> and its tools to produce and consume MQTT messages from the command line.<a contenteditable="false" data-primary="Mosquitto broker" data-type="indexterm">&nbsp;</a></p>
 
 <section data-type="sect1" id="_download_and_installation_2">
 <h1>Download and Installation</h1>
 
-<p>Mosquitto is an open source message broker that implements the MQTT protocol.
-The public MQTT broker hosted on <em>iot.eclipse.org</em> that we used in <a data-type="xref" href="#ch_mobile_mqtt">#ch_mobile_mqtt</a> and <a data-type="xref" href="#ch_web_mqtt">#ch_web_mqtt</a> is an instance of Mosquitto.</p>
+<p>Mosquitto is an open source message broker that implements the MQTT protocol. The public MQTT broker <a contenteditable="false" data-primary="Mosquitto broker" data-secondary="downloading and installing" data-type="indexterm">&nbsp;</a>hosted on <em>iot.eclipse.org</em> that we used in <a data-type="xref" href="#ch_mobile_mqtt">#ch_mobile_mqtt</a> and <a data-type="xref" href="#ch_web_mqtt">#ch_web_mqtt</a> is an instance of Mosquitto.</p>
 
 <p>Mosquitto also comes with two command-line tools to send and receive MQTT messages. These tools are handy when writing an application using MQTT to be able to quickly produce and consume messages and check that the application is working as expected.</p>
 
 <p>To install Mosquitto on your operating system, please consult its <a href="http://mosquitto.org/download/">documentation page</a>, which contains instructions for various operating systems and package managers.</p>
 </section>
 
-
-
-
-
-
-
-
-
-
-
-
-
 <section data-type="sect1" id="_produce_messages_with_code_mosquitto_pub_code">
 <h1>Produce Messages with mosquitto_pub</h1>
 
 <p>The <code>mosquitto_pub</code> command-line tool can be used to produce MQTT messages.</p>
 
-<p>In this book, we use it in the simplest fashion to send a message.
-The parameters we must pass to the tool are:</p>
+<p>In this book, we use it in the simplest fashion to send a message. The parameters we must pass to the tool are:</p>
+
 <ul>
-<li>
-<p><code>-h host</code> to specify the host of the MQTT broker</p>
-</li>
-<li>
-<p><code>-t topic</code> to specify the topic of the MQTT message</p>
-</li>
-<li>
-<p><code>-m message</code> to specify the message payload to send</p>
-</li>
+	<li>
+	<p><code>-h host</code> to specify the host of the MQTT broker</p>
+	</li>
+	<li>
+	<p><code>-t topic</code> to specify the topic of the MQTT message</p>
+	</li>
+	<li>
+	<p><code>-m message</code> to specify the message payload to send</p>
+	</li>
 </ul>
 
 <p>For example, to send a message with the text <code>yellow</code> for payload on the topic <code>/mwm/XYZ/alert</code> on the broker hosted on <em>iot.eclipse.org</em>, the command line is:</p>
 
-
-<pre data-type="programlisting" data-code-language="sh">$ mosquitto_pub -h iot.eclipse.org -t /mwm/XYZ/alert -m yellow</pre>
-
+<pre data-code-language="sh" data-type="programlisting">
+$ mosquitto_pub -h iot.eclipse.org -t /mwm/XYZ/alert -m yellow</pre>
 
 <p>The full list of the <code>mosquitto_pub</code> parameters is available by calling <code>mosquitto_pub --help</code>:</p>
 
-
-<pre data-type="programlisting">$ mosquitto_pub --help
+<pre data-type="programlisting">
+$ mosquitto_pub --help
 mosquitto_pub is a simple mqtt client that will publish a message on a single topic and exit.
 mosquitto_pub version 1.3.1 running on libmosquitto 1.3.1.
 
@@ -120,20 +100,7 @@ Usage: mosquitto_pub [-h host] [-p port] [-q qos] [-r] {-f file | -l | -n | -m m
  --psk-identity : client identity string for TLS-PSK mode.
 
 See http://mosquitto.org/ for more information.</pre>
-
 </section>
-
-
-
-
-
-
-
-
-
-
-
-
 
 <section data-type="sect1" id="_consume_messages_with_code_mosquitto_sub_code">
 <h1>Consume Messages with mosquitto_sub</h1>
@@ -141,30 +108,29 @@ See http://mosquitto.org/ for more information.</pre>
 <p>The <code>mosquitto_sub</code> command-line tool can be used to consume MQTT messages.</p>
 
 <p>The minimal parameters we must pass to the tool are:</p>
+
 <ul>
-<li>
-<p><code>-h host</code> to specify the host of the MQTT broker</p>
-</li>
-<li>
-<p><code>-t topic</code> to specify the topic to consume from</p>
-</li>
+	<li>
+	<p><code>-h host</code> to specify the host of the MQTT broker</p>
+	</li>
+	<li>
+	<p><code>-t topic</code> to specify the topic to consume from</p>
+	</li>
 </ul>
 
-<p>For example, to consume messages from the topic <code>/mwm/XYZ/alert</code>
-on the broker hosted on <em>iot.eclipse.org</em>, the command line is:</p>
+<p>For example, to consume messages from the topic <code>/mwm/XYZ/alert</code> on the broker hosted on <em>iot.eclipse.org</em>, the command line is:</p>
 
-
-<pre data-type="programlisting" data-code-language="sh">$ mosquitto_sub -h iot.eclipse.org -t /mwm/XYZ/alert
+<pre data-code-language="sh" data-type="programlisting">
+$ mosquitto_sub -h iot.eclipse.org -t /mwm/XYZ/alert
 ...
 yellow</pre>
-
 
 <p>Each message that is consumed by the tool will be displayed on a new line. You can use type <code>ctrl + c</code> to exit the tool and stop consuming messages.</p>
 
 <p>The full list of the <code>mosquitto_sub</code> parameters is available by calling <code>mosquitto_sub --help</code>:</p>
 
-
-<pre data-type="programlisting">$ mosquitto_sub --help
+<pre data-type="programlisting">
+$ mosquitto_sub --help
 mosquitto_sub is a simple mqtt client that will subscribe to a single topic and print all messages it receives.
 mosquitto_sub version 1.3.1 running on libmosquitto 1.3.1.
 
@@ -219,13 +185,5 @@ Usage: mosquitto_sub [-c] [-h host] [-k keepalive] [-p port] [-q qos] [-R] -t to
  --psk-identity : client identity string for TLS-PSK mode.
 
 See http://mosquitto.org/ for more information.</pre>
-
 </section>
-
-
-
-
-
-
-
 </section>
