@@ -517,7 +517,7 @@ Command symbol is not displayed in PDF.
 
 <p>However, the <a href="http://mosquitto.org">Mosquitto broker</a> provides a simple command-line tool to send and receive message from<a contenteditable="false" data-primary="brokers" data-secondary="Mosquitto broker, sending/receiving messages from MQTT broker" data-type="indexterm">&nbsp;</a> an MQTT broker. <a data-type="xref" href="#appendix_mosquitto">#appendix_mosquitto</a> explains how to download and install the Mosquitto broker.<a contenteditable="false" data-primary="Mosquitto broker" data-secondary="command-line tool to send/receive messages from MQTT broker" data-type="indexterm">&nbsp;</a> After it is done, we can use its <code>mosquitto_sub</code> command-line tool to connect to an MQTT broker (hosted at <em>iot.eclipse.org</em>) and subscribe to the device motion topic (in my case, <code>/mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/motion</code>, you will have to replace it using your own device identifier).</p>
 
-<p>This tool will display the message payload. We are sending binary payload, so we will pipe the command into the <code>hexdump</code> tool to display the hexadecimal representation of the binary payload:</p>
+<p>This tool will display the message payload. We are sending binary payload, so we will pipe the command into the <code>hexdump</code> tool to<a contenteditable="false" data-primary="hexdump tool" data-type="indexterm">&nbsp;</a> display the hexadecimal representation of the binary payload:</p>
 
 <pre data-code-language="bash" data-type="programlisting">
 $ mosquitto_sub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/motion | hexdump
@@ -536,7 +536,7 @@ $ mosquitto_sub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/
 <section data-type="sect1" id="ch_mobile_mqtt_receive">
 <h1>Receive MQTT Messages</h1>
 
-<p>As described in <a data-type="xref" href="#ch_introduction_mqtt_example">#ch_introduction_mqtt_example</a>, the Motions iOS application is also a consumer from the topic <code>/mwm/XXX/alert</code>. When it receives a message from this topic, it must change its background color to &quot;alert&quot; the user.</p>
+<p>As described in <a data-type="xref" href="#ch_introduction_mqtt_example">#ch_introduction_mqtt_example</a>, the Motions iOS application is also a consumer from <a contenteditable="false" data-primary="mobile messaging with MQTT" data-secondary="receiving MQTT messages" data-type="indexterm">&nbsp;</a>the topic <code>/mwm/XXX/alert</code>.<a contenteditable="false" data-primary="messages" data-secondary="receiving MQTT messages" data-type="indexterm">&nbsp;</a> When it receives a message from this topic, it must change its background color to &quot;alert&quot; the user.</p>
 
 <p>Let&rsquo;s write the method that alert the user by changing the background color first. This <code>warnUser:</code> method takes an <code>NSString</code> parameter that should correspond to a color. Using <code>UIKit</code> animations, we will:</p>
 
