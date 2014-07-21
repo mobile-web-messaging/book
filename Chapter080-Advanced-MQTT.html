@@ -296,7 +296,7 @@ function discard(deviceID) {
 <section data-type="sect2" id="__code_mqttws31_js_code_example_4">
 <h2>mqttws31.js Example</h2>
 
-<p>It is also possible to set a client&rsquo;s last will using <code>mqttws31.js</code>. The <code>client</code>'s <code>connect</code> method can take an optional <code>willMessage</code> object that represents the last will message to send if it disconnects unexpectedly. The value is a regular MQTT message created by calling <code>new Messaging.Message</code> constructor and specifying its <code>destinationName</code> (the last will topic), and optionally its <code>qos</code> and <code>retained</code> value:</p>
+<p>It is also possible to set a client&rsquo;s last will using <code>mqttws31.js</code>. <a contenteditable="false" data-primary="last will (MQTT)" data-secondary="mqttws31.js example" data-type="indexterm">&nbsp;</a><a contenteditable="false" data-primary="mqttws31.js" data-secondary="last will example" data-type="indexterm">&nbsp;</a>The <code>client</code>'s <code>connect</code> method can take an optional <code>willMessage</code> object that represents the last will message to send if it disconnects unexpectedly. The value is a regular MQTT message created by calling <code>new Messaging.Message</code> constructor and specifying its <code>destinationName</code> (the last will topic), and optionally its <code>qos</code> and <code>retained</code> value:</p>
 
 <pre data-code-language="js" data-type="programlisting">
 var willMessage = new Messaging.Message(&quot;Web client &quot; + clientID + &quot; 
