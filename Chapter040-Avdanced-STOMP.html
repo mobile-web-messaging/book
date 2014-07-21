@@ -594,7 +594,7 @@ heart-beat:20000,30000
 <p>The client desired to receive the broker heartbeat every minute (<code>60000</code> as the second value of the <code>CONNECT</code>'s <code>heart-beat</code> header). The broker replied that it can guarantee to send them at least every 30 seconds (second value of the <code>CONNECTED</code>'s <code>heart-beat</code> header). In that case, the broker and the client agrees that the broker must send heartbeats every minute (the maximum between 1 minute and 30 seconds). In other words, the broker <em>could</em> send heartbeats every 30 seconds (as it guaranteed in the <code>CONNECTED</code> frame) but the client will only check them every minute.</p>
 
 <div data-type="note">
-<p>ActiveMQ supports heart-beating and mirrors the heartbeat values sent by the STOMP client. This lets the STOMP client be the sole decider of the heartbeating values.</p>
+<p>ActiveMQ supports heart-beating and mirrors the heartbeat values sent by the STOMP client.<a contenteditable="false" data-primary="ActiveMQ" data-secondary="heart-beating support" data-type="indexterm">&nbsp;</a> This lets the STOMP client be the sole decider of the heartbeating values.</p>
 
 <p>This means that if a client connects with a <code>heart-beat</code> header set to <code>&lt;cx&gt;,&lt;sy&gt;</code>, the broker will accept the connection with a <code>heart-beat</code> header set to <code>&lt;sy&gt;,&lt;cx&gt;</code>.</p>
 
