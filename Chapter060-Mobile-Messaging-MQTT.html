@@ -373,7 +373,7 @@ Command symbol is not displayed in PDF.
 <section data-type="sect1" id="_send_mqtt_messages">
 <h1>Send MQTT Messages</h1>
 
-<p>The <code>MWMViewController</code> automatically connects to the MQTT broker when its view is loaded and disconnects when it is <a contenteditable="false" data-primary="mobile messaging with MQTT" data-secondary="sending MQTT messages" data-type="indexterm">&nbsp;</a>deallocated.<a contenteditable="false" data-primary="messages" data-secondary="sending MQTT messages" data-type="indexterm">&nbsp;</a> The next step is to send messages every time the device motion values are updated.</p>
+<p>The <code>MWMViewController</code> automatically connects to the MQTT broker when its view is loaded and disconnects when it is <a contenteditable="false" data-primary="mobile messaging with MQTT" data-secondary="sending MQTT messages" data-type="indexterm" id="mobmessMQTTsend">&nbsp;</a>deallocated.<a contenteditable="false" data-primary="messages" data-secondary="sending MQTT messages" data-type="indexterm">&nbsp;</a> The next step is to send messages every time the device motion values are updated.</p>
 
 <p>The MQTT protocol is a binary protocol. The message payload must be encoded as binary data<a contenteditable="false" data-primary="payload" data-secondary="binary payload for MQTT messages" data-type="indexterm">&nbsp;</a> to be sent. <a contenteditable="false" data-primary="MQTTKit" data-secondary="methods to send messages" data-type="indexterm">&nbsp;</a>The MQTTKit library provides two methods to send messages:</p>
 
@@ -529,7 +529,7 @@ $ mosquitto_sub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/
 0000090 50 fd 05 26 5b 0a 3f d1 60 87 16 0b 12 9e bf c2
 ...</pre>
 
-<p>This confirms that the Motions application is effectively publishing MQTT messages.</p>
+<p>This confirms that the Motions application is effectively publishing MQTT messages.<a contenteditable="false" data-primary="mobile messaging with MQTT" data-secondary="sending MQTT messages" data-startref="mobmessMQTTsend" data-type="indexterm">&nbsp;</a></p>
 </section>
 </section>
 
