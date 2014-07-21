@@ -284,7 +284,7 @@ NSLog(@&quot;started transaction %@&quot;, transaction.identifier);
 <section data-type="sect2" id="__code_stomp_js_code_example_3">
 <h2>stomp.js Example</h2>
 
-<p>The API is very similar to StompKit.<a contenteditable="false" data-primary="transactions in STOMP" data-secondary="stomp.js example" data-type="indexterm">&nbsp;</a> The <code>client</code> object has a <code>begin</code> method that can take a parameter corresponding to the transaction identifier. If there is no parameter, an identifier is automatically generated. The <code>begin</code> method returns a <code>transaction</code> object that has an <code>id</code> property corresponding to the transaction identifier.</p>
+<p>The API is very similar to StompKit.<a contenteditable="false" data-primary="transactions in STOMP" data-secondary="stomp.js example" data-type="indexterm">&nbsp;</a> The <code>client</code> object has a <code>begin</code> method that can take a parameter corresponding to <a contenteditable="false" data-primary="stomp.js" data-secondary="transaction example" data-type="indexterm">&nbsp;</a>the transaction identifier. If there is no parameter, an identifier is automatically generated. The <code>begin</code> method returns a <code>transaction</code> object that has an <code>id</code> property corresponding to the transaction identifier.</p>
 
 <p>Sending, acknowledging, or nacking a message can be part of a transaction by passing a <code>transaction</code> header set to the transaction identifier to these methods.</p>
 
