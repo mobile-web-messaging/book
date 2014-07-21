@@ -1,86 +1,56 @@
-<section xmlns="http://www.w3.org/1999/xhtml" data-type="chapter" id="ch_beyond_stomp">
+<section data-type="chapter" id="ch_beyond_stomp" xmlns="http://www.w3.org/1999/xhtml">
 <h1>Beyond STOMP</h1>
 
+<p class="lead">STOMP provides a simple yet flexible messaging protocol. It also offers an extensible way for brokers to provide additional features beyond the ones specified in the protocol.</p>
 
-<p class="lead">STOMP provides a simple yet flexible messaging protocol.
-It also offers an extensible way for brokers to provide additional features beyond the ones specified in the protocol.</p>
-
-<p>In this chapter, we will show how to leverage broker features with STOMP headers. Until this chapter, all STOMP brokers could be used to send and receive messages
-from our applications, but in this chapter, you will have to check your broker documentation to see if it provides these features (or others not covered by this chapter).</p>
-
-
-
-
-
+<p>In this chapter, we will show how to leverage broker features with STOMP headers. Until this chapter, all STOMP brokers could be used to send and receive messages from our applications, but in this chapter, you will have to check your broker documentation to see if it provides these features (or others not covered by this chapter).</p>
 
 <section data-type="sect1" id="_message_persistence">
 <h1>Message Persistence</h1>
 
-<p>Some STOMP brokers support <em>persistent</em> messages
-to ensure that if a message is held by the broker when it crashes, the message will be persisted (that means stored on a durable support) so that the broker can
-fetch it when it restarts and handle it again. This prevents any data loss (at the cost of performance, because the broker must ensure that the message is effectively
-written on the storage support).
-To use persistent messages, most STOMP brokers (including ActiveMQ) require that the message must be sent with a <code>persistent</code> header set to <code>true</code>.</p>
+<p>Some STOMP brokers support <em>persistent</em> messages to ensure that if a message is held by the broker when it crashes, the message <a contenteditable="false" data-primary="brokers" data-secondary="message persistence" data-type="indexterm">&nbsp;</a>will be persisted (that means stored on a durable support) so that the broker can fetch it when it restarts and handle it again. This prevents any data loss (at the cost of performance, because the broker must ensure that the message is effectively written on the storage support). To use persistent messages, most STOMP brokers (including ActiveMQ) require that the message must be sent with a <code>persistent</code> header set to <code>true</code>.</p>
 
 <p>In the Locations application, we send two types of messages: one for the device location and one for text messages.</p>
 
-<p>The location messages do not need to be persisted and survive a broker crash. It has minimal consequences if these messages are lost if the
-broker was crashed. Once the broker is up again, the device will send an updated position.</p>
+<p>The location messages do not need to be persisted and survive a broker crash. It has minimal consequences if these messages are lost if the broker was crashed. Once the broker is up again, the device will send an updated position.</p>
 
-<p>However, for the text messages sent to the devices, we want to make sure that they are not lost before the device had a chance to receive it.
-We could declare these messages as persistent in the Locations web application to ensure that they survive a broker crash:</p>
+<p>However, for the text messages sent to the devices, we want to make sure that they are not lost before the device had a chance to receive it. We could declare these messages as persistent in the Locations web application to ensure that they survive a broker crash:</p>
 
-
-<pre data-type="programlisting" data-code-language="js">var order = "XXX";
-client.send("/topic/mytopic", { persistent: true}, order);</pre>
-
+<pre data-code-language="js" data-type="programlisting">
+var order = &quot;XXX&quot;;
+client.send(&quot;/topic/mytopic&quot;, { persistent: true}, order);</pre>
 
 <p>When the broker receives the message, it will check the <code>persistent</code> header and persist the message if it is true.</p>
 
-<p>Persisting messages adds a significant cost: the broker must write the message to a durable support (on a filesystem or in a database) and wait for the operating system to effectively write it (some operating systems will buffer data before writing them to disk).
-The broker must also have sufficient space on the durable support to write the  persistent messages (once a persistent message has been delivered to all its consumers, the broker can safely discard it from the durable support).</p>
+<p>Persisting messages adds a significant cost: the broker must write the message to a durable support (on a filesystem or in a database) and wait for the operating system to effectively write it (some operating systems will buffer data before writing them to disk). The broker must also have sufficient space on the durable support to write the persistent messages (once a persistent message has been delivered to all its consumers, the broker can safely discard it from the durable support).</p>
 
 <p>To add further reliability, the client could use receipts (as described in <a data-type="xref" href="#ch_advanced_stomp_receipts">#ch_advanced_stomp_receipts</a>) to wait until the broker has processed its message (and persisted it). Once the receipt is received, the client is guaranteed that the message would survive a server crash. Without a receipt, there is a small window for failure if the server crashes <em>after</em> receiving the message but <em>before</em> storing it on its durable support.</p>
 </section>
-
-
-
-
-
-
-
-
-
-
-
-
 
 <section data-type="sect1" id="_filtered_consumer">
 <h1>Filtered Consumer</h1>
 
 <p>There are cases in which a consumer may be interested only by a subset of all messages delivered from a destination.</p>
 
-<p>Every time a consumer is delivered a message, it can filter it out (using the message’s headers or its payload) to take into account only the interesting ones. However, this is inefficient, because the consumer is still receiving all messages from the destination but may potentially discard many of them.</p>
+<p>Every time a consumer is delivered a message, it can filter it out (using the message&rsquo;s headers or its payload) to take into account only the interesting ones. However, this is inefficient, because the consumer is still receiving all messages from the destination but may potentially discard many of them.</p>
 
-<p>Some STOMP brokers allow you to specify a filter (or selector) when
-a consumer subscribes to a destination. Before delivering the message to the destination’s consumers, the STOMP broker will check whether the message matches the consumer’s filter. The message is delivered to the consumer only if it matches the filter.</p>
+<p>Some STOMP brokers allow you to specify a filter (or selector) when a consumer subscribes to a destination. Before delivering the message to the destination&rsquo;s consumers, the STOMP broker will check whether the message matches the consumer&rsquo;s filter. The message is delivered to the consumer only if it matches the filter.</p>
 
 <p>A filter is similar to a <a href="http://en.wikipedia.org/wiki/SQL-92">SQL 92</a> conditional query using the message headers. The message payload is opaque for the STOMP broker and cannot be used by filters.</p>
 
-<p>It turns out that this can be quite powerful, because STOMP allows us to add any user-specified header.
-If we want to filter out messages, we can put interesting information in the headers (either by removing them from the payload or duplicating them).</p>
+<p>It turns out that this can be quite powerful, because STOMP allows us to add any user-specified header. If we want to filter out messages, we can put interesting information in the headers (either by removing them from the payload or duplicating them).</p>
 
 <p>For example, we could add a <code>country</code> header when a location message is sent by the Locations iOS application. The value of this header would correspond to the country where the device is located (e.g., <code>FR</code> for France, <code>DE</code> for Germany, <code>IT</code> for Italy, etc.):</p>
 
-
-<pre data-type="programlisting" data-code-language="objc">- (void)sendLocation:(CLLocation *)location
+<pre data-code-language="objc" data-type="programlisting">
+- (void)sendLocation:(CLLocation *)location
 {
     // ...
 
     NSString *country = [self findCountryFrom:location];
     NSDictionary *headers = @{
-        @"content-type": @"application/json;charset=utf-8",
-        @"country": country
+        @&quot;content-type&quot;: @&quot;application/json;charset=utf-8&quot;,
+        @&quot;country&quot;: country
     };
 
     // send the message
@@ -89,73 +59,40 @@ If we want to filter out messages, we can put interesting information in the hea
                    body:body];
 }</pre>
 
-
 <p>With this new header in the message representation, the consumers can now filter out messages to receive only the ones for some countries.</p>
 
 <p>If we want to receive only messages from France, Germany, and Italy, we just need to add a <code>selector</code> header when the consumer subscribes to the destination:</p>
 
-
-<pre data-type="programlisting" data-code-language="js">client.subscribe(destination, function(message) {
+<pre data-code-language="js" data-type="programlisting">
+client.subscribe(destination, function(message) {
   // Only messages with the country header with the value FR, DE, or IT will
   // be delivered to the client.
   // ...
-}, {selector: "country IN ('FR', 'DE', 'IT')"});</pre>
-
+}, {selector: &quot;country IN ('FR', 'DE', 'IT')&quot;});</pre>
 
 <p>If the STOMP broker support filtered consumers and your application can leverage them, this can significantly reduce the amount of messages sent on the network, saving bandwidth, CPU, and battery usage on the client (filtered out messages will not be sent over the network and will not be processed at all by the client).</p>
+
 <div data-type="note">
 <p>ActiveMQ has specific rules about how to use a filtered consumer with STOMP that are described in its <a href="http://activemq.apache.org/selectors.html">Selectors documentation page</a>.</p>
-
 </div>
 </section>
-
-
-
-
-
-
-
-
-
-
-
-
 
 <section data-type="sect1" id="_priority">
 <h1>Priority</h1>
 
-<p>Messages sent to destinations are usually delivered to a consumer in the order of their arrival. That means that if a
-producer sent messages A, B, and C in that order, a single consumer will receive the messages in the same order: A, B, and C.</p>
+<p>Messages sent to destinations are usually delivered to a consumer in the order of their arrival. That means that if a producer sent messages A, B, and C in that order, a single consumer will receive the messages in the same order: A, B, and C.</p>
 
 <p>However, there are cases where a producer wants to send a more <em>urgent</em> message that should take precedence over messages that it already sent.</p>
 
-<p>Some STOMP brokers provide a way to achieve this using message <em>priority</em>. When a producer sends a message, it can set a <code>priority</code> header to change the
-message priority. The usual semantics for the priority value are copied from the JMS API, which defines ten levels of priority value, with <code>0</code> as the lowest priority and <code>9</code> as the highest (and <code>4</code> as
-the default priority).</p>
+<p>Some STOMP brokers provide a way to achieve this using message <em>priority</em>. When a producer sends a message, it can set a <code>priority</code> header to change the message priority. The usual semantics for the priority value are copied from the JMS API, which defines ten levels of priority value, with <code>0</code> as the lowest priority and <code>9</code> as the highest (and <code>4</code> as the default priority).</p>
 
-<p>A broker will often try to deliver expedited messages before messages of lower priority, but this is not a strong requirement. To ensure a <em>fair</em> delivery of messages,
-it may deliver lower priority messages so that a single producer sending only messages with the highest priority does not prevent the delivery of messages of lower priority from other producers.</p>
+<p>A broker will often try to deliver expedited messages before messages of lower priority, but this is not a strong requirement. To ensure a <em>fair</em> delivery of messages, it may deliver lower priority messages so that a single producer sending only messages with the highest priority does not prevent the delivery of messages of lower priority from other producers.</p>
 
-<p>In the Locations application, we do not have a use case where changing the priority of a message would make sense, because we use different channels for tracking device location and sending text messages to the device.
-If we were using a single channel for both kind of messages, we could give the text messages a higher priority (e.g., <code>7</code>) so that they
-could be delivered ahead of messages with normal priority:</p>
+<p>In the Locations application, we do not have a use case where changing the priority of a message would make sense, because we use different channels for tracking device location and sending text messages to the device. If we were using a single channel for both kind of messages, we could give the text messages a higher priority (e.g., <code>7</code>) so that they could be delivered ahead of messages with normal priority:</p>
 
-
-<pre data-type="programlisting" data-code-language="js">client.send(destination, { priority: 7 }, text);</pre>
-
+<pre data-code-language="js" data-type="programlisting">
+client.send(destination, { priority: 7 }, text);</pre>
 </section>
-
-
-
-
-
-
-
-
-
-
-
-
 
 <section data-type="sect1" id="_expiration">
 <h1>Expiration</h1>
@@ -168,16 +105,16 @@ could be delivered ahead of messages with normal priority:</p>
 
 <p>For example, if we want to expire messages 10 minutes after they are sent by the <code>Locations</code> applications, we need to add an <code>expires</code> header whose value is the number of milliseconds since the Unix time and ten minutes after now:</p>
 
-
-<pre data-type="programlisting" data-code-language="objc">- (void)sendLocation:(CLLocation *)location
+<pre data-code-language="objc" data-type="programlisting">
+- (void)sendLocation:(CLLocation *)location
 {
     // ...
 
     // 10 minutes from now
     NSTimeInterval expiration = [[NSDate date] timeIntervalSince1970] + 600000;
     NSDictionary *headers = @{
-        @"content-type": @"application/json;charset=utf-8",
-        @"expires": [NSNumber numberWithLong:(long)expiration]
+        @&quot;content-type&quot;: @&quot;application/json;charset=utf-8&quot;,
+        @&quot;expires&quot;: [NSNumber numberWithLong:(long)expiration]
     };
 
     // send the message
@@ -186,22 +123,8 @@ could be delivered ahead of messages with normal priority:</p>
                    body:body];
 }</pre>
 
-
-<p>Expiring messages can improve the healthiness of your applications. Producers have no knowledge of when their messages will be consumed and by whom.
-However, if they know that the data sent in their messages has a limited lifetime, they can expire them after a given time instead of letting the broker deliver them to consumers after they stop being valid.</p>
+<p>Expiring messages can improve the healthiness of your applications. Producers have no knowledge of when their messages will be consumed and by whom. However, if they know that the data sent in their messages has a limited lifetime, they can expire them after a given time instead of letting the broker deliver them to consumers after they stop being valid.</p>
 </section>
-
-
-
-
-
-
-
-
-
-
-
-
 
 <section data-type="sect1" id="_summary_5">
 <h1>Summary</h1>
@@ -209,28 +132,22 @@ However, if they know that the data sent in their messages has a limited lifetim
 <p>In this chapter, we learned that STOMP is a simple and flexible protocol that can be extended by brokers and clients using additional headers.</p>
 
 <p>Based on the ActiveMQ broker, we see that STOMP can be extended to:</p>
+
 <ul>
-<li>
-<p>Support persistent messages by passing a <code>persistent</code> header set to <code>true</code> when messages are sent.</p>
-</li>
-<li>
-<p>Have the consumer use a <code>selector</code> filter to receive only messages whose headers match the filter.</p>
-</li>
-<li>
-<p>Send messages with a higher or lower priority using the <code>priority</code> header.</p>
-</li>
-<li>
-<p>Expire messages after an expiration date so that broker will not deliver messages after this date.</p>
-</li>
+	<li>
+	<p>Support persistent messages by passing a <code>persistent</code> header set to <code>true</code> when messages are sent.</p>
+	</li>
+	<li>
+	<p>Have the consumer use a <code>selector</code> filter to receive only messages whose headers match the filter.</p>
+	</li>
+	<li>
+	<p>Send messages with a higher or lower priority using the <code>priority</code> header.</p>
+	</li>
+	<li>
+	<p>Expire messages after an expiration date so that broker will not deliver messages after this date.</p>
+	</li>
 </ul>
 
 <p>Depending on the STOMP broker you use, you may be able to use these features or others to improve the design of your architecture and reduce the network bandwidth, the CPU, and battery usage so that producers and consumers only deal with relevant messages and ignore the others.</p>
 </section>
-
-
-
-
-
-
-
 </section>
