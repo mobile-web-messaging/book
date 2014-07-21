@@ -433,7 +433,7 @@ Command symbol is not displayed in PDF.
 
 <p>In our case, we will publish messages with <code>retain</code> set to <code>YES</code>. If consumers subscribe to the device motion topic <em>after</em> the device stops updated its motion values, they will still be able to use the last known device motion value. This example is a bit of a stretch. A more interesting example would be an application broadcasting its location (similar to the <code>Locations</code> application). Using retained message would allow the consumers to know the last known position of the device before it stops broadcasting its position.</p>
 
-<p>To sum up, the <code>Motions</code> application will send a message:</p>
+<p>To sum up, the <code>Motions</code> application will<a contenteditable="false" data-primary="mobile messaging with MQTT" data-secondary="sending MQTT messages" data-tertiary="Motions application (example)" data-type="indexterm">&nbsp;</a> send a message:</p>
 
 <ul>
 	<li>
@@ -511,11 +511,11 @@ Command symbol is not displayed in PDF.
     self.client = [[MQTTClient alloc] initWithClientId:self.deviceID];
 }</pre>
 
-<p>We now have the <code>Motions</code> iOS application that is sending MQTT messages. How can we check that this is working as expected?</p>
+<p>We now have the <code>Motions</code> iOS application that is sending MQTT messages. How can we check that this is working as expected?<a contenteditable="false" data-primary="mobile messaging with MQTT" data-secondary="sending STOMP messages" data-tertiary="checking" data-type="indexterm">&nbsp;</a></p>
 
 <p>Conversely to <code>STOMP</code>, <code>MQTT</code> is a binary protocol and we cannot use a simple telnet client to create a consumer and receive messages sent by the application.</p>
 
-<p>However, the <a href="http://mosquitto.org">Mosquitto broker</a> provides a simple command-line tool to send and receive message from an MQTT broker. <a data-type="xref" href="#appendix_mosquitto">#appendix_mosquitto</a> explains how to download and install the Mosquitto broker. After it is done, we can use its <code>mosquitto_sub</code> command-line tool to connect to an MQTT broker (hosted at <em>iot.eclipse.org</em>) and subscribe to the device motion topic (in my case, <code>/mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/motion</code>, you will have to replace it using your own device identifier).</p>
+<p>However, the <a href="http://mosquitto.org">Mosquitto broker</a> provides a simple command-line tool to send and receive message from<a contenteditable="false" data-primary="brokers" data-secondary="Mosquitto broker, sending/receiving messages from MQTT broker" data-type="indexterm">&nbsp;</a> an MQTT broker. <a data-type="xref" href="#appendix_mosquitto">#appendix_mosquitto</a> explains how to download and install the Mosquitto broker.<a contenteditable="false" data-primary="Mosquitto broker" data-secondary="command-line tool to send/receive messages from MQTT broker" data-type="indexterm">&nbsp;</a> After it is done, we can use its <code>mosquitto_sub</code> command-line tool to connect to an MQTT broker (hosted at <em>iot.eclipse.org</em>) and subscribe to the device motion topic (in my case, <code>/mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/motion</code>, you will have to replace it using your own device identifier).</p>
 
 <p>This tool will display the message payload. We are sending binary payload, so we will pipe the command into the <code>hexdump</code> tool to display the hexadecimal representation of the binary payload:</p>
 
