@@ -455,7 +455,7 @@ function connect(url) {
 <section data-type="sect1" id="ch_advanced_stomp_receipts">
 <h1>Receipts</h1>
 
-<p>STOMP provides a basic mechanism to let a client know when the broker has received and processed its frames. This can be used with any STOMP frames. For example, a client can be notified when the broker receives a message that a producer sent (using a <code>SEND</code> frame) or when a consumer subscribes to a destination (with a <code>SUBSCRIBE</code> frame).</p>
+<p>STOMP provides a basic mechanism to let a client know when the broker has received and processed its frames.<a contenteditable="false" data-primary="STOMP" data-secondary="advanced" data-tertiary="receipts" data-type="indexterm">&nbsp;</a> This can be used with any STOMP frames. For example, a client can be notified when the broker receives a message that a producer sent (using a <code>SEND</code> frame) or when a consumer subscribes to a destination (with a <code>SUBSCRIBE</code> frame).</p>
 
 <p>To use this mechanism, the frame that is sent to the broker must include a <code>receipt</code> header with any arbitrary value. After the broker has processed the frame, it will deliver a <code>RECEIPT</code> frame to the client with a <code>receipt-id</code> header corresponding to the <code>receipt</code> header in the frame that has been processed.</p>
 
