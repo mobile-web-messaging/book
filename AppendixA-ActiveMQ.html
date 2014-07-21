@@ -50,7 +50,7 @@ Stopping broker: mybroker
 <figcaption>The mybroker resource in the ActiveMQ web console</figcaption>
 </figure>
 
-<p>One interesting attribute is <code>transportConnectors</code>. If you click on the attribute value, a pop-up screen opens and display all the protocols supported by ActiveMQ out of the box ().</p>
+<p>One interesting attribute is <code>transportConnectors</code>. If you click on the attribute value, a pop-up screen opens and display all the protocols supported by ActiveMQ out of the box ().<a contenteditable="false" data-primary="transport connectors (ActiveMQ)" data-type="indexterm">&nbsp;</a></p>
 
 <figure id="img_app_activemq_2"><img alt="ActiveMQ Default Transport Connectors" src="images/mawm_aa02.png" />
 <figcaption>ActiveMQ default transport connectors</figcaption>
@@ -70,9 +70,9 @@ Stopping broker: mybroker
 	</li>
 </ul>
 
-<p>They mean that to connect to ActiveMQ using the STOMP protocol we must connect to the <code>jeff.local</code> host (this is the name of my machine on my local network; your ActiveMQ installation will have another value) on the port <code>61613</code>.</p>
+<p>They mean that to connect to ActiveMQ using the STOMP protocol<a contenteditable="false" data-primary="STOMP" data-secondary="connecting to ActiveMQ with" data-type="indexterm">&nbsp;</a> we must connect to the <code>jeff.local</code> host (this is the name of my machine on my local network; your ActiveMQ installation will have another value) on the port <code>61613</code>.</p>
 
-<p>Likewise, to connect to ActiveMQ using the MQTT protocol, we must use again the <code>jeff.local</code> host but on the port <code>1883</code> this time.</p>
+<p>Likewise, to connect to ActiveMQ using the MQTT protocol, we must use again the <code>jeff.local</code> host but on the port <code>1883</code> this time.<a contenteditable="false" data-primary="MQTT" data-secondary="connecting to ActiveMQ with" data-type="indexterm">&nbsp;</a></p>
 
 <p>Finally, there is also the Web Socket connector that must be used to connect from a web browser, <em>regardless</em> of the messaging protocol that we use. A web application would have to connect to the <code>61614</code> port whether the application is using STOMP or MQTT.<br />
 <a contenteditable="false" data-primary="message acknowledgement in STOMP" data-startref="ActiveMQ" data-type="indexterm">&nbsp;</a></p>
