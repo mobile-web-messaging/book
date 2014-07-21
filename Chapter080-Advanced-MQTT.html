@@ -1,16 +1,9 @@
-<section xmlns="http://www.w3.org/1999/xhtml" data-type="chapter" id="ch_advanced_mqtt">
+<section data-type="chapter" id="ch_advanced_mqtt" xmlns="http://www.w3.org/1999/xhtml">
 <h1>Advanced MQTT</h1>
 
-
-<p class="lead">In Chapters 6 and 7, we used MQTT to send and receive messages from a native iOS application and a web application.
-MQTT provides additional features that we did not use to write these applications. In this chapter, we will take a tour of all these advanced features provided by MQTT.</p>
+<p class="lead">In Chapters 6 and 7, we used MQTT to send and receive messages from a native iOS application and a web application. MQTT provides additional features that we did not use to write these applications.<a contenteditable="false" data-primary="MQTT" data-secondary="advanced" data-type="indexterm" id="MQTTadv">&nbsp;</a> In this chapter, we will take a tour of all these advanced features provided by MQTT.</p>
 
 <p>This chapter covers the latest version of the protocol at the time of this writing (i.e., <a href="http://www.ibm.com/developerworks/webservices/library/ws-mqtt/index.html">MQTT v3.1</a>, which was released on August 19, 2010)<sup>th</sup>.</p>
-
-
-
-
-
 
 <section data-type="sect1" id="_authentication_2">
 <h1>Authentication</h1>
@@ -19,73 +12,53 @@ MQTT provides additional features that we did not use to write these application
 
 <p>If you are using an MQTT broker that is configured to accept secured connections, the client needs to pass a <em>username</em> and <em>password</em> when it connects to the broker.</p>
 
-
-
-
-
-
-
-
 <section data-type="sect2" id="__code_mqttkit_code_example">
 <h2>MQTTKit Example</h2>
 
-<p>The <code>MQTTClient</code> has two <code>NSString</code> properties that must be set to authenticate the client, <code>username</code>, and <code>password</code>. They must be set <em>prior</em> to calling the client’s <code>connect</code> methods to take effect.</p>
+<p>The <code>MQTTClient</code> has two <code>NSString</code> properties that must be set to authenticate the client, <code>username</code>, and <code>password</code>. They must be set <em>prior</em> to calling the client&rsquo;s <code>connect</code> methods to take effect.</p>
 
 <p>If the MQTT broker requires authentication, the client can check if the connection was refused due to invalid user credentials using the <code>ConnectionRefusedBadUserNameOrPassword</code> error code from the <code>completionHandler</code>:</p>
 
-
-<pre data-type="programlisting" data-code-language="objc">- (void)connect
+<pre data-code-language="objc" data-type="programlisting">
+- (void)connect
 {
-    NSString *username = @"...";
-    NSString *password = @"...";
+    NSString *username = @&quot;...&quot;;
+    NSString *password = @&quot;...&quot;;
 
     self.client.username = username;
     self.client.password = password;
-    NSLog(@"Connecting to %@...", kMqttHost);
+    NSLog(@&quot;Connecting to %@...&quot;, kMqttHost);
     [self.client connectToHost:kMqttHost
              completionHandler:^(MQTTConnectionReturnCode code) {
         if (code == ConnectionAccepted) {
-            NSLog(@"connected to the MQTT broker");
+            NSLog(@&quot;connected to the MQTT broker&quot;);
             [self subscribe];
         } else if (code == ConnectionRefusedBadUserNameOrPassword) {
-            NSLog(@"Failed to authenticate the user");
+            NSLog(@&quot;Failed to authenticate the user&quot;);
         } else {
-            NSLog(@"Failed to connect to the MQTT broker: code=%lu", (unsigned long)code);
+            NSLog(@&quot;Failed to connect to the MQTT broker: code=%lu&quot;, (unsigned long)code);
         }
     }];
 }</pre>
-
 </section>
-
-
-
-
-
-
-
-
-
-
-
-
 
 <section data-type="sect2" id="__code_mqttws31_js_code_example">
 <h2>mqttws31.js Example</h2>
 
-<p>To authenticate using the <code>mqttws31.js</code> library, you must set the <code>userName</code> and <code>password</code> properties to the object passed to the client’s <code>connect</code> method.</p>
+<p>To authenticate using the <code>mqttws31.js</code> library, you must set the <code>userName</code> and <code>password</code> properties to the object passed to the client&rsquo;s <code>connect</code> method.</p>
 
-<p>If the MQTT broker requires authentication and the client passes invalid user credentials, the client will be notified by having its <code>onFailure</code> handler called with a failure’s code set to <code>4</code> (the value specified in the MQTT protocol for the error <code>Connection Refused: bad user name or password</code>):</p>
+<p>If the MQTT broker requires authentication and the client passes invalid user credentials, the client will be notified by having its <code>onFailure</code> handler called with a failure&rsquo;s code set to <code>4</code> (the value specified in the MQTT protocol for the error <code>Connection Refused: bad user name or password</code>):</p>
 
-
-<pre data-type="programlisting" data-code-language="js">var userName = "...";
-var password = "...";
+<pre data-code-language="js" data-type="programlisting">
+var userName = &quot;...&quot;;
+var password = &quot;...&quot;;
 
 client.connect({onSuccess: function(frame) {
     ...
   },
   onFailure: function(failure) {
    if (failure.code === 4) {
-      alert("invalid user credentials");
+      alert(&quot;invalid user credentials&quot;);
       return;
    }
     ...
@@ -93,26 +66,8 @@ client.connect({onSuccess: function(frame) {
   userName: userName;
   password: password;
 });</pre>
-
 </section>
-
-
-
-
-
 </section>
-
-
-
-
-
-
-
-
-
-
-
-
 
 <section data-type="sect1" id="_error_handling_2">
 <h1>Error Handling</h1>
@@ -121,25 +76,17 @@ client.connect({onSuccess: function(frame) {
 
 <p>MQTT libraries provide callbacks or handlers for these cases so that they can act when such an error occurs.</p>
 
-
-
-
-
-
-
-
 <section data-type="sect2" id="__code_mqttkit_code_example_2">
 <h2>MQTTKit Example</h2>
 
 <p>The <code>MQTTClient</code> class has a <code>disconnectionHandler</code> property that can be set to handle any unexpected error leading to a disconnection. The disconnection can be the consequence of the MQTT broker closing the network exception (in case of abnormal errors or an administrative operation) or the network connection can be directly broken (e.g., if a mobile device is no longer able to receive any signal).</p>
 
-<p>The <code>disconnectionHandler</code> is a block that takes an <code>NSUinteger code</code> parameter.
-There are no standard values for the code and you will have to consult your MQTT broker documentation if you need to act differently depending on the type of errors.</p>
+<p>The <code>disconnectionHandler</code> is a block that takes an <code>NSUinteger code</code> parameter. There are no standard values for the code and you will have to consult your MQTT broker documentation if you need to act differently depending on the type of errors.</p>
 
 <p>We can modify the <code>Motions</code> iOS application to handle such disconnection failures and aggressively try to reconnect the MQTT broker (assuming the root cause of the disconnection failures are transient):</p>
 
-
-<pre data-type="programlisting" data-code-language="objc">- (void)viewDidLoad
+<pre data-code-language="objc" data-type="programlisting">
+- (void)viewDidLoad
 {
     [super viewDidLoad];
 
@@ -150,8 +97,8 @@ There are no standard values for the code and you will have to consult your MQTT
     // use a weak reference to avoid a retain/release cycle in the block
     __weak MWMViewController *weakSelf = self;
     self.client.disconnectionHandler = ^(NSUInteger code) {
-        NSLog(@"client disconnected with code %lu", (unsigned long)code);
-        NSLog(@"trying to reconnect...");
+        NSLog(@&quot;client disconnected with code %lu&quot;, (unsigned long)code);
+        NSLog(@&quot;trying to reconnect...&quot;);
         // trying to reconnect;
         [weakSelf connect];
     };
@@ -160,59 +107,29 @@ There are no standard values for the code and you will have to consult your MQTT
 
     [self connect];
 }</pre>
-
 </section>
-
-
-
-
-
-
-
-
-
-
-
-
 
 <section data-type="sect2" id="__code_mqttws31_js_code_example_2">
 <h2>mqttws31.js Example</h2>
 
 <p>In <a data-type="xref" href="#ch_mobile_mqtt_connect">#ch_mobile_mqtt_connect</a>, we already set a <code>onConnectionLost</code> callback on the <code>client</code> to be notified in case of connection error. The callback has a single <code>response</code> parameter object. This parameter is composed of two properties:</p>
+
 <ul>
-<li>
-<p><code>errorCode</code>, a numerical representation of the type of connection error</p>
-</li>
-<li>
-<p><code>errorMessage</code>, a textual description of the error</p>
-</li>
+	<li>
+	<p><code>errorCode</code>, a numerical representation of the type of connection error</p>
+	</li>
+	<li>
+	<p><code>errorMessage</code>, a textual description of the error</p>
+	</li>
 </ul>
 
-
-<pre data-type="programlisting" data-code-language="js">client.onConnectionLost = function(response) {
-  alert(response.errorMessage + "\nclientID = " + client.clientID + " [" + 
-  response.errorCode + "]\n");
+<pre data-code-language="js" data-type="programlisting">
+client.onConnectionLost = function(response) {
+  alert(response.errorMessage + &quot;\nclientID = &quot; + client.clientID + &quot; [&quot; + 
+  response.errorCode + &quot;]\n&quot;);
 };</pre>
-
 </section>
-
-
-
-
-
 </section>
-
-
-
-
-
-
-
-
-
-
-
-
 
 <section data-type="sect1" id="_heart_beating_2">
 <h1>Heart-beating</h1>
@@ -226,50 +143,28 @@ There are no standard values for the code and you will have to consult your MQTT
 <p>If the client does not receive heart-beats from the broker, it will close the underlying network connection and report an error.</p>
 
 <p>If the broker does not receive heart-beats from the client, it will consider the client to be disconnected.</p>
+
 <div data-type="caution">
-
-
 <p>Setting a good value for the keep alive timer is highly dependent on the application use cases and the platform it runs on.</p>
 
 <p>For mobile devices that are subject to frequent intermittent network failures, using a value too small will report false failures and increase the instability of the application. It will also increase the bandwidth and battery usage as heart-beats would have to be sent over the network more frequently.</p>
-
 </div>
-
-
-
-
-
-
-
 
 <section data-type="sect2" id="__code_mqttkit_code_example_3">
 <h2>MQTTKit Example</h2>
 
 <p>By default, MQTTKit defines a keep alive timer of 60 seconds.</p>
 
-<p>It is possible to change this value using the <code>keepAlive</code> property on the <code>MQTTClient</code> object. The property type is a <code>short</code> and its value must be changed prior to calling the client’s <code>connect</code> methods to take effect:</p>
+<p>It is possible to change this value using the <code>keepAlive</code> property on the <code>MQTTClient</code> object. The property type is a <code>short</code> and its value must be changed prior to calling the client&rsquo;s <code>connect</code> methods to take effect:</p>
 
-
-<pre data-type="programlisting" data-code-language="objc">MQTTClient *client = [[MQTTClient alloc] initWithClientId:clientID];
+<pre data-code-language="objc" data-type="programlisting">
+MQTTClient *client = [[MQTTClient alloc] initWithClientId:clientID];
 client.keepAlive = 10; // seconds
 [client connectToHost:host
     completionHandler:^(MQTTConnectionReturnCode code) {
         //...
 }];</pre>
-
 </section>
-
-
-
-
-
-
-
-
-
-
-
-
 
 <section data-type="sect2" id="__code_mqttws31_js_code_example_3">
 <h2>mqttws31.js Example</h2>
@@ -278,8 +173,8 @@ client.keepAlive = 10; // seconds
 
 <p>The <code>client</code>'s <code>connect</code> method can take an optional <code>keepAliveInterval</code> integer to specify another value (or <code>0</code> to disable heart-beating):</p>
 
-
-<pre data-type="programlisting" data-code-language="js">client.connect({onSuccess: function(frame) {
+<pre data-code-language="js" data-type="programlisting">
+client.connect({onSuccess: function(frame) {
     ...
   },
   onFailure: function(failure) {
@@ -287,26 +182,8 @@ client.keepAlive = 10; // seconds
   },
   keepAliveInterval: 10 // seconds
 });</pre>
-
 </section>
-
-
-
-
-
 </section>
-
-
-
-
-
-
-
-
-
-
-
-
 
 <section data-type="sect1" id="_last_will">
 <h1>Last Will</h1>
@@ -315,41 +192,30 @@ client.keepAlive = 10; // seconds
 
 <p>However, there are cases in which an application may require more information on the liveness of messaging clients.</p>
 
-<p>Let’s take the example of the Motions application that broadcasts the device position when it moves. A consumer of the device position topic will consume these messages.
-However, how could the consumer distinguish between receiving the messages because the device does not move or because the device is offline and has stopped broadcasting its position?</p>
+<p>Let&rsquo;s take the example of the Motions application that broadcasts the device position when it moves. A consumer of the device position topic will consume these messages. However, how could the consumer distinguish between receiving the messages because the device does not move or because the device is offline and has stopped broadcasting its position?</p>
 
 <p>If the device is offline, the consumer may want to be notified to discard the device position from the map or show it differently from other <em>live</em> devices.</p>
 
 <p>MQTT provides a <em>last will</em> feature that we could use to handle this use case.</p>
 
-<p>When an MQTT client connects to the broker, it can specify a last will message that will be published to a last will topic by the broker <em>on behalf</em> of the client in case of unexpected disconnection. If the client disconnects normally, its last will message is not published.
-If the client uses heart-beating and the broker fails to receive its heart-beat in a timely fashion, this is considered as an unexpected disconnection and the last will message will be published.</p>
+<p>When an MQTT client connects to the broker, it can specify a last will message that will be published to a last will topic by the broker <em>on behalf</em> of the client in case of unexpected disconnection. If the client disconnects normally, its last will message is not published. If the client uses heart-beating and the broker fails to receive its heart-beat in a timely fashion, this is considered as an unexpected disconnection and the last will message will be published.</p>
 
 <p>We could use this last will to let consumers know that the Motions iOS application has been terminated abnormally or its device is no longer reachable (in case of network disconnection).</p>
-
-
-
-
-
-
-
 
 <section data-type="sect2" id="__code_mqttkit_code_example_4">
 <h2>MQTTKit Example</h2>
 
-<p>The <code>STOMPClient</code> object has <code>setWill:toTopic:withQos:retain</code> and <code>setWillData:toTopic:withQos:retain</code> methods to specify the client’s last will. The difference between the two methods is that the first one takes an <code>NSString</code> for the will message payload and the second takes an <code>NSData</code>. These methods must be called before the client connects to the MQTT broker to take effect.</p>
+<p>The <code>STOMPClient</code> object has <code>setWill:toTopic:withQos:retain</code> and <code>setWillData:toTopic:withQos:retain</code> methods to specify the client&rsquo;s last will. The difference between the two methods is that the first one takes an <code>NSString</code> for the will message payload and the second takes an <code>NSData</code>. These methods must be called before the client connects to the MQTT broker to take effect.</p>
 
 <p>We could improve the <code>Motions</code> iOS application by specifying a last will to its <code>client</code> object in <em>MWMViewController.m</em> before it connects.</p>
 
-<p>The last will topic can be any MQTT topic. We will use the <code>/mwm/lastWill</code> topic so that a consumer would have to subscribe to this topic to be notified of any device’s abnormal disconnection.
-The payload of the last will message is a simple JSON object with a <code>deviceID</code> property.
-We will encapsulate the setup of the last will in a <code>setWill</code> method:</p>
+<p>The last will topic can be any MQTT topic. We will use the <code>/mwm/lastWill</code> topic so that a consumer would have to subscribe to this topic to be notified of any device&rsquo;s abnormal disconnection. The payload of the last will message is a simple JSON object with a <code>deviceID</code> property. We will encapsulate the setup of the last will in a <code>setWill</code> method:</p>
 
-
-<pre data-type="programlisting" data-code-language="objc">- (void)setLastWill
+<pre data-code-language="objc" data-type="programlisting">
+- (void)setLastWill
 {
-    NSString *willTopic = @"/mwm/lastWill";
-    NSDictionary *dict = @{ @"deviceID": self.deviceID};
+    NSString *willTopic = @&quot;/mwm/lastWill&quot;;
+    NSDictionary *dict = @{ @&quot;deviceID&quot;: self.deviceID};
     NSData *willData = 
     [NSJSONSerialization 
     dataWithJSONObject:dict
@@ -363,55 +229,51 @@ We will encapsulate the setup of the last will in a <code>setWill</code> method:
                   retain:NO];
 }</pre>
 
-
 <p>We just need to call this method before connecting to the MQTT broker in <code>connect</code>:</p>
 
-
-<pre data-type="programlisting" data-code-language="objc">- (void)connect
+<pre data-code-language="objc" data-type="programlisting">
+- (void)connect
 {
     [self setLastWill];
-    NSLog(@"Connecting to %@...", kMqttHost);
+    NSLog(@&quot;Connecting to %@...&quot;, kMqttHost);
     [self.client connectToHost:kMqttHost
              completionHandler:^(MQTTConnectionReturnCode code) {
         ...
     }];
 }</pre>
 
+<p>Similar to a regular message, the last will message can specify its QoS and whether it must be retained. A last will message may be important but infrequent. Using a QoS of exactly-once will ensure that a consumer of the last will topic will not receive false positives on the device&rsquo;s disconnection. We will also not retain the last will message. If it was retained, a newly subscribed consumer would receive it and could assume that a device has been disconnecting while it reconnected in the meantime.</p>
 
-<p>Similar to a regular message, the last will message can specify its QoS and whether it must be retained. A last will message may be important but infrequent. Using a QoS of exactly-once will ensure that a consumer of the last will topic will not receive false positives on the device’s disconnection.
-We will also not retain the last will message. If it was retained, a newly subscribed consumer would receive it and could assume that a device has been disconnecting while it reconnected in the meantime.</p>
-
-<p>Before we configure the web application’s own last will, we can first update it to discard data when it receives the last will message from a device.</p>
+<p>Before we configure the web application&rsquo;s own last will, we can first update it to discard data when it receives the last will message from a device.</p>
 
 <p>To achieve this, we need to do the following:</p>
-<ol>
-<li>
-<p>Subscribe to the last will topic <code>/mwm/lastWill</code>.</p>
-</li>
-<li>
-<p>Update the subscription callback to handle last will messages.</p>
-</li>
 
+<ol>
+	<li>
+	<p>Subscribe to the last will topic <code>/mwm/lastWill</code>.</p>
+	</li>
+	<li>
+	<p>Update the subscription callback to handle last will messages.</p>
+	</li>
 </ol>
 
 <p>The first step is done in the <code>onSuccess</code> callback passed to <code>client</code><em>s <code>connect</code> method when we were already subscribing to the devices</em> motion topics:</p>
 
-
-<pre data-type="programlisting" data-code-language="js">var lastWillTopic = "/mwm/lastWill";
+<pre data-code-language="js" data-type="programlisting">
+var lastWillTopic = &quot;/mwm/lastWill&quot;;
 
 client.connect({onSuccess: function(frame) {
   // once the client is successfully connected,
   // subscribe to all the motions topics
-  client.subscribe("/mwm/+/motion");
+  client.subscribe(&quot;/mwm/+/motion&quot;);
   // subscribe to the last will topic too:
   client.subscribe(lastWillTopic);
 },</pre>
 
+<p>The second step requires to modify the <code>client</code>'s <code>onMessageArrived</code> callback to check whether the message is coming from the last will topic and discard the device data if that the case. Because the last will message representation is a JSON object, we must first parse it by calling <code>JSON.parse</code> on the message&rsquo;s <code>payloadString</code>:</p>
 
-<p>The second step requires to modify the <code>client</code>'s <code>onMessageArrived</code> callback to check whether the message is coming from the last will topic and discard the device data if that the case. Because the last will message representation is a JSON object, we must first parse it by calling <code>JSON.parse</code> on the message’s <code>payloadString</code>:</p>
-
-
-<pre data-type="programlisting" data-code-language="js">client.onMessageArrived = function(message) {
+<pre data-code-language="js" data-type="programlisting">
+client.onMessageArrived = function(message) {
   if (message.destinationName === lastWillTopic) {
     var payload = JSON.parse(message.payloadString);
     discard(payload.deviceID);
@@ -421,41 +283,25 @@ client.connect({onSuccess: function(frame) {
   ...
 };</pre>
 
-
 <p>The <code>discard</code> function will delete the data from the <code>devices</code> dictionary and remove the HTML elements that were created to display the device:</p>
 
-
-<pre data-type="programlisting" data-code-language="js">function discard(deviceID) {
-  console.log("discard data for " + deviceID);
+<pre data-code-language="js" data-type="programlisting">
+function discard(deviceID) {
+  console.log(&quot;discard data for &quot; + deviceID);
   delete devices[deviceID];
   $('#'+ deviceID).remove();
 }</pre>
-
 </section>
-
-
-
-
-
-
-
-
-
-
-
-
 
 <section data-type="sect2" id="__code_mqttws31_js_code_example_4">
 <h2>mqttws31.js Example</h2>
 
-<p>It is also possible to set a client’s last will using <code>mqttws31.js</code>.
-The <code>client</code>'s <code>connect</code> method can take an optional <code>willMessage</code> object that represents the last will message to send if it disconnects unexpectedly.
-The value is a regular MQTT message created by calling <code>new Messaging.Message</code> constructor and specifying its <code>destinationName</code> (the last will topic), and optionally its <code>qos</code> and <code>retained</code> value:</p>
+<p>It is also possible to set a client&rsquo;s last will using <code>mqttws31.js</code>. The <code>client</code>'s <code>connect</code> method can take an optional <code>willMessage</code> object that represents the last will message to send if it disconnects unexpectedly. The value is a regular MQTT message created by calling <code>new Messaging.Message</code> constructor and specifying its <code>destinationName</code> (the last will topic), and optionally its <code>qos</code> and <code>retained</code> value:</p>
 
-
-<pre data-type="programlisting" data-code-language="js">var willMessage = new Messaging.Message("Web client " + clientID + " 
-has unexpectedly died");
-willMessage.destinationName = "/mwm/lastWill/web";
+<pre data-code-language="js" data-type="programlisting">
+var willMessage = new Messaging.Message(&quot;Web client &quot; + clientID + &quot; 
+has unexpectedly died&quot;);
+willMessage.destinationName = &quot;/mwm/lastWill/web&quot;;
 willMessage.qos = 2; // exactly once
 willMessage.retained = false;
 
@@ -469,41 +315,19 @@ client.connect({onSuccess: function(frame) {
   willMessage: willMessage
 });</pre>
 
+<p>Often, applications may not need to be notified of the last will of another MQTT client. However, we may still want to monitor the unexpected disconnection to be informed of the liveness of the whole system. If all MQTT clients have configured their last will, we can have a crude monitoring application by subscribing to their last will topics:</p>
 
-<p>Often, applications may not need to be notified of the last will of another MQTT client. However, we may still want to monitor the unexpected disconnection to be informed of the liveness of the whole system.
-If all MQTT clients have configured their last will, we can have a crude monitoring application by subscribing to their last will topics:</p>
-
-
-<pre data-type="programlisting" data-code-language="bash">$ mosquitto_sub -h iot.eclipse.org -t /mwm/lastWill/# -v
+<pre data-code-language="bash" data-type="programlisting">
+$ mosquitto_sub -h iot.eclipse.org -t /mwm/lastWill/# -v
 ...
-/mwm/lastWill {"deviceID":"C0962483-7DD9-43CC-B1A0-2E7FBFC05060"}
+/mwm/lastWill {&quot;deviceID&quot;:&quot;C0962483-7DD9-43CC-B1A0-2E7FBFC05060&quot;}
 /mwm/lastWill/web Web client 0.90778b769105b876 has unexpectedly died</pre>
 
 <div data-type="note">
-
-
 <p>We have subscribed to the wildcard topic <code>/mwm/lastWill/#</code> to receive messages from both <code>/mwm/lastWill</code> (that is used by the Motions iOS application) and any of its child including <code>/mwmw/lastWill/web</code> (that is used by the Motions web application).</p>
-
 </div>
 </section>
-
-
-
-
-
 </section>
-
-
-
-
-
-
-
-
-
-
-
-
 
 <section data-type="sect1" id="_clean_session">
 <h1>Clean Session</h1>
@@ -514,24 +338,15 @@ If all MQTT clients have configured their last will, we can have a crude monitor
 
 <p>A client with the Clean Session flag set will have to subscribe again to consume messages.</p>
 
-<p>A client that does not set the Clean Session flag will consume memory on the broker side (to store its state) and the broker may also perform administrative operations to remove such state.
-Unless there is a strong incentive to use such a client, it is better practice to use a "Clean session" client and subscribes again after it reconnects.</p>
-
-
-
-
-
-
-
+<p>A client that does not set the Clean Session flag will consume memory on the broker side (to store its state) and the broker may also perform administrative operations to remove such state. Unless there is a strong incentive to use such a client, it is better practice to use a &quot;Clean session&quot; client and subscribes again after it reconnects.</p>
 
 <section data-type="sect2" id="__code_mqttkit_code_example_5">
 <h2>MQTTKit Example</h2>
 
-<p>By default, MQTT clients created using MQTTKit have the Clean Session flag set (their state is not stored by the broker after they disconnect).
-It is also possible to change this behavior by using the <code>MQTTClient</code>'s <code>initWithClientID:cleanSession:</code> initializer and passing <code>NO</code> to its <code>cleanSession</code> parameter:</p>
+<p>By default, MQTT clients created using MQTTKit have the Clean Session flag set (their state is not stored by the broker after they disconnect). It is also possible to change this behavior by using the <code>MQTTClient</code>'s <code>initWithClientID:cleanSession:</code> initializer and passing <code>NO</code> to its <code>cleanSession</code> parameter:</p>
 
-
-<pre data-type="programlisting" data-code-language="objc">- (void)viewDidLoad
+<pre data-code-language="objc" data-type="programlisting">
+- (void)viewDidLoad
 {
     [super viewDidLoad];
 
@@ -546,45 +361,31 @@ It is also possible to change this behavior by using the <code>MQTTClient</code>
     [self connect];
 }</pre>
 
-
 <p>If the Motions iOS application is modified this way, we can test it by connecting to the broker (so that the broker knows that it must store its state) and closing the application.</p>
 
 <p>While the application is closed, we will modify the <em>motions.html</em> web application to send an alert message to the device alert topic with a QoS of <code>1</code> (<code>At Least Once</code>):</p>
 
-
-<pre data-type="programlisting" data-code-language="js">function sendAlert(deviceID) {
-  var message = new Messaging.Message("red");
-  message.destinationName = "/mwm/" + deviceID + "/alert";
+<pre data-code-language="js" data-type="programlisting">
+function sendAlert(deviceID) {
+  var message = new Messaging.Message(&quot;red&quot;);
+  message.destinationName = &quot;/mwm/&quot; + deviceID + &quot;/alert&quot;;
   // send the alert with a QoS of at-least-once
   message.qos = 1;
   client.send(message);
 }</pre>
-
 
 <p>The client will not be available to receive the message so the broker must store it to deliver when the client reconnects.</p>
 
 <p>If we open the <code>Motions</code> iOS application again, the broker will then deliver the message to the client.</p>
 </section>
 
-
-
-
-
-
-
-
-
-
-
-
-
 <section data-type="sect2" id="__code_mqttws31_js_code_example_5">
 <h2>mqttws31.js Example</h2>
 
-<p>The clients created by the mqttws31.js library also connects by default with the Clean Session flag set. It is possible to change this behavior by adding a <code>cleanSession</code> property set to <code>false</code> in the properties passed to the client’s <code>connect</code> method:</p>
+<p>The clients created by the mqttws31.js library also connects by default with the Clean Session flag set. It is possible to change this behavior by adding a <code>cleanSession</code> property set to <code>false</code> in the properties passed to the client&rsquo;s <code>connect</code> method:</p>
 
-
-<pre data-type="programlisting" data-code-language="js">// specify that the session must not be cleaned when the client connects to the broker
+<pre data-code-language="js" data-type="programlisting">
+// specify that the session must not be cleaned when the client connects to the broker
 client.connect({onSuccess: function(frame) {
     ...
   },
@@ -593,26 +394,8 @@ client.connect({onSuccess: function(frame) {
   },
   cleanSession: false
 });</pre>
-
 </section>
-
-
-
-
-
 </section>
-
-
-
-
-
-
-
-
-
-
-
-
 
 <section data-type="sect1" id="_beyond_mqtt">
 <h1>Beyond MQTT?</h1>
@@ -631,21 +414,8 @@ client.connect({onSuccess: function(frame) {
 
 <p>If you plan to use MQTT in your applications, you should consider carefully whether its features match your requirements.</p>
 
-<p>If you require features that are not provided by the protocol (or another messaging model than <em>publish/subscribe</em>), you may lose all the benefits of using this simple protocol and write brittle code that puts all the complexity in your applications instead of relying on the broker’s set of features.
-But if your requirements are fullfilled by MQTT features (as is the case for a lot of applications), you will be all set to use messaging in your applications.</p>
+<p>If you require features that are not provided by the protocol (or another messaging model than <em>publish/subscribe</em>), you may lose all the benefits of using this simple protocol and write brittle code that puts all the complexity in your applications instead of relying on the broker&rsquo;s set of features. But if your requirements are fullfilled by MQTT features (as is the case for a lot of applications), you will be all set to use messaging in your applications.</p>
 </section>
-
-
-
-
-
-
-
-
-
-
-
-
 
 <section data-type="sect1" id="_summary_8">
 <h1>Summary</h1>
@@ -653,29 +423,23 @@ But if your requirements are fullfilled by MQTT features (as is the case for a l
 <p>MQTT is a simple protocol that provides few advanced features. However, these features can be handy to solve common issues encountered by messaging applications.</p>
 
 <p>In this chapter, we learned to use:</p>
+
 <ul>
-<li>
-<p><em>Authentication</em> to ensure that only authenticated clients can communicate with the MQTT broker</p>
-</li>
-<li>
-<p><em>Error handling</em> to face unexpected connection issues and eventually reconnect to the broker</p>
-</li>
-<li>
-<p><em>Heart-beating</em> to ensure that the network connection between the client and broker is healthy (and to ensure that it will kill the connection if that is not the case)</p>
-</li>
-<li>
-<p><em>Last will</em> to let the broker sent a message on behalf of the client in case of unexpected disconnection</p>
-</li>
-<li>
-<p><em>Clean session</em> to preserve client state on the broker between connections</p>
-</li>
+	<li>
+	<p><em>Authentication</em> to ensure that only authenticated clients can communicate with the MQTT broker</p>
+	</li>
+	<li>
+	<p><em>Error handling</em> to face unexpected connection issues and eventually reconnect to the broker</p>
+	</li>
+	<li>
+	<p><em>Heart-beating</em> to ensure that the network connection between the client and broker is healthy (and to ensure that it will kill the connection if that is not the case)</p>
+	</li>
+	<li>
+	<p><em>Last will</em> to let the broker sent a message on behalf of the client in case of unexpected disconnection</p>
+	</li>
+	<li>
+	<p><em>Clean session</em> to preserve client state on the broker between connections<a contenteditable="false" data-primary="MQTT" data-secondary="advanced" data-startref="MQTTadv" data-type="indexterm">&nbsp;</a></p>
+	</li>
 </ul>
 </section>
-
-
-
-
-
-
-
 </section>
