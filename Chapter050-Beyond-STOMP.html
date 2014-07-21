@@ -34,7 +34,7 @@ client.send(&quot;/topic/mytopic&quot;, { persistent: true}, order);</pre>
 
 <p>Every time a consumer is delivered a message, it can filter it out (using the message&rsquo;s headers or its payload) to take into account only the interesting ones. However, this is inefficient, because the consumer is still receiving all messages from the destination but may potentially discard many of them.</p>
 
-<p>Some STOMP brokers allow you to specify a filter (or selector) when a consumer subscribes to a destination. Before delivering the message to the destination&rsquo;s consumers, the STOMP broker will check whether the message matches the consumer&rsquo;s filter. The message is delivered to the consumer only if it matches the filter.</p>
+<p>Some STOMP brokers allow you to specify a filter (or selector) when a consumer subscribes to a destination.<a contenteditable="false" data-primary="brokers" data-secondary="filtered consumers support" data-type="indexterm">&nbsp;</a> Before delivering the message to the destination&rsquo;s consumers, the STOMP broker will check whether the message matches the consumer&rsquo;s filter. The message is delivered to the consumer only if it matches the filter.</p>
 
 <p>A filter is similar to a <a href="http://en.wikipedia.org/wiki/SQL-92">SQL 92</a> conditional query using the message headers. The message payload is opaque for the STOMP broker and cannot be used by filters.</p>
 
@@ -80,11 +80,11 @@ client.subscribe(destination, function(message) {
 <section data-type="sect1" id="_priority">
 <h1>Priority</h1>
 
-<p>Messages sent to destinations are usually delivered to a consumer in the order of their arrival. That means that if a producer sent messages A, B, and C in that order, a single consumer will receive the messages in the same order: A, B, and C.</p>
+<p>Messages sent to destinations are usually delivered to a consumer in the order of their arrival. <a contenteditable="false" data-primary="priority, messages" data-type="indexterm">&nbsp;</a>That means that if a producer sent messages A, B, and C in that order, a single consumer will receive the messages in the same order: A, B, and C.</p>
 
 <p>However, there are cases where a producer wants to send a more <em>urgent</em> message that should take precedence over messages that it already sent.</p>
 
-<p>Some STOMP brokers provide a way to achieve this using message <em>priority</em>. When a producer sends a message, it can set a <code>priority</code> header to change the message priority. The usual semantics for the priority value are copied from the JMS API, which defines ten levels of priority value, with <code>0</code> as the lowest priority and <code>9</code> as the highest (and <code>4</code> as the default priority).</p>
+<p>Some STOMP brokers provide a way to achieve this using message <em>priority</em>. When a producer sends a message, it can set a <code>priority</code> header to change the message priority.<a contenteditable="false" data-primary="headers" data-secondary="priority headers" data-type="indexterm">&nbsp;</a> The usual semantics for the priority value are copied from the JMS API, which defines ten levels of priority value, with <code>0</code> as the lowest priority and <code>9</code> as the highest (and <code>4</code> as the default priority).</p>
 
 <p>A broker will often try to deliver expedited messages before messages of lower priority, but this is not a strong requirement. To ensure a <em>fair</em> delivery of messages, it may deliver lower priority messages so that a single producer sending only messages with the highest priority does not prevent the delivery of messages of lower priority from other producers.</p>
 
