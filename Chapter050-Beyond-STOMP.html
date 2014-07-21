@@ -30,7 +30,7 @@ client.send(&quot;/topic/mytopic&quot;, { persistent: true}, order);</pre>
 <section data-type="sect1" id="_filtered_consumer">
 <h1>Filtered Consumer</h1>
 
-<p>There are cases in which a consumer may be interested only by a subset of all messages delivered from a destination.</p>
+<p>There are cases in which a consumer may be interested only by a subset of all messages delivered from a destination.<a contenteditable="false" data-primary="consumers" data-secondary="filtering messages" data-type="indexterm">&nbsp;</a></p>
 
 <p>Every time a consumer is delivered a message, it can filter it out (using the message&rsquo;s headers or its payload) to take into account only the interesting ones. However, this is inefficient, because the consumer is still receiving all messages from the destination but may potentially discard many of them.</p>
 
