@@ -41,7 +41,7 @@
 <div data-type="note">
 <p>Depending on the messaging protocol or model, the <em>producer</em> is sometimes called <em>sender</em> or <em>publisher</em>. <a contenteditable="false" data-primary="producers" data-secondary="alternate names for" data-type="indexterm">&nbsp;</a>Likewise, the <em>consumer</em> may be called <em>receiver</em> or <em>subscriber</em>.<a contenteditable="false" data-primary="consumers" data-secondary="alternate names for" data-type="indexterm">&nbsp;</a></p>
 
-<p>In this book, I will always use the general terms of <em>producer</em> and <em>consumer</em>.</p>
+<p>In this book, I will always use the general terms <em>producer</em> and <em>consumer</em>.</p>
 </div>
 
 <p>One key aspect of messaging is that it loosely couples its participants. The producer and consumer know nothing about each other.<a contenteditable="false" data-primary="messaging" data-secondary="concepts" data-tertiary="loose coupling of participants" data-type="indexterm">&nbsp;</a> When one application produces a message, it has no knowledge of when or where the message will be consumed. There may be one or many consumers that will receive the message. It is also possible that the message will not be consumed at all if nobody has registered any interest for it.</p>
@@ -92,7 +92,7 @@
 
 <p>In a publish/subscribe messaging<a contenteditable="false" data-primary="models, messaging" data-secondary="publish/subscribe" data-type="indexterm">&nbsp;</a> model (often shortened as pub/sub), a message sent by a producer is routed to many consumers.<a contenteditable="false" data-primary="publish/subscribe messaging model" data-type="indexterm">&nbsp;</a></p>
 
-<p>The producer sends a message to a destination identified as a <em>topic</em> in that messaging model.<a contenteditable="false" data-primary="topics" data-type="indexterm">&nbsp;</a> There can be zero or many consumers subscribed to this topic and the messaging broker will route incoming message to <em>all</em> these consumers to deliver the message. If there are no consumers bound to the topic, the broker may <em>not</em> retain the incoming messages. As illustrated in <a data-type="xref" href="#img_intro_pub_sub">#img_intro_pub_sub</a>, when the producer sends a message to the topic, all the consumers that are subscribed receive the message.</p>
+<p>The producer sends a message to a destination identified as a <em>topic</em>.<a contenteditable="false" data-primary="topics" data-type="indexterm">&nbsp;</a> There can be zero or many consumers subscribed to this topic and the messaging broker will route incoming message to <em>all</em> these consumers to deliver the message. If there are no consumers bound to the topic, the broker may <em>not</em> retain the incoming messages. As illustrated in <a data-type="xref" href="#img_intro_pub_sub">#img_intro_pub_sub</a>, when the producer sends a message to the topic, all the consumers that are subscribed receive the message.</p>
 
 <figure id="img_intro_pub_sub"><img alt="Diagram of the Point-to-Point Topology" src="images/mawm_0103.png" />
 <figcaption>Diagram of the publish/subscribe topology</figcaption>
@@ -121,7 +121,7 @@
 
 <p>When a producer sends a message to a <em>destination</em>, the name of the destination is put inside the message.<a contenteditable="false" data-primary="destinations" data-secondary="in a message" data-type="indexterm">&nbsp;</a> When a consumer receives this message, it can use this information to know which destination held this message. This is especially useful when a consumer is subscribed to many destinations, as it helps identify the exchanged data.</p>
 
-<p>A message may also contain <em>headers</em>. <a contenteditable="false" data-primary="headers" data-secondary="in messages" data-type="indexterm">&nbsp;</a>Messaging protocols use headers to add metadata information to the messages.<a contenteditable="false" data-primary="metadata in message headers" data-type="indexterm">&nbsp;</a> This metadata can be read by the consumers and give additional contextual information to a message. Examples of such metadata include message identifiers (that uniquely identify a message for a broker), timestamps (the date and time it was sent by the producer), and redelivered flags (if the message is being delivered again after a failed first attempt). Headers are specific to messaging protocols. Some messaging protocols (such as STOMP) allow the producer to set application-specific headers in addition to the headers defined by the protocol.<a contenteditable="false" data-primary="application-specific headers in messages" data-type="indexterm">&nbsp;</a> Other protocols (such as MQTT) do not allow producers to set application-specific headers. In that case, the producer has to put any application-specific information in the message payload.</p>
+<p>A message may also contain <em>headers</em>. <a contenteditable="false" data-primary="headers" data-secondary="in messages" data-type="indexterm">&nbsp;</a>Messaging protocols use headers to add metadata information to the messages.<a contenteditable="false" data-primary="metadata in message headers" data-type="indexterm">&nbsp;</a> This metadata can be read by the consumers and gives additional contextual information to a message. Examples of such metadata include message identifiers (that uniquely identify a message for a broker), timestamps (the date and time it was sent by the producer), and redelivered flags (if the message is being delivered again after a failed first attempt). Headers are specific to messaging protocols. Some messaging protocols (such as STOMP) allow the producer to set application-specific headers in addition to the headers defined by the protocol.<a contenteditable="false" data-primary="application-specific headers in messages" data-type="indexterm">&nbsp;</a> Other protocols (such as MQTT) do not allow producers to set application-specific headers. In that case, the producer has to put any application-specific information in the message payload.</p>
 
 <p>Finally, a message can have an optional <em>body</em> (or payload) that contains the data exchanged between the producer and consumer.<a contenteditable="false" data-primary="body (messages)" data-type="indexterm">&nbsp;</a> The type of body depends on the messaging protocols, some defining text <a contenteditable="false" data-primary="payload" data-see-also="body" data-type="indexterm">&nbsp;</a>payload (such as STOMP) or binary (MQTT). A payload is an <em>opaque blob of content</em>. The broker does not read or modify it when it routes a message.</p>
 
@@ -142,7 +142,7 @@
 
 <p>We will build a very simple application named Locations that looks similar to this example (see ).</p>
 
-<p>The &quot;truck&quot; will use an iOS application to broadcast the device&rsquo;s geolocation data using its GPS sensor and display text messages that it receives from the headquarters.&nbsp; The &quot;headquarters&quot; will use a web application to display the locations of all the &quot;trucks&quot; on a map.<a contenteditable="false" data-primary="web applications" data-secondary="Locations application (example)" data-type="indexterm">&nbsp;</a> It will also be used to send text messages to a given truck on their devices:</p>
+<p>The &quot;truck&quot; will use an iOS application to broadcast the device&rsquo;s geolocation data using its GPS sensor and display text messages that it receives from the headquarters.&nbsp; The &quot;headquarters&quot; will use a web application to display the location of all the &quot;trucks&quot; on a map.<a contenteditable="false" data-primary="web applications" data-secondary="Locations application (example)" data-type="indexterm">&nbsp;</a> It will also be used to send text messages to a given truck on their devices:</p>
 
 <ul>
 	<li>
@@ -390,7 +390,7 @@
 
 <p>In this chapter, we learned about the messaging protocols and how they differ from request/reply protocols. We introduced two messaging models (point-to-point and publish/subscribe) and the parts that compose a message (destination, headers, and payload).</p>
 
-<p>We also took a look at the two applications that will be written in the subsequent chapters--the Locations application (which uses STOMP) and the Motions application (which uses MQTT)--and established the messaging models and representation that they will use.</p>
+<p>We also took a look at the two applications that will be written in the subsequent chapters&#x2014;the Locations application (which uses STOMP) and the Motions application (which uses MQTT)&#x2014;and established the messaging models and representation that they will use.</p>
 
 <p>In the next chapter, we will start writing the Locations iOS application. If you are more interested in learning about MQTT, you can go directly to <a data-type="xref" href="#ch_mobile_mqtt">#ch_mobile_mqtt</a> to start writing the Motions application.</p>
 </section>
