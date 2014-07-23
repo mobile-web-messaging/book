@@ -5,13 +5,13 @@
 
 <p>This chapter covers the latest version of the protocol at the time of this writing (i.e., <a href="http://stomp.github.io/stomp-specification-1.2.html">STOMP 1.2</a>, which was released on October 22, 2012).</p>
 
-<p>As we present these features, we will show how to use them from either StompKit or stomp.js. The API may vary depending on the platform and language, but the concept remains the same. If you ever need to use STOMP from another language or platform, you will have to adapt to the library API but the underlying concept will still apply.</p>
+<p>As we present these features, we will show how to use them from either StompKit or stomp.js. The API may vary depending on the platform and language, but the concept remains the same. If you ever need to use STOMP from another language or platform, you will have to adapt to the library API&#x2014;but the underlying concept will still apply.</p>
 
-<p>Clients and brokers can use these features by sending additional frames (defined in the protocol) or by using message headers. The STOMP protocol defines frames to provide transactions, a combination of frames and headers for message acknowledgment, and headers for hearbeat negotiation.</p>
+<p>Clients and brokers can use these features by sending additional frames (defined in the protocol) or by using message headers. The STOMP protocol defines frames to provide transactions, a combination of frames and headers for message acknowledgment, and headers for heartbeat negotiation.</p>
 
-<p>In this chapter, we will describe the features provided by the STOMP protocol that the client and broker must support to be compliant.</p>
+<p>In this chapter, we will describe the features provided by the STOMP protocol that the client and broker must support in order to be compliant.</p>
 
-<p>STOMP is also extensible and clients and brokers can support additional features by using headers not defined in the protocol. We will describe such additional features in the next chapter.</p>
+<p>STOMP is also extensible, and clients and brokers can support additional features by using headers not defined in the protocol. We will describe these additional features in <a data-type="xref" href="ch_beyond_stomp"></a>.</p>
 
 <p>In any case, the features (defined in the protocol or supported only by some brokers) rely on the structure of STOMP frames.</p>
 
@@ -49,7 +49,7 @@ payload^@ <a class="co" href="#callout_ch4-co-4" id="co_ch4-co-4"><img alt="4" s
 	</dd>
 	<dt><a class="co" href="#co_ch4-co-2" id="callout_ch4-co-2"><img alt="2" src="images/callouts/2.png" /></a></dt>
 	<dd>
-	<p>Header entries <a contenteditable="false" data-primary="headers" data-secondary="in STOMP frames" data-type="indexterm">&nbsp;</a>followed the format <code>&lt;key&gt;:&lt;value&gt;</code> and is ended by EOL</p>
+	<p>Header entries <a contenteditable="false" data-primary="headers" data-secondary="in STOMP frames" data-type="indexterm">&nbsp;</a>follow the format <code>&lt;key&gt;:&lt;value&gt;</code> and are ended by EOL</p>
 	</dd>
 	<dt><a class="co" href="#co_ch4-co-3" id="callout_ch4-co-3"><img alt="3" src="images/callouts/3.png" /></a></dt>
 	<dd>
@@ -75,7 +75,7 @@ payload^@ <a class="co" href="#callout_ch4-co-4" id="co_ch4-co-4"><img alt="4" s
 
 <p>It is also possible to add other headers when sending a frame, as long as it does not collide with the headers already specified in the STOMP protocol.</p>
 
-<p>An application may use headers instead of the message&rsquo;s payload to transmit data. The fundamental difference between headers and payload is that headers can be read (and modified) by the STOMP brokers.<a contenteditable="false" data-primary="payload" data-secondary="in STOMP frames" data-tertiary="headers versus" data-type="indexterm">&nbsp;</a> Payload is treated as a black box and the broker never reads or modifies it.</p>
+<p>An application can use headers instead of the message&rsquo;s payload to transmit data. The fundamental difference between headers and payload is that headers can be read (and modified) by the STOMP brokers.<a contenteditable="false" data-primary="payload" data-secondary="in STOMP frames" data-tertiary="headers versus" data-type="indexterm">&nbsp;</a> Payload is treated as a black box and the broker never reads or modifies it.</p>
 
 <p>In practice, headers are most often used to specify additional features or constraints to the message processing.</p>
 </section>
@@ -84,7 +84,7 @@ payload^@ <a class="co" href="#callout_ch4-co-4" id="co_ch4-co-4"><img alt="4" s
 <section data-type="sect1" id="_authentication">
 <h1>Authentication</h1>
 
-<p>In Chapters 2 and 3, the STOMP clients are <a contenteditable="false" data-primary="authentication" data-secondary="in STOMP" data-type="indexterm">&nbsp;</a>connected to<a contenteditable="false" data-primary="STOMP" data-secondary="advanced" data-tertiary="authentication" data-type="indexterm">&nbsp;</a> the broker <em>anonymously</em>. We <a contenteditable="false" data-primary="anonymous connections, STOMP clients to brokers" data-type="indexterm">&nbsp;</a>do not pass any user credentials that the broker could use to authenticate the user and check whether he or she could send and/or receive messages.</p>
+<p>In Chapters 2 and 3, the STOMP clients are <a contenteditable="false" data-primary="authentication" data-secondary="in STOMP" data-type="indexterm">&nbsp;</a>connected to<a contenteditable="false" data-primary="STOMP" data-secondary="advanced" data-tertiary="authentication" data-type="indexterm">&nbsp;</a> the broker <em>anonymously</em>. We <a contenteditable="false" data-primary="anonymous connections, STOMP clients to brokers" data-type="indexterm">&nbsp;</a>do not pass any user credentials that the broker could use to authenticate the user and check whether he or she can send and/or receive messages.</p>
 
 <p>If the STOMP broker is configured to accept secured connections, the client needs to pass <code>login</code> and <code>passcode</code> parameters when it connects to the STOMP broker.</p>
 
@@ -167,14 +167,14 @@ function connect(url) {
 
 <p>If the client does not specify any type of acknowledgment or if it uses <code>default</code>, it does not need to send any acknowledgment; the STOMP broker will consider the message acknowledged as soon as it is delivered to the client.</p>
 
-<p>If <code>client</code> or <code>client-individual</code> is used, the <a contenteditable="false" data-primary="client acknowledgement" data-type="indexterm">&nbsp;</a>consumer must send acknowledgments to the server with the <code>message-id</code> of the message that is acknowledge.<a contenteditable="false" data-primary="client-individual acknowledgement" data-type="indexterm">&nbsp;</a> The difference between <code>client</code> and <code>client-individual</code> is that <code>client</code> will acknowledged the message <em>and all other messages delivered to the consumer before</em>. Using <code>client-individual</code> will only acknowledge the message and no other messages. The consumer acknowledges a message by sending an <code>ACK</code> frame to the STOMP broker.</p>
+<p>If <code>client</code> or <code>client-individual</code> is used, the <a contenteditable="false" data-primary="client acknowledgement" data-type="indexterm">&nbsp;</a>consumer must send acknowledgments to the server with the <code>message-id</code> of the message that is acknowledged.<a contenteditable="false" data-primary="client-individual acknowledgement" data-type="indexterm">&nbsp;</a> The difference between <code>client</code> and <code>client-individual</code> is that <code>client</code> will acknowledge the message <em>and all other messages previously delivered to the consumer</em> <code>client-individual</code> will only acknowledge the message and no other messages. The consumer acknowledges a message by sending an <code>ACK</code> frame to the STOMP broker.</p>
 
-<p>If <code>client</code> and <code>client-individual</code> is used, the consumer may explicitly refuse to handle the message by sending a <code>NACK</code> frame, a negative acknowledgment.</p>
+<p>If <code>client</code> and <code>client-individual</code> are used, the consumer can explicitly refuse to handle the message by sending a <code>NACK</code> frame, which is a negative acknowledgment.</p>
 
 <section data-type="sect2" id="__code_stompkit_code_example_2">
 <h2>StompKit Example</h2>
 
-<p>The message acknowledgment is specified when the <code>STOMPClient</code> subscribes to a destination<a contenteditable="false" data-primary="message acknowledgement in STOMP" data-secondary="StompKit example" data-type="indexterm">&nbsp;</a> by <a contenteditable="false" data-primary="StompKit" data-secondary="message acknowledgement example" data-type="indexterm">&nbsp;</a>calling its <code>subscribeTo:headers:messageHandler:</code> method. To specify a <code>client</code> or <code>client-individual</code> acknowledgment, you must set an <code>ack</code> header. <em>StompKit.h</em> defines constants to represent the header name, <code>kHeaderAck</code> and its accepted values, <code>kAckAuto</code>, <code>kAckClient</code>, and <code>kAckClientIndividual</code>.</p>
+<p>The message acknowledgment is specified when the <code>STOMPClient</code> subscribes to a destination<a contenteditable="false" data-primary="message acknowledgement in STOMP" data-secondary="StompKit example" data-type="indexterm">&nbsp;</a> by <a contenteditable="false" data-primary="StompKit" data-secondary="message acknowledgement example" data-type="indexterm">&nbsp;</a>calling its <code>subscribeTo:headers:messageHandler:</code> method. To specify a <code>client</code> or <code>client-individual</code> acknowledgment, you must set an <code>ack</code> header. <em>StompKit.h</em> defines constants to represent the header name, <code>kHeaderAck</code>, and its accepted values, <code>kAckAuto</code>, <code>kAckClient</code>, and <code>kAckClientIndividual</code>.</p>
 
 <p>The <code>STOMPMessage</code> parameter of the <code>messageHandler</code> has two methods, <code>ack</code> and <code>nack</code>, to acknowledge or nack the message, respectively.</p>
 
@@ -217,7 +217,7 @@ client.subscribe(destination,
 
 <p>There are many use cases where it is not necessary to use explicit acknowledgment.</p>
 
-<p>For example, in the Locations web application, we do not need to acknowledge every message that we receive from the devices with their GPS position. At worst, there may be a problem to display the position, but we know there are other messages that will come later to update the device&rsquo;s position.</p>
+<p>For example, in the Locations web application, we do not need to acknowledge every message that we receive from the devices with its GPS position. At worst, there may be a problem displaying the position, but we know that other messages will come later to update the device&rsquo;s position.</p>
 
 <p>Besides, acknowledging every message would have a performance cost. Sending the acknowledgment back to the broker would involve an additional network trip for every message.</p>
 
@@ -232,7 +232,7 @@ client.subscribe(destination,
 
 <p>STOMP has basic support for transactions.</p>
 
-<p>Sending a message or acknowledging the consumption of messages can be performed inside a <a contenteditable="false" data-primary="transactions in STOMP" data-type="indexterm">&nbsp;</a>transaction. <a contenteditable="false" data-primary="STOMP" data-secondary="advanced" data-tertiary="transactions" data-type="indexterm">&nbsp;</a>This means that the messages and acknowledgments are not processed by the broker when it receives the corresponding frames but when the transaction completes. If the client does not complete the transaction or aborts it, the broker will not process the frames that it received inside the transaction and will just discard them. Transactions ensure that messages and acknowledgment processing is <em>atomic</em>. <em>All</em> transacted messages and acknowledgments will be processed by the broker when the transaction is committed or <em>none</em> will be if the transaction is aborted.</p>
+<p>Sending a message or acknowledging the consumption of messages can be performed inside a <a contenteditable="false" data-primary="transactions in STOMP" data-type="indexterm">&nbsp;</a>transaction. <a contenteditable="false" data-primary="STOMP" data-secondary="advanced" data-tertiary="transactions" data-type="indexterm">&nbsp;</a>This means that the messages and acknowledgments are not processed by the broker when it receives the corresponding frames but when the transaction completes. If the client does not complete the transaction or aborts it, the broker will not process the frames that it received inside the transaction and will just discard them. Transactions ensure that messages and acknowledgment processing are <em>atomic</em>. <em>All</em> transacted messages and acknowledgments will be processed by the broker when the transaction is committed or <em>none</em> will be if the transaction is aborted.</p>
 
 <p>A transaction is started by the client by sending a <code>BEGIN</code> frame to the broker.<a contenteditable="false" data-primary="BEGIN frame (STOMP transactions)" data-type="indexterm">&nbsp;</a> This frame must have a <code>transaction</code> header whose value is a transaction identifier that must be unique within a STOMP connection.<a contenteditable="false" data-primary="headers" data-secondary="in STOMP frames" data-tertiary="transaction headers" data-type="indexterm">&nbsp;</a></p>
 
@@ -242,10 +242,10 @@ client.subscribe(destination,
 <p>By default, STOMP consumers use <code>auto</code> acknowledgment. In that case, the message acknowledgment is performed automatically by the STOMP broker when the message is delivered to the client and the acknowledgment <em>cannot</em> be put inside a transaction.</p>
 </div>
 
-<p>To complete this active transaction and allow the broker to process it, the client must send a <code>COMMIT</code> frame with the same <code>transaction</code> header as in the corresponding <code>BEGIN</code> frame that started the transaction.<a contenteditable="false" data-primary="COMMIT frame (STOMP transactions)" data-type="indexterm">&nbsp;</a> To abort (or roll back) a transaction and discard any messages or acknowledgments sent inside it, the client must send instead an <code>ABORT</code> frame <a contenteditable="false" data-primary="ABORT frame (STOMP transactions)" data-type="indexterm">&nbsp;</a>with this <code>transaction</code> header.</p>
+<p>To complete this active transaction and allow the broker to process it, the client must send a <code>COMMIT</code> frame with the same <code>transaction</code> header as in the corresponding <code>BEGIN</code> frame that started the transaction.<a contenteditable="false" data-primary="COMMIT frame (STOMP transactions)" data-type="indexterm">&nbsp;</a> To abort (or roll back) a transaction and discard any messages or acknowledgments inside it, the client must instead send an <code>ABORT</code> frame <a contenteditable="false" data-primary="ABORT frame (STOMP transactions)" data-type="indexterm">&nbsp;</a>with this <code>transaction</code> header.</p>
 
 <div data-type="warning">
-<p>Beginning a transaction is not sufficient to send subsequent messages inside it. If a transaction is begun, the message to send must have its <code>transaction</code> header set to the transaction identifier. Otherwise, the STOMP broker will not consider that the message is part of the transaction and will process it when it receives it instead of waiting for the transaction to complete. If the client decides to abort the transaction, the message will have already been processed by the broker and will not be discarded.</p>
+<p>Beginning a transaction is not sufficient to send subsequent messages inside it. If a transaction is begun, the message to send must have its <code>transaction</code> header set to the transaction identifier. Otherwise, the STOMP broker will not consider the message to be part of the transaction and will process it when it receives it instead of waiting for the transaction to complete. If the client decides to abort the transaction, the message will have already been processed by the broker and will not be discarded.</p>
 </div>
 
 <p>STOMP does not provide a transaction timeout that would abort the transaction if it is not completed in a timely fashion. The transaction lifecycle (controlled by <code>BEGIN</code> and <code>COMMIT</code>/<code>ABORT</code> frames) is the responsibility of the client. However, the broker will automatically abort any active transaction if the client sends a <code>DISCONNECT</code> frame or if the underlying TCP connection fails.</p>
@@ -253,7 +253,7 @@ client.subscribe(destination,
 <section data-type="sect2" id="__code_stompkit_code_example_3">
 <h2>StompKit Example</h2>
 
-<p>The <code>STOMPClient</code> can begin a transaction by <a contenteditable="false" data-primary="transactions in STOMP" data-secondary="StompKit example" data-type="indexterm">&nbsp;</a>calling its <code>begin:</code> method and passing an <code>NSString</code> that will be used to identify the transaction.<a contenteditable="false" data-primary="StompKit" data-secondary="transaction example" data-type="indexterm">&nbsp;</a> Alternatively, you can call its <code>begin</code> method (without any parameter) and a transaction identifier will be automatically generated. Both <code>begin:</code> and <code>begin</code> methods returns a <code>STOMPTransaction</code> object. This object has a <code>identifier</code> property that contains the transaction identifier.</p>
+<p>The <code>STOMPClient</code> can begin a transaction by <a contenteditable="false" data-primary="transactions in STOMP" data-secondary="StompKit example" data-type="indexterm">&nbsp;</a>calling its <code>begin:</code> method and passing an <code>NSString</code> that will be used to identify the transaction.<a contenteditable="false" data-primary="StompKit" data-secondary="transaction example" data-type="indexterm">&nbsp;</a> Alternatively, you can call its <code>begin</code> method (without any parameter) and a transaction identifier will be automatically generated. Both <code>begin:</code> and <code>begin</code> methods return a <code>STOMPTransaction</code> object. This object has a <code>identifier</code> property that contains the transaction identifier.</p>
 
 <p>Sending, acknowledging, or nacking a message can then be part of a transaction by adding a <code>transaction</code> header set to the transaction identifier (StompKit.h defines a <code>kHeaderTransaction</code> to represent this <code>transaction</code> header).</p>
 
@@ -265,7 +265,7 @@ STOMPTransaction *transaction = [self.client begin];
 // or STOMPTransaction *transaction = [self.client begin:mytxid];
 NSLog(@&quot;started transaction %@&quot;, transaction.identifier);
 
-// send message inside a transaction
+// send a message inside a transaction
 [self.client sendTo:destination
             headers:@{kHeaderTransaction: transaction.identifier}
                body:body];
@@ -324,7 +324,7 @@ tx.abort();</pre>
 
 <p>Until now, we have used STOMP in a perfect world <a contenteditable="false" data-primary="error handling" data-secondary="in STOMP" data-type="indexterm">&nbsp;</a>where no unexpected problems happened. <a contenteditable="false" data-primary="STOMP" data-secondary="advanced" data-tertiary="error handling" data-type="indexterm">&nbsp;</a>Realistically, problems will occur. On mobile devices, the network will be lost and the connection to the STOMP broker will be broken.</p>
 
-<p>STOMP provides basic support to handle errors. The STOMP broker can inform the client that an error occurs by sending an <code>ERROR</code> frame to the client.<a contenteditable="false" data-primary="ERROR frame (STOMP)" data-type="indexterm">&nbsp;</a> This frame may contain a <code>message</code> header that contains a short description of the error. Most STOMP brokers deliver <code>ERROR</code> frames with a message payload containing more detailed information on the error.</p>
+<p>STOMP provides basic support to handle errors. The STOMP broker can inform the client that an error occurs by sending an <code>ERROR</code> frame to the client.<a contenteditable="false" data-primary="ERROR frame (STOMP)" data-type="indexterm">&nbsp;</a> This frame can contain a <code>message</code> header that contains a short description of the error. Most STOMP brokers deliver <code>ERROR</code> frames with a message payload containing more detailed information on the error.</p>
 
 <p>STOMP specifies that after delivering an <code>ERROR</code> frame to the client, the broker must close the connection. This means that STOMP is not resilient to error. If a single error occurs on the server, the broker will close the connection to the client. In addition, there is no guarantee that the client will be able to receive the <code>ERROR</code> frame before the connection is closed.</p>
 
@@ -344,7 +344,7 @@ tx.abort();</pre>
 
 <p>We will modify the <code>Locations</code> iOS application to handle errors and automatically reconnect to the STOMP broker<a contenteditable="false" data-primary="error handling" data-secondary="in STOMP" data-tertiary="StompKit example" data-type="indexterm">&nbsp;</a> after a delay.<a contenteditable="false" data-primary="StompKit" data-secondary="error handling example" data-type="indexterm">&nbsp;</a></p>
 
-<p>The <code>STOMPClient</code> has an <code>errorHandler</code> property that is called if the client encounters any error. Error can come from the STOMP protocol (when the broker delivers an <code>ERROR</code> frame) or from the underlying network connection (e.g., if the network is lost or if the broker closes the connection before any <code>ERROR</code> frame is delivered).</p>
+<p>The <code>STOMPClient</code> has an <code>errorHandler</code> property that is called if the client encounters any error. Errors can come from the STOMP protocol (when the broker delivers an <code>ERROR</code> frame) or from the underlying network connection (e.g., if the network is lost or if the broker closes the connection before any <code>ERROR</code> frame is delivered).</p>
 
 <p>The <code>errorHandler</code> property is a block with a standard <code>NSSError</code> parameter. If the error is coming from the STOMP broker, the corresponding <code>STOMPFrame</code> is stored in the error&rsquo;s <code>userInfo</code> dictionary with the key <code>frame</code>.</p>
 
@@ -359,7 +359,7 @@ tx.abort();</pre>
 	</li>
 </ul>
 
-<p>In both cases, we will attempt to reconnect by disconnecting first (in the eventual case where the client is already connected), waiting for 10 seconds and connecting again.<a contenteditable="false" data-primary="reconnecting to STOMP broker" data-secondary="StompKit iOS Locations application (example)" data-type="indexterm">&nbsp;</a> This code can be<a contenteditable="false" data-primary="error handling in STOMP" data-secondary="StompKit example" data-tertiary="reconnecting to STOMP broker" data-type="indexterm">&nbsp;</a> encapsulated in a <code>reconnect:</code> method of the <code>MWMViewController</code> implementation:</p>
+<p>In both cases, we will attempt to reconnect by disconnecting first (in the eventual case where the client is already connected), waiting for 10 seconds, and connecting again.<a contenteditable="false" data-primary="reconnecting to STOMP broker" data-secondary="StompKit iOS Locations application (example)" data-type="indexterm">&nbsp;</a> This code can be<a contenteditable="false" data-primary="error handling in STOMP" data-secondary="StompKit example" data-tertiary="reconnecting to STOMP broker" data-type="indexterm">&nbsp;</a> encapsulated in a <code>reconnect:</code> method of the <code>MWMViewController</code> implementation:</p>
 
 <pre data-code-language="objc" data-type="programlisting">
 #pragma mark - Messaging
@@ -402,7 +402,7 @@ tx.abort();</pre>
     // when the method returns, we cannot assume that the client is connected
 }</pre>
 
-<p>To avoid a retain/release cycle between <code>self</code> and the blocks, we need to create a <em>weak</em> reference of <code>self</code> to use it inside the blocks.</p>
+<p>To avoid a retain/release cycle between <code>self</code> and the blocks, we need to create a <em>weak</em> reference to <code>self</code> to use it inside the blocks.</p>
 </section>
 
 <section data-type="sect2" id="__code_stomp_js_code_example_4">
@@ -438,12 +438,12 @@ function connect(url) {
 
   // create the STOMP client
   client = Stomp.client(url);
-  // and connects to the STOMP broker
+  // and connect to the STOMP broker
   client.connect({}, connectedCallback, errorCallback);
 }</pre>
 
 <div data-type="warning">
-<p>A Web socket can be opened only once. If a problem occurs and the socket is closed, it can no longer be used. This implies that we cannot just call the <code>client</code>'s <code>connect</code> method again as its Web socket is no longer usable. Instead, we must create a <em>new</em> <code>client</code> that will open a new Web socket.</p>
+<p>A Web socket can be opened only once. If a problem occurs and the socket is closed, it can no longer be used. This implies that we cannot just call the <code>client</code>'s <code>connect</code> method again as its Web Socket is no longer usable. Instead, we must create a <em>new</em> <code>client</code> that will open a new Web Socket.</p>
 </div>
 
 <p>Whenever an error occurs (e.g., if the network connection is broken or the STOMP broker becomes temporarily unavailable), the <code>errorCallback</code> will be called and the client will try to reconnect.</p>
@@ -459,25 +459,25 @@ function connect(url) {
 
 <p>To use this mechanism, the frame that is sent to the broker must include a <code>receipt</code> header with any arbitrary value.<a contenteditable="false" data-primary="headers" data-secondary="in STOMP frames" data-tertiary="receipt headers" data-type="indexterm">&nbsp;</a> After the broker has processed the frame, it will deliver a <code>RECEIPT</code> frame to the client with a <code>receipt-id</code> header corresponding to the <code>receipt</code> header in the frame that has been processed.<a contenteditable="false" data-primary="headers" data-secondary="in STOMP frames" data-tertiary="receipt-id headers" data-type="indexterm">&nbsp;</a></p>
 
-<p>As an example, we can use receipt to confirm that a consumer has been subscribed successfully to a destination.<a contenteditable="false" data-primary="publish/subscribe messaging model" data-secondary="using receipt to confirm successful subscription" data-type="indexterm">&nbsp;</a> If the broker cannot successfully create the subscription, it will send back an <code>ERROR</code> frame to the client and close the connection. In practice, this means that a successful subscription is <em>silent</em>: the client is not informed of its success. We can use receipts to have an explicit confirmation of the subscription by adding a <code>receipt</code> header when the client subscribes to a destination. The broker must then deliver a <code>RECEIPT</code> frame that will inform the client that the broker has processed its subscription successfully. If the subscription is not successful, the broker will deliver an <code>ERROR</code> frame that has a <code>receipt-id</code> header corresponding to the <code>RECEIPT</code>'s <code>receipt</code> header to be able to correlate the error.</p>
+<p>As an example, we can use <code>receipt</code> to confirm that a consumer has been subscribed successfully to a destination.<a contenteditable="false" data-primary="publish/subscribe messaging model" data-secondary="using receipt to confirm successful subscription" data-type="indexterm">&nbsp;</a> If the broker cannot successfully create the subscription, it will send back an <code>ERROR</code> frame to the client and close the connection. In practice, this means that a successful subscription is <em>silent</em>: the client is not informed of its success. We can use receipts to have an explicit confirmation of the subscription by adding a <code>receipt</code> header when the client subscribes to a destination. The broker must then deliver a <code>RECEIPT</code> frame that will inform the client that the broker has processed its subscription successfully. If the subscription is unsuccessful, the broker will deliver an <code>ERROR</code> frame that has a <code>receipt-id</code> header corresponding to the <code>RECEIPT</code>'s <code>receipt</code> header to correlate the error.</p>
 
-<p>Another use case for receipts is to make sending a message <em>synchronous</em>.<a contenteditable="false" data-primary="synchronous messaging, using receipts in STOMP" data-type="indexterm">&nbsp;</a> The client would send a message with a <code>receipt</code> header and blocks until it receives the corresponding <code>RECEIPT</code> frame. This would add reliability (the client is sure that the broker has processed its message) at the cost of performance (the client can do nothing until the <code>RECEIPT</code> frame is received).</p>
+<p>Another use case for receipts is to make sending a message <em>synchronous</em>.<a contenteditable="false" data-primary="synchronous messaging, using receipts in STOMP" data-type="indexterm">&nbsp;</a> The client sends a message with a <code>receipt</code> header and blocks until it receives the corresponding <code>RECEIPT</code> frame. This adds reliability (the client is sure that the broker has processed its message) at the cost of performance (the client can do nothing until the <code>RECEIPT</code> frame is received).</p>
 
 <section data-type="sect2" id="__code_stompkit_code_example_5">
 <h2>StompKit Example</h2>
 
-<p>A <code>STOMPClient</code> has a <code>receiptHandler</code> property that can be set to handle receipts.<a contenteditable="false" data-primary="StompKit" data-secondary="receipts example" data-type="indexterm">&nbsp;</a> The <code>receiptHandler</code> is a block that take a <code>STOMPFrame</code> corresponding to a <code>RECEIPT</code> frame.<a contenteditable="false" data-primary="receipts in STOMP" data-secondary="StompKit example" data-type="indexterm">&nbsp;</a></p>
+<p>A <code>STOMPClient</code> has a <code>receiptHandler</code> property that can be set to handle receipts.<a contenteditable="false" data-primary="StompKit" data-secondary="receipts example" data-type="indexterm">&nbsp;</a> The <code>receiptHandler</code> is a block that takes a <code>STOMPFrame</code> corresponding to a <code>RECEIPT</code> frame.<a contenteditable="false" data-primary="receipts in STOMP" data-secondary="StompKit example" data-type="indexterm">&nbsp;</a></p>
 
 <p>Let&rsquo;s add a receipt for the device text queue&rsquo;s subscription to the Locations iOS application.</p>
 
-<p>In its <code>subscribe</code> method, we will build a <code>receipt</code> identifier for the subscription receipt and set the <code>client</code>'s <code>receiptHandler</code>. In this block, we just check if the <code>headers</code> of the <code>frame</code> parameter contain a <code>kHeaderReceiptID</code> key whose value matches the <code>receipt</code> identifier.</p>
+<p>In its <code>subscribe</code> method, we will build a <code>receipt</code> identifier for the subscription receipt and set the <code>client</code>'s <code>receiptHandler</code>. In this block, we just check if the <code>headers</code> of the <code>frame</code> parameter contain a <code>kHeaderReceiptID</code> key with a value that matches the <code>receipt</code> identifier.</p>
 
 <p>To receive such a receipt from the subscription, we need to add a <code>kHeaderReceipt</code> header to the <code>subscribeTo:headers:messageHandler:</code> and set it to the <code>receipt</code> identifier:</p>
 
 <pre data-code-language="objc" data-type="programlisting">
 - (void)subscribe
 {
-    // susbscribes to the device text queue:
+    // susbscribe to the device text queue:
     NSString *destination = [NSString stringWithFormat:@&quot;/queue/device.%@.text&quot;, self.deviceID];
 
     // build a receipt identifier
@@ -500,7 +500,7 @@ function connect(url) {
     }];
 }</pre>
 
-<p>If the Locations iOS application is run with this code, we see the log that confirms the client is successfully subscribed to the destination:</p>
+<p>If the Locations iOS application is run with this code, we see the log that confirms that the client is successfully subscribed to the destination:</p>
 
 <pre data-type="programlisting">
 2014-04-21 17:30:39.205 Locations[2384:3903] Subscribing to /queue/device.2262EC25-E9FD-4578-BADE-4E113DE45934.text
@@ -537,13 +537,13 @@ client.subscribe(destination, function(message) {
 </section>
 
 <section data-type="sect1" id="_heart_beating">
-<h1>Heart-beating</h1>
+<h1>Heart-Beating</h1>
 
-<p>STOMP offers a mechanism to test the healthiness of a network connection between a STOMP client and a broker<a contenteditable="false" data-primary="heart-beating" data-secondary="in STOMP" data-type="indexterm">&nbsp;</a> using heart-beating. <a contenteditable="false" data-primary="STOMP" data-secondary="advanced" data-tertiary="heart-beating" data-type="indexterm">&nbsp;</a>In the absence of messages exchanged between the STOMP client and the broker, both can send a <em>heartbeat</em> periodically to inform the other that is alive but has no activity.</p>
+<p>STOMP offers a mechanism to test the healthiness of a network connection between a STOMP client and a broker<a contenteditable="false" data-primary="heart-beating" data-secondary="in STOMP" data-type="indexterm">&nbsp;</a> using heart-beating. <a contenteditable="false" data-primary="STOMP" data-secondary="advanced" data-tertiary="heart-beating" data-type="indexterm">&nbsp;</a>In the absence of messages exchanged between the STOMP client and the broker, both can send a <em>heartbeat</em> periodically to inform the other that it is alive but has no activity.</p>
 
 <p>If heart-beating is enabled, this allows the client and the broker to be informed in case of network failures and act accordingly (the client could try to reconnect to the broker, the broker could clean up the resources created on behalf of the client, etc.).</p>
 
-<p>Heart-beating is negotiated between the client and the broker when the client connects to the broker (by sending a <code>CONNECT</code> frame) and the broker accepts the connection (by sending a <code>CONNECTED</code> frame to the client). Both frames accepts a <code>heart-beat</code> header whose value <a contenteditable="false" data-primary="headers" data-secondary="in STOMP frames" data-tertiary="heart-beat headers" data-type="indexterm">&nbsp;</a>contains two integers separated by a comma:</p>
+<p>Heart-beating is negotiated between the client and the broker when the client connects to the broker (by sending a <code>CONNECT</code> frame) and the broker accepts the connection (by sending a <code>CONNECTED</code> frame to the client). Both frames accept a <code>heart-beat</code> header whose value <a contenteditable="false" data-primary="headers" data-secondary="in STOMP frames" data-tertiary="heart-beat headers" data-type="indexterm">&nbsp;</a>contains two integers separated by a comma:</p>
 
 <pre data-type="programlisting">
 CONNECT
@@ -562,7 +562,7 @@ heart-beat:&lt;sx&gt;,&lt;sy&gt;</pre>
 	<p><code>&lt;cy&gt;</code> The desired number of milliseconds between heartbeats coming from the broker. If it is set to <code>0</code>, the client does not want to receive any heartbeat.</p>
 	</li>
 	<li>
-	<p><code>&lt;sx&gt;</code> The smallest number of milliseconds between heartbeats that the broker guarantees. If it is set to <code>0</code>, the broker will not send any heartbeat at all.</p>
+	<p><code>&lt;sx&gt;</code> The smallest number of milliseconds between heartbeats that the broker guarantees. If it is set to <code>0</code>, the broker will not send any heartbeat.</p>
 	</li>
 	<li>
 	<p><code>&lt;sy&gt;</code> The desired number of milliseconds between heartbeats coming from the client. If it is set to <code>0</code>, the broker does not want to receive any heartbeat.</p>
@@ -571,11 +571,11 @@ heart-beat:&lt;sx&gt;,&lt;sy&gt;</pre>
 
 <p>When the client is successfully connected to the STOMP broker (it has received the <code>CONNECTED</code> frame), it must determine the frequency of the heartbeats to send to the broker and the frequency of heartbeats coming from the broker.</p>
 
-<p>The values that are used to determine the frequency of<a contenteditable="false" data-primary="heart-beating" data-secondary="in STOMP" data-tertiary="values determining frequency of hearbeats" data-type="indexterm">&nbsp;</a> heartbeats sent to the broker are <code>&lt;cx&gt;</code> and <code>&lt;sy&gt;</code>. If <code>&lt;cx&gt;</code> is <code>0</code> (the client will send no heartbeat) or if <code>&lt;sy&gt;</code> is <code>0</code> (the broker does not expect any client heartbeats), there will be no client heartbeating at all. This means that the broker will not be able to test the healthiness of the client connection. Otherwise, both server and broker expect to exchange client heartbeats. The frequency is then determined by the maximum value between the value guaranteed by the client, <code>&lt;cx&gt;</code>, and the value desired by the broker, <code>&lt;sy&gt;</code>. In other words, the client must send heartbeats at least <code>MAX(cx,sy)</code> milliseconds.</p>
+<p>The values that are used to determine the frequency of<a contenteditable="false" data-primary="heart-beating" data-secondary="in STOMP" data-tertiary="values determining frequency of hearbeats" data-type="indexterm">&nbsp;</a> heartbeats sent to the broker are <code>&lt;cx&gt;</code> and <code>&lt;sy&gt;</code>. If <code>&lt;cx&gt;</code> is <code>0</code> (the client will send no heartbeat) or if <code>&lt;sy&gt;</code> is <code>0</code> (the broker does not expect any client heartbeats), there will be no client heartbeating at all. This means that the broker will not be able to test the health of the client connection. Otherwise, both server and broker expect to exchange client heartbeats. The frequency is then determined by the maximum value between the value guaranteed by the client, <code>&lt;cx&gt;</code>, and the value desired by the broker, <code>&lt;sy&gt;</code>. In other words, the client must send heartbeats at a frequency of at least <code>MAX(cx,sy)</code> milliseconds.</p>
 
 <p>For the heartbeats sent by the broker to the client, the algorithm is the same but uses the <code>&lt;cy&gt;</code> and <code>&lt;sx&gt;</code> values.</p>
 
-<p>Let&rsquo;s take a simple example to illustrate the algorithm. We have a STOMP client that connects to the broker with the <code>heart-beat</code> header set to <code>0,60000</code> (the client will not send any heartbeats but desires to receive the broker&rsquo;s heartbeats every minute):</p>
+<p>Let&rsquo;s take a simple example to illustrate the algorithm. We have a STOMP client that connects to the broker with the <code>heart-beat</code> header set to <code>0,60000</code> (the client will not send any heartbeats, but desires to receive the broker&rsquo;s heartbeats every minute):</p>
 
 <pre data-type="programlisting">
 CONNECT
@@ -589,12 +589,12 @@ CONNECTED
 heart-beat:20000,30000
 ....</pre>
 
-<p>Because the client specified that it will send no heartbeat (<code>0</code> as the first value of the <code>CONNECT</code>'s <code>heart-beat</code> header), client heartbeating is disabled and the broker should not expect any (although it <em>desired</em> to receive them every 20 seconds).</p>
+<p>Because the client specified that it will send no heartbeat (<code>0</code> as the first value of the <code>CONNECT</code>'s <code>heart-beat</code> header), client heartbeating is disabled and the broker should not expect any (even though it <em>desired</em> to receive them every 20 seconds).</p>
 
-<p>The client desired to receive the broker heartbeat every minute (<code>60000</code> as the second value of the <code>CONNECT</code>'s <code>heart-beat</code> header). The broker replied that it can guarantee to send them at least every 30 seconds (second value of the <code>CONNECTED</code>'s <code>heart-beat</code> header). In that case, the broker and the client agrees that the broker must send heartbeats every minute (the maximum between 1 minute and 30 seconds). In other words, the broker <em>could</em> send heartbeats every 30 seconds (as it guaranteed in the <code>CONNECTED</code> frame) but the client will only check them every minute.</p>
+<p>The client desired to receive the broker heartbeat every minute (<code>60000</code> as the second value of the <code>CONNECT</code>'s <code>heart-beat</code> header). The broker replied that it can guarantee to send them at least every 30 seconds (second value of the <code>CONNECTED</code>'s <code>heart-beat</code> header). In that case, the broker and the client agrees that the broker must send heartbeats every minute (the maximum between 1 minute and 30 seconds). In other words, the broker <em>could</em> send heartbeats every 30 seconds (as it guaranteed in the <code>CONNECTED</code> frame), but the client will only check them every minute.</p>
 
 <div data-type="note">
-<p>ActiveMQ supports heart-beating and mirrors the heartbeat values sent by the STOMP client.<a contenteditable="false" data-primary="ActiveMQ" data-secondary="heart-beating support" data-type="indexterm">&nbsp;</a> This lets the STOMP client be the sole decider of the heartbeating values.</p>
+<p>ActiveMQ supports heart-beating and mirrors the heartbeat values sent by the STOMP client.<a contenteditable="false" data-primary="ActiveMQ" data-secondary="heart-beating support" data-type="indexterm">&nbsp;</a> This lets the STOMP client be the sole decider of the heart-beating values.</p>
 
 <p>This means that if a client connects with a <code>heart-beat</code> header set to <code>&lt;cx&gt;,&lt;sy&gt;</code>, the broker will accept the connection with a <code>heart-beat</code> header set to <code>&lt;sy&gt;,&lt;cx&gt;</code>.</p>
 
@@ -610,9 +610,9 @@ heart-beat:20000,30000
 
 <p>A <code>STOMPClient</code> supports<a contenteditable="false" data-primary="StompKit" data-secondary="heart-beating example" data-type="indexterm">&nbsp;</a> heart-beating <a contenteditable="false" data-primary="heart-beating" data-secondary="in STOMP" data-tertiary="StompKit example" data-type="indexterm">&nbsp;</a>by passing the <code>heart-beat</code> header when it connects to the broker using its <code>connectWithHeaders:completionHandler</code> method.</p>
 
-<p>By default, <code>StompKit</code> defines a heartbeat of <code>5000,10000</code> (send heartbeat every 5 seconds and receive them every 10 seconds).</p>
+<p>By default, <code>StompKit</code> defines a heartbeat of <code>5000,10000</code> (send heartbeats every 5 seconds and receive them every 10 seconds).</p>
 
-<p>Let&rsquo;s add heart-beating to the Locations iOS application. The application often sends messages (every time the device GPS position is updated) but receives them less frequently (when a user sends a message from the web application). We will guarantee to send heartbeats every minute (60000ms) and desire to receive them from the broker every 20 seconds (20000ms):</p>
+<p>Let&rsquo;s add heart-beating to the Locations iOS application. The application sends messages often (every time the device GPS position is updated), but receives them less frequently (when a user sends a message from the web application). We will guarantee to send heartbeats every minute (60000ms) and desire to receive them from the broker every 20 seconds (20000ms):</p>
 
 <pre data-code-language="objc" data-type="programlisting">
 - (void)connect
@@ -621,8 +621,8 @@ heart-beat:20000,30000
     self.client.errorHandler = ^(NSError* error) {
         NSLog(@&quot;got error from STOMP: %@&quot;, error);
     };
-    // will send a heartbeat at most every minute.
-    // expect broker's heartbeat at least every 20 seconds.
+    // will send a heartbeat at most every minute
+    // expect broker's heartbeat at least every 20 seconds
     NSString *heartbeat = @&quot;60000,20000&quot;;
     [self.client connectWithHeaders:@{ @&quot;client-id&quot;: self.deviceID,
                                        kHeaderHeartBeat: heartbeat }
@@ -680,7 +680,7 @@ client.connect({}, function(frame) {
 	<p><em>Acknowledgment</em> to let the client explicitly accept the delivery of a message</p>
 	</li>
 	<li>
-	<p><em>Transaction</em> to send messages as a single atomic unit-of-work</p>
+	<p><em>Transaction</em> to send messages as a single atomic unit of work</p>
 	</li>
 	<li>
 	<p><em>Error handling</em> to face unexpected issues and eventually reconnect to the broker</p>
