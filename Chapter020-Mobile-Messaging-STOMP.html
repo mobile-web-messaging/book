@@ -249,8 +249,10 @@ interface MWMViewController () &lt;CLLocationManagerDelegate&gt;
     NSLog(@&quot;startUpdatingCurrentLocation&quot;);
 
     // if location services are restricted, do nothing
-    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied ||
-  [CLLocationManager authorizationStatus] == kCLAuthorizationStatusRestricted) {
+    if ([CLLocationManager authorizationStatus] == 
+    kCLAuthorizationStatusDenied ||
+  [CLLocationManager authorizationStatus] == 
+  kCLAuthorizationStatusRestricted) {
         return;
     }
 
@@ -496,8 +498,10 @@ interface MWMViewController () &lt;CLLocationManagerDelegate&gt;
 <p>As we described in <a data-type="xref" href="#ch_introduction_stomp_example_topology">#ch_introduction_stomp_example_topology</a>, each device will send its location in a topic named after its identifier.</p>
 
 <pre data-code-language="objc" data-type="programlisting">
-NSString *destination = [NSString stringWithFormat:@&quot;/topic/device.%@.
-location&quot;, self.deviceID];</pre>
+NSString *destination = 
+  [NSString stringWithFormat:@&quot;/
+topic/device.%@.location&quot;, 
+self.deviceID];</pre>
 
 <div data-type="note">
 <p>ActiveMQ convention is to prefix a STOMP destination with <code>/topic/</code> to use a publish/subscribe messaging model and by <code>/queue/</code> to use a point-to-point model.</p>
@@ -514,9 +518,16 @@ NSDictionary *dict = @{
     @&quot;lng&quot;: [NSNumber numberWithDouble:location.coordinate.longitude],
     @&quot;ts&quot;: [dateFormatter stringFromDate:location.timestamp]
 };
-NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 
+   NSData *data = 
+[NSJSONSerialization 
+dataWithJSONObject:dict 
+
+options:0 
+
 error:nil];
-NSString *body =[[NSString alloc] initWithData:data 
+   NSString *body =[[NSString alloc] 
+initWithData:data 
+
 encoding:NSUTF8StringEncoding];</pre>
 
 <p>This body follows the JSON format.<a contenteditable="false" data-primary="JSON" data-secondary="STOMP message body" data-type="indexterm">&nbsp;</a> We will add a <code>content-type</code> header in the STOMP message and set it to <code>application/json; charset=utf-8</code> to let the STOMP brokers and the eventual consumers know that this message&rsquo;s payload can be read as a JSON string encoded with UTF-8. Without such a <code>content-type</code>, the consumers would not necessarily know how to <em>read</em> the data in the body and interpret it.</p>
@@ -559,10 +570,16 @@ NSDictionary *headers = @{
         @&quot;ts&quot;: [dateFormatter stringFromDate:location.timestamp]
     };
     // create a JSON string from this dictionary
-    NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0
+       NSData *data = 
+    [NSJSONSerialization dataWithJSONObject:dict 
+    
+    options:0
+    
     error:nil];
-    NSString *body =[[NSString alloc] initWithData:data 
-    encoding:NSUTF8StringEncoding];
+       NSString *body =[[NSString alloc] 
+   initWithData:data 
+   
+   encoding:NSUTF8StringEncoding];
 
     NSDictionary *headers = @{
         @&quot;content-type&quot;: @&quot;application/json;charset=utf-8&quot;
@@ -967,8 +984,11 @@ STOMPSubscription *subscription;</pre>
 - (void)connect
 {
     NSLog(@&quot;Connecting...&quot;);
-    [self.client connectWithHeaders:@{ @&quot;client-id&quot;: self.deviceID}
-                  completionHandler:^(STOMPFrame *connectedFrame, NSError *error) {
+    [self.client connectWithHeaders:@
+    { @&quot;client-id&quot;: self.deviceID}
+                  completionHandler:^
+    (STOMPFrame *connectedFrame, 
+    NSError *error) {
                       if (error) {
                           // we have not been able to connect to the broker
                           // let's log the error
