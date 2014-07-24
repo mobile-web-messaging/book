@@ -3,7 +3,7 @@
 
 <p class="lead">In this appendix, we describe how to install and configure <a href="http://activemq.apache.org">Apache ActiveMQ</a> to support STOMP and <a contenteditable="false" data-primary="Apache ActiveMQ" data-see="ActiveMQ" data-type="indexterm">&nbsp;</a>MQTT protocols.<a contenteditable="false" data-primary="ActiveMQ" data-type="indexterm" id="ActiveMQ">&nbsp;</a></p>
 
-<p>Apache ActiveMQ is a popular and powerful open source messaging server. It is fast, and supports many cross-language clients and protocols. In this book, we will connect to it from the Objective-C and JavaScript languages using two messaging protocols: STOMP and MQTT.</p>
+<p>The Apache ActiveMQ is a popular and powerful open source messaging server. It is fast, and supports many cross-language clients and protocols. In this book, we will connect to it from the Objective-C and JavaScript languages using two messaging protocols: STOMP and MQTT.</p>
 
 <section data-type="sect1" id="_download_and_installation">
 <h1>Download and Installation</h1>
@@ -12,7 +12,7 @@
 
 <p>For our setup, ActiveMQ will be installed in the directory <em>~/mobilewebmsg/mybroker</em>.</p>
 
-<p>Once you have downloaded the archive for ActiveMQ, it can be installed and started by running the commands:</p>
+<p>After you have downloaded the archive for ActiveMQ, it can be installed and started by running the commands:</p>
 
 <pre data-code-language="sh" data-type="programlisting">
 $ tar zxvf apache-activemq-5.9.0-bin.tar.gz
@@ -42,9 +42,9 @@ Stopping broker: mybroker
 <section data-type="sect1" id="app_activemq_admin_console">
 <h1>Administration Web Console</h1>
 
-<p>When the broker is started, it can be administrated and managed using its web console running at <a href="http://localhost:8161/hawtio"><em class="hyperlink">http://localhost:8161/hawtio</em></a>. Out of the box, you can log into the admin console using the <strong><code>admin</code></strong> / <strong><code>admin</code></strong> credentials.<a contenteditable="false" data-primary="ActiveMQ" data-secondary="administration web console" data-type="indexterm">&nbsp;</a></p>
+<p>When the broker is started, it can be administered and managed using its web console running at <a href="http://localhost:8161/hawtio"><em class="hyperlink">http://localhost:8161/hawtio</em></a>. Out of the box, you can log into the admin console using the <strong><code>admin</code></strong> / <strong><code>admin</code></strong> credentials.<a contenteditable="false" data-primary="ActiveMQ" data-secondary="administration web console" data-type="indexterm">&nbsp;</a></p>
 
-<p>Once you are logged in, you can check the <code>mybroker</code> resource in the ActiveMQ tree, as illustrated in .</p>
+<p>After you are logged in, you can check the <code>mybroker</code> resource in the ActiveMQ tree, as illustrated in .</p>
 
 <figure id="img_app_activemq_1"><img alt="The mybroker resource in ActiveMQ Web console" src="images/mawm_aa01.png" />
 <figcaption>The mybroker resource in the ActiveMQ web console</figcaption>
@@ -72,9 +72,9 @@ Stopping broker: mybroker
 
 <p>They mean that to connect to ActiveMQ using the STOMP protocol<a contenteditable="false" data-primary="STOMP" data-secondary="connecting to ActiveMQ with" data-type="indexterm">&nbsp;</a> we must connect to the <code>jeff.local</code> host (this is the name of my machine on my local network; your ActiveMQ installation will have another value) on the port <code>61613</code>.</p>
 
-<p>Likewise, to connect to ActiveMQ using the MQTT protocol, we must use again the <code>jeff.local</code> host but on the port <code>1883</code> this time.<a contenteditable="false" data-primary="MQTT" data-secondary="connecting to ActiveMQ with" data-type="indexterm">&nbsp;</a></p>
+<p>Likewise, to connect to ActiveMQ using the MQTT protocol, we must again use the <code>jeff.local</code> host, but on the port <code>1883</code> this time.<a contenteditable="false" data-primary="MQTT" data-secondary="connecting to ActiveMQ with" data-type="indexterm">&nbsp;</a></p>
 
-<p>Finally, there is also the Web Socket connector that must be used to connect from a web browser, <em>regardless</em> of the messaging protocol that we use.<a contenteditable="false" data-primary="Web Sockets" data-secondary="ActiveMQ transport connector" data-type="indexterm">&nbsp;</a> A web application would have to connect to the <code>61614</code> port whether the application is using STOMP or MQTT.<br />
+<p>Finally, there is also the Web Socket connector that must be used to connect from a web browser, <em>regardless</em> of the messaging protocol that we use.<a contenteditable="false" data-primary="Web Sockets" data-secondary="ActiveMQ transport connector" data-type="indexterm">&nbsp;</a> A web application would have to connect to the <code>61614</code> port regardless of whether the application is using STOMP or MQTT.<br />
 <a contenteditable="false" data-primary="message acknowledgement in STOMP" data-startref="ActiveMQ" data-type="indexterm">&nbsp;</a></p>
 </section>
 </section>
