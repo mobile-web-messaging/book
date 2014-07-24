@@ -7,11 +7,12 @@
 
 <p>MQTT is a simple and lightweight messaging protocol that only supports the publish/subscribe messaging model.</p>
 
-<p>MQTT is a binary protocol and its wireformat (the bits that are sent over the wire) is very compact, reducing bandwidth and memory usage. It defines a small set of features and there are clients for it on many platforms ranging from traditional operating systems to embedded devices. In Chapters 6 and 7, we will write a mobile application for iOS and a web application, but the description of the MQTT protocol applies to any client (although their API may differ).</p>
-<div data-type="note">
-<p>For the MQTT Motions application, we will not run an MQTT broker on our local network, but use instead a public MQTT broker hosted by <a href="http://iot.eclipse.org/sandbox.html#mqtt"><em>iot.eclipse.org</em></a>, the portal for Internet of Things development of the Eclipse foundation. This public broker is running using the Mosquitto project (the same codebase underneath MQTTKit) and any MQTT client can connect to it. While it is not appropriate to use it for production (there is no uptime guarantee for it), it shows that it is possible to use MQTT on the Internet.</p>
+<p>MQTT is a binary protocol and its wire format (the bits that are sent over the wire) is very compact, reducing bandwidth and memory usage. It defines a small set of features and there are clients for it on many platforms ranging from traditional operating systems to embedded devices. In Chapters 6 and 7, we will write a mobile application for iOS and a web application, but the description of the MQTT protocol applies to any client (although their API may differ).</p>
 
-<p>MQTT clients can connect to it using the <em>iot.eclipse.org</em> hostname on the port 1883 (that is reserved for MQTT).</p>
+<div data-type="note">
+<p>For the MQTT Motions application, we will not run an MQTT broker on our local network, but instead use a public MQTT broker hosted by <a href="http://iot.eclipse.org/sandbox.html#mqtt"><em>iot.eclipse.org</em></a>, the portal for the Internet of Things development of the Eclipse foundation. This public broker is running using the Mosquitto project (the same codebase underneath MQTTKit) and any MQTT client can connect to it. While it is not appropriate to use it for production (there is no uptime guarantee for it), it shows that it is possible to use MQTT on the Internet.</p>
+
+<p>MQTT clients can connect to it using the <em>iot.eclipse.org</em> hostname on the port 1883 (which is reserved for MQTT).</p>
 
 </div>
 </div>
