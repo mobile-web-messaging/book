@@ -135,16 +135,16 @@ client.send(destination, { priority: 7 }, text);</pre>
 
 <ul>
 	<li>
-	<p>Support persistent messages by passing a <code>persistent</code> header set to <code>true</code> when messages are sent.</p>
+	<p>Support <em>persistent</em> messages by passing a <code>persistent</code> header set to <code>true</code> when messages are sent.</p>
 	</li>
 	<li>
-	<p>Have the consumer use a <code>selector</code> filter to receive only messages with headers that match the filter.</p>
+	<p>Create a <em>filtered consumer</em> use a <code>selector</code> filter to receive only messages with headers that match the filter.</p>
 	</li>
 	<li>
 	<p>Send messages with a higher or lower priority using the <code>priority</code> header.</p>
 	</li>
 	<li>
-	<p>Expire messages after an expiration date so that broker will not deliver messages after this date.</p>
+	<p>Priority messages after an expiration date so that broker will not deliver messages after this date.</p>
 	</li>
 </ul>
 
