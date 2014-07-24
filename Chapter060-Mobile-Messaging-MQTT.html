@@ -28,7 +28,7 @@
 
 <p>We will use <a href="https://developer.apple.com/xcode/">Xcode</a> to create the Locations iOS application.</p>
 
-<p>Once Xcode is installed and started, we select &quot;Create a new Xcode project&quot; from its launch<a contenteditable="false" data-primary="Xcode" data-secondary="creating Motions project" data-type="indexterm">&nbsp;</a> screen.<a contenteditable="false" data-primary="mobile messaging with MQTT" data-secondary="Motions application (example)" data-tertiary="creating Motions project with Xcode" data-type="indexterm">&nbsp;</a> The application will be composed of a single view, so we select the Single View Application template in iOS &rarr; Application from the template screen, as illustrated in .</p>
+<p>After Xcode is installed and started, we select &quot;Create a new Xcode project&quot; from its launch<a contenteditable="false" data-primary="Xcode" data-secondary="creating Motions project" data-type="indexterm">&nbsp;</a> screen.<a contenteditable="false" data-primary="mobile messaging with MQTT" data-secondary="Motions application (example)" data-tertiary="creating Motions project with Xcode" data-type="indexterm">&nbsp;</a> The application will be composed of a single view, so we select the Single View Application template in iOS &rarr; Application from the template screen, as illustrated in .</p>
 
 <figure id="img_mobile_mqtt_125"><img alt="XCode template screen" src="images/mawm_0602.png" />
 <figcaption>Select Single View Application from the template screen</figcaption>
@@ -53,7 +53,7 @@
 <p>We create a file named <em>Podfile</em> at the<a contenteditable="false" data-primary="Podfile, creating" data-secondary="for MQTT Motions application (example)" data-type="indexterm">&nbsp;</a> root of the project (in the same directory as <em>Motions.xcodeproj</em>). See .</p>
 
 <div data-type="example" id="ex_mobile_mqtt_1">
-<h5>The Motions's application</h5>
+<h5>The Motions application</h5>
 
 <pre data-type="programlisting">
 xcodeproj 'Motions.xcodeproj'
@@ -88,7 +88,7 @@ Integrating client project
 
 <p>First, we will verify that the project is set up correctly and that the application can run in the iOS simulator.</p>
 
-<p>We will simulate the latest iPhone devices by selecting Product &rarr; Destination &rarr; iPhone Retina (4-inch 64-bit) from Xcode menubar.<a contenteditable="false" data-primary="iOS simulator" data-type="indexterm">&nbsp;</a></p>
+<p>We will simulate the latest iPhone devices by selecting Product &rarr; Destination &rarr; iPhone Retina (4-inch 64-bit) from the Xcode menu bar.<a contenteditable="false" data-primary="iOS simulator" data-type="indexterm">&nbsp;</a></p>
 <!--
 Command symbol is not displayed in PDF.
 -->
@@ -122,10 +122,10 @@ Command symbol is not displayed in PDF.
 
 @end</pre>
 
-<p>Open the <em>Main.storyboard</em> and control-click on View Controller to see its connection panel. Drag from deviceIDLabel to the UILabel to connect it. See .</p>
+<p>Open the <em>Main.storyboard</em> and Ctrl-click on View Controller to see its connection panel. Drag from deviceIDLabel to the UILabel to connect it. See .</p>
 
 <figure id="img_mobile_mqtt_5"><img alt="Connect the deviceIDLabel outlet property to the device ID UILabel" src="images/mawm_0606.png" />
-<figcaption>Connect the deviceIDLabel outlet property to the device ID UILabel</figcaption>
+<figcaption>Connect the deviceIDLabel outlet property to the Device ID UILabel</figcaption>
 </figure>
 
 <p>The device identifier is generated in the <code>MWMViewController</code> implementation when the view is loaded and stored in the <code>deviceID</code> property. We also set the <code>deviceIDLabel</code>'s <code>text</code> to this identifier:</p>
@@ -166,9 +166,9 @@ Command symbol is not displayed in PDF.
 
 @end</pre>
 
-<p>The next step is to connect the three labels in the <em>Main.storyboard</em> to these three outlet properties:</p>
+<p>The next step is to connect the three labels in the <em>Main.storyboard</em> to these three outlet properties.</p>
 
-<p>Open the <em>Main.storyboard</em> and control-click on View Controller to see its connection panel. Drag from its pitchLabel property to the corresponding pitch UILabel to connect it (see ).</p>
+<p>Open the <em>Main.storyboard</em> and Ctrl-click on View Controller to see its connection panel. Drag from its pitchLabel property to the corresponding pitch UILabel to connect it (see ).</p>
 
 <figure id="img_mobile_mqtt_7"><img alt="Connect the pitchLabel outlet property to the pitch UILabel" src="images/mawm_0608.png" />
 <figcaption>Connect the pitchLabel outlet property to the pitch UILabel</figcaption>
@@ -184,7 +184,7 @@ Command symbol is not displayed in PDF.
 
 <p>iOS provides the <code>CoreMotion</code> framework to capture the <a contenteditable="false" data-primary="mobile messaging with STOMP" data-secondary="capturing device motions with CoreMotion framework" data-type="indexterm">&nbsp;</a>motion of the devices.<a contenteditable="false" data-primary="CoreMotion framework" data-type="indexterm">&nbsp;</a></p>
 
-<p>We need to add it to the libraries linked by the application. Click on the Motions project and then the Motions target. In the General tab, under the Linked Frameworks and Libraries section, click on the <code>+</code> button. In the selection window, type &quot;CoreMotion,&quot; select the CoreMotion.framework, and click on the Add button.</p>
+<p>We need to add it to the libraries linked by the application. Click on the Motions project and then the Motions target. In the General tab, under the Linked Frameworks and Libraries section, click on the <code>+</code> button. In the selection window, type &quot;CoreMotion,&quot; select CoreMotion.framework, and click on the Add button.</p>
 
 <figure><img alt="Add the CoreMotion framework" src="images/mawm_0609.png" />
 <figcaption>Add the CoreMotion framework</figcaption>
@@ -192,7 +192,7 @@ Command symbol is not displayed in PDF.
 
 <p>We can now use the CoreMotion framework by importing <em>CoreMotion/CoreMotion.h</em> at the top of the <em>MWMViewController.m</em> file.</p>
 
-<p>We will also define a <code>motionManager</code> property in <code>MWMViewController</code> private interface to use <code>CoreMotion</code>:</p>
+<p>We will also define a <code>motionManager</code> property in the <code>MWMViewController</code> private interface to use <code>CoreMotion</code>:</p>
 
 <pre data-code-language="objc" data-type="programlisting">
 #import &lt;CoreMotion/CoreMotion.h&gt;
@@ -203,13 +203,13 @@ Command symbol is not displayed in PDF.
 
 @end</pre>
 
-<p>This <code>motionManager</code> is used to capture the device motions. We must create a new <code>CMMotionManager</code>, specify the interval of update and call its <code>startDeviceMotionUpdatesToQueue:withHandler:</code> method to get the device motion periodically in a block. We create a new <code>NSOperationQueue</code> to receive these updates on this queue.</p>
+<p>This <code>motionManager</code> is used to capture the device motions. We must create a new <code>CMMotionManager</code>, specify the interval of updates, and call its <code>startDeviceMotionUpdatesToQueue:withHandler:</code> method to get the device motion periodically in a block. We create a new <code>NSOperationQueue</code> to receive these updates on this queue.</p>
 
-<p>The device motion is represented by a <code>CMDeviceMotion</code> object. In our example, we are interested only by its <code>attitude</code> property that contains the pitch, roll, and yaw value we want to broadcast. Their values are expressed in radians, so we will convert them in degrees to display them.</p>
+<p>The device motion is represented by a <code>CMDeviceMotion</code> object. In our example, we are interested only in its <code>attitude</code> property that contains the pitch, roll, and yaw value we want to broadcast. Their values are expressed in radians, so we will convert them in degrees to display them.</p>
 
-<p>The block to receive motion update is executed on the <code>NSOperationQueue</code> we have created, so we cannot update the <code>UILabel</code> from it. We must instead create another block and call <code>dispatch_async</code> to execute the graphical changes on the UI main queue (that is retrieved by calling <code>dispatch_get_main_queue()</code>).</p>
+<p>The block to receive motion updates is executed on the <code>NSOperationQueue</code> we created, so we cannot update the <code>UILabel</code> from it. We must instead create another block and call <code>dispatch_async</code> to execute the graphical changes on the UI main queue (which is retrieved by calling <code>dispatch_get_main_queue()</code>).</p>
 
-<p>All this logic can be written in <code>viewDidLoad</code> so that the motion manager will start receiving updates when the view is loaded:</p>
+<p>All this logic can be written in <code>viewDidLoad</code> so that the motion manager starts receiving updates when the view is loaded:</p>
 
 <pre data-code-language="objc" data-type="programlisting">
 - (void)viewDidLoad
@@ -221,7 +221,7 @@ Command symbol is not displayed in PDF.
     self.deviceIDLabel.text = self.deviceID;
 
     self.motionManager = [[CMMotionManager alloc] init];
-    // get the device motion updates every second.
+    // get the device motion updates every second
     self.motionManager.deviceMotionUpdateInterval = 1;
     NSOperationQueue *queue = [[NSOperationQueue alloc] init];
     [self.motionManager startDeviceMotionUpdatesToQueue:queue
@@ -259,7 +259,7 @@ Command symbol is not displayed in PDF.
 </figure>
 
 <div data-type="note">
-<p>The iOS Simulator is not able to simulate device motions. If you run the Motions application in the simulator, the <code>motionManager</code> will not send any device motions updates. At the time of writing this book, the only way to test this code is to run the application on a real iOS device.</p>
+<p>The iOS Simulator cannot simulate device motions. If you run the Motions application in the simulator, the <code>motionManager</code> will not send any device motions updates. At the time of writing this book, the only way to test this code is to run the application on a real iOS device.</p>
 </div>
 
 <p>We now capture the device motions and display them. The next step is to broadcast them by sending MQTT messages.</p>
@@ -268,11 +268,11 @@ Command symbol is not displayed in PDF.
 <section data-type="sect1" id="ch_mobile_mqtt_client">
 <h1>Create an MQTT Client with MQTTKit</h1>
 
-<p>To send and receive message with MQTT, we must first import the MQTTKit library that was added to the project<a contenteditable="false" data-primary="mobile messaging with MQTT" data-secondary="creating MQTT client with MQTTKit" data-type="indexterm">&nbsp;</a> using <a contenteditable="false" data-primary="MQTTKit" data-secondary="creating MQTT client with" data-type="indexterm">&nbsp;</a>CocoaPods at the beginning of this chapter.</p>
+<p>To send and receive messages with MQTT, we must first import the MQTTKit library that was added to the project<a contenteditable="false" data-primary="mobile messaging with MQTT" data-secondary="creating MQTT client with MQTTKit" data-type="indexterm">&nbsp;</a> using <a contenteditable="false" data-primary="MQTTKit" data-secondary="creating MQTT client with" data-type="indexterm">&nbsp;</a>CocoaPods at the beginning of this chapter.</p>
 
 <p>We must import its header file <em>MQTTKit.h</em> at the top of the <em>MWMViewController.m</em> file and add an <code>MQTTClient</code> property named <code>client</code> to the <code>MWMViewController</code> private interface.</p>
 
-<p>We also define a constant to represent the hostname of the MQTT broker we are using <em>iot.eclipse.org</em>:</p>
+<p>We also define a constant to represent the hostname of the MQTT broker we are using in <em>iot.eclipse.org</em>:</p>
 
 <pre data-code-language="objc" data-type="programlisting">
 #import &lt;MQTTKit/MQTTKit.h&gt;
@@ -346,7 +346,7 @@ Command symbol is not displayed in PDF.
 
 <p>The <code>client</code> can disconnect from the MQTT broker <a contenteditable="false" data-primary="mobile messaging with MQTT" data-secondary="disconnecting from an MQTT broker" data-type="indexterm">&nbsp;</a>by calling its <code>disconnectWithCompletionHandler:</code> method.<a contenteditable="false" data-primary="brokers" data-secondary="disconnecting from an MQTT broker" data-type="indexterm">&nbsp;</a></p>
 
-<p>The <code>completionHandler</code> block as a <code>code</code> parameter that will be <code>0</code> if the disconnection was successful:</p>
+<p>The <code>completionHandler</code> block as a <code>code</code> parameter will be <code>0</code> if the disconnection succeeds:</p>
 
 <pre data-code-language="objc" data-type="programlisting">
 - (void)disconnect
@@ -382,7 +382,7 @@ Command symbol is not displayed in PDF.
 	<p>The <code>publishData:toTopic:withQos:retain:</code> method expects an <code>NSData</code> object as the message payload and its <code>bytes</code> will be used.</p>
 	</li>
 	<li>
-	<p>The <code>publishString:toTopic:withQos:retain:</code> method can also be used for the common case of sending a text message. Internally, the <code>NSString</code> that is passed in parameter is encoded as an <code>NSData</code> using the UTF-8 encoding.</p>
+	<p>The <code>publishString:toTopic:withQos:retain:</code> method can also be used for the common case of sending a text message. Internally, the <code>NSString</code> that is passed in as a parameter is encoded as an <code>NSData</code> using the UTF-8 encoding.</p>
 	</li>
 </ul>
 
@@ -401,27 +401,27 @@ Command symbol is not displayed in PDF.
 
 <ul>
 	<li>
-	<p>At Most Once (with the value <code>0</code> represented by <code>AtMostOnce</code> in MQTTKit)</p>
+	<p><code>At Most Once</code> (with the value <code>0</code> represented by <code>AtMostOnce</code> in MQTTKit)</p>
 	</li>
 	<li>
-	<p>At Least Once (with the value <code>1</code> represented by <code>AtLeastOnce</code> in MQTTKit)</p>
+	<p><code>At Least Once</code> (with the value <code>1</code> represented by <code>AtLeastOnce</code> in MQTTKit)</p>
 	</li>
 	<li>
-	<p>Exactly Once (with the value <code>2</code> represented by <code>ExactlyOnce</code> in MQTTKit)</p>
+	<p><code>Exactly Once</code> (with the value <code>2</code> represented by <code>ExactlyOnce</code> in MQTTKit)</p>
 	</li>
 </ul>
 
 <p>These levels of QoS determine the guarantee that the MQTT broker will accept to deliver a message. With <code>At Most Once</code>, the MQTT broker guarantees that the published message will be delivered at most once to its consumers. This means that the consumers may not receive the message at all. If an error (such as a network failure or a crash) occurs while the message is sent to the broker, it is possible that it will be lost and the consumers will never receive it.</p>
 
-<p>With <code>At Least Once</code>, the MQTT <a contenteditable="false" data-primary="At Least Once QoS" data-type="indexterm">&nbsp;</a>broker guarantees that the published message will be delivered at least once to the consumers. This also means that a consumer may receive the same message twice. If there is an error when the producer sends the message to the broker and a message acknowledgment has not been received, it will resend it a second time as a <em>duplicate</em> (the MQTT message will have a <code>DUP</code> bit set). When the broker receives this duplicate message it will redeliver it to the consumer, but it is possible that they in fact received the original message. The consumer may need to check if the <code>DUP</code> bit is set on the delivered message to know whether it is an original message (and it must process it) or a duplicate (and it can discard it).</p>
+<p>With <code>At Least Once</code>, the MQTT <a contenteditable="false" data-primary="At Least Once QoS" data-type="indexterm">&nbsp;</a>broker guarantees that the published message will be delivered at least once to the consumers. This also means that a consumer may receive the same message twice. If there is an error when the producer sends the message to the broker and a message acknowledgment has not been received, it will resend it a second time as a <em>duplicate</em> (the MQTT message will have a <code>DUP</code> bit set). When the broker receives this duplicate message, it will redeliver it to the consumer, but it is possible that they in fact received the original message. The consumer might need to check if the <code>DUP</code> bit is set on the delivered message to know whether it is an original message (and it must process it) or a duplicate (and it can discard it).</p>
 
 <p>The <code>At Least Once</code> QoS offers the guarantee that no published message will be lost, but at the cost of performance and additional code on the consumer side. The performance cost is caused by the additional message (a <code>PUBACK</code> message) sent from the broker to the client to acknowledge that it has received the published message. That means that using this QoS level to publish <code>N</code> messages will involve exchanging <code>2*N</code> messages between the producer and the broker.</p>
 
-<p>The highest level of delivery is provided using the <code>Exactly Once</code> QoS. <a contenteditable="false" data-primary="Exactly Once QoS" data-type="indexterm">&nbsp;</a>With that level, the MQTT broker guarantees that the published message will be delivered <em>exactly</em> once by the consumers. There will be no lost messages or duplicate messages. This is guaranteed by additional exchange of messages between the producer and broker (<code>PUBREC</code>, <code>PUBREL</code>, <code>PUBCOMP</code> messages). That means that using this QoS level to publish <code>N</code> messages will involve exchanging <code>4*N</code> messages, requires four times more network trips than the lowest level of QoS of <code>At Most Once</code> and twice<a contenteditable="false" data-primary="At Most Once QoS" data-type="indexterm">&nbsp;</a> more than the <code>At Least Once</code> level.</p>
+<p>The highest level of delivery is provided using the <code>Exactly Once</code> QoS. <a contenteditable="false" data-primary="Exactly Once QoS" data-type="indexterm">&nbsp;</a>With that level, the MQTT broker guarantees that the published message will be delivered <em>exactly</em> once by the consumers. There will be no lost messages or duplicate messages. This is guaranteed by additional exchanges of messages between the producer and broker (<code>PUBREC</code>, <code>PUBREL</code>, <code>PUBCOMP</code> messages). That means that using this QoS level to publish <code>N</code> messages will involve exchanging <code>4*N</code> messages, requires four times more network trips than the lowest level of QoS of <code>At Most Once</code> and twice<a contenteditable="false" data-primary="At Most Once QoS" data-type="indexterm">&nbsp;</a> more than the <code>At Least Once</code> level.</p>
 
-<p>Choosing the correct QoS depends on the type of message exchanged and the <em>importance</em> of its payload. In the Motions iOS application, the published message contains device motion that is updated every second. It is acceptable if a published message is <em>lost</em> because a new message with updated content will be sent just one second after. Using the <code>AtMostOnce</code> QoS is the best choice for this type of message.</p>
+<p>Choosing the correct QoS depends on the type of message exchanged and the <em>importance</em> of its payload. In the Motions iOS application, the published message contains device motion that is updated every second. It is acceptable if a published message is <em>lost</em> because a new message with updated content will be sent just one second later. Using the <code>At Most Once</code> QoS is the best choice for this type of message.</p>
 
-<p>All the complexities of using a higher level of QoS is transparent from the application using MQTT, as it is the responsibility of the client library to handle it. However, you need to be aware of the cost associated with using these QoS, as they can have significant impact on your application performance and the device in general (as the additional network trips will drain the battery life).</p>
+<p>All the complexities of using a higher level of QoS are transparent from the application using MQTT, as it is the responsibility of the client library to handle it. However, you need to be aware of the cost associated with using these QoSes, as they can significantly impact your application performance and the device in general (the additional network trips will drain the battery life).</p>
 </section>
 
 <section data-type="sect2" id="_retained_message">
@@ -431,7 +431,7 @@ Command symbol is not displayed in PDF.
 
 <p>If this flag is set on the message, the broker will deliver the message to its subscribers and keep holding the message. If a new consumer subscribes to this topic, the broker will deliver the retained message to it. This is useful, as the new subscriber will not have to wait for a publisher to send a message to receive new data. The retained message contains the <em>Last Known Good</em> value.<a contenteditable="false" data-primary="Last Known Good value" data-type="indexterm">&nbsp;</a></p>
 
-<p>In our case, we will publish messages with <code>retain</code> set to <code>YES</code>. If consumers subscribe to the device motion topic <em>after</em> the device stops updated its motion values, they will still be able to use the last known device motion value. This example is a bit of a stretch. A more interesting example would be an application broadcasting its location (similar to the <code>Locations</code> application). Using retained message would allow the consumers to know the last known position of the device before it stops broadcasting its position.</p>
+<p>In our case, we will publish messages with <code>retain</code> set to <code>YES</code>. If consumers subscribe to the device motion topic <em>after</em> the device stops updating its motion values, they will still be able to use the last known device motion value. This example is a bit of a stretch. A more interesting example would be an application broadcasting its location (similar to the <code>Locations</code> application). Using retained message would allow the consumers to know the last known position of the device before it stops broadcasting its position.</p>
 
 <p>To sum up, the <code>Motions</code> application will<a contenteditable="false" data-primary="mobile messaging with MQTT" data-secondary="sending MQTT messages" data-tertiary="Motions application (example)" data-type="indexterm">&nbsp;</a> send a message:</p>
 
@@ -443,10 +443,10 @@ Command symbol is not displayed in PDF.
 	<p>To the device motion topic <code>/mwm/XXX/motion</code> where <code>XXX</code> is the device identifier</p>
 	</li>
 	<li>
-	<p>With a QoS of <code>AtMostOnce</code>, because we accept that a published message may not be delivered</p>
+	<p>With a QoS of <code>At Most Once</code>, because we accept that a published message may not be delivered</p>
 	</li>
 	<li>
-	<p>With <code>retain</code> set to <code>YES</code> so that the broker will retain the Last Known Good message to deliver it to new subscribers.</p>
+	<p>With <code>retain</code> set to <code>YES</code> so that the broker will retain the Last Known Good message to deliver it to new subscribers</p>
 	</li>
 </ul>
 
@@ -484,7 +484,7 @@ Command symbol is not displayed in PDF.
     self.deviceIDLabel.text = self.deviceID;
 
     self.motionManager = [[CMMotionManager alloc] init];
-    // get the device motion updates every second.
+    // get the device motion updates every second
     self.motionManager.deviceMotionUpdateInterval = 1;
     NSOperationQueue *queue = [[NSOperationQueue alloc] init];
     [self.motionManager startDeviceMotionUpdatesToQueue:queue
@@ -515,7 +515,7 @@ Command symbol is not displayed in PDF.
 
 <p>Conversely to <code>STOMP</code>, <code>MQTT</code> is a binary protocol and we cannot use a simple telnet client to create a consumer and receive messages sent by the application.</p>
 
-<p>However, the <a href="http://mosquitto.org">Mosquitto broker</a> provides a simple command-line tool to send and receive message from<a contenteditable="false" data-primary="brokers" data-secondary="Mosquitto broker" data-type="indexterm">&nbsp;</a> an MQTT broker. <a data-type="xref" href="#appendix_mosquitto">#appendix_mosquitto</a> explains how to download and install the Mosquitto broker.<a contenteditable="false" data-primary="Mosquitto broker" data-secondary="command-line tool to send/receive messages from MQTT broker" data-type="indexterm">&nbsp;</a> After it is done, we can use its <code>mosquitto_sub</code> command-line tool to connect to an MQTT broker (hosted at <em>iot.eclipse.org</em>) and subscribe to the device motion topic (in my case, <code>/mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/motion</code>, you will have to replace it using your own device identifier).</p>
+<p>However, the <a href="http://mosquitto.org">Mosquitto broker</a> provides a simple command-line tool to send and receive message from<a contenteditable="false" data-primary="brokers" data-secondary="Mosquitto broker" data-type="indexterm">&nbsp;</a> an MQTT broker. <a data-type="xref" href="#appendix_mosquitto">#appendix_mosquitto</a> explains how to download and install the Mosquitto broker.<a contenteditable="false" data-primary="Mosquitto broker" data-secondary="command-line tool to send/receive messages from MQTT broker" data-type="indexterm">&nbsp;</a> After it is done, we can use its <code>mosquitto_sub</code> command-line tool to connect to an MQTT broker (hosted at <em>iot.eclipse.org</em>) and subscribe to the device motion topic (in my case, <code>/mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/motion</code>; you will have to replace it using your own device identifier).</p>
 
 <p>This tool will display the message payload. We are sending binary payload, so we will pipe the command into the <code>hexdump</code> tool to<a contenteditable="false" data-primary="hexdump tool" data-type="indexterm">&nbsp;</a> display the hexadecimal representation of the binary payload:</p>
 
@@ -538,7 +538,7 @@ $ mosquitto_sub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/
 
 <p>As described in <a data-type="xref" href="#ch_introduction_mqtt_example">#ch_introduction_mqtt_example</a>, the Motions iOS application is also a consumer from <a contenteditable="false" data-primary="mobile messaging with MQTT" data-secondary="receiving MQTT messages" data-type="indexterm">&nbsp;</a>the topic <code>/mwm/XXX/alert</code>.<a contenteditable="false" data-primary="messages" data-secondary="receiving MQTT messages" data-type="indexterm">&nbsp;</a> When it receives a message from this topic, it must change its background color to &quot;alert&quot; the user.</p>
 
-<p>Let&rsquo;s write the method that alert the user by changing the background color first. This <code>warnUser:</code> method takes an <code>NSString</code> parameter that should correspond to a color. Using <code>UIKit</code> animations, we will:</p>
+<p>Let&rsquo;s write the method that alerts the user by changing the background color first. This <code>warnUser:</code> method takes an <code>NSString</code> parameter that should correspond to a color. Using <code>UIKit</code> animations, we will:</p>
 
 <ol>
 	<li>
@@ -563,7 +563,8 @@ $ mosquitto_sub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/
                         options:0
                      animations:^{
                          // change it to the color passed in parameter
-                         SEL sel = NSSelectorFromString([NSString stringWithFormat:@&quot;%@Color&quot;, colorStr]);
+                         SEL sel = NSSelectorFromString([NSString stringWith
+                         Format:@&quot;%@Color&quot;, colorStr]);
                          UIColor* color = nil;
                          if ([UIColor respondsToSelector:sel]) {
                              color  = [UIColor performSelector:sel];
@@ -579,7 +580,8 @@ $ mosquitto_sub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/
                                                delay:2
                                              options:0
                                           animations:^{
-                                              self.view.backgroundColor = originalColor;
+                                              self.view.backgroundColor =
+                                              originalColor;
                                           }
                                           completion:nil];
                      }];
@@ -596,7 +598,7 @@ $ mosquitto_sub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/
 	</li>
 </ol>
 
-<p>Note that you can subscribe to many topics from the client but it has only one <code>messageHandler</code> property.<a contenteditable="false" data-primary="messageHandler property, MQTT client" data-type="indexterm">&nbsp;</a> If the client is subscribed to different topics, its <code>messageHandler</code> must determine which topic the message is consumed from.</p>
+<p>Note that you can subscribe to many topics from the client but it has only one <code>messageHandler</code> property.<a contenteditable="false" data-primary="messageHandler property, MQTT client" data-type="indexterm">&nbsp;</a> If the client is subscribed to different topics, its <code>messageHandler</code> must determine the topic from which the message is consumed.</p>
 
 <section data-type="sect2" id="_subscription">
 <h2>Subscription</h2>
@@ -610,7 +612,7 @@ $ mosquitto_sub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/
 
 <p>The <code>subscribe:withQos:completionHandler:</code> method takes a <code>qos</code> parameter that corresponds to the level of quality of service at which the consumer wants to recieve messages from the topic.<a contenteditable="false" data-primary="Quality of Service (QoS)" data-secondary="receiving MQTT messages" data-type="indexterm">&nbsp;</a></p>
 
-<p>The completion handler will be called when the client is effectively subscribed to the topic. The handler has a <code>grantedQos</code> parameter that corresponds to the effective quality of service. The producer is responsible for determining the maximum quality of service that a message can be delivered at, but the consumer can decide to <em>downgrade</em> the quality of service according to its usage. For example, a producer may publish a message with a QoS of <code>ExactlyOnce</code>, but a consumer may decide that it is acceptable for it if there are message duplicates and downgrade its QoS to <code>At Least Once</code>.</p>
+<p>The completion handler will be called when the client is effectively subscribed to the topic. The handler has a <code>grantedQos</code> parameter that corresponds to the effective quality of service. The producer is responsible for determining the maximum quality of service at which a message can be delivered, but the consumer can decide to <em>downgrade</em> the quality of service according to its usage. For example, a producer may publish a message with a QoS of <code>ExactlyOnce</code>, but a consumer may decide that it is acceptable if there are message duplicates and downgrade its QoS to <code>At Least Once</code>.</p>
 
 <p>In our case, we will request to have messages delivered with a <code>qos</code> set to <code>AtLeastOnce</code>, as we do not want to lose messages but can accept duplicate messages:</p>
 
@@ -644,7 +646,7 @@ $ mosquitto_sub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/
 </section>
 
 <section data-type="sect2" id="_unsubscription">
-<h2>Unsubscription</h2>
+<h2>Unsubscribing</h2>
 
 <p>To unsubscribe from a topic and<a contenteditable="false" data-primary="unsubscribing from MQTT topics" data-type="indexterm">&nbsp;</a> stop receiving<a contenteditable="false" data-primary="mobile messaging with MQTT" data-secondary="receiving MQTT messages" data-tertiary="unsubscription" data-type="indexterm">&nbsp;</a> messages from it, we will call the <code>unsubscribe:withCompletionHandler:</code> method of the <code>client</code> where the first parameter is the topic to unsubscribe from (the alert topic in our case). The second parameter is a completion handler that is called back when the client has been acknowledged by the server that it is effectively unsubscribed. We do not have any need for this information so we just pass <code>nil</code> as the handler:</p>
 
@@ -671,9 +673,9 @@ $ mosquitto_sub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/
 <section data-type="sect2" id="_define_a_mqttmessage_handler">
 <h2>Define an MQTTMessage Handler</h2>
 
-<p>Subscribing to a topic is the first step to receive messages with MQTTKit.<a contenteditable="false" data-primary="MQTTKit" data-secondary="defining MQTTMessageHandler" data-type="indexterm">&nbsp;</a> The second step is to define a block that will be called every time a message is received from a subscribed topic.<a contenteditable="false" data-primary="mobile messaging with MQTT" data-secondary="receiving MQTT messages" data-tertiary="defining MQTTMessageHandler" data-type="indexterm">&nbsp;</a></p>
+<p>Subscribing to a topic is the first step in receiving messages with MQTTKit.<a contenteditable="false" data-primary="MQTTKit" data-secondary="defining MQTTMessageHandler" data-type="indexterm">&nbsp;</a> The second step is to define a block that will be called every time a message is received from a subscribed topic.<a contenteditable="false" data-primary="mobile messaging with MQTT" data-secondary="receiving MQTT messages" data-tertiary="defining MQTTMessageHandler" data-type="indexterm">&nbsp;</a></p>
 
-<p>The <code>client</code>'s <code>messageHandler</code> property defines an <code>MQTTMessageHandler</code> block. This block has an <code>MQTTMessage</code> parameter representing the MQTT message that is deliver to the client.</p>
+<p>The <code>client</code>'s <code>messageHandler</code> property defines an <code>MQTTMessageHandler</code> block. This block has an <code>MQTTMessage</code> parameter representing the MQTT message that is delivered to the client.</p>
 
 <p>The <code>MQTTMessage</code> interface defines four properties corresponding to the message <span class="keep-together">data:</span></p>
 
@@ -682,17 +684,17 @@ $ mosquitto_sub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/
 	<p><code>mid</code> is a <code>unsigned short</code> corresponding to the <em>message ID</em>.</p>
 	</li>
 	<li>
-	<p><code>topic</code> is the name of the topic that this message is coming from. If the client is subscribed to many topics, we must use this property to determine which topic the received message is coming from.</p>
+	<p><code>topic</code> is the name of the topic that this message is coming from. If the client is subscribed to many topics, we must use this property to determine the topic from which the received message is coming.</p>
 	</li>
 	<li>
-	<p><code>retained</code> is a <code>BOOL</code> to check whether the message was retained (and contains the last known good value) or not (it is a <em>fresh</em> message).</p>
+	<p><code>retained</code> is a <code>BOOL</code> to check whether the message was retained (and contains the last known good value) or not (in which case it is a <em>fresh</em> message).</p>
 	</li>
 	<li>
 	<p><code>payload</code> is an <code>NSData</code> object containing the binary content of the message payload.</p>
 	</li>
 </ul>
 
-<p>Because sending and receiving text message is very common, the <code>MQTTMessage</code> interface also defines a <code>payloadString</code> method that returns an <code>NSString</code> decoded from the message binary payload using UTF-8.</p>
+<p>Because sending and receiving text messages is very common, the <code>MQTTMessage</code> interface also defines a <code>payloadString</code> method that returns an <code>NSString</code> decoded from the message binary payload using UTF-8.</p>
 
 <p>In the <code>Motions</code> application, we expect to receive a text payload and will use this <code>payloadString</code> to extract the color string from the received message.</p>
 
@@ -727,7 +729,7 @@ $ mosquitto_sub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/
 
 <p>We extracted the color using the message <code>payloadString</code> method after checking that it was indeed coming from the device alert topic. We then call the <code>warnUser:</code> method in a block that is run on the main queue, because it contains code related to <code>UIKit</code>.</p>
 
-<p>To avoid a retain/release cycle between <code>self</code> and the <code>messageHandler</code> block, we need to create a <em>weak</em> reference of <code>self</code> to use it inside the block.</p>
+<p>To avoid a retain/release cycle between <code>self</code> and the <code>messageHandler</code> block, we need to create a <em>weak</em> reference of <code>self</code> in order to use it inside the block.</p>
 
 <p>How can we verify that the Motions application is effectively receiving alert messages? To verify that the application was sending messages, we used the <code>mosquitto_sub</code> tool. We will now use the opposite tool, <code>mosquitto_pub</code>, to publish a message on the alert topic and verify that the application background color changes.<a contenteditable="false" data-primary="Mosquitto broker" data-secondary="publishing messages with mosquitto_pub tool" data-type="indexterm">&nbsp;</a></p>
 
