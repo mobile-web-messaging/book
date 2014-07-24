@@ -50,10 +50,7 @@
 
 <p>We close Xcode because CocoaPods will modify the project settings to import the dependencies.</p>
 
-<p>We create a file named <em>Podfile</em> at the<a contenteditable="false" data-primary="Podfile, creating" data-secondary="for MQTT Motions application (example)" data-type="indexterm">&nbsp;</a> root of the project (in the same directory as <em>Motions.xcodeproj</em>). See .</p>
-
-<div data-type="example" id="ex_mobile_mqtt_1">
-<h5>The Motions application</h5>
+<p>We create a file named <em>Podfile</em> at the<a contenteditable="false" data-primary="Podfile, creating" data-secondary="for MQTT Motions application (example)" data-type="indexterm">&nbsp;</a> root of the project (in the same directory as <em>Motions.xcodeproj</em>):</p>
 
 <pre data-type="programlisting">
 xcodeproj 'Motions.xcodeproj'
@@ -63,7 +60,7 @@ pod 'MQTTKit', :git =&gt; 'https://github.com/mobile-web-messaging/MQTTKit.git'
 platform :ios, '5.0'</pre>
 </div>
 
-<p>After saving this file, run the <strong><code>pod install</code></strong> command, <a contenteditable="false" data-primary="pod install command" data-type="indexterm">&nbsp;</a>shown in .</p>
+<p>After saving this file, run the <strong><code>pod install</code></strong> command:<a contenteditable="false" data-primary="pod install command" data-type="indexterm"></p>
 
 <div data-type="example" id="ex_mobile_mqtt_2">
 <h5>Install Motions dependencies</h5>
@@ -190,7 +187,7 @@ Command symbol is not displayed in PDF.
 <figcaption>Add the CoreMotion framework</figcaption>
 </figure>
 
-<p>We can now use the CoreMotion framework by importing <em>CoreMotion/CoreMotion.h</em> at the top of the <em>MWMViewController.m</em> file.</p>
+<p>We can now use the CoreMotion framework by importing <em>CoreMotion/CoreMotion.h</em> at the top of the <em>CoreMotion/CoreMotion.h</em> file.</p>
 
 <p>We will also define a <code>motionManager</code> property in the <code>MWMViewController</code> private interface to use <code>CoreMotion</code>:</p>
 
@@ -225,7 +222,8 @@ Command symbol is not displayed in PDF.
     self.motionManager.deviceMotionUpdateInterval = 1;
     NSOperationQueue *queue = [[NSOperationQueue alloc] init];
     [self.motionManager startDeviceMotionUpdatesToQueue:queue
-                                            withHandler:^(CMDeviceMotion *motion, NSError *error) {
+                                            withHandler:^(CMDeviceMotion
+                                            *motion, NSError *error) {
         if(!error) {
             CMAttitude *attitude = motion.attitude;
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -488,7 +486,8 @@ Command symbol is not displayed in PDF.
     self.motionManager.deviceMotionUpdateInterval = 1;
     NSOperationQueue *queue = [[NSOperationQueue alloc] init];
     [self.motionManager startDeviceMotionUpdatesToQueue:queue
-                                            withHandler:^(CMDeviceMotion *motion, NSError *error) {
+                                            withHandler:^(CMDeviceMotion
+                                            *motion, NSError *error) {
         if(!error) {
             CMAttitude *attitude = motion.attitude;
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -612,7 +611,7 @@ $ mosquitto_sub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/
 
 <p>The <code>subscribe:withQos:completionHandler:</code> method takes a <code>qos</code> parameter that corresponds to the level of quality of service at which the consumer wants to recieve messages from the topic.<a contenteditable="false" data-primary="Quality of Service (QoS)" data-secondary="receiving MQTT messages" data-type="indexterm">&nbsp;</a></p>
 
-<p>The completion handler will be called when the client is effectively subscribed to the topic. The handler has a <code>grantedQos</code> parameter that corresponds to the effective quality of service. The producer is responsible for determining the maximum quality of service at which a message can be delivered, but the consumer can decide to <em>downgrade</em> the quality of service according to its usage. For example, a producer may publish a message with a QoS of <code>ExactlyOnce</code>, but a consumer may decide that it is acceptable if there are message duplicates and downgrade its QoS to <code>At Least Once</code>.</p>
+<p>The completion handler will be called when the client is effectively subscribed to the topic. The handler has a <code>grantedQos</code> parameter that corresponds to the effective quality of service. The producer is responsible for determining the maximum quality of service at which a message can be delivered, but the consumer can decide to <em>downgrade</em> the quality of service according to its usage. For example, a producer may publish a message with a QoS of <code>ExactlyOnce</code>, but a consumer may decide that it is acceptable if there are message duplicates and downgrade its QoS to <code>AtLeastOnce</code>.</p>
 
 <p>In our case, we will request to have messages delivered with a <code>qos</code> set to <code>AtLeastOnce</code>, as we do not want to lose messages but can accept duplicate messages:</p>
 
