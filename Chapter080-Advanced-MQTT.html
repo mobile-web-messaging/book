@@ -3,7 +3,7 @@
 
 <p class="lead">In Chapters 6 and 7, we used MQTT to send and receive messages from a native iOS application and a web application. MQTT provides additional features that we did not use to write these applications.<a contenteditable="false" data-primary="MQTT" data-secondary="advanced" data-type="indexterm" id="MQTTadv">&nbsp;</a> In this chapter, we will take a tour of all these advanced features provided by MQTT.</p>
 
-<p>This chapter covers the latest version of the protocol at the time of this writing (i.e., <a href="http://www.ibm.com/developerworks/webservices/library/ws-mqtt/index.html">MQTT v3.1</a>, which was released on August 19, 2010)<sup>th</sup>.</p>
+<p>This chapter covers the latest version of the protocol at the time of this writing (i.e., <a href="http://www.ibm.com/developerworks/webservices/library/ws-mqtt/index.html">MQTT v3.1</a>, which was released on August 19, 2010).</p>
 
 <section data-type="sect1" id="_authentication_2">
 <h1>Authentication</h1>
@@ -15,7 +15,7 @@
 <section data-type="sect2" id="__code_mqttkit_code_example">
 <h2>MQTTKit Example</h2>
 
-<p>The <code>MQTTClient</code> has two <code>NSString</code> properties that must be set to authenticate the client, <code>username</code>, and <code>password</code>. <a contenteditable="false" data-primary="MQTTKit" data-secondary="authentication example" data-type="indexterm">&nbsp;</a>They must be set <em>prior</em> to calling the client&rsquo;s <code>connect</code> methods to take effect.</p>
+<p>The <code>MQTTClient</code> has two <code>NSString</code> properties that must be set to authenticate the client, <code>username</code>, and <code>password</code>. <a contenteditable="false" data-primary="MQTTKit" data-secondary="authentication example" data-type="indexterm">&nbsp;</a>They must be set <em>prior</em> to calling the client&rsquo;s <code>connect</code> methods in order to take effect.</p>
 
 <p>If the MQTT broker requires authentication, the client can check if the connection was refused due to invalid user credentials using the <code>ConnectionRefusedBadUserNameOrPassword</code> error code from the <code>completionHandler</code>:</p>
 
@@ -36,7 +36,8 @@
         } else if (code == ConnectionRefusedBadUserNameOrPassword) {
             NSLog(@&quot;Failed to authenticate the user&quot;);
         } else {
-            NSLog(@&quot;Failed to connect to the MQTT broker: code=%lu&quot;, (unsigned long)code);
+            NSLog(@&quot;Failed to connect to the MQTT broker: code=%lu&quot;,
+            (unsigned long)code);
         }
     }];
 }</pre>
@@ -47,7 +48,7 @@
 
 <p>To authenticate using the <code>mqttws31.js</code> library, you must set the <code>userName</code> and <code>password</code> properties to <a contenteditable="false" data-primary="mqttws31.js" data-secondary="authentication example" data-type="indexterm">&nbsp;</a>the object passed to the client&rsquo;s <code>connect</code> method.</p>
 
-<p>If the MQTT broker requires authentication and the client passes invalid user credentials, the client will be notified by having its <code>onFailure</code> handler called with a failure&rsquo;s code set to <code>4</code> (the value specified in the MQTT protocol for the error <code>Connection Refused: bad user name or password</code>):</p>
+<p>If the MQTT broker requires authentication and the client passes invalid user credentials, the client will be notified by having its <code>onFailure</code> handler called with a failur code set to <code>4</code> (the value specified in the MQTT protocol for the error <code>Connection Refused: bad user name or password</code>):</p>
 
 <pre data-code-language="js" data-type="programlisting">
 var userName = &quot;...&quot;;
@@ -99,7 +100,7 @@ client.connect({onSuccess: function(frame) {
     self.client.disconnectionHandler = ^(NSUInteger code) {
         NSLog(@&quot;client disconnected with code %lu&quot;, (unsigned long)code);
         NSLog(@&quot;trying to reconnect...&quot;);
-        // trying to reconnect;
+        // trying to reconnect
         [weakSelf connect];
     };
 
@@ -112,7 +113,7 @@ client.connect({onSuccess: function(frame) {
 <section data-type="sect2" id="__code_mqttws31_js_code_example_2">
 <h2>mqttws31.js Example</h2>
 
-<p>In <a data-type="xref" href="#ch_mobile_mqtt_connect">#ch_mobile_mqtt_connect</a>, we already set a <code>onConnectionLost</code> callback on the <code>client</code> to be notified in case of connection error.<a contenteditable="false" data-primary="error handling" data-secondary="in MQTT" data-tertiary="mqqtws31.js example" data-type="indexterm">&nbsp;</a><a contenteditable="false" data-primary="mqttws31.js" data-secondary="error handling example" data-type="indexterm">&nbsp;</a> The callback has a single <code>response</code> parameter object. This parameter is composed of two properties:</p>
+<p>In <a data-type="xref" href="#ch_mobile_mqtt_connect">#ch_mobile_mqtt_connect</a>, we already set an <code>onConnectionLost</code> callback on the <code>client</code> to be notified in case of a connection error.<a contenteditable="false" data-primary="error handling" data-secondary="in MQTT" data-tertiary="mqqtws31.js example" data-type="indexterm">&nbsp;</a><a contenteditable="false" data-primary="mqttws31.js" data-secondary="error handling example" data-type="indexterm">&nbsp;</a> The callback has a single <code>response</code> parameter object. This parameter is composed of two properties:</p>
 
 <ul>
 	<li>
@@ -132,30 +133,30 @@ client.onConnectionLost = function(response) {
 </section>
 
 <section data-type="sect1" id="_heart_beating_2">
-<h1>Heart-beating</h1>
+<h1>Heart-Beating</h1>
 
-<p>MQTT offers a simple mechanism to test the healthiness of the network connection betwee a client and a broker<a contenteditable="false" data-primary="MQTT" data-secondary="advanced" data-tertiary="heart-beating" data-type="indexterm">&nbsp;</a> using heart-beating.<a contenteditable="false" data-primary="heart-beating" data-secondary="in MQTT" data-type="indexterm">&nbsp;</a></p>
+<p>MQTT offers a simple mechanism to test the health of the network connection between a client and a broker<a contenteditable="false" data-primary="MQTT" data-secondary="advanced" data-tertiary="heart-beating" data-type="indexterm">&nbsp;</a> using heart-beating.<a contenteditable="false" data-primary="heart-beating" data-secondary="in MQTT" data-type="indexterm">&nbsp;</a></p>
 
 <p>Heart-beating is enabled by specifying a <em>keep alive timer</em> when the client initially connects to the broker.<a contenteditable="false" data-primary="keep alive timer" data-type="indexterm">&nbsp;</a> This timer, measured in seconds, defines the maximum time interval between messages received from a client. It allows the client and broker to detect whether the network connection is broken without waiting for the long TCP/IP timeout. A timer value of <code>0</code> disables heart-beating.</p>
 
-<p>In the absence of regular messages exchanged between them, the client and the broker automatically send respective heart-beats (<code>PINGREQ</code> for the client and <code>PINGRESP</code> for the broker) based on the keep alive timer to check the healthiness of the network connection.</p>
+<p>In the absence of regular messages exchanged between them, the client and the broker automatically send respective heart-beats (<code>PINGREQ</code> for the client and <code>PINGRESP</code> for the broker) based on the keep alive timer to check the health of the network connection.</p>
 
-<p>If the client does not receive heart-beats from the broker, it will close the underlying network connection and report an error.</p>
+<p>If the client does not receive heartbeats from the broker, it will close the underlying network connection and report an error.</p>
 
-<p>If the broker does not receive heart-beats from the client, it will consider the client to be disconnected.</p>
+<p>If the broker does not receive heartbeats from the client, it will consider the client to be disconnected.</p>
 
 <div data-type="caution">
 <p>Setting a good value for the keep alive timer is highly dependent on the application use cases and the platform it runs on.</p>
 
-<p>For mobile devices that are subject to frequent intermittent network failures, using a value too small will report false failures and increase the instability of the application. It will also increase the bandwidth and battery usage as heart-beats would have to be sent over the network more frequently.</p>
+<p>For mobile devices that are subject to frequent intermittent network failures, using a value too small will report false failures and increase the instability of the application. It will also increase the bandwidth and battery usage as heartbeats would have to be sent over the network more frequently.</p>
 </div>
 
 <section data-type="sect2" id="__code_mqttkit_code_example_3">
 <h2>MQTTKit Example</h2>
 
-<p>By default, MQTTKit defines a keep alive timer of 60 seconds.<a contenteditable="false" data-primary="heart-beating" data-secondary="in MQTT" data-tertiary="MQTTKit example" data-type="indexterm">&nbsp;</a><a contenteditable="false" data-primary="MQTTKit" data-secondary="heart-beating example" data-type="indexterm">&nbsp;</a></p>
+<p>By default, MQTTKit defines a keep-alive timer of 60 seconds.<a contenteditable="false" data-primary="heart-beating" data-secondary="in MQTT" data-tertiary="MQTTKit example" data-type="indexterm">&nbsp;</a><a contenteditable="false" data-primary="MQTTKit" data-secondary="heart-beating example" data-type="indexterm">&nbsp;</a></p>
 
-<p>It is possible to change this value using the <code>keepAlive</code> property on the <code>MQTTClient</code> object. The property type is a <code>short</code> and its value must be changed prior to calling the client&rsquo;s <code>connect</code> methods to take effect:</p>
+<p>It is possible to change this value using the <code>keepAlive</code> property on the <code>MQTTClient</code> object. The property type is a <code>short</code> and its value must be changed prior to calling the client&rsquo;s <code>connect</code> method in order to take effect:</p>
 
 <pre data-code-language="objc" data-type="programlisting">
 MQTTClient *client = [[MQTTClient alloc] initWithClientId:clientID];
@@ -169,7 +170,7 @@ client.keepAlive = 10; // seconds
 <section data-type="sect2" id="__code_mqttws31_js_code_example_3">
 <h2>mqttws31.js Example</h2>
 
-<p><code>mqttws31.js</code> also defines a keep aliver timer of 60 seconds by default.<a contenteditable="false" data-primary="heart-beating" data-secondary="in MQTT" data-tertiary="mqttws31.js example" data-type="indexterm">&nbsp;</a><a contenteditable="false" data-primary="mqttws31.js" data-secondary="heart-beating example" data-type="indexterm">&nbsp;</a></p>
+<p><code>mqttws31.js</code> also defines a keep-alive timer of 60 seconds by default.<a contenteditable="false" data-primary="heart-beating" data-secondary="in MQTT" data-tertiary="mqttws31.js example" data-type="indexterm">&nbsp;</a><a contenteditable="false" data-primary="mqttws31.js" data-secondary="heart-beating example" data-type="indexterm">&nbsp;</a></p>
 
 <p>The <code>client</code>'s <code>connect</code> method can take an optional <code>keepAliveInterval</code> integer to specify another value (or <code>0</code> to disable heart-beating):</p>
 
@@ -198,7 +199,7 @@ client.connect({onSuccess: function(frame) {
 
 <p>MQTT provides a <em>last will</em> feature that we could use to handle this use case.<a contenteditable="false" data-primary="last will (MQTT)" data-type="indexterm">&nbsp;</a></p>
 
-<p>When an MQTT client connects to the broker, it can specify a last will message that will be published to a last will topic by the broker <em>on behalf</em> of the client in case of unexpected disconnection. If the client disconnects normally, its last will message is not published. If the client uses heart-beating and the broker fails to receive its heart-beat in a timely fashion, this is considered as an unexpected disconnection and the last will message will be published.</p>
+<p>When an MQTT client connects to the broker, it can specify a last will message that will be published to a last will topic by the broker <em>on behalf</em> of the client in case of unexpected disconnection. If the client disconnects normally, its last will message is not published. If the client uses heart-beating and the broker fails to receive its heartbeat in a timely fashion, this is considered an unexpected disconnection and the last will message will be published.</p>
 
 <p>We could use this last will to let consumers know that the Motions iOS application has been terminated abnormally or its device is no longer reachable (in case of network disconnection).</p>
 
@@ -242,7 +243,7 @@ client.connect({onSuccess: function(frame) {
     }];
 }</pre>
 
-<p>Similar to a regular message, the last will message can specify its QoS and whether it must be retained. A last will message may be important but infrequent. Using a QoS of exactly-once will ensure that a consumer of the last will topic will not receive false positives on the device&rsquo;s disconnection. We will also not retain the last will message. If it was retained, a newly subscribed consumer would receive it and could assume that a device has been disconnecting while it reconnected in the meantime.</p>
+<p>Similar to a regular message, the last will message can specify its QoS and whether it must be retained. A last will message might be important but infrequent. Using a QoS of <code>Exactly Once</code> will ensure that a consumer of the last will topic will not receive false positives on the device&rsquo;s disconnection. We will also not retain the last will message. If it were retained, a newly subscribed consumer could receive it and assume that a device has been disconnecting while it reconnected in the meantime.</p>
 
 <p>Before we configure the web application&rsquo;s own last will, we can first update it to discard data when it receives the last will message from a device.</p>
 
@@ -257,20 +258,20 @@ client.connect({onSuccess: function(frame) {
 	</li>
 </ol>
 
-<p>The first step is done in the <code>onSuccess</code> callback passed to <code>client</code><em>s <code>connect</code> method when we were already subscribing to the devices</em> motion topics:</p>
+<p>The first step is done in the <code>onSuccess</code> callback passed to <code>client</code>s <code>connect</code> method when we were already subscribing to the devices, motion topics:</p>
 
 <pre data-code-language="js" data-type="programlisting">
 var lastWillTopic = &quot;/mwm/lastWill&quot;;
 
 client.connect({onSuccess: function(frame) {
-  // once the client is successfully connected,
+  // after the client is successfully connected,
   // subscribe to all the motions topics
   client.subscribe(&quot;/mwm/+/motion&quot;);
-  // subscribe to the last will topic too:
+  // subscribe to the last will topic, too
   client.subscribe(lastWillTopic);
 },</pre>
 
-<p>The second step requires to modify the <code>client</code>'s <code>onMessageArrived</code> callback to check whether the message is coming from the last will topic and discard the device data if that the case. Because the last will message representation is a JSON object, we must first parse it by calling <code>JSON.parse</code> on the message&rsquo;s <code>payloadString</code>:</p>
+<p>The second step requires us to modify the <code>client</code>'s <code>onMessageArrived</code> callback to check whether the message is coming from the last will topic and discard the device data if that the case. Because the last will message representation is a JSON object, we must first parse it by calling <code>JSON.parse</code> on the message&rsquo;s <code>payloadString</code>:</p>
 
 <pre data-code-language="js" data-type="programlisting">
 client.onMessageArrived = function(message) {
@@ -283,7 +284,7 @@ client.onMessageArrived = function(message) {
   ...
 };</pre>
 
-<p>The <code>discard</code> function will delete the data from the <code>devices</code> dictionary and remove the HTML elements that were created to display the device:</p>
+<p>The <code>discard</code> function will delete the data from the <code>device</code>'s dictionary and remove the HTML elements that were created to display the device:</p>
 
 <pre data-code-language="js" data-type="programlisting">
 function discard(deviceID) {
@@ -296,7 +297,7 @@ function discard(deviceID) {
 <section data-type="sect2" id="__code_mqttws31_js_code_example_4">
 <h2>mqttws31.js Example</h2>
 
-<p>It is also possible to set a client&rsquo;s last will using <code>mqttws31.js</code>. <a contenteditable="false" data-primary="last will (MQTT)" data-secondary="mqttws31.js example" data-type="indexterm">&nbsp;</a><a contenteditable="false" data-primary="mqttws31.js" data-secondary="last will example" data-type="indexterm">&nbsp;</a>The <code>client</code>'s <code>connect</code> method can take an optional <code>willMessage</code> object that represents the last will message to send if it disconnects unexpectedly. The value is a regular MQTT message created by calling <code>new Messaging.Message</code> constructor and specifying its <code>destinationName</code> (the last will topic), and optionally its <code>qos</code> and <code>retained</code> value:</p>
+<p>It is also possible to set a client&rsquo;s last will using <code>mqttws31.js</code>. <a contenteditable="false" data-primary="last will (MQTT)" data-secondary="mqttws31.js example" data-type="indexterm">&nbsp;</a><a contenteditable="false" data-primary="mqttws31.js" data-secondary="last will example" data-type="indexterm">&nbsp;</a>The <code>client</code>'s <code>connect</code> method can take an optional <code>willMessage</code> object that represents the last will message to send if it disconnects unexpectedly. The value is a regular MQTT message created by calling a <code>new Messaging.Message</code> constructor and specifying its <code>destinationName</code> (the last will topic), and optionally its <code>qos</code> and <code>retained</code> value:</p>
 
 <pre data-code-language="js" data-type="programlisting">
 var willMessage = new Messaging.Message(&quot;Web client &quot; + clientID + &quot; 
@@ -324,7 +325,7 @@ $ mosquitto_sub -h iot.eclipse.org -t /mwm/lastWill/# -v
 /mwm/lastWill/web Web client 0.90778b769105b876 has unexpectedly died</pre>
 
 <div data-type="note">
-<p>We have subscribed to the wildcard topic <code>/mwm/lastWill/#</code> to receive messages from both <code>/mwm/lastWill</code> (that is used by the Motions iOS application) and any of its child including <code>/mwmw/lastWill/web</code> (that is used by the Motions web application).</p>
+<p>We subscribed to the wildcard topic <code>/mwm/lastWill/#</code> to receive messages from both <code>/mwm/lastWill</code> (that is used by the Motions iOS application) and any of its children including <code>/mwmw/lastWill/web</code> (that is used by the Motions web application).</p>
 </div>
 </section>
 </section>
@@ -332,13 +333,13 @@ $ mosquitto_sub -h iot.eclipse.org -t /mwm/lastWill/# -v
 <section data-type="sect1" id="_clean_session">
 <h1>Clean Session</h1>
 
-<p>When an MQTT client connects to the broker, it can specify whether the broker must store its state after it disconnects and until it reconnects.<a contenteditable="false" data-primary="MQTT" data-secondary="advanced" data-tertiary="clean session" data-type="indexterm">&nbsp;</a><a contenteditable="false" data-primary="clean session (MQTT)" data-type="indexterm">&nbsp;</a> The client state that is stored includes its subscriptions and any in-flight message with a QoS greater or equals to <code>1</code>. Messages with a QoS of <code>0</code> (<code>At Most Once</code>) are not stored, because they are delivered on a best effort basis.<a contenteditable="false" data-primary="Quality of Service (QoS)" data-secondary="for stored messages" data-type="indexterm">&nbsp;</a></p>
+<p>When an MQTT client connects to the broker, it can specify whether the broker must store its state after it disconnects and until it reconnects.<a contenteditable="false" data-primary="MQTT" data-secondary="advanced" data-tertiary="clean session" data-type="indexterm">&nbsp;</a><a contenteditable="false" data-primary="clean session (MQTT)" data-type="indexterm">&nbsp;</a> The client state that is stored includes its subscriptions and any in-flight message with a QoS greater or equal to <code>1</code>. Messages with a QoS of <code>0</code> (<code>At Most Once</code>) are not stored, because they are delivered on a best effort basis.<a contenteditable="false" data-primary="Quality of Service (QoS)" data-secondary="for stored messages" data-type="indexterm">&nbsp;</a></p>
 
 <p>The client uses a Clean Session flag for this. If the flag is set, the broker will not store any state and the connection opened by the client will be <em>clean</em>. If the flag is not set, the broker will store the client state.</p>
 
 <p>A client with the Clean Session flag set will have to subscribe again to consume messages.</p>
 
-<p>A client that does not set the Clean Session flag will consume memory on the broker side (to store its state) and the broker may also perform administrative operations to remove such state. Unless there is a strong incentive to use such a client, it is better practice to use a &quot;Clean session&quot; client and subscribes again after it reconnects.</p>
+<p>A client that does not set the Clean Session flag will consume memory on the broker side (to store its state) and the broker might also perform administrative operations to remove such state. Unless there is a strong incentive to use such a client, it is better practice to use a Clean Session client and subscribe again after it reconnects.</p>
 
 <section data-type="sect2" id="__code_mqttkit_code_example_5">
 <h2>MQTTKit Example</h2>
@@ -369,7 +370,7 @@ $ mosquitto_sub -h iot.eclipse.org -t /mwm/lastWill/# -v
 function sendAlert(deviceID) {
   var message = new Messaging.Message(&quot;red&quot;);
   message.destinationName = &quot;/mwm/&quot; + deviceID + &quot;/alert&quot;;
-  // send the alert with a QoS of at-least-once
+  // send the alert with a QoS of At Least Once
   message.qos = 1;
   client.send(message);
 }</pre>
@@ -382,10 +383,11 @@ function sendAlert(deviceID) {
 <section data-type="sect2" id="__code_mqttws31_js_code_example_5">
 <h2>mqttws31.js Example</h2>
 
-<p>The clients created by the mqttws31.js library also connects by default with the Clean Session flag set. <a contenteditable="false" data-primary="mqttws31.js" data-secondary="clean session example" data-type="indexterm">&nbsp;</a><a contenteditable="false" data-primary="clean session (MQTT)" data-secondary="mqttws31.js example" data-type="indexterm">&nbsp;</a>It is possible to change this behavior by adding a <code>cleanSession</code> property set to <code>false</code> in the properties passed to the client&rsquo;s <code>connect</code> method:</p>
+<p>The clients created by the mqttws31.js library also connect by default with the Clean Session flag set. <a contenteditable="false" data-primary="mqttws31.js" data-secondary="clean session example" data-type="indexterm">&nbsp;</a><a contenteditable="false" data-primary="clean session (MQTT)" data-secondary="mqttws31.js example" data-type="indexterm">&nbsp;</a>It is possible to change this behavior by adding a <code>cleanSession</code> property set to <code>false</code> in the properties passed to the client&rsquo;s <code>connect</code> method:</p>
 
 <pre data-code-language="js" data-type="programlisting">
-// specify that the session must not be cleaned when the client connects to the broker
+// specify that the session must not be cleaned when the client connects to
+// the broker
 client.connect({onSuccess: function(frame) {
     ...
   },
@@ -400,19 +402,17 @@ client.connect({onSuccess: function(frame) {
 <section data-type="sect1" id="_beyond_mqtt">
 <h1>Beyond MQTT?</h1>
 
-<p>MQTT is a simple protocol well suited for a limited set of applications that can be modeled using the publish/subscribe model.<a contenteditable="false" data-primary="MQTT" data-secondary="limitations of" data-type="indexterm">&nbsp;</a></p>
+<p>MQTT is a simple protocol well-suited to a limited set of applications that can be modeled using the publish/subscribe model.<a contenteditable="false" data-primary="MQTT" data-secondary="limitations of" data-type="indexterm">&nbsp;</a></p>
 
-<p>Its small set of features makes it simple to understand and use, but it lacks some flexibility and you have to consider carefully if it meets your requirements.<a contenteditable="false" data-primary="headers" data-secondary="absence of, in MQTT messages" data-type="indexterm">&nbsp;</a></p>
+<p>Its small set of features makes it simple to understand and use, but it lacks some flexibility and you have to carefully consider whether it meets your requirements.<a contenteditable="false" data-primary="headers" data-secondary="absence of, in MQTT messages" data-type="indexterm">&nbsp;</a></p>
 
 <p>One missing feature of MQTT is the lack of headers in the message representation.</p>
 
 <p>MQTT defines a fixed set of headers for its command messages (used to connect to the broker, send a message, create a subscription, etc.), but there is no general notion of a header that the application or the broker could add to the messages.</p>
 
-<p>This impacts the expressiveness of the messages that are delivered using MQTT. As a simple example, the absence of headers mean that there is no way to know what type of data to expect from the payload. HTTP and STOMP defines a <code>content-type</code> header that can be queried to know the MIME type of the payload and extract it accordingly. MQTT does not allow this and the consumer must have <em>a priori</em> knowledge of the payload type for a message before being able to read it.</p>
+<p>This impacts the expressiveness of the messages that are delivered using MQTT. As a simple example, the absence of headers means that there is no way to know what type of data to expect from the payload. HTTP and STOMP define a <code>content-type</code> header that can be queried to know the MIME type of the payload and extract it accordingly. MQTT does not allow this and the consumer must have <em>a priori</em> knowledge of the payload type for a message before being able to read it.</p>
 
 <p>The absence of headers also implies that the MQTT broker cannot provide additional features not covered by the protocol in an unobtrusive way. As we saw in <a data-type="xref" href="#ch_beyond_stomp">#ch_beyond_stomp</a>, STOMP brokers can provide additional features such as persistence, priority, and expiration, and the client can use them by adding headers to the messages. There is no such mechanism for MQTT in its current version. There are some ongoing discussions to add application-specific headers in a future version of the protocol, but no agreement has been reached at the time of this writing.</p>
-
-<p>If you plan to use MQTT in your applications, you should consider carefully whether its features match your requirements.</p>
 
 <p>If you require features that are not provided by the protocol (or another messaging model than <em>publish/subscribe</em>), you may lose all the benefits of using this simple protocol and write brittle code that puts all the complexity in your applications instead of relying on the broker&rsquo;s set of features. But if your requirements are fullfilled by MQTT features (as is the case for a lot of applications), you will be all set to use messaging in your applications.</p>
 </section>
@@ -435,10 +435,10 @@ client.connect({onSuccess: function(frame) {
 	<p><em>Heart-beating</em> to ensure that the network connection between the client and broker is healthy (and to ensure that it will kill the connection if that is not the case)</p>
 	</li>
 	<li>
-	<p><em>Last will</em> to let the broker sent a message on behalf of the client in case of unexpected disconnection</p>
+	<p><em>Last will</em> to let the broker sent a message on behalf of the client in case of an unexpected disconnection</p>
 	</li>
 	<li>
-	<p><em>Clean session</em> to preserve client state on the broker between connections<a contenteditable="false" data-primary="MQTT" data-secondary="advanced" data-startref="MQTTadv" data-type="indexterm">&nbsp;</a></p>
+	<p>Clean Session to preserve client state on the broker between connections<a contenteditable="false" data-primary="MQTT" data-secondary="advanced" data-startref="MQTTadv" data-type="indexterm">&nbsp;</a></p>
 	</li>
 </ul>
 </section>
