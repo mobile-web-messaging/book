@@ -1,4 +1,5 @@
 @charset "UTF-8";
+@import url('../../../animal_theme/pdf/pdf.css');
 
 /*--------Put Your Custom CSS Rules Below--------*/
 /*--- This oneoff overrides the code in https://github.com/oreillymedia/animal_theme/blob/master/pdf/pdf.css---*/
@@ -44,7 +45,6 @@ dl.calloutlist dt:nth-of-type(4) a.co:before {
   content: url("../../images/callouts/4.pdf");
 }
 
-
 /*----Uncomment to turn OFF automatic code wrapping (it's on by default in the new toolchain)
 
 pre {
@@ -87,3 +87,21 @@ section[data-type="titlepage"] p.author {
   padding-left: 3in;
 }
 ----*/
+
+
+
+/*============== CSS from Sam ==============*/
+/*fixing space beneath safari paragraph*/
+div.safarienabled {
+  margin-bottom: -15pt; 
+  padding-bottom: 0;
+  font-size: 10.5pt;}
+
+dl.calloutlist dt,
+dl.calloutlist dd
+{
+  line-height: 5pt;
+}
+
+
+
