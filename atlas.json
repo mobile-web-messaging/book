@@ -28,7 +28,7 @@
       "version": "web",
       "index": true,
       "toc": true,
-      "antennahouse_version": "AHFormatterV61_64-MR2"
+      "antennahouse_version": "AHFormatterV62_64"
     },
     "epub": {
       "index": false,
