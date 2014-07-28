@@ -704,23 +704,8 @@ content-length:122
 <p>This confirms that STOMP messages are effectively sent by the Locations application.</p>
 </section>
 
-<section data-type="sect2" id="_activemq_admin_console">
-<h2>ActiveMQ Admin Console</h2>
 
-<p>In <a data-type="xref" href="#app_activemq_admin_console">#app_activemq_admin_console</a>, we use the ActiveMQ admin console to check the broker<a contenteditable="false" data-primary="brokers" data-secondary="checking configuration with ActiveMQ admin console" data-type="indexterm">&nbsp;</a> configuration.<a contenteditable="false" data-primary="ActiveMQ" data-secondary="admin console" data-type="indexterm">&nbsp;</a> We can also use this console to check the destinations and their associated metrics.<a contenteditable="false" data-primary="destinations" data-secondary="checking with ActiveMQ admin console" data-type="indexterm">&nbsp;</a></p>
-
-<p>Go to the ActiveMQ admin console in your web browser at <a href="http://localhost:8161/hawtio"><em class="hyperlink">http://localhost:8161/hawtio</em></a> and navigate the ActiveMQ tree down to the position topic in mybroker &rarr; Topic &rarr; device.2262EC25-E9FD-4578-BADE-4E113DE45934.location.</p>
-
-<p>In the righthand panel, select Attributes in the top menu to display all the attributes associated to this topic.</p>
-
-<p>To check whether the broker is receiving the messages on this destination, check the Enqueue count attribute. It corresponds to the messages that have been <em>enqueued</em> (in other words, <em>sent</em>) to the destination. We see that this value is growing over time (it was at 113 when the screenshot in was captured). This confirms that the broker is actually receiving the messages sent by the mobile application.</p>
-
-<figure id="img_mobile_stomp_16"><img alt="Check the number of messages sent to a destination in ActiveMQ admin console" src="images/mawm_0217.png" />
-<figcaption>Check the number of messages sent to a destination in the ActiveMQ admin console</figcaption>
-</figure>
-
-<p>Another interesting attribute is Dequeue count. It corresponds to the messages removed from the topic and sent to consumers. In our case, it stays at <code>0</code> because there are no consumers subscribed to this destination.</p>
-</section>
+/*placeholder*/
 
 <section data-type="sect2" id="_a_simple_stomp_consumer">
 <h2>A Simple STOMP Consumer</h2>
@@ -828,7 +813,8 @@ priority:4
 
 @end</pre>
 
-<p>We need to bind this outlet property to the table view. Open the <em>Main.storyboard</em> and Ctrl-click on View Controller to see its connection panel. Drag from Table View the table to connect it. See <a data-type="xref" href="img_mobile_stomp_182"></a></p>.
+<p>We need to bind this outlet property to the table view. Open the <em>Main.storyboard</em> and Ctrl-click on View Controller to see its connection panel. Drag from Table View the table to connect it. See</p>
+.
 
 <figure id="img_mobile_stomp_182"><img alt="Connect the tableView outlet property to the Table View" src="images/mawm_0221.png" />
 <figcaption>Connect the tableView outlet property to the Table View</figcaption>
@@ -1082,7 +1068,7 @@ Hello, where are you?
 
 <p>StompKit uses Grand Central Dispatch&rsquo;s global queue to handle the communication between the client and the STOMP brokers. The <code>STOMPMessageHandler</code> block is called on that queue. However, any code that deals with <code>UIKit</code> (such as reloading the <code>tableView</code>) <em>must</em> be executed on the queue bound to the main thread. This is why we must wrap the <code>reloadData</code> call into a block executed on the main queue.</p>
 
-<p>If we restart the application and send another message on the destination with the ActiveMQ admin console, the table will display the text as soon as it is received. See <a data-type="xref" href="img_mobile_stomp_22"></a>.</p>
+<p>If we restart the application and send another message on the destination with the ActiveMQ admin console, the table will display the text as soon as it is received. See .</p>
 
 <figure id="img_mobile_stomp_22"><img alt="The Received Text is Displayed in the Table" src="images/mawm_0225.png" />
 <figcaption>The received text is displayed in the table</figcaption>
