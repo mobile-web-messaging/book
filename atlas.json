@@ -27,7 +27,8 @@
     "pdf": {
       "version": "web",
       "index": true,
-      "toc": true
+      "toc": true,
+      "antennahouse_version": "AHFormatterV62_64-MR2"
     },
     "epub": {
       "index": false,
