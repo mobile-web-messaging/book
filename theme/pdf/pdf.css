@@ -1,5 +1,4 @@
 @charset "UTF-8";
-@import url('../../../animal_theme/pdf/pdf.css');
 
 /*--------Put Your Custom CSS Rules Below--------*/
 /*--- This oneoff overrides the code in https://github.com/oreillymedia/animal_theme/blob/master/pdf/pdf.css---*/
@@ -97,11 +96,29 @@ div.safarienabled {
   padding-bottom: 0;
   font-size: 10.5pt;}
 
-dl.calloutlist dt,
-dl.calloutlist dd
-{
-  line-height: 5pt;
+
+
+dl.calloutlist {
+    font-family: "MinionPro";
+    font-size: 10.5pt;
+    text-align: justify;
 }
 
+dl.calloutlist dt {
+  position: relative;
+  line-height: 0;
+  top: 5pt;
+  margin-bottom: -5pt;
+  page-break-after: avoid;
+}
+
+dl.calloutlist dd {
+   margin-bottom: -5pt;
+
+}
+
+blockquote[data-type="epigraph"] p {text-align: left;}
+
+/* -
 
 
