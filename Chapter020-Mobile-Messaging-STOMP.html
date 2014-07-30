@@ -3,7 +3,7 @@
 
 <p class="lead">In this chapter, we will write our first messaging client: a native application running on an iPhone.<a contenteditable="false" data-primary="mobile messaging with STOMP" data-type="indexterm" id="mobmessSTOMP">&nbsp;</a> We will use STOMP to send and receive messages using the Objective-C library StompKit.<a contenteditable="false" data-primary="STOMP" data-secondary="mobile messaging with" data-type="indexterm" id="STOMPmobmess">&nbsp;</a></p>
 
-<p>In <a data-type="xref" href="#ch_introduction_stomp_example">#ch_introduction_stomp_example</a>, we described the Locations application. In this chapter, we will write the iOS application that broadcasts the device&rsquo;s position and receives text messages ().</p>
+<p>In <a data-type="xref" href="#ch_introduction_stomp_example">#ch_introduction_stomp_example</a>, we described the Locations application. In this chapter, we will write the iOS application that broadcasts the device&rsquo;s position and receives text messages (<a data-type="xref" href="img_mobile_stomp_1">img_mobile_stomp_1</a>).</p>
 
 <figure id="img_mobile_stomp_1"><img alt="Diagram of the Locations iOS application" src="images/mawm_0201.png" />
 <figcaption>Diagram of the Locations iOS application</figcaption>
@@ -78,7 +78,7 @@ Integrating client project
 
 [!] From now on use `Locations.xcworkspace`.</pre>
 
-<p>We can now open Xcode again, <a contenteditable="false" data-primary="Xcode" data-secondary="opening Locations workspace file" data-type="indexterm">&nbsp;</a>but we must do it using the workspace file named <em>Locations.xcworkspace</em>, and not the project file named <em>Locations.xcodeproj</em> ().</p>
+<p>We can now open Xcode again, <a contenteditable="false" data-primary="Xcode" data-secondary="opening Locations workspace file" data-type="indexterm">&nbsp;</a>but we must do it using the workspace file named <em>Locations.xcworkspace</em>, and not the project file named <em>Locations.xcodeproj</em> (<a data-type="xref" href="img_mobile_stomp_4">img_mobile_stomp_4</a>).</p>
 
 <figure id="img_mobile_stomp_4"><img alt="Open the Workspace file" src="images/mawm_0205.png" />
 <figcaption>Open the Workspace file</figcaption>
@@ -91,7 +91,7 @@ Integrating client project
 Command symbol is not displayed in PDF.
 -->
 
-<p>If we run the application by selecting Product &rarr; Run (or pressing <code>⌘+R</code>), the iOS simulator starts and opens the application, which is composed of a blank view ().</p>
+<p>If we run the application by selecting Product &rarr; Run (or pressing <code>⌘+R</code>), the iOS simulator starts and opens the application, which is composed of a blank view (<a data-type="xref" href="img_mobile_stomp_5">img_mobile_stomp_5</a>).</p>
 
 <figure id="img_mobile_stomp_5"><img alt="Locations Blank View" src="images/mawm_0206.png" />
 <figcaption>Blank view of the Locations application</figcaption>
@@ -169,7 +169,7 @@ Command symbol is not displayed in PDF.
     self.deviceIDLabel.text = self.deviceID;
 }</pre>
 
-<p>If we run the application, we will see the device ID displayed instead of <code>Device ID</code> in the view ().</p>
+<p>If we run the application, we will see the device ID displayed instead of <code>Device ID</code> in the view (<a data-type="xref" href="img_mobile_stomp_9">img_mobile_stomp_9</a>).</p>
 
 <figure id="img_mobile_stomp_9"><img alt="Display the device ID" src="images/mawm_0210.png" />
 <figcaption>Display the device ID</figcaption>
@@ -187,13 +187,13 @@ Command symbol is not displayed in PDF.
 
 <p>We will retrieve the geolocation data from the device&rsquo;s GPS sensor to send them using STOMP messages.<a contenteditable="false" data-primary="mobile messaging with STOMP" data-secondary="displaying device position" data-type="indexterm">&nbsp;</a> However, we also want to have some graphical feedback to show that the data changes over time as we move with our device.</p>
 
-<p>To display the geolocation data, we will add a <code>UILabel</code> to the view and change its text to &quot;Current position: ???&quot; ().</p>
+<p>To display the geolocation data, we will add a <code>UILabel</code> to the view and change its text to &quot;Current position: ???&quot; (<a data-type="xref" href="img_mobile_stomp_10">img_mobile_stomp_10</a>).</p>
 
 <figure id="img_mobile_stomp_10"><img alt="Add the current position label" src="images/mawm_0211.png" />
 <figcaption>Add the current position label</figcaption>
 </figure>
 
-<p>We will change its appearance to match the <code>deviceID</code> label by setting its Font to System 13.0 and its Alignment to centered ().</p>
+<p>We will change its appearance to match the <code>deviceID</code> label by setting its Font to System 13.0 and its Alignment to centered (<a data-type="xref" href="img_mobile_stomp_11">img_mobile_stomp_11</a>).</p>
 
 <figure id="img_mobile_stomp_11"><img alt="Change the current position label appearance" src="images/mawm_0212.png" />
 <figcaption>Change the appearance of the current position label</figcaption>
@@ -218,7 +218,7 @@ Command symbol is not displayed in PDF.
 
 <p>iOS provides the <code>CoreLocation</code> framework<a contenteditable="false" data-primary="mobile messaging with STOMP" data-secondary="accessing device geolocation data with CoreLocation" data-type="indexterm">&nbsp;</a> to access the location data.<a contenteditable="false" data-primary="CoreLocation framework" data-secondary="accessing device geolocation data with" data-type="indexterm">&nbsp;</a></p>
 
-<p>We need to add it to the libraries linked by the application. Click on the Locations project and then the Locations target. In the General tab, under the Linked Frameworks and Libraries section, click on the <code>+</code> button. In the selection window, type <strong><code>CoreLocation</code></strong>, select the CoreLocation.framework, and click on the Add button ().</p>
+<p>We need to add it to the libraries linked by the application. Click on the Locations project and then the Locations target. In the General tab, under the Linked Frameworks and Libraries section, click on the <code>+</code> button. In the selection window, type <strong><code>CoreLocation</code></strong>, select the CoreLocation.framework, and click on the Add button (<a data-type="xref" href="img_mobile_stomp_13">img_mobile_stomp_13</a>).</p>
 
 <figure id="img_mobile_stomp_13"><img alt="Add the CoreLocation framework" src="images/mawm_0214.png" />
 <figcaption>Add the CoreLocation framework</figcaption>
@@ -332,13 +332,13 @@ interface MWMViewController () &lt;CLLocationManagerDelegate&gt;
     [self stopUpdatingCurrentLocation];
 }</pre>
 
-<p>The first time the application asks the <code>locationManager</code> to start updating the device location, the user will see an alert view asking for permission to access the device location ().</p>
+<p>The first time the application asks the <code>locationManager</code> to start updating the device location, the user will see an alert view asking for permission to access the device location (<a data-type="xref" href="img_mobile_stomp_14">img_mobile_stomp_14</a>).</p>
 
 <figure id="img_mobile_stomp_14"><img alt="Permission to use the current location" src="images/mawm_0215.png" />
 <figcaption>Permission to use the current location</figcaption>
 </figure>
 
-<p>If the user taps OK, the <code>locationManager</code> will start updating the device location and the label for its current position will be updated with the latitude and longitude ().</p>
+<p>If the user taps OK, the <code>locationManager</code> will start updating the device location and the label for its current position will be updated with the latitude and longitude (<a data-type="xref" href="img_mobile_stomp_15">img_mobile_stomp_15</a>).</p>
 
 <figure id="img_mobile_stomp_15"><img alt="Display the current position of the device" src="images/mawm_0216.png" />
 <figcaption>Display the current position of the device</figcaption>
@@ -813,7 +813,7 @@ priority:4
 <figcaption>Add a Table View Cell</figcaption>
 </figure>
 
-<p>We will change the Table View Cell properties by setting its Style to Basic and its Identifier to TextCell ().</p>
+<p>We will change the Table View Cell properties by setting its Style to Basic and its Identifier to TextCell (<a data-type="xref" href="img_mobile_stomp_18">img_mobile_stomp_18</a>).</p>
 
 <figure id="img_mobile_stomp_18"><img alt="Edit the Table View Cell Properties" src="images/mawm_0220.png" />
 <figcaption>Edit the Table View Cell properties</figcaption>
@@ -828,7 +828,7 @@ priority:4
 
 @end</pre>
 
-<p>We need to bind this outlet property to the table view. Open the <em>Main.storyboard</em> and Ctrl-click on View Controller to see its connection panel. Drag from Table View the table to connect it. See</p>
+<p>We need to bind this outlet property to the table view. Open the <em>Main.storyboard</em> and Ctrl-click on View Controller to see its connection panel. Drag from Table View the table to connect it. See <a data-type="xref" href="img_mobile_stomp_182">img_mobile_stomp_182</a></p>
 .
 
 <figure id="img_mobile_stomp_182"><img alt="Connect the tableView outlet property to the Table View" src="images/mawm_0221.png" />
@@ -837,13 +837,13 @@ priority:4
 
 <p>We also need to connect the View Controller to the Table View and declare it as its dataSource and delegate.</p>
 
-<p>Open the <em>Main.storyboard</em> and Ctrl-click on Table View to see its connection panel. Drag from dataSource to the View Controller to connect it ().</p>
+<p>Open the <em>Main.storyboard</em> and Ctrl-click on Table View to see its connection panel. Drag from dataSource to the View Controller to connect it (<a data-type="xref" href="img_mobile_stomp_19">img_mobile_stomp_19</a>).</p>
 
 <figure id="img_mobile_stomp_19"><img alt="Connect the Table View's dataSource to the View Controller" src="images/mawm_0222.png" />
 <figcaption>Connect the Table View's dataSource to the View Controller</figcaption>
 </figure>
 
-<p>We do the same operation to connect the Table View's delegate property to the View Controller ().</p>
+<p>We do the same operation to connect the Table View's delegate property to the View Controller (<a data-type="xref" href="img_mobile_stomp_20">img_mobile_stomp_20</a>).</p>
 
 <figure id="img_mobile_stomp_20"><img alt="Connect the Table View's delegate to the View Controller" src="images/mawm_0223.png" />
 <figcaption>Connect the Table View's delegate property to the View Controller</figcaption>
