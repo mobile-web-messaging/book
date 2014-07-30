@@ -151,7 +151,7 @@ function connect(url) {
 
 <p>However, there are cases in which the consumer may prefer to explicitly acknowledge the message. It leaves a window of opportunity to determine whether it can handle the message or not. For example, the client needs to write the message payload in a data store. There may be issues with opening a connection to the data store and the client could choose to acknowledge the message only after having successfully written its body to the data store. In case of failure, it will instead <em>nack</em> the message (explicitly refuse to take ownership of it). When the STOMP broker is informed of this negative acknowledgment, it may then decide to deliver the message to another consumer subscribed to the destination or try again some time later depending on its configuration.</p>
 
-<p>The consumer specifies its type of acknowledgement when it subscribes to a destination.<a contenteditable="false" data-primary="Acknowledgement modes" data-type="indexterm">&nbsp;</a> STOMP supports three types of acknowledgements:</p>
+<p>The consumer specifies its type of acknowledgement when it subscribes to a destination.<a contenteditable="false" data-primary="Acknowledgement modes" data-type="indexterm">&nbsp;</a> STOMP supports<a contenteditable="false" data-primary="auto acknowledgement (STOMP)" data-type="indexterm">&nbsp;</a> three types of acknowledgements:</p>
 
 <ul>
 	<li>
