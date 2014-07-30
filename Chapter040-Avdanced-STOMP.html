@@ -5,13 +5,13 @@
 
 <p>This chapter covers the latest version of the protocol at the time of this writing (i.e., <a href="http://stomp.github.io/stomp-specification-1.2.html">STOMP 1.2</a>, which was released on October 22, 2012).</p>
 
-<p>As we present these features, we will show how to use them from either StompKit or stomp.js. The API may vary depending on the platform and language, but the concept remains the same. If you ever need to use STOMP from another language or platform, you will have to adapt to the library API&#x2014;but the underlying concept will still apply.</p>
+<p>As we present these features, we will show how to use them from either StompKit or stomp.js. The API may vary depending on the platform and language, but the concept remains the same. If you ever need to use STOMP from another language or platform, you will have to adapt to the library API&mdash;but the underlying concept will still apply.</p>
 
 <p>Clients and brokers can use these features by sending additional frames (defined in the protocol) or by using message headers. The STOMP protocol defines frames to provide transactions, a combination of frames and headers for message acknowledgment, and headers for heartbeat negotiation.</p>
 
 <p>In this chapter, we will describe the features provided by the STOMP protocol that the client and broker must support in order to be compliant.</p>
 
-<p>STOMP is also extensible, and clients and brokers can support additional features by using headers not defined in the protocol. We will describe these additional features in <a data-type="xref" href="ch_beyond_stomp"></a>.</p>
+<p>STOMP is also extensible, and clients and brokers can support additional features by using headers not defined in the protocol. We will describe these additional features in .</p>
 
 <p>In any case, the features (defined in the protocol or supported only by some brokers) rely on the structure of STOMP frames.</p>
 
@@ -242,7 +242,7 @@ client.subscribe(destination,
 <p>By default, STOMP consumers use <code>auto</code> acknowledgment. In that case, the message acknowledgment is performed automatically by the STOMP broker when the message is delivered to the client and the acknowledgment <em>cannot</em> be put inside a transaction.</p>
 </div>
 
-<p>To complete this active transaction and allow the broker to process it, the client must send a <code>COMMIT</code> frame with the same <code>transaction</code> header as in the corresponding <code>BEGIN</code> frame that started the transaction.<a contenteditable="false" data-primary="COMMIT frame (STOMP transactions)" data-type="indexterm">&nbsp;</a> To abort (or roll back) a transaction and discard any messages or acknowledgments inside it, the client must instead send an <code>ABORT</code> frame <a contenteditable="false" data-primary="ABORT frame (STOMP transactions)" data-type="indexterm">&nbsp;</a>with this <code>transaction</code> header.</p>
+<p>To complete this active transaction and allow the broker to process it, the client must send a <code>COMMIT</code> frame with the same <code>transaction</code> header as in the corresponding <code>BEGIN</code> frame that started the transaction.<a contenteditable="false" data-primary="COMMIT frame (STOMP transactions)" data-type="indexterm">&nbsp;</a> To abort (or roll back) a transaction and discard any messages or acknowledgments inside it, the client must instead send an <code>ABORT</code> frame <a contenteditable="false" data-primary="ABORT frame (STOMP)" data-type="indexterm">&nbsp;</a>with this <code>transaction</code> header.</p>
 
 <div data-type="warning">
 <p>Beginning a transaction is not sufficient to send subsequent messages inside it. If a transaction is begun, the message to send must have its <code>transaction</code> header set to the transaction identifier. Otherwise, the STOMP broker will not consider the message to be part of the transaction and will process it when it receives it instead of waiting for the transaction to complete. If the client decides to abort the transaction, the message will have already been processed by the broker and will not be discarded.</p>
