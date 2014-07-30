@@ -43,7 +43,7 @@
 <div data-type="warning">
 <p>A STOMP client running in a web browser is similar to another STOMP client running on another platform with one exception: STOMP messages are transported by Web Sockets and not regular TCP sockets. The significant difference between them is that a Web Socket is created by sending an HTTP request with an <code>Upgrade: websocket</code> header. The STOMP broker must be able to handle such an HTTP request and upgrade the connection from HTTP to the STOMP protocol.</p>
 
-<p>Web Sockets support is not part of the STOMP protocol. The most commonly used STOMP brokers&#x2014;such as ActiveMQ (which is used in this book), HornetQ, and RabbitMQ&#x2014;support it, but you will have to consult your broker documentation to check if it does.</p>
+<p>Web Sockets support is not part of the STOMP protocol. The most commonly used STOMP brokers&mdash;such as ActiveMQ (which is used in this book), HornetQ, and RabbitMQ&mdash;support it, but you will have to consult your broker documentation to check if it does.</p>
 </div>
 </section>
 
@@ -219,7 +219,6 @@ client.subscribe(destination, function(message) {
   // this function is executed every time a message is consumed
 });</pre>
 
-
 <p>The <code>message</code> parameter that is passed to the subscription callback corresponds to a STOMP message and has three properties:</p>
 
 <dl>
@@ -374,7 +373,7 @@ function connect(url) {
 <section data-type="sect1" id="_draw_the_device_locations_on_a_map">
 <h1>Draw the Device Locations on a Map</h1>
 
-<p>The web application is now receiving the GPS coordinates of any devices that send them.<a contenteditable="false" data-primary="web messaging with STOMP" data-secondary="drawing device locations on a map" data-type="indexterm">&nbsp;</a> We could just display them as text like we did for the iOS application in <a data-type="xref" href="#ch_mobile_stomp_display_position">#ch_mobile_stomp_display_position</a>, but we can make it prettier by drawing them on a map using the Google Maps API.<a contenteditable="false" data-primary="Google Maps API, using to draw device locations on a map" data-type="indexterm">&nbsp;</a></p>
+<p>The web application is now receiving the GPS coordinates of any devices that send them.<a contenteditable="false" data-primary="web messaging with STOMP" data-secondary="drawing device locations on a map" data-type="indexterm">&nbsp;</a> We could just display them as text like we did for the iOS application in <a data-type="xref" href="#ch_mobile_stomp_display_position">#ch_mobile_stomp_display_position</a>, but we can make it prettier by drawing them on a map using the Google Maps API.<a contenteditable="false" data-primary="Google Maps API" data-type="indexterm">&nbsp;</a></p>
 
 <p>In the template in <a data-type="xref" href="#ex_web_stomp_1">#ex_web_stomp_1</a>, we already added the scripts to use Google Maps API. We now need to create the map and initialize it:</p>
 
@@ -433,7 +432,7 @@ function show(deviceID, lat, lng) {
   }
 }</pre>
 
-<p>If we now open this <em>locations.html</em> file in a web browser, we will see a map of the whole world displayed ().</p>
+<p>If we now open this <em>locations.html</em> file in a web browser, we will see a map of the whole world<a contenteditable="false" data-primary="Google Maps API" data-secondary="Locations STOMP application (example)" data-type="indexterm">&nbsp;</a> displayed ().</p>
 
 <figure id="img_web_stomp_125"><img alt="The Locations Web application" src="images/mawm_0302.png" />
 <figcaption>The Locations web application</figcaption>
@@ -441,7 +440,7 @@ function show(deviceID, lat, lng) {
 
 <p>If we click on the Connect button, markers will appear on the map for each device that broadcasts its coordinates.</p>
 
-<p>In my case, I am using the iOS simulator to run the mobile application developed in <a data-type="xref" href="ch_mobile_stomp"></a>. I use the Location tool to simulate a freeway drive (as explained in <a data-type="xref" href="#ch_mobile_stomp_location_simulator">#ch_mobile_stomp_location_simulator</a>). See .</p>
+<p>In my case, I am using the iOS simulator to run the mobile application developed in . I use the Location tool to simulate a freeway drive (as explained in <a data-type="xref" href="#ch_mobile_stomp_location_simulator">#ch_mobile_stomp_location_simulator</a>). See .</p>
 
 <figure id="img_web_stomp_2"><img alt="Simulate a freeway drive" src="images/mawm_0303.png" />
 <figcaption>Simulating a freeway drive</figcaption>
@@ -503,7 +502,7 @@ $('#text_form').submit(function() {
 
 <p>If we reload the <em>locations.html</em> file after adding this code, we can now send any text message to a device by selecting it in the list in the Send Text form.</p>
 
-<p>As illustrated in <a data-type="xref" href="img_web_stomp_3"></a>, let's type &quot;Hello, where are you?&quot; and click on the Send button.</p>
+<p>As illustrated in , let's type &quot;Hello, where are you?&quot; and click on the Send button.</p>
 
 <figure id="img_web_stomp_3"><img alt="Send a text message to a device" src="images/mawm_0304.png" />
 <figcaption>Send a text message to a device</figcaption>
