@@ -28,19 +28,19 @@
 
 <p>We will use <a href="https://developer.apple.com/xcode/">Xcode</a> to create the <code>Locations</code> iOS <a contenteditable="false" data-primary="Xcode" data-secondary="creating Locations project" data-type="indexterm">&nbsp;</a>application.<a contenteditable="false" data-primary="mobile messaging with STOMP" data-secondary="creating Locations project with Xcode" data-type="indexterm">&nbsp;</a></p>
 
-<p>When Xcode is installed and started, we create a new project from its launch screen, as illustrated in :</p>
+<p>When Xcode is installed and started, we create a new project from its launch screen, as illustrated in <a data-type="xref" href="img_mobile_stomp_125">img_mobile_stomp_125</a>:</p>
 
 <figure id="img_mobile_stomp_125"><img alt="XCode Launch screen" src="images/mawm_0202.png" />
 <figcaption>Select &quot;Create a new Xcode project&quot; from the Xcode launch screen</figcaption>
 </figure>
 
-<p>The application consists of a single view, so we choose the Single View Application template in iOs &rarr; Application from the template screen, as illustrated in .</p>
+<p>The application consists of a single view, so we choose the Single View Application template in iOs &rarr; Application from the template screen, as illustrated in <a data-type="xref" href="img_mobile_stomp_2">img_mobile_stomp_2</a>.</p>
 
 <figure id="img_mobile_stomp_2"><img alt="XCode template screen" src="images/mawm_0203.png" />
 <figcaption>Select Single View Application from the template screen</figcaption>
 </figure>
 
-<p>We will call the project Locations and select to build it only for iPhone devices, as illustrated in .</p>
+<p>We will call the project Locations and select to build it only for iPhone devices, as illustrated in <a data-type="xref" href="img_mobile_stomp_3">img_mobile_stomp_3</a>.</p>
 
 <figure id="img_mobile_stomp_3"><img alt="XCode project options screen" src="images/mawm_0204.png" />
 <figcaption>XCode project options screen</figcaption>
@@ -107,7 +107,7 @@ Command symbol is not displayed in PDF.
 
 <p>Because the application will run only on iPhone devices,&nbsp;the entire user interface will be set up in the <em>Main.storyboard</em> file.</p>
 
-<p>Click on <em>Main.storyboard</em> to open it. From the Object library, drag a Label on the View's window. Place it at the top of the view and change the text to &quot;Device ID,&quot; as illustrated in .</p>
+<p>Click on <em>Main.storyboard</em> to open it. From the Object library, drag a Label on the View's window. Place it at the top of the view and change the text to &quot;Device ID,&quot; as illustrated in <a data-type="xref" href="img_mobile_stomp_6">img_mobile_stomp_6</a>.</p>
 
 <figure id="img_mobile_stomp_6"><img alt="Add the Device ID label" src="images/mawm_0207.png" />
 <figcaption>Add the Device ID label</figcaption>
@@ -119,7 +119,7 @@ Command symbol is not displayed in PDF.
 <p>However, the example code in the <a href="https://github.com/mobile-web-messaging/code">GitHib repository</a> is constrained correctly.</p>
 </div>
 
-<p>The UUID that we will generate is quite long, so we will change its appearance by setting its Font to System 13.0 and its Alignment to centered to fit the screen, as illustrated in .</p>
+<p>The UUID that we will generate is quite long, so we will change its appearance by setting its Font to System 13.0 and its Alignment to centered to fit the screen, as illustrated in <a data-type="xref" href="img_mobile_stomp_7">img_mobile_stomp_7</a>.</p>
 
 <figure id="img_mobile_stomp_7"><img alt="Change the appearance of the device ID label" src="images/mawm_0208.png" />
 <figcaption>Change the appearance of the device ID label</figcaption>
@@ -138,7 +138,7 @@ Command symbol is not displayed in PDF.
 
 @end</pre>
 
-<p>Open the <em>Main.storyboard</em> and Ctrl-click on View Controller to see its connection panel. Drag from deviceIDLabel to the UILabel to connect it. See .</p>
+<p>Open the <em>Main.storyboard</em> and Ctrl-click on View Controller to see its connection panel. Drag from deviceIDLabel to the UILabel to connect it. See <a data-type="xref" href="img_mobile_stomp_8">img_mobile_stomp_8</a>.</p>
 
 <figure id="img_mobile_stomp_8"><img alt="Connect the deviceIDLabel outlet property to the device ID UILabel" src="images/mawm_0209.png" />
 <figcaption>Connect the deviceIDLabel outlet property to the Device ID UILabel</figcaption>
@@ -204,7 +204,7 @@ Command symbol is not displayed in PDF.
 <pre data-code-language="objc" data-type="programlisting">
 @property (weak, nonatomic) IBOutlet UILabel *currentPositionLabel;</pre>
 
-<p>We then bind this property to the label. Open the <em>Main.storyboard</em> and Ctrl-click on View Controller to see its connection panel. Drag from currentPositionLabel to the label to connect it. See .</p>
+<p>We then bind this property to the label. Open the <em>Main.storyboard</em> and Ctrl-click on View Controller to see its connection panel. Drag from currentPositionLabel to the label to connect it. See <a data-type="xref" href="img_mobile_stomp_12">img_mobile_stomp_12</a>.</p>
 
 <figure id="img_mobile_stomp_12"><img alt="Connect the currentPositionLabel outlet property to the current position UILabel" src="images/mawm_0213.png" />
 <figcaption>Connect the currentPositionLabel outlet property to the Current Position UILabel</figcaption>
@@ -713,7 +713,7 @@ content-length:122
 
 <p>In the righthand panel, select Attributes in the top menu to display all the attributes associated to this topic.</p>
 
-<p>To check whether the broker is receiving the messages on this destination, check the Enqueue count attribute. It corresponds to the messages that have been <em>enqueued</em> (in other words, <em>sent</em>) to the destination. We see that this value is growing over time (it was at 113 when the screenshot in was captured). This confirms that the broker is actually receiving the messages sent by the mobile application.</p>
+<p>To check whether the broker is receiving the messages on this destination, check the Enqueue count attribute. It corresponds to the messages that have been <em>enqueued</em> (in other words, <em>sent</em>) to the destination. We see that this value is growing over time (it was at 113 when the screenshot in <a data-type="xref" href="img_mobile_stomp_16">img_mobile_stomp_16</a> was captured). This confirms that the broker is actually receiving the messages sent by the mobile application.</p>
 
 <figure id="img_mobile_stomp_16"><img alt="Check the number of messages sent to a destination in ActiveMQ admin console" src="images/mawm_0217.png" />
 <figcaption>Check the number of messages sent to a destination in the ActiveMQ admin console</figcaption>
@@ -801,13 +801,13 @@ priority:4
 
 <p>We will write the graphical part first by adding a <code>UITable</code> to the user interface.</p>
 
-<p>Click on <em>Main.storyboard</em> to open it. From the Object library, drag a Table View on the View&rsquo;s window. Place it below the Current Position UILabel (see ).</p>
+<p>Click on <em>Main.storyboard</em> to open it. From the Object library, drag a Table View on the View&rsquo;s window. Place it below the Current Position UILabel (see <a data-type="xref" href="img_mobile_stomp_162">img_mobile_stomp_162</a>).</p>
 
 <figure id="img_mobile_stomp_162"><img alt="Add a Table View" src="images/mawm_0218.png" />
 <figcaption>Add a Table View</figcaption>
 </figure>
 
-<p>From the Object library, drag a Table View Cell inside the Table View (see ).</p>
+<p>From the Object library, drag a Table View Cell inside the Table View (see <a data-type="xref" href="img_mobile_stomp_17">img_mobile_stomp_17</a>).</p>
 
 <figure id="img_mobile_stomp_17"><img alt="Add a Table View Cell" src="images/mawm_0219.png" />
 <figcaption>Add a Table View Cell</figcaption>
@@ -828,8 +828,7 @@ priority:4
 
 @end</pre>
 
-<p>We need to bind this outlet property to the table view. Open the <em>Main.storyboard</em> and Ctrl-click on View Controller to see its connection panel. Drag from Table View the table to connect it. See <a data-type="xref" href="img_mobile_stomp_182">img_mobile_stomp_182</a></p>
-.
+<p>We need to bind this outlet property to the table view. Open the <em>Main.storyboard</em> and Ctrl-click on View Controller to see its connection panel. Drag from Table View the table to connect it. See <a data-type="xref" href="img_mobile_stomp_182">img_mobile_stomp_182</a>.</p>
 
 <figure id="img_mobile_stomp_182"><img alt="Connect the tableView outlet property to the Table View" src="images/mawm_0221.png" />
 <figcaption>Connect the tableView outlet property to the Table View</figcaption>
@@ -1031,7 +1030,7 @@ STOMPSubscription *subscription;</pre>
 
 <p>Go to the ActiveMQ admin console and browse to the device text destination (in my case, its name is device.2262EC25-E9FD-4578-BADE-4E113DE45934.text) and click on the Send tab.</p>
 
-<p>As illustrated in , fill the text area with a plain-text string (e.g., &quot;Hello, where are you?&quot;) and set the body format to Plain Text.</p>
+<p>As illustrated in <a data-type="xref" href="img_mobile_stomp_21">img_mobile_stomp_21</a>, fill the text area with a plain-text string (e.g., &quot;Hello, where are you?&quot;) and set the body format to Plain Text.</p>
 
 <figure id="img_mobile_stomp_21"><img alt="Send a Message using ActiveMQ Admin Console" src="images/mawm_0224.png" />
 <figcaption>Send a message using the ActiveMQ Admin Console</figcaption>
@@ -1083,7 +1082,7 @@ Hello, where are you?
 
 <p>StompKit uses Grand Central Dispatch&rsquo;s global queue to handle the communication between the client and the STOMP brokers. The <code>STOMPMessageHandler</code> block is called on that queue. However, any code that deals with <code>UIKit</code> (such as reloading the <code>tableView</code>) <em>must</em> be executed on the queue bound to the main thread. This is why we must wrap the <code>reloadData</code> call into a block executed on the main queue.</p>
 
-<p>If we restart the application and send another message on the destination with the ActiveMQ admin console, the table will display the text as soon as it is received. See .</p>
+<p>If we restart the application and send another message on the destination with the ActiveMQ admin console, the table will display the text as soon as it is received. See <a data-type="xref" href="img_mobile_stomp_22">img_mobile_stomp_22</a>.</p>
 
 <figure id="img_mobile_stomp_22"><img alt="The Received Text is Displayed in the Table" src="images/mawm_0225.png" />
 <figcaption>The received text is displayed in the table</figcaption>
