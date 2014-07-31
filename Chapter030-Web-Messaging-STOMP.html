@@ -12,7 +12,7 @@
 <div data-type="note">
 <p>Throughout the chapter, we will show all the code required to run the application.</p>
 
-<p>The whole application code can be retrieved from the <a href="https://github.com/mobile-web-messaging/code">GitHub repository</a> in the <em>stomp/web/</em> directory.</p>
+<p>The whole application code can be retrieved from the <a href="http://bit.ly/mwm-code">GitHub repository</a> in the <em>stomp/web/</em> directory.</p>
 </div>
 
 <section data-type="sect1" id="_html5_web_sockets">
@@ -27,7 +27,7 @@
 <div data-type="note">
 <p>Web Sockets have many use cases in addition to messaging. In some simple cases, sending data on Web Sockets without using a messaging protocol could be enough.</p>
 
-<p>For further information, the book <a class="orm:hideurl " href="http://bit.ly/hpbn-book">High Performance Browser Networking</a> contains a thorough introduction to Web Sockets.</p>
+<p>For further information, the book <a class="orm:hideurl " href="http://bit.ly/hpbn-book"><em>High Performance Browser Networking</em></a> contains a thorough introduction to Web Sockets.</p>
 </div>
 </section>
 
@@ -260,7 +260,7 @@ for (deviceID in deviceIDs) {
 
 <p>Until now, we have used <em>simple</em> destinations (e.g., <code>/topic/device.2262EC25-E9FD-4578-BADE-4E113DE45934.location</code> or <code>/queue/device.2262EC25-E9FD-4578-BADE-4E113DE45934.text</code>) that are straightforward to understand.</p>
 
-<p>We will now use a feature<a contenteditable="false" data-primary="wildcard destinations" data-type="indexterm">&nbsp;</a> from our STOMP broker, <a contenteditable="false" data-primary="ActiveMQ" data-secondary="wildcard destinations" data-type="indexterm">&nbsp;</a>ActiveMQ, that allows us to use <a href="http://activemq.apache.org/wildcards.html"><em>wildcard</em> destinations</a>.</p>
+<p>We will now use a feature<a contenteditable="false" data-primary="wildcard destinations" data-type="indexterm">&nbsp;</a> from our STOMP broker, <a contenteditable="false" data-primary="ActiveMQ" data-secondary="wildcard destinations" data-type="indexterm">&nbsp;</a>ActiveMQ, that allows us to use <a href="http://bit.ly/activemq"><em>wildcard</em> destinations</a>.</p>
 
 <ul>
 	<li>
@@ -470,7 +470,7 @@ function show(deviceID, lat, lng) {
 <pre data-code-language="js" data-type="programlisting">
 client.send(destination, {}, body);</pre>
 
-<p>As we described in <a data-type="xref" href="#ch_introduction_stomp_example_topology">#ch_introduction_stomp_example_topology</a>, we use a queue to send orders to a given device, and the destination for this is named <code>/queue/device.XXX.text</code>.</p>
+<p>As we described in <a data-type="xref" href="#ch_introduction_stomp_example_topology">#ch_introduction_stomp_example_topology</a>, we use a queue to send orders to a given device, and the destination for this is named <span class="keep-together"><code>/queue/device.XXX.text</code></span>.</p>
 
 <p>The text is sent in the STOMP message body as a plain-text string:</p>
 
