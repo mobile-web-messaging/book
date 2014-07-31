@@ -12,7 +12,7 @@
 <div data-type="note">
 <p>Throughout the chapter, we will show all the code required to run the application.</p>
 
-<p>The whole application code can be retrieved from the <a href="https://github.com/mobile-web-messaging/code">GitHub repository</a> in the <em>stomp/ios/</em> directory.</p>
+<p>The whole application code can be retrieved from the <a href="http://bit.ly/mwm-code">GitHub repository</a> in the <em>stomp/ios/</em> directory.</p>
 </div>
 
 <section data-type="sect1" id="_stompkit">
@@ -20,7 +20,7 @@
 
 <p>To use STOMP on iOS, we will use the StompKit Objective-C library that implements the STOMP protocol in a modern, event-driven way using ARC, Grand Central Dispatch, and<a contenteditable="false" data-primary="mobile messaging with STOMP" data-secondary="StompKit" data-type="indexterm">&nbsp;</a> blocks.<a contenteditable="false" data-primary="StompKit" data-type="indexterm">&nbsp;</a></p>
 
-<p>The source code of this library project is hosted on <a href="https://github.com/mobile-web-messaging/StompKit/">GitHub</a>.</p>
+<p>The source code of this library project is hosted on <a href="http://bit.ly/mwm-sk">GitHub</a>.</p>
 </section>
 
 <section data-type="sect1" id="_create_the_code_locations_code_project_with_xcode">
@@ -56,7 +56,7 @@
 
 <p>First, we need to close Xcode, because we will modify the project structure to import our dependencies.</p>
 
-<p>After installing CocoaPods by following the <a href="http://guides.cocoapods.org/using/getting-started.html#getting-started">instructions on its website</a>, we create a file named <em>Podfile</em> at the root of<a contenteditable="false" data-primary="Podfile, creating" data-secondary="for STOMP Locations application (example)" data-type="indexterm">&nbsp;</a> the project (in the same directory as <em>Locations.xcodeproj</em>):</p>
+<p>After installing CocoaPods by following the <a href="http://bit.ly/cocoa-start">instructions on its website</a>, we create a file named <em>Podfile</em> at the root of<a contenteditable="false" data-primary="Podfile, creating" data-secondary="for STOMP Locations application (example)" data-type="indexterm">&nbsp;</a> the project (in the same directory as <em>Locations.xcodeproj</em>):</p>
 
 <pre data-type="programlisting">
 xcodeproj 'Locations.xcodeproj'
@@ -114,9 +114,7 @@ Command symbol is not displayed in PDF.
 </figure>
 
 <div data-type="note">
-<p>I will not describe in detail how to set up the layout constraints for the graphical objects so that they adapt correctly to the device&rsquo;s size and orientation.</p>
-
-<p>However, the example code in the <a href="https://github.com/mobile-web-messaging/code">GitHib repository</a> is constrained correctly.</p>
+<p>I will not describe in detail how to set up the layout constraints for the graphical objects so that they adapt correctly to the device&rsquo;s size and orientation. However, the example code in the <a href="http://bit.ly/mwm-code">GitHib repository</a> is constrained correctly.</p>
 </div>
 
 <p>The UUID that we will generate is quite long, so we will change its appearance by setting its Font to System 13.0 and its Alignment to centered to fit the screen, as illustrated in <a data-type="xref" href="img_mobile_stomp_7">img_mobile_stomp_7</a>.</p>
@@ -504,7 +502,7 @@ topic/device.%@.location&quot;,
 self.deviceID];</pre>
 
 <div data-type="note">
-<p>ActiveMQ convention is to prefix a STOMP destination with <code>/topic/</code> to use a publish/subscribe messaging model and by <code>/queue/</code> to use a point-to-point model.</p>
+<p>ActiveMQ convention is to prefix a STOMP destination with <span class="keep-together"><code>/topic/</code></span> to use a publish/subscribe messaging model and by <code>/queue/</code> to use a point-to-point model.</p>
 
 <p>We designed our application to use a topic for the <code>device.XXX.location</code>, so we must prefix it with <code>/topic/</code>.</p>
 </div>
@@ -672,7 +670,7 @@ NSDictionary *headers = @{
 	<p>Next, we'll use the ActiveMQ administration console to check that it effectively handled the sent messages.</p>
 	</li>
 	<li>
-	<p>Finally, we will write the simplest STOMP consumer that can receive these messages.</p>
+	<p>Finally, we will write the simplest STOMP consumer that can receive these <span class="keep-together">messages</span>.</p>
 	</li>
 </ol>
 
@@ -681,7 +679,7 @@ NSDictionary *headers = @{
 
 <p>Every time the StompKit library sends a message to a STOMP broker, it logs the STOMP frame that is sent.<a contenteditable="false" data-primary="StompKit" data-secondary="displaying debug log" data-type="indexterm">&nbsp;</a></p>
 
-<p>To display them in the console, edit the file named <em>StompKit.m</em> in Xcode that is under the <em>Pods</em> project (its full path is Pods &rarr; Pods &rarr; StompKit &rarr; StompKit.m in the Project Navigator view) and change the macro to activate logs by replacing the <code>0</code> with <code>1</code>:</p>
+<p>To display them in the console, edit the file named <em>StompKit.m</em> in Xcode that is under the <em>Pods</em> project (its full path is Pods &rarr; Pods &rarr; StompKit &rarr; StompKit.m in the Project Navigator view) and change the macro to activate logs by replacing the <code>0</code> <span class="keep-together">with <code>1</code>:</span></p>
 
 <pre data-code-language="objc" data-type="programlisting">
 #pragma mark Logging macros
@@ -707,9 +705,9 @@ content-length:122
 <section data-type="sect2" id="_activemq_admin_console">
 <h2>ActiveMQ Admin Console</h2>
 
-<p>In <a href="#app_activemq_admin_console">#app_activemq_admin_console</a>, we use the ActiveMQ admin console to check the broker<a contenteditable="false" data-primary="brokers" data-secondary="checking configuration with ActiveMQ admin console" data-type="indexterm">&nbsp;</a> configuration.<a contenteditable="false" data-primary="ActiveMQ" data-secondary="admin console" data-type="indexterm">&nbsp;</a> We can also use this console to check the destinations and their associated metrics.<a contenteditable="false" data-primary="destinations" data-secondary="checking with ActiveMQ admin console" data-type="indexterm">&nbsp;</a></p>
+<p>In <a href="app_activemq_admin_console">#app_activemq_admin_console</a>, we use the ActiveMQ admin console to check the broker<a contenteditable="false" data-primary="brokers" data-secondary="checking configuration with ActiveMQ admin console" data-type="indexterm">&nbsp;</a> configuration.<a contenteditable="false" data-primary="ActiveMQ" data-secondary="admin console" data-type="indexterm">&nbsp;</a> We can also use this console to check the destinations and their associated metrics.<a contenteditable="false" data-primary="destinations" data-secondary="checking with ActiveMQ admin console" data-type="indexterm">&nbsp;</a></p>
 
-<p>Go to the ActiveMQ admin console in your web browser at <a href="http://localhost:8161/hawtio"><em class="hyperlink">http://localhost:8161/hawtio</em></a> and navigate the ActiveMQ tree down to the position topic in mybroker &rarr; Topic &rarr; device.2262EC25-E9FD-4578-BADE-4E113DE45934.location.</p>
+<p>Go to the ActiveMQ admin console in your web browser at <em>http://localhost:8161/hawtio</em> and navigate the ActiveMQ tree down to the position topic in mybroker &rarr; Topic &rarr; device.2262EC25-E9FD-4578-BADE-4E113DE45934.location.</p>
 
 <p>In the righthand panel, select Attributes in the top menu to display all the attributes associated to this topic.</p>
 
@@ -738,7 +736,7 @@ Connected to localhost.
 Escape character is '^]'.
 </pre>
 
-<p>Once the client is connected, we must connect to the broker to open a STOMP connection (as we did in the application using <code>STOMPClient</code>'s <code>connectWithHeaders:completionHandler:</code> method).</p>
+<p>Once the client is connected, we must connect to the broker to open a STOMP connection (as we did in the application using <code>STOMPClient</code>'s <code>connectWithHeaders:completionHandler:</code> method):</p>
 
 <pre data-type="programlisting">
 <strong><code>CONNECT
@@ -932,7 +930,7 @@ numberOfRowsInSection:(NSInteger)section
 
 <ul>
 	<li>
-	<p>The <code>destination</code> that the client wants to consume from. In our case, it is the destination <code>/queue/device.XXX.text</code> (we prepended the destination with the <code>/queue/</code> prefix according to the ActiveMQ naming convention).</p>
+	<p>The <code>destination</code> that the client wants to consume from. In our case, it is the destination <code>/queue/device.XXX.text</code> (we prepended the destination with the <span class="keep-together"><code>/queue/</code></span> prefix according to the ActiveMQ naming convention).</p>
 	</li>
 	<li>
 	<p>A dictionary of <code>headers</code> to pass additional metadata to the connection process. Because we do not have any such header for the time being, we will pass an empty dictionary.</p>
