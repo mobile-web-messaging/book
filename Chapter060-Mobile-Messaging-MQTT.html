@@ -28,13 +28,13 @@
 
 <p>We will use <a href="https://developer.apple.com/xcode/">Xcode</a> to create the Locations iOS application.</p>
 
-<p>After Xcode is installed and started, we select &quot;Create a new Xcode project&quot; from its launch<a contenteditable="false" data-primary="Xcode" data-secondary="creating Motions project" data-type="indexterm">&nbsp;</a> screen.<a contenteditable="false" data-primary="mobile messaging with MQTT" data-secondary="Motions application (example)" data-tertiary="creating Motions project with Xcode" data-type="indexterm">&nbsp;</a> The application will be composed of a single view, so we select the Single View Application template in iOS &rarr; Application from the template screen, as illustrated in .</p>
+<p>After Xcode is installed and started, we select &quot;Create a new Xcode project&quot; from its launch<a contenteditable="false" data-primary="Xcode" data-secondary="creating Motions project" data-type="indexterm">&nbsp;</a> screen.<a contenteditable="false" data-primary="mobile messaging with MQTT" data-secondary="Motions application (example)" data-tertiary="creating Motions project with Xcode" data-type="indexterm">&nbsp;</a> The application will be composed of a single view, so we select the Single View Application template in iOS &rarr; Application from the template screen, as illustrated in <a data-type="xref" href="img_mobile_mqtt_125">img_mobile_mqtt_125</a>.</p>
 
 <figure id="img_mobile_mqtt_125"><img alt="XCode template screen" src="images/mawm_0602.png" />
 <figcaption>Select Single View Application from the template screen</figcaption>
 </figure>
 
-<p>We will call the project Motions and select to build it only for iPhone devices, as illustrated in .</p>
+<p>We will call the project Motions and select to build it only for iPhone devices, as illustrated in <a data-type="xref" href="img_mobile_mqtt_2">img_mobile_mqtt_2</a>.</p>
 
 <figure id="img_mobile_mqtt_2"><img alt="XCode project options screen" src="images/mawm_0603.png" />
 <figcaption>XCode project options screen</figcaption>
@@ -99,7 +99,7 @@ Command symbol is not displayed in PDF.
 
 <p>We will generate a unique identifier for the iOS device and display it in the view.</p>
 
-<p>Click on <em>Main.storyboard</em> to open it. From the Object library, drag a Label on the View's window. Place it at the top of the view and change the text to &quot;Device ID,&quot; as shown in .</p>
+<p>Click on <em>Main.storyboard</em> to open it. From the Object library, drag a Label on the View's window. Place it at the top of the view and change the text to &quot;Device ID,&quot; as shown in <a data-type="xref" href="img_mobile_mqtt_4">img_mobile_mqtt_4</a>.</p>
 
 <figure id="img_mobile_mqtt_4"><img alt="Add the Device ID label" src="images/mawm_0605.png" />
 <figcaption>Add the Device ID label</figcaption>
@@ -118,7 +118,7 @@ Command symbol is not displayed in PDF.
 
 @end</pre>
 
-<p>Open the <em>Main.storyboard</em> and Ctrl-click on View Controller to see its connection panel. Drag from deviceIDLabel to the UILabel to connect it. See .</p>
+<p>Open the <em>Main.storyboard</em> and Ctrl-click on View Controller to see its connection panel. Drag from deviceIDLabel to the UILabel to connect it. See <a data-type="xref" href="img_mobile_mqtt_5">img_mobile_mqtt_5</a>.</p>
 
 <figure id="img_mobile_mqtt_5"><img alt="Connect the deviceIDLabel outlet property to the device ID UILabel" src="images/mawm_0606.png" />
 <figcaption>Connect the deviceIDLabel outlet property to the Device ID UILabel</figcaption>
@@ -142,7 +142,7 @@ Command symbol is not displayed in PDF.
 
 <p>The device motion will be identified using the <a contenteditable="false" data-primary="pitch, roll, and yaw values" data-secondary="displaying in Motions application (example)" data-type="indexterm">&nbsp;</a>pitch, roll, and yaw values. <a contenteditable="false" data-primary="mobile messaging with STOMP" data-secondary="displaying device motion values" data-type="indexterm">&nbsp;</a>To have some graphical feedback as we move the device, we will add three <code>UILabel</code>s that show these three values.</p>
 
-<p>Click on <em>Main.storyboard</em> to open it. From the Object library, drag three Labels on the View's window below the Device ID label. Change their respective text to &quot;pitch,&quot; &quot;roll,&quot; and &quot;yaw,&quot; as illustrated in .</p>
+<p>Click on <em>Main.storyboard</em> to open it. From the Object library, drag three Labels on the View's window below the Device ID label. Change their respective text to &quot;pitch,&quot; &quot;roll,&quot; and &quot;yaw,&quot; as illustrated in <a data-type="xref" href="img_mobile_mqtt_6">img_mobile_mqtt_6</a>.</p>
 
 <figure id="img_mobile_mqtt_6"><img alt="Add three labels to display the device's pitch, roll and yaw values." src="images/mawm_0607.png" />
 <figcaption>Add three labels to display the device&rsquo;s pitch, roll, and yaw values</figcaption>
