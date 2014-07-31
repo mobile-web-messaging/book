@@ -3,7 +3,7 @@
 
 <p class="lead">In Chapters 2 and 3, we used STOMP to send and receive messages from a native iOS application and a web application.<a contenteditable="false" data-primary="STOMP" data-secondary="advanced" data-type="indexterm" id="STOMPadv">&nbsp;</a> STOMP provides additional features that we did not use to write these applications. In this chapter, we will take a tour of all the features provided by STOMP.</p>
 
-<p>This chapter covers the latest version of the protocol at the time of this writing (i.e., <a href="http://stomp.github.io/stomp-specification-1.2.html">STOMP 1.2</a>, which was released on October 22, 2012).</p>
+<p>This chapter covers the latest version of the protocol at the time of this writing (i.e., <a href="http://bit.ly/STOMPspec">STOMP 1.2</a>, which was released on October 22, 2012).</p>
 
 <p>As we present these features, we will show how to use them from either StompKit or stomp.js. The API may vary depending on the platform and language, but the concept remains the same. If you ever need to use STOMP from another language or platform, you will have to adapt to the library API&mdash;but the underlying concept will still apply.</p>
 
@@ -89,7 +89,7 @@ payload^@ <a class="co" href="#callout_ch4-co-4" id="co_ch4-co-4"><img alt="4" s
 <p>If the STOMP broker is configured to accept secured connections, the client needs to pass <code>login</code> and <code>passcode</code> parameters when it connects to the STOMP broker.</p>
 
 <div data-type="note">
-<p>By default, ActiveMQ accepts anonymous connections. <a contenteditable="false" data-primary="ActiveMQ" data-secondary="security settings, changing" data-type="indexterm">&nbsp;</a>To change its security settings to authenticate users and grant them restricted privileges (so that they can only receive messages from example), consult its <a href="http://activemq.apache.org/security.html">security documentation page</a>.</p>
+<p>By default, ActiveMQ accepts anonymous connections. <a contenteditable="false" data-primary="ActiveMQ" data-secondary="security settings, changing" data-type="indexterm">&nbsp;</a>To change its security settings to authenticate users and grant them restricted privileges (so that they can only receive messages from example), consult its <a href="http://bit.ly/activemq-sec">security documentation page</a>.</p>
 </div>
 
 <section data-type="sect2" id="__code_stompkit_code_example">
@@ -145,7 +145,7 @@ function connect(url) {
 
 <p>Message acknowledgment <a contenteditable="false" data-primary="message acknowledgement in STOMP" data-type="indexterm">&nbsp;</a>is a feature<a contenteditable="false" data-primary="STOMP" data-secondary="advanced" data-tertiary="message acknowledgement" data-type="indexterm">&nbsp;</a> available to STOMP <em>consumers</em>.</p>
 
-<p>When the broker <a contenteditable="false" data-primary="consumers" data-secondary="message acknowledgement for STOMP consumers" data-type="indexterm">&nbsp;</a>delivers a message to a consumer, there is a transfer of responsibility between the broker and the consumer to determine which is the <em>owner</em> of the message. The consumer becomes responsible for the message by <em>acknowledging</em> the message.</p>
+<p>When the broker <a contenteditable="false" data-primary="consumers" data-secondary="message acknowledgement for STOMP consumers" data-type="indexterm">&nbsp;</a>delivers a message to a consumer, there is a transfer of responsibility between the broker and the consumer to determine which is the <em>owner</em> of the <span class="keep-together">message.</span> The consumer becomes responsible for the message by <em>acknowledging</em> the message.</p>
 
 <p>By default, the STOMP broker will consider the message automatically acknowledged when it is delivered to the consumer.</p>
 
@@ -167,7 +167,7 @@ function connect(url) {
 
 <p>If the client does not specify any type of acknowledgment or if it uses <code>default</code>, it does not need to send any acknowledgment; the STOMP broker will consider the message acknowledged as soon as it is delivered to the client.</p>
 
-<p>If <code>client</code> or <code>client-individual</code> is used, the <a contenteditable="false" data-primary="client acknowledgment (STOMP)" data-type="indexterm">&nbsp;</a>consumer must send acknowledgments to the server with the <code>message-id</code> of the message that is acknowledged.<a contenteditable="false" data-primary="client-individual acknowledgment (STOMP)" data-type="indexterm">&nbsp;</a> The difference between <code>client</code> and <code>client-individual</code> is that <code>client</code> will acknowledge the message <em>and all other messages previously delivered to the consumer</em> <code>client-individual</code> will only acknowledge the message and no other messages. The consumer acknowledges a message by sending an <code>ACK</code> frame to the STOMP broker.</p>
+<p>If <code>client</code> or <code>client-individual</code> is used, the <a contenteditable="false" data-primary="client acknowledgment (STOMP)" data-type="indexterm">&nbsp;</a>consumer must send acknowledgments to the server with the <code>message-id</code> of the message that is acknowledged.<a contenteditable="false" data-primary="client-individual acknowledgment (STOMP)" data-type="indexterm">&nbsp;</a> The <span class="keep-together">difference</span> between <code>client</code> and <code>client-individual</code> is that <code>client</code> will acknowledge the message <em>and all other messages previously delivered to the consumer</em> <code>client-individual</code> will only acknowledge the message and no other messages. The consumer acknowledges a message by sending an <code>ACK</code> frame to the STOMP broker.</p>
 
 <p>If <code>client</code> and <code>client-individual</code> are used, the consumer can explicitly refuse to handle the message by sending a <code>NACK</code> frame, which is a negative acknowledgment.</p>
 
@@ -326,7 +326,7 @@ tx.abort();</pre>
 
 <p>STOMP provides basic support to handle errors. The STOMP broker can inform the client that an error occurs by sending an <code>ERROR</code> frame to the client.<a contenteditable="false" data-primary="ERROR frame (STOMP)" data-type="indexterm">&nbsp;</a> This frame can contain a <code>message</code> header that contains a short description of the error. Most STOMP brokers deliver <code>ERROR</code> frames with a message payload containing more detailed information on the error.</p>
 
-<p>STOMP specifies that after delivering an <code>ERROR</code> frame to the client, the broker must close the connection. This means that STOMP is not resilient to error. If a single error occurs on the server, the broker will close the connection to the client. In addition, there is no guarantee that the client will be able to receive the <code>ERROR</code> frame before the connection is closed.</p>
+<p>STOMP specifies that after delivering an <code>ERROR</code> frame to the client, the broker must close the connection. This means that STOMP is not resilient to error. If a single <span class="keep-together">error</span> occurs on the server, the broker will close the connection to the client. In addition, there is no guarantee that the client will be able to receive the <code>ERROR</code> frame before the connection is closed.</p>
 
 <p>In practice, this implies that to be able to handle any errors in the client, we should:</p>
 
