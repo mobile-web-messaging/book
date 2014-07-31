@@ -8,17 +8,15 @@
 </figure>
 
 <div data-type="note">
-<p>Throughout the chapter, we will show all the code required to run the application.</p>
-
-<p>The whole application code can be retrieved from the <a href="https://github.com/mobile-web-messaging/code">GitHub repository</a> in the <em>mqtt/web/</em> directory.</p>
+<p>Throughout the chapter, we will show all the code required to run the application. The whole application code can be retrieved from the <a href="http://bit.ly/mwm-code">GitHub repository</a> in the <em>mqtt/web/</em> directory.</p>
 </div>
 
 <section data-type="sect1" id="_eclipse_paho_javascript_client">
 <h1>Eclipse Paho JavaScript Client</h1>
 
-<p>Earlier, we mentioned that <a href="http://iot.eclipse.org"><em>iot.eclipse.org</em></a> provides a <a contenteditable="false" data-primary="Eclipse" data-secondary="Paho JavaScript client" data-type="indexterm">&nbsp;</a>public MQTT broker that we use for our MQTT applications.<a contenteditable="false" data-primary="web messaging with MQTT" data-secondary="Eclipse Paho JavaScript client" data-type="indexterm">&nbsp;</a> <a contenteditable="false" data-primary="JavaScript" data-secondary="Eclipse Paho JavaScript MQTT client" data-type="indexterm">&nbsp;</a>Eclipse also provides a variety of MQTT clients for different languages and platforms.&nbsp; In particular, it has a JavaScript client for web browsers, which uses HTML5 Web Sockets.<a contenteditable="false" data-primary="Web Sockets" data-secondary="Eclipse Paho JavaScript client that uses" data-type="indexterm">&nbsp;</a></p>
+<p>Earlier, we mentioned that iot.eclipse.org provides a <a contenteditable="false" data-primary="Eclipse" data-secondary="Paho JavaScript client" data-type="indexterm">&nbsp;</a>public MQTT broker that we use for our MQTT applications.<a contenteditable="false" data-primary="web messaging with MQTT" data-secondary="Eclipse Paho JavaScript client" data-type="indexterm">&nbsp;</a> <a contenteditable="false" data-primary="JavaScript" data-secondary="Eclipse Paho JavaScript MQTT client" data-type="indexterm">&nbsp;</a>Eclipse also provides a variety of MQTT clients for different languages and platforms.&nbsp; In particular, it has a JavaScript client for web browsers, which uses HTML5 Web Sockets.<a contenteditable="false" data-primary="Web Sockets" data-secondary="Eclipse Paho JavaScript client that uses" data-type="indexterm">&nbsp;</a></p>
 
-<p>The source code of the project is hosted in this <a href="http://git.eclipse.org/c/paho/org.eclipse.paho.mqtt.javascript.git/">Git repository</a>.</p>
+<p>The source code of the project is hosted in this <a href="http://bit.ly/eclipse-git">Git repository</a>.</p>
 </section>
 
 <section data-type="sect1" id="_bootstrap_the_code_motions_html_code_web_application">
@@ -28,11 +26,11 @@
 
 <p>It will be a very simple one-page web application that can be run from a web server serving static pages. It does not require any server-side runtime as all the code will be executed inside the web browser using JavaScript.</p>
 
-<p>The device motions data will be displayed graphically as <a href="http://en.wikipedia.org/wiki/Sparkline">Sparklines</a>. The web application <a contenteditable="false" data-primary="sparklines" data-type="indexterm">&nbsp;</a>uses jQuery and a library named <a href="http://omnipotent.net/jquery.sparkline">jQuery Sparklines</a> to draw them.<a contenteditable="false" data-primary="jQuery" data-secondary="Sparklines library" data-type="indexterm">&nbsp;</a></p>
+<p>The device motions data will be displayed graphically as Sparklines. The web application <a contenteditable="false" data-primary="sparklines" data-type="indexterm">&nbsp;</a>uses jQuery and a library named <a href="http://bit.ly/jq-spark">jQuery Sparklines</a> to draw them.<a contenteditable="false" data-primary="jQuery" data-secondary="Sparklines library" data-type="indexterm">&nbsp;</a></p>
 
 <p>Note, however, that we use jQuery for convenience, but the MQTT JavaScript client does not require it at all and can be used with any JavaScript frameworks or libraries.</p>
 
-<p>Let&rsquo;s bootstrap the web application by creating a <em>motions.html</em> page.</p>
+<p>Let&rsquo;s bootstrap the web application by creating a <em>motions.html</em> page, seen in <a data-type="xref" href="ex_web_mqtt_1">ex_web_mqtt_1</a>.</p>
 
 <div data-type="example" id="ex_web_mqtt_1">
 <h5>Template for the motions.html web application</h5>
