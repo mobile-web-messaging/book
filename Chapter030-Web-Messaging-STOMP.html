@@ -3,7 +3,7 @@
 
 <p class="lead">In this chapter, we will write a web application that sends and receives messages using the STOMP protocol <a contenteditable="false" data-primary="web messaging with STOMP" data-type="indexterm" id="webmessSTOMP">&nbsp;</a>over HTML5 Web Sockets.<a contenteditable="false" data-primary="STOMP" data-secondary="web messaging with" data-type="indexterm" id="STOMPwebmess">&nbsp;</a></p>
 
-<p>In <a data-type="xref" href="#ch_introduction_stomp_example">#ch_introduction_stomp_example</a>, we described the Locations application. In this chapter, we will write the web application (shown in ) that consumes the device&rsquo;s GPS position to display it on a map and send text messages to the device.</p>
+<p>In <a data-type="xref" href="#ch_introduction_stomp_example">#ch_introduction_stomp_example</a>, we described the Locations application. In this chapter, we will write the web application (shown in <a data-type="xref" href="img_web_stomp_1">img_web_stomp_1</a>) that consumes the device&rsquo;s GPS position to display it on a map and send text messages to the device.</p>
 
 <figure id="img_web_stomp_1"><img alt="Diagram of the +Locations+ Web application" src="images/mawm_0301.png" />
 <figcaption>Diagram of the Locations web application</figcaption>
@@ -54,7 +54,7 @@
 
 <p>It will be a very simple one-page web application that can be run from a web server serving static pages. It does not require any server-side runtime, as all the code will be executed inside the web browser using JavaScript.</p>
 
-<p>As shown in , let&rsquo;s bootstrap the web application by creating a <em>locations.html</em> page.</p>
+<p>As shown in <a data-type="xref" href="ex_web_stomp_1">ex_web_stomp_1</a>, let&rsquo;s bootstrap the web application by creating a <em>locations.html</em> page.</p>
 
 <div data-type="example" id="ex_web_stomp_1">
 <h5>Template for the locations.html web application</h5>
@@ -440,7 +440,7 @@ function show(deviceID, lat, lng) {
 
 <p>If we click on the Connect button, markers will appear on the map for each device that broadcasts its coordinates.</p>
 
-<p>In my case, I am using the iOS simulator to run the mobile application developed in . I use the Location tool to simulate a freeway drive (as explained in <a data-type="xref" href="#ch_mobile_stomp_location_simulator">#ch_mobile_stomp_location_simulator</a>). See .</p>
+<p>In my case, I am using the iOS simulator to run the mobile application developed in . I use the Location tool to simulate a freeway drive (as explained in <a data-type="xref" href="#ch_mobile_stomp_location_simulator">#ch_mobile_stomp_location_simulator</a>). See <a data-type="xref" href="img_web_stomp_2">img_web_stomp_2</a>.</p>
 
 <figure id="img_web_stomp_2"><img alt="Simulate a freeway drive" src="images/mawm_0303.png" />
 <figcaption>Simulating a freeway drive</figcaption>
