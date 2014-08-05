@@ -318,7 +318,7 @@ client.subscribe(destination, function(message) {
   //...
 });</pre>
 
-<p>When we receive the position of a device, the last step we need to make is to display its position on a map. We will wrap this code in a <code>show</code> method that is called from the subscription callback with the device identifier, its latitute and longitude.</p>
+<p>When we receive the position of a device, the last step we need to make is to display its position on a map. We will wrap this code in a <code>show</code> method that is called from the subscription callback. The callback will pass three parameters to this method: the device identifier, its latitude, and its longitude.</p>
 
 <p>The code to connect to the STOMP broker and subscribe to the wildcard destination is shown here:</p>
 
