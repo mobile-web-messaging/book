@@ -180,14 +180,9 @@ Command symbol is not displayed in PDF.
 
 <p>iOS provides the <code>CoreMotion</code> framework to capture the <a contenteditable="false" data-primary="mobile messaging with STOMP" data-secondary="capturing device motions with CoreMotion framework" data-type="indexterm">&nbsp;</a>motion of the devices.<a contenteditable="false" data-primary="CoreMotion framework" data-type="indexterm">&nbsp;</a></p>
 
-<p>We need to add it to the libraries linked by the application. Click on the Motions project and then the Motions target. In the General tab, under the Linked Frameworks and Libraries section, click on the <code>+</code> button. In the selection window, type &quot;CoreMotion,&quot; select CoreMotion.framework, and click on the Add button.</p>
-
-<figure><img alt="Add the CoreMotion framework" src="images/mawm_0609.png" />
-<figcaption>Add the CoreMotion framework</figcaption>
-</figure>
+<p>We need to add it to the libraries linked by the application (see <a data-type="xref" href="add_cm_frame">add_cm_frame</a>). Click on the Motions project and then the Motions target. In the General tab, under the Linked Frameworks and Libraries section, click on the <code>+</code> button. In the selection window, type &quot;CoreMotion,&quot; select CoreMotion.framework, and click on the Add button.</p>
 
 <p>We can now use the CoreMotion framework by importing <em>CoreMotion/CoreMotion.h</em> at the top of the <em>CoreMotion/CoreMotion.h</em> file.</p>
-
 <p>We will also define a <code>motionManager</code> property in the <code>MWMViewController</code> private interface to use <code>CoreMotion</code>:</p>
 
 <pre data-code-language="objc" data-type="programlisting">
@@ -200,6 +195,10 @@ Command symbol is not displayed in PDF.
 @end</pre>
 
 <p>This <code>motionManager</code> is used to capture the device motions. We must create a new <code>CMMotionManager</code>, specify the interval of updates, and call its <code>startDeviceMotionUpdatesToQueue:withHandler:</code> method to get the device motion periodically in a block. We create a new <code>NSOperationQueue</code> to receive these updates on this queue.</p>
+
+<figure id="add_cm_frame"><img alt="Add the CoreMotion framework" src="images/mawm_0609.png" />
+<figcaption>Add the CoreMotion framework</figcaption>
+</figure>
 
 <p>The device motion is represented by a <code>CMDeviceMotion</code> object. In our example, we are interested only in its <code>attitude</code> property that contains the pitch, roll, and yaw value we want to broadcast. Their values are expressed in radians, so we will convert them in degrees to display them.</p>
 
