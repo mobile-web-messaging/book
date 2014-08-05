@@ -480,8 +480,8 @@ function connect(url) {
 {
     // susbscribe to the device text queue:
     NSString *destination = 
-    [NSString stringWithFormat:@&quot;/queue/
-    device.%@.text&quot;, self.deviceID];
+    [NSString stringWithFormat:@&quot;/queue/device.%@.text&quot;, 
+    self.deviceID];
 
     // build a receipt identifier
     NSString *receipt = [NSString stringWithFormat:@&quot;%@-%@&quot;, self.deviceID, 
