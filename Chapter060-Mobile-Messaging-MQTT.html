@@ -254,12 +254,12 @@ Command symbol is not displayed in PDF.
 <p>The iOS Simulator cannot simulate device motions. If you run the Motions application in the simulator, the <code>motionManager</code> will not send any device motions updates. At the time of writing this book, the only way to test this code is to run the application on a real iOS device.</p>
 </div>
 
+<p>We now capture the device motions and display them. The next step is to broadcast them by sending MQTT messages.</p>
+</section>
+
 <figure id="img_mobile_mqtt_8"><img alt="The motion values change when the device moves." src="images/mawm_0610.png" />
 <figcaption>The motion values change when the device moves</figcaption>
 </figure>
-
-<p>We now capture the device motions and display them. The next step is to broadcast them by sending MQTT messages.</p>
-</section>
 
 <section data-type="sect1" id="ch_mobile_mqtt_client">
 <h1>Create an MQTT Client with MQTTKit</h1>
