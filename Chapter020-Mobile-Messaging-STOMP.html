@@ -595,9 +595,10 @@ NSDictionary *headers = @{
 - (void)locationManager:(CLLocationManager *)manager
     didUpdateToLocation:(CLLocation *)newLocation
            fromLocation:(CLLocation *)oldLocation
-   {
+ {
     // ignore if the location is older than 30 seconds
-    if (fabs([newLocation.timestamp timeIntervalSinceDate:[NSDate date]]) &gt; 30) {
+    if (fabs([newLocation.timestamp timeIntervalSinceDate:[NSDate date]]) &gt; 30) 
+    {
         return;
     }
 
@@ -949,8 +950,8 @@ numberOfRowsInSection:(NSInteger)section
 {
     // subscribes to the device text queue:
     NSString *destination = 
-    [NSString stringWithFormat:@&quot;/queue/device
-    .%@.text&quot;, self.deviceID];
+    [NSString stringWithFormat:@&quot;/queue/device.%@.text&quot;, 
+    self.deviceID];
 
     NSLog(@&quot;subscribing to %@&quot;, destination);
     subscription = [self.client subscribeTo:destination
