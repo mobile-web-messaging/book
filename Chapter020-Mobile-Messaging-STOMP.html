@@ -48,10 +48,6 @@
 
 <p>First, we need to close Xcode, because we will modify the project structure to import our dependencies.</p>
 
-<figure id="img_mobile_stomp_3"><img alt="XCode project options screen" src="images/mawm_0204.png" />
-<figcaption>XCode project options screen</figcaption>
-</figure>
-
 <p>After installing CocoaPods by following the <a href="http://bit.ly/cocoa-start">instructions on its website</a>, we create a file named <em>Podfile</em> at the root of<a contenteditable="false" data-primary="Podfile, creating" data-secondary="for STOMP Locations application (example)" data-type="indexterm">&nbsp;</a> the project (in the same directory as <em>Locations.xcodeproj</em>):</p>
 
 <pre data-type="programlisting">
@@ -60,6 +56,10 @@ xcodeproj 'Locations.xcodeproj'
 pod 'StompKit', '~&gt; 0.1'
 
 platform :ios, '5.0'</pre>
+
+<figure id="img_mobile_stomp_3"><img alt="XCode project options screen" src="images/mawm_0204.png" />
+<figcaption>XCode project options screen</figcaption>
+</figure>
 
 <p>After saving<a contenteditable="false" data-primary="pod install command" data-type="indexterm">&nbsp;</a> this file, run the <strong><code>pod install</code></strong> command:</p>
 
