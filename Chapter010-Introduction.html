@@ -169,11 +169,12 @@
 	</li>
 </ul>
 
+<p>A topic is used to send the GPS data, as this allows potentially many consumers to receive the information. However, a queue is used to handle the device&rsquo;s text as only one single device will consume messages from this destination.</p>
+
 <figure id="img_example_app_1"><img alt="Diagram of the Locations application with two devices, AAA and BBB, and two web applications" src="images/mawm_0105.png" />
 <figcaption>Diagram of the Locations application with two devices, AAA and BBB, and two web applications</figcaption>
 </figure>
 
-<p>A topic is used to send the GPS data, as this allows potentially many consumers to receive the information. However, a queue is used to handle the device&rsquo;s text as only one single device will consume messages from this destination.</p>
 
 <p>Each device (identified by a unique identifier <code>XXX</code>) running the Locations application will be:</p>
 
