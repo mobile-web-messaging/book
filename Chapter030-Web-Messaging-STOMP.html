@@ -434,21 +434,22 @@ function show(deviceID, lat, lng) {
 
 <p>If we now open this <em>locations.html</em> file in a web browser, we will see a map of the whole world<a contenteditable="false" data-primary="Google Maps API" data-secondary="map for Locations STOMP application (example)" data-type="indexterm">&nbsp;</a> displayed (<a data-type="xref" href="img_web_stomp_125">img_web_stomp_125</a>).</p>
 
-<figure id="img_web_stomp_125"><img alt="The Locations Web application" src="images/mawm_0302.png" />
-<figcaption>The Locations web application</figcaption>
-</figure>
-
 <p>If we click on the Connect button, markers will appear on the map for each device that broadcasts its coordinates.</p>
 
 <p>In my case, I am using the iOS simulator to run the mobile application developed in . I use the Location tool to simulate a freeway drive (as explained in <a data-type="xref" href="#ch_mobile_stomp_location_simulator">#ch_mobile_stomp_location_simulator</a>). See <a data-type="xref" href="img_web_stomp_2">img_web_stomp_2</a>.</p>
+
+<p>The position of the device is updated every time the web application receives a STOMP message from the device&rsquo;s position destination and we see it move on the map.</p>
+
+<p>At this stage, the web application receives STOMP messages to display the position of the devices. We now need to write the code to send texts to the devices.</p>
+
+<figure id="img_web_stomp_125"><img alt="The Locations Web application" src="images/mawm_0302.png" />
+<figcaption>The Locations web application</figcaption>
+</figure>
 
 <figure id="img_web_stomp_2"><img alt="Simulate a freeway drive" src="images/mawm_0303.png" />
 <figcaption>Simulating a freeway drive</figcaption>
 </figure>
 
-<p>The position of the device is updated every time the web application receives a STOMP message from the device&rsquo;s position destination and we see it move on the map.</p>
-
-<p>At this stage, the web application receives STOMP messages to display the position of the devices. We now need to write the code to send texts to the devices.</p>
 </section>
 
 <section data-type="sect1" id="_send_stomp_messages_2">
