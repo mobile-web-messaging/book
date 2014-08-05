@@ -124,6 +124,8 @@ client.connect({onSuccess: function(frame) {
 	</li>
 </ul>
 
+<p>We can modify the <code>Motions</code> web application to display an alert message when a connection loss is detected to inform the user:</p>
+
 <pre data-code-language="js" data-type="programlisting">
 client.onConnectionLost = function(response) {
   alert(response.errorMessage + &quot;\nclientID = &quot; + client.clientID + &quot; [&quot; + 
