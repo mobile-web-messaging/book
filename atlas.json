@@ -1,9 +1,11 @@
 {
   "branch": "master",
   "files": [
-    "AppendixA-ActiveMQ.html",
-    "author_bio.html",
-    "AppendixB-Mosquitto.html",
+    "titlepage.html",
+    "copyright.html",
+    "toc.html",
+    "Preface.html",
+    "Dedication.html",
     "Chapter010-Introduction.html",
     "Chapter020-Mobile-Messaging-STOMP.html",
     "Chapter030-Web-Messaging-STOMP.html",
@@ -12,16 +14,14 @@
     "Chapter060-Mobile-Messaging-MQTT.html",
     "Chapter070-Web-Messaging-MQTT.html",
     "Chapter080-Advanced-MQTT.html",
-    "colo.html",
-    "copyright.html",
-    "Dedication.html",
-    "ix.html",
+    "AppendixA-ActiveMQ.html",
+    "AppendixB-Mosquitto.html",
     "part1.html",
     "part2.html",
     "part3.html",
-    "Preface.html",
-    "titlepage.html",
-    "toc.html"
+    "ix.html",
+    "author_bio.html",
+    "colo.html"
   ],
   "formats": {
     "pdf": {
