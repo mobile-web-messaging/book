@@ -217,20 +217,19 @@ client.connect({onSuccess: function(frame) {
 <pre data-code-language="objc" data-type="programlisting">
 - (void)setLastWill
 {
-    NSString *willTopic = @&quot;/mwm/lastWill&quot;;
-    NSDictionary *dict = @{ @&quot;deviceID&quot;: self.deviceID};
-    NSData *willData = 
-    [NSJSONSerialization 
-     dataWithJSONObject:dict
-    
-                 options:0 
-                   error:nil];
+&nbsp; &nbsp; NSString *willTopic = @&quot;/mwm/lastWill&quot;;
+&nbsp; &nbsp; NSDictionary *dict = @{ @&quot;deviceID&quot;: self.deviceID};
+&nbsp; &nbsp; NSData *willData = [NSJSONSerialization dataWithJSONObject:dict
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;options:0
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;error:nil];
 
-[self.client setWillData:willData
-                 toTopic:willTopic
-                 withQos:ExactlyOnce
-                  retain:NO];
-}</pre>
+&nbsp; &nbsp; [self.client setWillData:willData
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;toTopic:willTopic
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;withQos:ExactlyOnce
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; retain:NO];
+}
+
+</pre>
 
 <p>We just need to call this method before connecting to the MQTT broker in <code>connect</code>:</p>
 
