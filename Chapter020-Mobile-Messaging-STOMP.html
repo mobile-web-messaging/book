@@ -237,16 +237,15 @@ interface MWMViewController () &lt;CLLocationManagerDelegate&gt;
 
 - (void)startUpdatingCurrentLocation
 {
-    NSLog(@&quot;startUpdatingCurrentLocation&quot;);
-
-    // if location services are restricted, do nothing
-    if ([CLLocationManager authorizationStatus] == 
-    kCLAuthorizationStatusDenied ||
-  [CLLocationManager authorizationStatus] == 
-  kCLAuthorizationStatusRestricted) {
+    NSLog(@"startUpdatingCurrentLocation");
+    
+    // if location services are restricted do nothing
+    CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
+    if (status == kCLAuthorizationStatusDenied ||
+        status == kCLAuthorizationStatusRestricted) {
         return;
     }
-
+    
     // if locationManager does not currently exist, create it
     if (!self.locationManager) {
         self.locationManager = [[CLLocationManager alloc] init];
@@ -255,7 +254,7 @@ interface MWMViewController () &lt;CLLocationManagerDelegate&gt;
         // use the accuracy best suite for navigation
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation;
     }
-
+    
     // start updating the location
     [self.locationManager startUpdatingLocation];
 }</pre>
