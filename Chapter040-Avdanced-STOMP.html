@@ -100,17 +100,19 @@ payload^@ <a class="co" href="#callout_ch4-co-4" id="co_ch4-co-4"><img alt="4" s
 <pre data-code-language="objc" data-type="programlisting">
 - (void)connect
 {
-    NSLog(@&quot;Connecting...&quot;);
+&nbsp; &nbsp; NSLog(@&quot;Connecting...&quot;);
 
-    NSString *login = @&quot;...&quot;;
-    NSString *passcode = @&quot;...&quot;;
-    [self.client connectWithHeaders:@{ @&quot;client-id&quot;: self.deviceID,
-                                       kHeaderLogin: login,
-                                    kHeaderPasscode: passcode}
-                  completionHandler:^(STOMPFrame *connectedFrame, 
-                  NSError *error) {
-                      ...
-}</pre>
+&nbsp; &nbsp; NSString *login = @&quot;...&quot;;
+&nbsp; &nbsp; NSString *passcode = @&quot;...&quot;;
+&nbsp; &nbsp; [self.client connectWithHeaders:@{ @&quot;client-id&quot;: self.deviceID,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;kHeaderLogin: login,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;kHeaderPasscode: passcode }
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; completionHandler:^(STOMPFrame *connectedFrame,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; NSError *error) {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ...
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }];
+}
+</pre>
 </section>
 
 <section data-type="sect2" id="__code_stomp_js_code_example">
@@ -382,25 +384,25 @@ tx.abort();</pre>
 <pre data-code-language="objc" data-type="programlisting">
 - (void)connect
 {
-    NSLog(@&quot;Connecting...&quot;);
-    __weak typeof(self) weakSelf = self;
-    self.client.errorHandler = ^(NSError* error) {
-        [weakSelf reconnect:error];
-    };
-    [self.client connectWithHeaders:@{ @&quot;client-id&quot;: self.deviceID }
-                  completionHandler:^(STOMPFrame *connectedFrame, NSError 
-                  *error) {
-                      if (error) {
-                          NSLog(@&quot;Error during connection: %@&quot;, error);
-                          [weakSelf reconnect:error];
-                      } else {
-                          // we are connected to the STOMP broker without
-                          // an error
-                          NSLog(@&quot;Connected&quot;);
-                          [self subscribe];
-                      }
-                  }];
-    // when the method returns, we cannot assume that the client is connected
+&nbsp; &nbsp; NSLog(@&quot;Connecting...&quot;);
+&nbsp; &nbsp; __weak typeof(self) weakSelf = self;
+&nbsp; &nbsp; self.client.errorHandler = ^(NSError* error) {
+&nbsp; &nbsp; &nbsp; &nbsp; [weakSelf reconnect:error];
+&nbsp; &nbsp; };
+&nbsp; &nbsp; [self.client connectWithHeaders:@{ @&quot;client-id&quot;: self.deviceID }
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; completionHandler:^(STOMPFrame *connectedFrame,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; NSError *error) {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (error) {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; NSLog(@&quot;Error during connection: %@&quot;, error);
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [weakSelf reconnect:error];
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; } else {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // we are connected to the STOMP broker without
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // an error
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; NSLog(@&quot;Connected&quot;);
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [self subscribe];
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }];
+&nbsp; &nbsp; // when the method returns, we can not assume that the client is connected
 }</pre>
 
 <p>To avoid a retain/release cycle between <code>self</code> and the blocks, we need to create a <em>weak</em> reference to <code>self</code> to use it inside the blocks.</p>
@@ -478,30 +480,30 @@ function connect(url) {
 <pre data-code-language="objc" data-type="programlisting">
 - (void)subscribe
 {
-    // susbscribe to the device text queue:
-    NSString *destination = 
-    [NSString stringWithFormat:@&quot;/queue/device.%@.text&quot;, 
-    self.deviceID];
+&nbsp; &nbsp; // susbscribes to the device text queue:
+&nbsp; &nbsp; NSString *destination =
+&nbsp; &nbsp; &nbsp; &nbsp; [NSString stringWithFormat:@&quot;/queue/device.%@.text&quot;, self.deviceID];
 
-    // build a receipt identifier
-    NSString *receipt = [NSString stringWithFormat:@&quot;%@-%@&quot;, self.deviceID, 
-    destination];
-    // set the client's receiptHandler to handle any receipt delivered by 
-    // the broker
-    self.client.receiptHandler = ^(STOMPFrame *frame) {
-        NSString *receiptID = [frame.headers objectForKey:kHeaderReceiptID];
-        if ([receiptID isEqualToString:receipt]) {
-            NSLog(@&quot;Susbscribed to %@&quot;, destination);
-        }
-    };
-    NSLog(@&quot;Subscribing to %@&quot;, destination);
-    // pass a receipt header to be informed of the subscription processing
-    subscription = [self.client subscribeTo:destination
-                                    headers:@{kHeaderReceipt: receipt}
-                             messageHandler:^(STOMPMessage *message) {
-        ...
-    }];
-}</pre>
+&nbsp; &nbsp; // build a receipt identifier
+&nbsp; &nbsp; NSString *receipt = [NSString stringWithFormat:@&quot;%@-%@&quot;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;self.deviceID, destination];
+&nbsp; &nbsp; // set the client's receiptHandler to handle any receipt delivered by
+&nbsp; &nbsp; // the broker
+&nbsp; &nbsp; self.client.receiptHandler = ^(STOMPFrame *frame) {
+&nbsp; &nbsp; &nbsp; &nbsp; NSString *receiptID = [frame.headers objectForKey:kHeaderReceiptID];
+&nbsp; &nbsp; &nbsp; &nbsp; if ([receiptID isEqualToString:receipt]) {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; NSLog(@&quot;Subscribed to %@&quot;, destination);
+&nbsp; &nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; };
+&nbsp; &nbsp; NSLog(@&quot;subscribing to %@&quot;, destination);
+&nbsp; &nbsp; // pass a receipt header to be informed of the subscription processing
+&nbsp; &nbsp; subscription = [self.client subscribeTo:destination
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; headers:@{kHeaderReceipt: receipt}
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;messageHandler:^(STOMPMessage *message) {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;...
+&nbsp; &nbsp; }];
+}
+</pre>
 
 <p>If the Locations iOS application is run with this code, we see the log that confirms that the client is successfully subscribed to the destination:</p>
 
@@ -620,19 +622,19 @@ heart-beat:20000,30000
 <pre data-code-language="objc" data-type="programlisting">
 - (void)connect
 {
-    NSLog(@&quot;Connecting...&quot;);
-    self.client.errorHandler = ^(NSError* error) {
-        NSLog(@&quot;got error from STOMP: %@&quot;, error);
-    };
-    // will send a heartbeat at most every minute
-    // expect broker's heartbeat at least every 20 seconds
-    NSString *heartbeat = @&quot;60000,20000&quot;;
-    [self.client connectWithHeaders:@{ @&quot;client-id&quot;: self.deviceID,
-                                       kHeaderHeartBeat: heartbeat }
-                  completionHandler:^(STOMPFrame *connectedFrame, 
-                  NSError *error) {
-                      ...
-                  }];
+&nbsp; &nbsp; NSLog(@&quot;Connecting...&quot;);
+&nbsp; &nbsp; self.client.errorHandler = ^(NSError* error) {
+&nbsp; &nbsp; &nbsp; &nbsp; NSLog(@&quot;got error from STOMP: %@&quot;, error);
+&nbsp; &nbsp; };
+&nbsp; &nbsp; // will send a heartbeat at most every minute.
+&nbsp; &nbsp; // expect broker's heartbeat at least every 20 seconds.
+&nbsp; &nbsp; NSString *heartbeat = @&quot;60000,20000&quot;;
+&nbsp; &nbsp; [self.client connectWithHeaders:@{ @&quot;client-id&quot;: self.deviceID,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;kHeaderHeartBeat: heartbeat }
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; completionHandler:^(STOMPFrame *connectedFrame,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; NSError *error) {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ...
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }];
 }</pre>
 </section>
 
