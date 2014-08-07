@@ -237,7 +237,7 @@ interface MWMViewController () &lt;CLLocationManagerDelegate&gt;
 
 - (void)startUpdatingCurrentLocation
 {
-    NSLog(@"startUpdatingCurrentLocation");
+    NSLog(@&quot;startUpdatingCurrentLocation&quot;);
     
     // if location services are restricted do nothing
     CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
@@ -252,7 +252,8 @@ interface MWMViewController () &lt;CLLocationManagerDelegate&gt;
         // set its delegate to self
         self.locationManager.delegate = self;
         // use the accuracy best suite for navigation
-        self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation;
+        self.locationManager.desiredAccuracy = 
+&nbsp;         kCLLocationAccuracyBestForNavigation;
     }
     
     // start updating the location
@@ -273,19 +274,23 @@ interface MWMViewController () &lt;CLLocationManagerDelegate&gt;
 
 <pre data-code-language="objc" data-type="programlisting">
 #pragma mark - CLLocationManagerDelegate protocol
-
 - (void)locationManager:(CLLocationManager *)manager
-    didUpdateToLocation:(CLLocation *)newLocation
-           fromLocation:(CLLocation *)oldLocation
+&nbsp; &nbsp; didUpdateToLocation:(CLLocation *)newLocation
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;fromLocation:(CLLocation *)oldLocation
 {
-    // ignore if the location is older than 30s
-    if (fabs([newLocation.timestamp timeIntervalSinceDate:[NSDate date]]) &gt; 30) {
-        return;
-    }
+&nbsp; &nbsp; // ignore if the location is older than 30s
+&nbsp; &nbsp; int delta = [newLocation.timestamp timeIntervalSinceDate: [NSDate date]];
+&nbsp; &nbsp; if (fabs(delta) &gt; 30) {
+&nbsp; &nbsp; &nbsp; &nbsp; return;
+&nbsp; &nbsp; }
+&nbsp; &nbsp;&nbsp;
+&nbsp; &nbsp; CLLocationCoordinate2D coord = [newLocation coordinate];
+&nbsp; &nbsp; NSString *text =[NSString stringWithFormat:@&quot;&phi;:%.4F, &lambda;:%.4F&quot;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;coord.latitude, coord.longitude];
+&nbsp; &nbsp; self.currentPositionLabel.text = text;
+}
 
-    CLLocationCoordinate2D coord = [newLocation coordinate];
-    self.currentPositionLabel.text = [NSString stringWithFormat:@&quot;&phi;:%.4F, &lambda;:%.4F&quot;, coord.latitude, coord.longitude];
-}</pre>
+</pre>
 
 <p>If there is any problem with the <code>locationManager</code>, we want to warn the user about it and stop updating the location. To do so, we implement the <code>CLLocationManagerDelegate</code>'s <code>locationManager:didFailWithError:</code> method to display a warning to the user:</p>
 
@@ -405,26 +410,25 @@ interface MWMViewController () &lt;CLLocationManagerDelegate&gt;
 @implementation MWMViewController
 
 #pragma mark - Messaging
-
 - (void)connect
 {
-    NSLog(@&quot;Connecting...&quot;);
-    [self.client connectWithHeaders:@{ @&quot;client-id&quot;: self.deviceID}
-                  completionHandler:^(STOMPFrame *connectedFrame, NSError
-                  *error) {
-                      if (error) {
-                          // We have not been able to connect to the broker.
-                          // Let's log the error
-                          NSLog(@&quot;Error during connection: %@&quot;,
-                          error);
-                      } else {
-                          // we are connected to the STOMP broker without 
-                          // an error
-                          NSLog(@&quot;Connected&quot;);
-                      }
-                  }];
-    // when the method returns, we cannot assume that the client is connected
+&nbsp; &nbsp; NSLog(@&quot;Connecting...&quot;);
+&nbsp; &nbsp; [self.client connectWithHeaders:@{ @&quot;client-id&quot;: self.deviceID }
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; completionHandler:^(STOMPFrame *connectedFrame,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; NSError *error) {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (error) {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // We have not been able to connect to the broker.
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // Let's log the error
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; NSLog(@&quot;Error during connection: %@&quot;, error);
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; } else {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // we are connected to the STOMP broker without
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // an error
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; NSLog(@&quot;Connected&quot;);
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }];
+&nbsp; &nbsp; // when the method returns, we can not assume that the client is connected
 }
+
 
 @end</pre>
 
@@ -502,23 +506,19 @@ NSString *destination = [NSString
 <p>As we described in <a data-type="xref" href="#ch_introduction_stomp_example_message">#ch_introduction_stomp_example_message</a>, the message representation is a JSON string that contains the location coordinates, the timestamp, and the device ID. We build an <code>NSDictionary</code> from this data and serialize it as a JSON string:</p>
 
 <pre data-code-language="objc" data-type="programlisting">
+// build a dictionary containing all the information to send
 NSDictionary *dict = @{
-    @&quot;deviceID&quot;: self.deviceID,
-    @&quot;lat&quot;: [NSNumber numberWithDouble:location.coordinate.latitude],
-    @&quot;lng&quot;: [NSNumber numberWithDouble:location.coordinate.longitude],
-     @&quot;ts&quot;: [dateFormatter stringFromDate:location.timestamp]
+&nbsp; &nbsp; @&quot;deviceID&quot;: self.deviceID,
+&nbsp; &nbsp; @&quot;lat&quot;: [NSNumber numberWithDouble:location.coordinate.latitude],
+&nbsp; &nbsp; @&quot;lng&quot;: [NSNumber numberWithDouble:location.coordinate.longitude],
+&nbsp; &nbsp; @&quot;ts&quot;: [dateFormatter stringFromDate:location.timestamp]
 };
-NSData *data = 
-[NSJSONSerialization 
-  dataWithJSONObject:dict 
-
-             options:0 
-
-               error:nil];
-NSString *body =[[NSString alloc] 
-        initWithData:data 
-
-            encoding:NSUTF8StringEncoding];</pre>
+// create a JSON string from this dictionary
+NSData *data = [NSJSONSerialization dataWithJSONObject:dict
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;options:0
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;error:nil];
+NSString *body =[[NSString alloc] initWithData:data
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; encoding:NSUTF8StringEncoding];</pre>
 
 <p>This body follows the JSON format.<a contenteditable="false" data-primary="JSON" data-secondary="STOMP message body" data-type="indexterm">&nbsp;</a> We will add a <code>content-type</code> header in the STOMP message and set it to <code>application/json; charset=utf-8</code> to let the STOMP brokers and the eventual consumers know that this message&rsquo;s payload can be read as a JSON string encoded with UTF-8. Without such a <code>content-type</code>, the consumers would not necessarily know how to <em>read</em> the data in the body and interpret it.</p>
 
@@ -540,66 +540,64 @@ NSDictionary *headers = @{
 <pre data-code-language="objc" data-type="programlisting">
 - (void)sendLocation:(CLLocation *)location
 {
-    // build a static NSDateFormatter to display the current date in ISO-8601
-    static NSDateFormatter *dateFormatter = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&amp;onceToken, ^{
-        dateFormatter = [[NSDateFormatter alloc] init];
-        dateFormatter.dateFormat = @&quot;yyyy-MM-d'T'HH:mm:ssZZZZZ&quot;;
-    });
-
-    // send the message to the device's topic
-    NSString *destination = 
-    [NSString stringWithFormat:@&quot;/topic/device.%@.location&quot;, self.deviceID];
-
-    // build a dictionary containing all the information to send
-    NSDictionary *dict = @{
-        @&quot;deviceID&quot;: self.deviceID,
-        @&quot;lat&quot;: [NSNumber numberWithDouble:location.coordinate.latitude],
-        @&quot;lng&quot;: [NSNumber numberWithDouble:location.coordinate.longitude],
-         @&quot;ts&quot;: [dateFormatter stringFromDate:location.timestamp]
-    };
-    // create a JSON string from this dictionary
- NSData *data = 
-    [NSJSONSerialization dataWithJSONObject:dict 
-    
-                 options:0
-    
-                  error:nil];
-NSString *body =[[NSString alloc] 
-   initWithData:data 
-   
-               encoding:NSUTF8StringEncoding];
-
-NSDictionary *headers = @{
-        @&quot;content-type&quot;: @&quot;application/json;charset=utf-8&quot;
-    };
-
-    // send the message
-    [self.client sendTo:destination
-                headers:headers
-                   body:body];
+&nbsp; &nbsp; // build a static NSDateFormatter to display the current date in ISO-8601
+&nbsp; &nbsp; static NSDateFormatter *dateFormatter = nil;
+&nbsp; &nbsp; static dispatch_once_t onceToken;
+&nbsp; &nbsp; dispatch_once(&amp;onceToken, ^{
+&nbsp; &nbsp; &nbsp; &nbsp; dateFormatter = [[NSDateFormatter alloc] init];
+&nbsp; &nbsp; &nbsp; &nbsp; dateFormatter.dateFormat = @&quot;yyyy-MM-d'T'HH:mm:ssZZZZZ&quot;;
+&nbsp; &nbsp; });
+&nbsp; &nbsp;&nbsp;
+&nbsp; &nbsp; // send the message to the device's topic
+&nbsp; &nbsp; NSString *destination =
+&nbsp; &nbsp; &nbsp; &nbsp; [NSString stringWithFormat:@&quot;/topic/device.%@.location&quot;, self.deviceID];
+&nbsp; &nbsp;&nbsp;
+&nbsp; &nbsp; // build a dictionary containing all the information to send
+&nbsp; &nbsp; NSDictionary *dict = @{
+&nbsp; &nbsp; &nbsp; &nbsp; @&quot;deviceID&quot;: self.deviceID,
+&nbsp; &nbsp; &nbsp; &nbsp; @&quot;lat&quot;: [NSNumber numberWithDouble:location.coordinate.latitude],
+&nbsp; &nbsp; &nbsp; &nbsp; @&quot;lng&quot;: [NSNumber numberWithDouble:location.coordinate.longitude],
+&nbsp; &nbsp; &nbsp; &nbsp; @&quot;ts&quot;: [dateFormatter stringFromDate:location.timestamp]
+&nbsp; &nbsp; };
+&nbsp; &nbsp; // create a JSON string from this dictionary
+&nbsp; &nbsp; NSData *data = [NSJSONSerialization dataWithJSONObject:dict
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;options:0
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;error:nil];
+&nbsp; &nbsp; NSString *body =[[NSString alloc] initWithData:data
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; encoding:NSUTF8StringEncoding];
+&nbsp; &nbsp;&nbsp;
+&nbsp; &nbsp; NSDictionary *headers = @{
+&nbsp; &nbsp; &nbsp; &nbsp; @&quot;content-type&quot;: @&quot;application/json;charset=utf-8&quot;
+&nbsp; &nbsp; };
+&nbsp; &nbsp;&nbsp;
+&nbsp; &nbsp; // send the message
+&nbsp; &nbsp; [self.client sendTo:destination
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; headers:headers
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;body:body];
 }</pre>
 
 <p>The next step is to call this method every time we receive an updated location in the <code>locationManager:didUpdateToLocation:fromLocation:</code> method.</p>
 
 <pre data-code-language="objc" data-type="programlisting">
 - (void)locationManager:(CLLocationManager *)manager
-    didUpdateToLocation:(CLLocation *)newLocation
-           fromLocation:(CLLocation *)oldLocation
- {
-    // ignore if the location is older than 30 seconds
-    if (fabs([newLocation.timestamp timeIntervalSinceDate:[NSDate date]]) &gt; 30) 
-    {
-        return;
-    }
+&nbsp; &nbsp; didUpdateToLocation:(CLLocation *)newLocation
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;fromLocation:(CLLocation *)oldLocation
+{
+&nbsp; &nbsp; // ignore if the location is older than 30s
+&nbsp; &nbsp; int delta = [newLocation.timestamp timeIntervalSinceDate:[NSDate date]];
+&nbsp; &nbsp; if (fabs(delta) &gt; 30) {
+&nbsp; &nbsp; &nbsp; &nbsp; return;
+&nbsp; &nbsp; }
+&nbsp; &nbsp;&nbsp;
+&nbsp; &nbsp; CLLocationCoordinate2D coord = [newLocation coordinate];
+&nbsp; &nbsp; NSString *text =[NSString stringWithFormat:@&quot;&phi;:%.4F, &lambda;:%.4F&quot;,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;coord.latitude, coord.longitude];
+&nbsp; &nbsp; self.currentPositionLabel.text = text;
 
-    CLLocationCoordinate2D coord = [newLocation coordinate];
-    self.currentPositionLabel.text = [NSString stringWithFormat:@&quot;&phi;:%.4F, &lambda;:%.4F&quot;, coord.latitude, coord.longitude];
-
-    // send a message with the location data
-    [self sendLocation:newLocation];
-}</pre>
+&nbsp; &nbsp; // send a message with the location data
+&nbsp; &nbsp; [self sendLocation:newLocation];
+}
+</pre>
 
 <p>Messages will be sent every time the device location changes. This is a bit inconvenient during development, as I do not want to move around my workspace whenever I need to update my location and send a message.</p>
 
@@ -934,24 +932,25 @@ numberOfRowsInSection:(NSInteger)section
 
 - (void)subscribe
 {
-    // subscribes to the device text queue:
-    NSString *destination = 
-    [NSString stringWithFormat:@&quot;/queue/device.%@.text&quot;, 
-    self.deviceID];
+&nbsp; &nbsp; // susbscribes to the device text queue:
+&nbsp; &nbsp; NSString *destination =
+&nbsp; &nbsp; &nbsp; &nbsp; [NSString stringWithFormat:@&quot;/queue/device.%@.text&quot;, self.deviceID];
 
-    NSLog(@&quot;subscribing to %@&quot;, destination);
-    subscription = [self.client subscribeTo:destination
-                                    headers:@{}
-                             messageHandler:^(STOMPMessage *message) {
-        // called every time a message is consumed from the destination
-        NSLog(@&quot;received message %@&quot;, message);
-        // the text is sent in a plain string; we use it as is
-        NSString *text = message.body;
-        NSLog(@&quot;adding text = %@&quot;, text);
-        [texts addObject:text];
-        // TODO reloads the table
-    }];
-}</pre>
+&nbsp; &nbsp; NSLog(@&quot;subscribing to %@&quot;, destination);
+&nbsp; &nbsp; subscription = [self.client subscribeTo:destination
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; headers:@{}
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;messageHandler:^(STOMPMessage *message) {
+&nbsp; &nbsp; &nbsp; &nbsp; // called every time a message is consumed from the destination
+&nbsp; &nbsp; &nbsp; &nbsp; NSLog(@&quot;received message %@&quot;, message);
+&nbsp; &nbsp; &nbsp; &nbsp; // the text is send in a plain String, we use it as is.
+&nbsp; &nbsp; &nbsp; &nbsp; NSString *text = message.body;
+&nbsp; &nbsp; &nbsp; &nbsp; NSLog(@&quot;adding text = %@&quot;, text);
+&nbsp; &nbsp; &nbsp; &nbsp; [texts addObject:text];
+&nbsp; &nbsp; &nbsp; &nbsp; // TODO reloads the table
+&nbsp; &nbsp; }];
+}
+
+</pre>
 
 <p><code>subscription</code> is an object returned by the <code>subscribe</code> method, which identifies the STOMP subscription and that can be used to <em>unsubscribe</em>.</p>
 
@@ -969,24 +968,23 @@ STOMPSubscription *subscription;</pre>
 
 - (void)connect
 {
-    NSLog(@&quot;Connecting...&quot;);
-    [self.client connectWithHeaders:@
-    { @&quot;client-id&quot;: self.deviceID}
-                  completionHandler:^
-    (STOMPFrame *connectedFrame, 
-    NSError *error) {
-                      if (error) {
-                          // we have not been able to connect to the broker
-                          // let's log the error
-                          NSLog(@&quot;Error during connection: %@&quot;, error);
-                      } else {
-                          // we are connected to the STOMP broker 
-                          // without an error
-                          NSLog(@&quot;Connected&quot;);
-                          [self subscribe];
-                      }
-                  }];
-    // when the method returns, we cannot assume that the client is connected
+&nbsp; &nbsp; NSLog(@&quot;Connecting...&quot;);
+&nbsp; &nbsp; [self.client connectWithHeaders:@{ @&quot;client-id&quot;: self.deviceID }
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; completionHandler:^(STOMPFrame *connectedFrame,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; NSError *error) {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if (error) {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // We have not been able to connect to the broker.
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // Let's log the error
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; NSLog(@&quot;Error during connection: %@&quot;, error);
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [weakSelf reconnect:error];
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; } else {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // we are connected to the STOMP broker without
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // an error
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; NSLog(@&quot;Connected&quot;);
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [self subscribe];
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }];
+&nbsp; &nbsp; // when the method returns, we can not assume that the client is connected
 }</pre>
 </section>
 </section>
@@ -1045,24 +1043,27 @@ Hello, where are you?
 <pre data-code-language="objc" data-type="programlisting">
 - (void)subscribe
 {
-    // susbscribes to the device text queue:
-    NSString *destination = [NSString stringWithFormat:@&quot;/queue/device.%@.text&quot;, self.deviceID];
+&nbsp; &nbsp; // subscribes to the device text queue:
+&nbsp; &nbsp; NSString *destination =
+&nbsp; &nbsp; &nbsp; &nbsp; [NSString stringWithFormat:@&quot;/queue/device.%@.text&quot;, self.deviceID];
 
-    NSLog(@&quot;subscribing to %@&quot;, destination);
-    subscription = [self.client subscribeTo:destination
-                                    headers:@{}
-                             messageHandler:^(STOMPMessage *message) {
-        // called every time a message is consumed from the destination
-        NSLog(@&quot;received message %@&quot;, message);
-        // the text is sent in a plain string; we use it as is
-        NSString *text = message.body;
-        NSLog(@&quot;adding text = %@&quot;, text);
-        [texts addObject:text];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.tableView reloadData];
-        });
-    }];
-}</pre>
+&nbsp; &nbsp; NSLog(@&quot;subscribing to %@&quot;, destination);
+&nbsp; &nbsp; subscription = [self.client subscribeTo:destination
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; headers:@{}
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;messageHandler:^(STOMPMessage *message) {
+&nbsp; &nbsp; &nbsp; &nbsp; // called every time a message is consumed from the destination
+&nbsp; &nbsp; &nbsp; &nbsp; NSLog(@&quot;received message %@&quot;, message);
+&nbsp; &nbsp; &nbsp; &nbsp; // the text is send in a plain String, we use it as is.
+&nbsp; &nbsp; &nbsp; &nbsp; NSString *text = message.body;
+&nbsp; &nbsp; &nbsp; &nbsp; NSLog(@&quot;adding text = %@&quot;, text);
+&nbsp; &nbsp; &nbsp; &nbsp; [texts addObject:text];
+&nbsp; &nbsp; &nbsp; &nbsp; dispatch_async(dispatch_get_main_queue(), ^{
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [self.tableView reloadData];
+&nbsp; &nbsp; &nbsp; &nbsp; });
+&nbsp; &nbsp; }];
+}
+
+</pre>
 
 <p>Note that we did not call directly <code>[self.tableView reloadData];</code> from the <code>STOMPMessageHandler</code> block.</p>
 
