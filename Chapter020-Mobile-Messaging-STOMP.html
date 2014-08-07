@@ -549,7 +549,7 @@ NSDictionary *headers = @{
         dateFormatter.dateFormat = @&quot;yyyy-MM-d'T'HH:mm:ssZZZZZ&quot;;
     });
 
-    // send the message to the truck's topic
+    // send the message to the device's topic
     NSString *destination = 
     [NSString stringWithFormat:@&quot;/topic/device.%@.location&quot;, self.deviceID];
 
