@@ -183,6 +183,7 @@ Command symbol is not displayed in PDF.
 <p>We need to add it to the libraries linked by the application (see <a data-type="xref" href="add_cm_frame">add_cm_frame</a>). Click on the Motions project and then the Motions target. In the General tab, under the Linked Frameworks and Libraries section, click on the <code>+</code> button. In the selection window, type &quot;CoreMotion,&quot; select CoreMotion.framework, and click on the Add button.</p>
 
 <p>We can now use the CoreMotion framework by importing <em>CoreMotion/CoreMotion.h</em> at the top of the <em>CoreMotion/CoreMotion.h</em> file.</p>
+
 <p>We will also define a <code>motionManager</code> property in the <code>MWMViewController</code> private interface to use <code>CoreMotion</code>:</p>
 
 <pre data-code-language="objc" data-type="programlisting">
@@ -209,36 +210,37 @@ Command symbol is not displayed in PDF.
 <pre data-code-language="objc" data-type="programlisting">
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
+&nbsp; &nbsp; [super viewDidLoad];
 
-    self.deviceID = [UIDevice currentDevice].identifierForVendor.UUIDString;
-    NSLog(@&quot;Device identifier is %@&quot;, self.deviceID);
-    self.deviceIDLabel.text = self.deviceID;
+&nbsp; &nbsp; self.deviceID = [UIDevice currentDevice].identifierForVendor.UUIDString;
+&nbsp; &nbsp; NSLog(@&quot;Device identifier is %@&quot;, self.deviceID);
+&nbsp; &nbsp; self.deviceIDLabel.text = self.deviceID;
 
-    self.motionManager = [[CMMotionManager alloc] init];
-    // get the device motion updates every second
-    self.motionManager.deviceMotionUpdateInterval = 1;
-    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
-    [self.motionManager startDeviceMotionUpdatesToQueue:queue
-                                            withHandler:^(CMDeviceMotion
-                                            *motion, NSError *error) {
-        if(!error) {
-            CMAttitude *attitude = motion.attitude;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                // convert values from radians to degrees
-                double pitch = attitude.pitch * 180 / M_PI;
-                double roll = attitude.roll * 180 / M_PI;
-                double yaw = attitude.yaw * 180 / M_PI;
-                self.pitchLabel.text = 
-                [NSString stringWithFormat:@&quot;pitch: %.0f&deg;&quot;, pitch];
-                self.rollLabel.text = 
-                [NSString stringWithFormat:@&quot;roll: %.0f&deg;&quot;, roll];
-                self.yawLabel.text = 
-                [NSString stringWithFormat:@&quot;yaw: %.0f&deg;&quot;, yaw];
-            });
-        }
-    }];
-}</pre>
+&nbsp; &nbsp; self.motionManager = [[CMMotionManager alloc] init];
+&nbsp; &nbsp; // get the device motion updates every second.
+&nbsp; &nbsp; self.motionManager.deviceMotionUpdateInterval = 1;
+&nbsp; &nbsp; NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+&nbsp; &nbsp; [self.motionManager startDeviceMotionUpdatesToQueue:queue
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; withHandler:^(CMDeviceMotion *motion,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; NSError *error) {
+&nbsp; &nbsp; &nbsp; &nbsp; if(!error) {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; CMAttitude *attitude = motion.attitude;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; dispatch_async(dispatch_get_main_queue(), ^{
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // convert values from radians to degrees
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; double pitch = attitude.pitch * 180 / M_PI;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; double roll = attitude.roll * 180 / M_PI;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; double yaw = attitude.yaw * 180 / M_PI;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; self.pitchLabel.text =
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [NSString stringWithFormat:@&quot;pitch: %.0f&deg;&quot;, pitch];
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; self.rollLabel.text =
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [NSString stringWithFormat:@&quot;roll: %.0f&deg;&quot;, roll];
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; self.yawLabel.text =
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [NSString stringWithFormat:@&quot;yaw: %.0f&deg;&quot;, yaw];
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; });
+&nbsp; &nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; }];
+}
+</pre>
 
 <p>We also need to notify the <code>motionManager</code> that we no longer want to receive updates when the view is no longer used. We need to call its <code>stopDeviceMotionUpdates</code> method inside the view controller&rsquo;s <code>dealloc</code> method:</p>
 
@@ -473,40 +475,41 @@ Command symbol is not displayed in PDF.
 <pre data-code-language="objc" data-type="programlisting">
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
+&nbsp; &nbsp; [super viewDidLoad];
 
-    self.deviceID = [UIDevice currentDevice].identifierForVendor.UUIDString;
-    NSLog(@&quot;Device identifier is %@&quot;, self.deviceID);
-    self.deviceIDLabel.text = self.deviceID;
+&nbsp; &nbsp; self.deviceID = [UIDevice currentDevice].identifierForVendor.UUIDString;
+&nbsp; &nbsp; NSLog(@&quot;Device identifier is %@&quot;, self.deviceID);
+&nbsp; &nbsp; self.deviceIDLabel.text = self.deviceID;
 
-    self.motionManager = [[CMMotionManager alloc] init];
-    // get the device motion updates every second
-    self.motionManager.deviceMotionUpdateInterval = 1;
-    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
-    [self.motionManager startDeviceMotionUpdatesToQueue:queue
-                                            withHandler:^(CMDeviceMotion
-                                            *motion, NSError *error) {
-        if(!error) {
-            CMAttitude *attitude = motion.attitude;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                // convert values from radians to degrees
-                double pitch = attitude.pitch * 180 / M_PI;
-                double roll = attitude.roll * 180 / M_PI;
-                double yaw = attitude.yaw * 180 / M_PI;
-                self.pitchLabel.text = 
-                [NSString stringWithFormat:@&quot;pitch: %.0f&deg;&quot;, pitch];
-                self.rollLabel.text = 
-                [NSString stringWithFormat:@&quot;roll: %.0f&deg;&quot;, roll];
-                self.yawLabel.text = 
-                [NSString stringWithFormat:@&quot;yaw: %.0f&deg;&quot;, yaw];
-            });
-            [self send:attitude];
-        }
-    }];
-
-
-    self.client = [[MQTTClient alloc] initWithClientId:self.deviceID];
-}</pre>
+&nbsp; &nbsp; self.motionManager = [[CMMotionManager alloc] init];
+&nbsp; &nbsp; // get the device motion updates every second.
+&nbsp; &nbsp; self.motionManager.deviceMotionUpdateInterval = 1;
+&nbsp; &nbsp; NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+&nbsp; &nbsp; [self.motionManager startDeviceMotionUpdatesToQueue:queue
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; withHandler:^(CMDeviceMotion *motion,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; NSError *error) {
+&nbsp; &nbsp; &nbsp; &nbsp; if(!error) {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; CMAttitude *attitude = motion.attitude;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; dispatch_async(dispatch_get_main_queue(), ^{
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // convert values from radians to degrees
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; double pitch = attitude.pitch * 180 / M_PI;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; double roll = attitude.roll * 180 / M_PI;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; double yaw = attitude.yaw * 180 / M_PI;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; self.pitchLabel.text =
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [NSString stringWithFormat:@&quot;pitch: %.0f&deg;&quot;, pitch];
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; self.rollLabel.text =
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [NSString stringWithFormat:@&quot;roll: %.0f&deg;&quot;, roll];
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; self.yawLabel.text =
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [NSString stringWithFormat:@&quot;yaw: %.0f&deg;&quot;, yaw];
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; });
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [self send:attitude];
+&nbsp; &nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; }];
+&nbsp; &nbsp;&nbsp;
+&nbsp; &nbsp; self.client = [[MQTTClient alloc] initWithClientId:self.deviceID];
+&nbsp; &nbsp; [self connect];
+}
+</pre>
 
 <p>We now have the <code>Motions</code> iOS application that is sending MQTT messages. How can we check that this is working as expected?&nbsp;</p>
 
@@ -548,41 +551,43 @@ $ mosquitto_sub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/
 
 <pre data-code-language="objc" data-type="programlisting">
 # pragma mark - UI Actions
-
-// Warn the user by changing the view's background color to the specified color during 2 seconds
+// Warn the user by changing the view's background color to the specified color
+// during 2 seconds
 - (void)warnUser:(NSString *)colorStr
 {
-    // keep a reference to the original color
-    UIColor *originalColor = self.view.backgroundColor;
-
-    [UIView animateWithDuration:0.5
-                          delay:0.0
-                        options:0
-                     animations:^{
-                         // change it to the color passed in parameter
-                         SEL sel = NSSelectorFromString([NSString stringWith
-                         Format:@&quot;%@Color&quot;, colorStr]);
-                         UIColor* color = nil;
-                         if ([UIColor respondsToSelector:sel]) {
-                             color  = [UIColor performSelector:sel];
-                         } else {
-                             color = [UIColor redColor];
-                         }
-                         self.view.backgroundColor = color;
-                     }
-                completion:^(BOOL finished) {
-                         // after a delay of 2 seconds, revert it to 
-                         // the original color
-                         [UIView animateWithDuration:0.5
-                                               delay:2
-                                             options:0
-                                          animations:^{
-                                              self.view.backgroundColor =
-                                              originalColor;
-                                          }
-                                          completion:nil];
-                     }];
-}</pre>
+&nbsp; &nbsp; // keep a reference to the original color
+&nbsp; &nbsp; UIColor *originalColor = self.view.backgroundColor;
+&nbsp; &nbsp;&nbsp;
+&nbsp; &nbsp; [UIView animateWithDuration:0.5
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; delay:0.0
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; options:0
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;animations:^{
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;// change it to the color passed in parameter
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;NSString *colorCode =
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [NSString stringWithFormat:@&quot;%@Color&quot;, colorStr];
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;SEL sel = NSSelectorFromString(colorCode);
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;UIColor* color = nil;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;if ([UIColor respondsToSelector:sel]) {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;color &nbsp;= [UIColor performSelector:sel];
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;} else {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;color = [UIColor redColor];
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;self.view.backgroundColor = color;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;completion:^(BOOL finished) {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;// after a delay of 2 seconds, revert it to
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;// the original color
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[UIView animateWithDuration:0.5
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;delay:2
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;options:0
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; animations:^{
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; self.view.backgroundColor =
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; originalColor;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; completion:nil];
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}];
+}
+</pre>
 
 <p>To consume messages from an MQTT broker, the <code>client</code> must do the following:</p>
 
@@ -700,29 +705,31 @@ $ mosquitto_sub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/
 <pre data-code-language="objc" data-type="programlisting">
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
+&nbsp; &nbsp; [super viewDidLoad];
 
-    self.deviceID = [UIDevice currentDevice].identifierForVendor.UUIDString;
-    NSLog(@&quot;Device identifier is %@&quot;, self.deviceID);
-    self.deviceIDLabel.text = self.deviceID;
+&nbsp; &nbsp; self.deviceID = [UIDevice currentDevice].identifierForVendor.UUIDString;
+&nbsp; &nbsp; NSLog(@&quot;Device identifier is %@&quot;, self.deviceID);
+&nbsp; &nbsp; self.deviceIDLabel.text = self.deviceID;
 
-    ...
-
-    self.client = [[MQTTClient alloc] initWithClientId:self.deviceID];
-    // use a weak reference to avoid a retain/release cycle in the block
-    __weak MWMViewController *weakSelf = self;
-    self.client.messageHandler = ^(MQTTMessage *message) {
-        NSString *alertTopic = [NSString stringWithFormat:kAlertTopic, weakSelf.deviceID];
-        if ([alertTopic isEqualToString:message.topic]) {
-            NSString *color = message.payloadString;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf warnUser:color];
-            });
-        }
-    };
-
-    [self connect];
-}</pre>
+&nbsp; &nbsp; ...
+&nbsp; &nbsp;&nbsp;
+&nbsp; &nbsp; self.client = [[MQTTClient alloc] initWithClientId:self.deviceID];
+&nbsp; &nbsp; // use a weak reference to avoid a retain/release cycle in the block
+&nbsp; &nbsp; __weak MWMViewController *weakSelf = self;
+&nbsp; &nbsp; self.client.messageHandler = ^(MQTTMessage *message) {
+&nbsp; &nbsp; &nbsp; &nbsp; NSString *alertTopic =
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [NSString stringWithFormat:kAlertTopic, weakSelf.deviceID];
+&nbsp; &nbsp; &nbsp; &nbsp; if ([alertTopic isEqualToString:message.topic]) {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; NSString *color = message.payloadString;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; dispatch_async(dispatch_get_main_queue(), ^{
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [weakSelf warnUser:color];
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; });
+&nbsp; &nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; };
+&nbsp; &nbsp;&nbsp;
+&nbsp; &nbsp; [self connect];
+}
+</pre>
 
 <p>We extracted the color using the message <code>payloadString</code> method after checking that it was indeed coming from the device alert topic. We then call the <code>warnUser:</code> method in a block that is run on the main queue, because it contains code related to <code>UIKit</code>.</p>
 
