@@ -62,57 +62,58 @@
 <pre data-code-language="html" data-type="programlisting">
 &lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;en&quot;&gt;
-  &lt;head&gt;
-    &lt;meta content=&quot;width=device-width&quot; name=&quot;viewport&quot;&gt;
-    &lt;meta charset=&quot;utf-8&quot;&gt;
-    &lt;title&gt;Locations - STOMP Example&lt;/title&gt;
-  &lt;/head&gt;
-  &lt;body&gt;
-    &lt;h1&gt;Locations - STOMP Example&lt;/h1&gt;
-      &lt;form id='connect_form'&gt;
-        &lt;fieldset&gt;
-          &lt;label&gt;WebSocket URL&lt;/label&gt;
-          &lt;input name=url id='connect_url' value='ws://localhost:61614' type=&quot;text&quot;&gt;
-          &lt;button id='connect_button' type=&quot;submit&quot;&gt;Connect&lt;/button&gt;
-          &lt;button type=&quot;button&quot; id='disconnect_button' disabled&gt;Disconnect&lt;/button&gt;
-        &lt;/fieldset&gt;
-      &lt;/form&gt;
-      &lt;form id=&quot;text_form&quot; style=&quot;display: none;&quot;&gt;
-        &lt;fieldset&gt;
-          &lt;legend&gt;Send Text&lt;/legend&gt;
-          Device: &lt;select id=&quot;deviceID&quot;&gt;&lt;/select&gt;
-          &lt;br&gt;
-          Text: &lt;input id='text' size=64 placeholder=&quot;type the text 
-          to sent to the device&quot; type=&quot;text&quot;&gt;
-          &lt;br&gt;
-          &lt;button id='text_submit' type=&quot;submit&quot;&gt;Send&lt;/button&gt;
-        &lt;/fieldset&gt;
-      &lt;/form&gt;
-      &lt;hr&gt;
+&nbsp; &lt;head&gt;
+&nbsp; &nbsp; &lt;meta content=&quot;width=device-width&quot; name=&quot;viewport&quot;&gt;
+&nbsp; &nbsp; &lt;meta charset=&quot;utf-8&quot;&gt;
+&nbsp; &nbsp; &lt;title&gt;Locations - STOMP Example&lt;/title&gt;
+&nbsp; &lt;/head&gt;
+&nbsp; &lt;body&gt;
+&nbsp; &nbsp; &lt;h1&gt;Locations - STOMP Example&lt;/h1&gt;
+&nbsp; &nbsp; &lt;form id='connect_form'&gt;
+&nbsp; &nbsp; &nbsp; &lt;fieldset&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;label&gt;WebSocket URL&lt;/label&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;input name=url id='connect_url'&nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; value='ws://localhost:61614' type=&quot;text&quot;&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;button id='connect_button' type=&quot;submit&quot;&gt;Connect&lt;/button&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;button type=&quot;button&quot;&nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; id='disconnect_button' disabled&gt;Disconnect&lt;/button&gt;
+&nbsp; &nbsp; &nbsp; &lt;/fieldset&gt;
+&nbsp; &nbsp; &lt;/form&gt;
+&nbsp; &nbsp; &lt;form id=&quot;text_form&quot; style=&quot;display: none;&quot;&gt;
+&nbsp; &nbsp; &nbsp; &lt;fieldset&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;legend&gt;Send Text&lt;/legend&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; Device: &lt;select id=&quot;deviceID&quot;&gt;&lt;/select&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;br&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; Text: &lt;input id='text' size=64&nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; placeholder=&quot;type the text to sent to the device&quot; type=&quot;text&quot;&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;br&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;button id='text_submit' type=&quot;submit&quot;&gt;Send&lt;/button&gt;
+&nbsp; &nbsp; &nbsp; &lt;/fieldset&gt;
+&nbsp; &nbsp; &lt;/form&gt;
+&nbsp; &nbsp; &lt;hr&gt;
 
-      &lt;div id=&quot;map-canvas&quot; style=&quot;height:512px; width:100%; padding:0; margin:0&quot;&gt;
-      &lt;/div&gt;
+&nbsp; &nbsp; &lt;div id=&quot;map-canvas&quot; style=&quot;height:512px; width:100%; padding:0; margin:0&quot;&gt;
+&nbsp; &nbsp; &lt;/div&gt;
 
-      &lt;footer&gt;&amp;copy; 2014 &lt;a href=&quot;http://mobile-web-messaging.net&quot;&gt;Mobile &amp;
-      amp; Web Messaging&lt;/a&gt;&lt;/footer&gt;
+&nbsp; &nbsp; &lt;footer&gt;&amp;copy; 2014 &lt;a href=&quot;http://mobile-web-messaging.net&quot;&gt;Mobile &amp;amp;&nbsp;
+&nbsp; &nbsp; &nbsp; Web Messaging&lt;/a&gt;&lt;/footer&gt;
 
-      &lt;!-- Scripts placed at the end of the document so the pages load faster --&gt;
-      &lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.9.0
-      /jquery.min.js&quot;&gt;&lt;/script&gt;
-      &lt;script src=&quot;https://maps.googleapis.com/maps/api/js?v=3.exp&amp;sensor=false&quot;&gt;
-      &lt;/script&gt;
-      &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.1/
-      stomp.min.js&quot;&gt;&lt;/script&gt;
-      &lt;script&gt;
+&nbsp; &nbsp; &lt;!-- Scripts placed at the end of the document so the pages load faster --&gt;
+&nbsp; &nbsp; &lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js&quot;&gt;&lt;/script&gt;
+&nbsp; &nbsp; &lt;script src=&quot;https://maps.googleapis.com/maps/api/js?v=3.exp&amp;sensor=false&quot;&gt;&lt;/script&gt;
+&nbsp; &nbsp; &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.1/stomp.js&quot;&gt;&lt;/script&gt;
+&nbsp; &nbsp; &lt;script&gt;
 $(document).ready(function() {
 
 // We will put all the JavaScript code in this is called
 // when the document is ready
 
 };
-    &lt;/script&gt;
-  &lt;/body&gt;
-&lt;/html&gt;</pre>
+&nbsp; &nbsp; &lt;/script&gt;
+&nbsp; &lt;/body&gt;
+&lt;/html&gt;
+
+</pre>
 </div>
 </section>
 
@@ -449,7 +450,6 @@ function show(deviceID, lat, lng) {
 <figure id="img_web_stomp_2"><img alt="Simulate a freeway drive" src="images/mawm_0303.png" />
 <figcaption>Simulating a freeway drive</figcaption>
 </figure>
-
 </section>
 
 <section data-type="sect1" id="_send_stomp_messages_2">
