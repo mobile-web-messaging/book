@@ -3,7 +3,7 @@
 
 <p class="lead">In this chapter, we will write an iOS application using the MQTTKit library to send and receive messages using<a contenteditable="false" data-primary="mobile messaging with MQTT" data-type="indexterm" id="mobmessMQTT">&nbsp;</a> the MQTT protocol.<a contenteditable="false" data-primary="MQTT" data-secondary="mobile messaging with" data-type="indexterm" id="MQTTmobmess">&nbsp;</a></p>
 
-<p>In <a data-type="xref" href="#ch_introduction_mqtt_example">#ch_introduction_mqtt_example</a>, we described the Motions application (). In this chapter, <a contenteditable="false" data-primary="mobile messaging with MQTT" data-secondary="Motions application (example)" data-type="indexterm">&nbsp;</a>we will write the iOS application that broadcasts the device motion data and receives alert messages.</p>
+<p>In <a data-type="xref" href="#ch_introduction_mqtt_example">#ch_introduction_mqtt_example</a>, we described the Motions application (<a data-type="xref" href="img_mobile_mqtt_1">img_mobile_mqtt_1</a>). In this chapter, <a contenteditable="false" data-primary="mobile messaging with MQTT" data-secondary="Motions application (example)" data-type="indexterm">&nbsp;</a>we will write the iOS application that broadcasts the device motion data and receives alert messages.</p>
 
 <figure id="img_mobile_mqtt_1"><img alt="Diagram of the Motions+ iOS application" src="images/mawm_0601.png" />
 <figcaption>Diagram of the Motions iOS application</figcaption>
@@ -12,7 +12,7 @@
 <div data-type="note">
 <p>Throughout the chapter, we will show all the code required to run the application.</p>
 
-<p>The whole application code can be retrieved from the <a href="https://github.com/mobile-web-messaging/code">GitHub repository</a> in the <em>mqtt/ios/</em> directory.</p>
+<p>The whole application code can be retrieved from the <a href="http://bit.ly/mwm-code">GitHub repository</a> in the <em>mqtt/ios/</em> directory.</p>
 </div>
 
 <section data-type="sect1" id="__code_mqttkit_code">
@@ -20,21 +20,21 @@
 
 <p>This book uses the MQTTKit library for iOS (and Mac OS X) applications.<a contenteditable="false" data-primary="MQTTKit" data-type="indexterm">&nbsp;</a> It is a modern Objective-C library that uses ARC and blocks to write messaging clients in a simple fashion.<a contenteditable="false" data-primary="Objective-C" data-secondary="MQTTKit library" data-type="indexterm">&nbsp;</a> It is based on the <a href="http://mosquitto.org">Mosquitto</a> project that provides a lower-level C implementation of MQTT.</p>
 
-<p>The source code of this library project is hosted on <a href="https://github.com/mobile-web-messaging/MQTTKit">GitHub</a>.</p>
+<p>The source code of this library project is hosted on <a href="http://bit.ly/mwm-mqttkit">GitHub</a>.</p>
 </section>
 
 <section data-type="sect1" id="_create_the_code_motions_code_project_with_xcode">
 <h1>Create the Motions Project with Xcode</h1>
 
-<p>We will use <a href="https://developer.apple.com/xcode/">Xcode</a> to create the Locations iOS application.</p>
+<p>We will use <a href="http://bit.ly/apple-xcode">Xcode</a> to create the Locations iOS application.</p>
 
-<p>After Xcode is installed and started, we select &quot;Create a new Xcode project&quot; from its launch<a contenteditable="false" data-primary="Xcode" data-secondary="creating Motions project" data-type="indexterm">&nbsp;</a> screen.<a contenteditable="false" data-primary="mobile messaging with MQTT" data-secondary="Motions application (example)" data-tertiary="creating Motions project with Xcode" data-type="indexterm">&nbsp;</a> The application will be composed of a single view, so we select the Single View Application template in iOS &rarr; Application from the template screen, as illustrated in .</p>
+<p>After Xcode is installed and started, we select &quot;Create a new Xcode project&quot; from its launch<a contenteditable="false" data-primary="Xcode" data-secondary="creating Motions project" data-type="indexterm">&nbsp;</a> screen.<a contenteditable="false" data-primary="mobile messaging with MQTT" data-secondary="Motions application (example)" data-tertiary="creating Motions project with Xcode" data-type="indexterm">&nbsp;</a> The application will be composed of a single view, so we select the Single View Application template in iOS &rarr; Application from the template screen, as illustrated in <a data-type="xref" href="img_mobile_mqtt_125">img_mobile_mqtt_125</a>.</p>
 
 <figure id="img_mobile_mqtt_125"><img alt="XCode template screen" src="images/mawm_0602.png" />
 <figcaption>Select Single View Application from the template screen</figcaption>
 </figure>
 
-<p>We will call the project Motions and select to build it only for iPhone devices, as illustrated in .</p>
+<p>We will call the project Motions and select to build it only for iPhone devices, as illustrated in <a data-type="xref" href="img_mobile_mqtt_2">img_mobile_mqtt_2</a>.</p>
 
 <figure id="img_mobile_mqtt_2"><img alt="XCode project options screen" src="images/mawm_0603.png" />
 <figcaption>XCode project options screen</figcaption>
@@ -59,7 +59,6 @@ pod 'MQTTKit', :git =&gt; 'https://github.com/mobile-web-messaging/MQTTKit.git'
 
 platform :ios, '5.0'</pre>
 
-
 <p>After saving this file, run the <strong><code>pod install</code></strong> command:<a contenteditable="false" data-primary="pod install command" data-type="indexterm"></a></p>
 
 <div data-type="example" id="ex_mobile_mqtt_2">
@@ -77,7 +76,7 @@ Integrating client project
 [!] From now on use `Motions.xcworkspace`.</pre>
 </div>
 
-<p>We can now open Xcode again, but we must do it using the <em>workspace</em> file named <em>Motions.xcworkspace</em>, and not <a contenteditable="false" data-primary="Xcode" data-secondary="opening Motions workspace file" data-type="indexterm">&nbsp;</a>the <em>project</em> file named <em>Motions.xcodeproj</em> ().</p>
+<p>We can now open Xcode again, but we must do it using the <em>workspace</em> file named <em>Motions.xcworkspace</em>, and not <a contenteditable="false" data-primary="Xcode" data-secondary="opening Motions workspace file" data-type="indexterm">&nbsp;</a>the <em>project</em> file named <em>Motions.xcodeproj</em> (<a data-type="xref" href="img_mobile_mqtt_3">img_mobile_mqtt_3</a>).</p>
 
 <figure id="img_mobile_mqtt_3"><img alt="Open the workspace file" src="images/mawm_0604.png" />
 <figcaption>Open the workspace file</figcaption>
@@ -100,7 +99,7 @@ Command symbol is not displayed in PDF.
 
 <p>We will generate a unique identifier for the iOS device and display it in the view.</p>
 
-<p>Click on <em>Main.storyboard</em> to open it. From the Object library, drag a Label on the View's window. Place it at the top of the view and change the text to &quot;Device ID,&quot; as shown in .</p>
+<p>Click on <em>Main.storyboard</em> to open it. From the Object library, drag a Label on the View's window. Place it at the top of the view and change the text to &quot;Device ID,&quot; as shown in <a data-type="xref" href="img_mobile_mqtt_4">img_mobile_mqtt_4</a>.</p>
 
 <figure id="img_mobile_mqtt_4"><img alt="Add the Device ID label" src="images/mawm_0605.png" />
 <figcaption>Add the Device ID label</figcaption>
@@ -119,7 +118,7 @@ Command symbol is not displayed in PDF.
 
 @end</pre>
 
-<p>Open the <em>Main.storyboard</em> and Ctrl-click on View Controller to see its connection panel. Drag from deviceIDLabel to the UILabel to connect it. See .</p>
+<p>Open the <em>Main.storyboard</em> and Ctrl-click on View Controller to see its connection panel. Drag from deviceIDLabel to the UILabel to connect it. See <a data-type="xref" href="img_mobile_mqtt_5">img_mobile_mqtt_5</a>.</p>
 
 <figure id="img_mobile_mqtt_5"><img alt="Connect the deviceIDLabel outlet property to the device ID UILabel" src="images/mawm_0606.png" />
 <figcaption>Connect the deviceIDLabel outlet property to the Device ID UILabel</figcaption>
@@ -143,7 +142,7 @@ Command symbol is not displayed in PDF.
 
 <p>The device motion will be identified using the <a contenteditable="false" data-primary="pitch, roll, and yaw values" data-secondary="displaying in Motions application (example)" data-type="indexterm">&nbsp;</a>pitch, roll, and yaw values. <a contenteditable="false" data-primary="mobile messaging with STOMP" data-secondary="displaying device motion values" data-type="indexterm">&nbsp;</a>To have some graphical feedback as we move the device, we will add three <code>UILabel</code>s that show these three values.</p>
 
-<p>Click on <em>Main.storyboard</em> to open it. From the Object library, drag three Labels on the View's window below the Device ID label. Change their respective text to &quot;pitch,&quot; &quot;roll,&quot; and &quot;yaw,&quot; as illustrated in .</p>
+<p>Click on <em>Main.storyboard</em> to open it. From the Object library, drag three Labels on the View's window below the Device ID label. Change their respective text to &quot;pitch,&quot; &quot;roll,&quot; and &quot;yaw,&quot; as illustrated in <a data-type="xref" href="img_mobile_mqtt_6">img_mobile_mqtt_6</a>.</p>
 
 <figure id="img_mobile_mqtt_6"><img alt="Add three labels to display the device's pitch, roll and yaw values." src="images/mawm_0607.png" />
 <figcaption>Add three labels to display the device&rsquo;s pitch, roll, and yaw values</figcaption>
@@ -165,7 +164,7 @@ Command symbol is not displayed in PDF.
 
 <p>The next step is to connect the three labels in the <em>Main.storyboard</em> to these three outlet properties.</p>
 
-<p>Open the <em>Main.storyboard</em> and Ctrl-click on View Controller to see its connection panel. Drag from its pitchLabel property to the corresponding pitch UILabel to connect it (see ).</p>
+<p>Open the <em>Main.storyboard</em> and Ctrl-click on View Controller to see its connection panel. Drag from its pitchLabel property to the corresponding pitch UILabel to connect it (see <a data-type="xref" href="img_mobile_mqtt_7">img_mobile_mqtt_7</a>).</p>
 
 <figure id="img_mobile_mqtt_7"><img alt="Connect the pitchLabel outlet property to the pitch UILabel" src="images/mawm_0608.png" />
 <figcaption>Connect the pitchLabel outlet property to the pitch UILabel</figcaption>
@@ -181,11 +180,7 @@ Command symbol is not displayed in PDF.
 
 <p>iOS provides the <code>CoreMotion</code> framework to capture the <a contenteditable="false" data-primary="mobile messaging with STOMP" data-secondary="capturing device motions with CoreMotion framework" data-type="indexterm">&nbsp;</a>motion of the devices.<a contenteditable="false" data-primary="CoreMotion framework" data-type="indexterm">&nbsp;</a></p>
 
-<p>We need to add it to the libraries linked by the application. Click on the Motions project and then the Motions target. In the General tab, under the Linked Frameworks and Libraries section, click on the <code>+</code> button. In the selection window, type &quot;CoreMotion,&quot; select CoreMotion.framework, and click on the Add button.</p>
-
-<figure><img alt="Add the CoreMotion framework" src="images/mawm_0609.png" />
-<figcaption>Add the CoreMotion framework</figcaption>
-</figure>
+<p>We need to add it to the libraries linked by the application (see <a data-type="xref" href="add_cm_frame">add_cm_frame</a>). Click on the Motions project and then the Motions target. In the General tab, under the Linked Frameworks and Libraries section, click on the <code>+</code> button. In the selection window, type &quot;CoreMotion,&quot; select CoreMotion.framework, and click on the Add button.</p>
 
 <p>We can now use the CoreMotion framework by importing <em>CoreMotion/CoreMotion.h</em> at the top of the <em>CoreMotion/CoreMotion.h</em> file.</p>
 
@@ -202,6 +197,10 @@ Command symbol is not displayed in PDF.
 
 <p>This <code>motionManager</code> is used to capture the device motions. We must create a new <code>CMMotionManager</code>, specify the interval of updates, and call its <code>startDeviceMotionUpdatesToQueue:withHandler:</code> method to get the device motion periodically in a block. We create a new <code>NSOperationQueue</code> to receive these updates on this queue.</p>
 
+<figure id="add_cm_frame"><img alt="Add the CoreMotion framework" src="images/mawm_0609.png" />
+<figcaption>Add the CoreMotion framework</figcaption>
+</figure>
+
 <p>The device motion is represented by a <code>CMDeviceMotion</code> object. In our example, we are interested only in its <code>attitude</code> property that contains the pitch, roll, and yaw value we want to broadcast. Their values are expressed in radians, so we will convert them in degrees to display them.</p>
 
 <p>The block to receive motion updates is executed on the <code>NSOperationQueue</code> we created, so we cannot update the <code>UILabel</code> from it. We must instead create another block and call <code>dispatch_async</code> to execute the graphical changes on the UI main queue (which is retrieved by calling <code>dispatch_get_main_queue()</code>).</p>
@@ -211,36 +210,37 @@ Command symbol is not displayed in PDF.
 <pre data-code-language="objc" data-type="programlisting">
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
+&nbsp; &nbsp; [super viewDidLoad];
 
-    self.deviceID = [UIDevice currentDevice].identifierForVendor.UUIDString;
-    NSLog(@&quot;Device identifier is %@&quot;, self.deviceID);
-    self.deviceIDLabel.text = self.deviceID;
+&nbsp; &nbsp; self.deviceID = [UIDevice currentDevice].identifierForVendor.UUIDString;
+&nbsp; &nbsp; NSLog(@&quot;Device identifier is %@&quot;, self.deviceID);
+&nbsp; &nbsp; self.deviceIDLabel.text = self.deviceID;
 
-    self.motionManager = [[CMMotionManager alloc] init];
-    // get the device motion updates every second
-    self.motionManager.deviceMotionUpdateInterval = 1;
-    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
-    [self.motionManager startDeviceMotionUpdatesToQueue:queue
-                                            withHandler:^(CMDeviceMotion
-                                            *motion, NSError *error) {
-        if(!error) {
-            CMAttitude *attitude = motion.attitude;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                // convert values from radians to degrees
-                double pitch = attitude.pitch * 180 / M_PI;
-                double roll = attitude.roll * 180 / M_PI;
-                double yaw = attitude.yaw * 180 / M_PI;
-                self.pitchLabel.text = 
-                [NSString stringWithFormat:@&quot;pitch: %.0f&deg;&quot;, pitch];
-                self.rollLabel.text = 
-                [NSString stringWithFormat:@&quot;roll: %.0f&deg;&quot;, roll];
-                self.yawLabel.text = 
-                [NSString stringWithFormat:@&quot;yaw: %.0f&deg;&quot;, yaw];
-            });
-        }
-    }];
-}</pre>
+&nbsp; &nbsp; self.motionManager = [[CMMotionManager alloc] init];
+&nbsp; &nbsp; // get the device motion updates every second.
+&nbsp; &nbsp; self.motionManager.deviceMotionUpdateInterval = 1;
+&nbsp; &nbsp; NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+&nbsp; &nbsp; [self.motionManager startDeviceMotionUpdatesToQueue:queue
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; withHandler:^(CMDeviceMotion *motion,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; NSError *error) {
+&nbsp; &nbsp; &nbsp; &nbsp; if(!error) {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; CMAttitude *attitude = motion.attitude;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; dispatch_async(dispatch_get_main_queue(), ^{
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // convert values from radians to degrees
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; double pitch = attitude.pitch * 180 / M_PI;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; double roll = attitude.roll * 180 / M_PI;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; double yaw = attitude.yaw * 180 / M_PI;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; self.pitchLabel.text =
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [NSString stringWithFormat:@&quot;pitch: %.0f&deg;&quot;, pitch];
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; self.rollLabel.text =
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [NSString stringWithFormat:@&quot;roll: %.0f&deg;&quot;, roll];
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; self.yawLabel.text =
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [NSString stringWithFormat:@&quot;yaw: %.0f&deg;&quot;, yaw];
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; });
+&nbsp; &nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; }];
+}
+</pre>
 
 <p>We also need to notify the <code>motionManager</code> that we no longer want to receive updates when the view is no longer used. We need to call its <code>stopDeviceMotionUpdates</code> method inside the view controller&rsquo;s <code>dealloc</code> method:</p>
 
@@ -250,11 +250,7 @@ Command symbol is not displayed in PDF.
     [self.motionManager stopDeviceMotionUpdates];
 }</pre>
 
-<p>At this stage, if you run the Motions application on your iPhone and move it, the pitch, roll, and yaw labels will be updated to reflect the changes in the device motions ().</p>
-
-<figure id="img_mobile_mqtt_8"><img alt="The motion values change when the device moves." src="images/mawm_0610.png" />
-<figcaption>The motion values change when the device moves</figcaption>
-</figure>
+<p>At this stage, if you run the Motions application on your iPhone and move it, the pitch, roll, and yaw labels will be updated to reflect the changes in the device motions (<a data-type="xref" href="img_mobile_mqtt_8">img_mobile_mqtt_8</a>).</p>
 
 <div data-type="note">
 <p>The iOS Simulator cannot simulate device motions. If you run the Motions application in the simulator, the <code>motionManager</code> will not send any device motions updates. At the time of writing this book, the only way to test this code is to run the application on a real iOS device.</p>
@@ -262,6 +258,10 @@ Command symbol is not displayed in PDF.
 
 <p>We now capture the device motions and display them. The next step is to broadcast them by sending MQTT messages.</p>
 </section>
+
+<figure id="img_mobile_mqtt_8"><img alt="The motion values change when the device moves." src="images/mawm_0610.png" />
+<figcaption>The motion values change when the device moves</figcaption>
+</figure>
 
 <section data-type="sect1" id="ch_mobile_mqtt_client">
 <h1>Create an MQTT Client with MQTTKit</h1>
@@ -373,7 +373,7 @@ Command symbol is not displayed in PDF.
 
 <p>The <code>MWMViewController</code> automatically connects to the MQTT broker when its view is loaded and disconnects when it is <a contenteditable="false" data-primary="mobile messaging with MQTT" data-secondary="sending MQTT messages" data-type="indexterm" id="mobmessMQTTsend">&nbsp;</a>deallocated.<a contenteditable="false" data-primary="messages" data-secondary="sending MQTT messages" data-type="indexterm" id="messMQTTsend">&nbsp;</a> The next step is to send messages every time the device motion values are updated.</p>
 
-<p>The MQTT protocol is a binary protocol. The message payload must be encoded as binary data<a contenteditable="false" data-primary="payload" data-secondary="binary payload for MQTT messages" data-type="indexterm">&nbsp;</a> to be sent. <a contenteditable="false" data-primary="MQTTKit" data-secondary="methods to send messages" data-type="indexterm">&nbsp;</a>The MQTTKit library provides two methods to send messages:</p>
+<p>The MQTT protocol is a binary protocol. The message payload must be encoded as binary data<a contenteditable="false" data-primary="payload" data-secondary="binary payload for MQTT messages" data-type="indexterm">&nbsp;</a> to be sent. <a contenteditable="false" data-primary="MQTTKit" data-secondary="methods to send messages" data-type="indexterm">&nbsp;</a>The MQTTKit library provides two methods to send <span class="keep-together">messages:</span></p>
 
 <ul>
 	<li>
@@ -395,7 +395,7 @@ Command symbol is not displayed in PDF.
 <section data-type="sect2" id="mqtt_qos">
 <h2>Quality of Service</h2>
 
-<p>The MQTT protocol defines<a contenteditable="false" data-primary="mobile messaging with MQTT" data-secondary="sending MQTT messages" data-tertiary="Quality of Service (QoS)" data-type="indexterm">&nbsp;</a> three levels of<a contenteditable="false" data-primary="Quality of Service (QoS)" data-secondary="levels defined by MQTT protocol" data-type="indexterm">&nbsp;</a> Quality of Service:</p>
+<p>The MQTT protocol defines<a contenteditable="false" data-primary="mobile messaging with MQTT" data-secondary="sending MQTT messages" data-tertiary="Quality of Service (QoS)" data-type="indexterm">&nbsp;</a> three levels of<a contenteditable="false" data-primary="Quality of Service (QoS)" data-secondary="At Most Once, At Least Once, and Exactly Once levels" data-type="indexterm">&nbsp;</a> Quality of Service:</p>
 
 <ul>
 	<li>
@@ -425,7 +425,7 @@ Command symbol is not displayed in PDF.
 <section data-type="sect2" id="_retained_message">
 <h2>Retained Message</h2>
 
-<p>The final parameter of the <code>publish&hellip;</code> methods is a boolean to specify whether the published message must<a contenteditable="false" data-primary="mobile messaging with MQTT" data-secondary="sending MQTT messages" data-tertiary="retained messages" data-type="indexterm">&nbsp;</a> be <em>retained</em> by the topic.<a contenteditable="false" data-primary="retained messages" data-type="indexterm">&nbsp;</a></p>
+<p>The final parameter of the <code>publish&hellip;</code> methods is a boolean to specify whether the published message must<a contenteditable="false" data-primary="mobile messaging with MQTT" data-secondary="sending MQTT messages" data-tertiary="retained messages" data-type="indexterm">&nbsp;</a> be <em>retained</em> by the topic.<a contenteditable="false" data-primary="retained messages (MQTT)" data-type="indexterm">&nbsp;</a></p>
 
 <p>If this flag is set on the message, the broker will deliver the message to its subscribers and keep holding the message. If a new consumer subscribes to this topic, the broker will deliver the retained message to it. This is useful, as the new subscriber will not have to wait for a publisher to send a message to receive new data. The retained message contains the <em>Last Known Good</em> value.<a contenteditable="false" data-primary="Last Known Good value" data-type="indexterm">&nbsp;</a></p>
 
@@ -475,46 +475,47 @@ Command symbol is not displayed in PDF.
 <pre data-code-language="objc" data-type="programlisting">
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
+&nbsp; &nbsp; [super viewDidLoad];
 
-    self.deviceID = [UIDevice currentDevice].identifierForVendor.UUIDString;
-    NSLog(@&quot;Device identifier is %@&quot;, self.deviceID);
-    self.deviceIDLabel.text = self.deviceID;
+&nbsp; &nbsp; self.deviceID = [UIDevice currentDevice].identifierForVendor.UUIDString;
+&nbsp; &nbsp; NSLog(@&quot;Device identifier is %@&quot;, self.deviceID);
+&nbsp; &nbsp; self.deviceIDLabel.text = self.deviceID;
 
-    self.motionManager = [[CMMotionManager alloc] init];
-    // get the device motion updates every second
-    self.motionManager.deviceMotionUpdateInterval = 1;
-    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
-    [self.motionManager startDeviceMotionUpdatesToQueue:queue
-                                            withHandler:^(CMDeviceMotion
-                                            *motion, NSError *error) {
-        if(!error) {
-            CMAttitude *attitude = motion.attitude;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                // convert values from radians to degrees
-                double pitch = attitude.pitch * 180 / M_PI;
-                double roll = attitude.roll * 180 / M_PI;
-                double yaw = attitude.yaw * 180 / M_PI;
-                self.pitchLabel.text = 
-                [NSString stringWithFormat:@&quot;pitch: %.0f&deg;&quot;, pitch];
-                self.rollLabel.text = 
-                [NSString stringWithFormat:@&quot;roll: %.0f&deg;&quot;, roll];
-                self.yawLabel.text = 
-                [NSString stringWithFormat:@&quot;yaw: %.0f&deg;&quot;, yaw];
-            });
-            [self send:attitude];
-        }
-    }];
-
-
-    self.client = [[MQTTClient alloc] initWithClientId:self.deviceID];
-}</pre>
+&nbsp; &nbsp; self.motionManager = [[CMMotionManager alloc] init];
+&nbsp; &nbsp; // get the device motion updates every second.
+&nbsp; &nbsp; self.motionManager.deviceMotionUpdateInterval = 1;
+&nbsp; &nbsp; NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+&nbsp; &nbsp; [self.motionManager startDeviceMotionUpdatesToQueue:queue
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; withHandler:^(CMDeviceMotion *motion,
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; NSError *error) {
+&nbsp; &nbsp; &nbsp; &nbsp; if(!error) {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; CMAttitude *attitude = motion.attitude;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; dispatch_async(dispatch_get_main_queue(), ^{
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; // convert values from radians to degrees
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; double pitch = attitude.pitch * 180 / M_PI;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; double roll = attitude.roll * 180 / M_PI;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; double yaw = attitude.yaw * 180 / M_PI;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; self.pitchLabel.text =
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [NSString stringWithFormat:@&quot;pitch: %.0f&deg;&quot;, pitch];
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; self.rollLabel.text =
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [NSString stringWithFormat:@&quot;roll: %.0f&deg;&quot;, roll];
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; self.yawLabel.text =
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [NSString stringWithFormat:@&quot;yaw: %.0f&deg;&quot;, yaw];
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; });
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [self send:attitude];
+&nbsp; &nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; }];
+&nbsp; &nbsp;&nbsp;
+&nbsp; &nbsp; self.client = [[MQTTClient alloc] initWithClientId:self.deviceID];
+&nbsp; &nbsp; [self connect];
+}
+</pre>
 
 <p>We now have the <code>Motions</code> iOS application that is sending MQTT messages. How can we check that this is working as expected?&nbsp;</p>
 
 <p>Conversely to <code>STOMP</code>, <code>MQTT</code> is a binary protocol and we cannot use a simple telnet client to create a consumer and receive messages sent by the application.</p>
 
-<p>However, the <a href="http://mosquitto.org">Mosquitto broker</a> provides a simple command-line tool to send and receive message from<a contenteditable="false" data-primary="brokers" data-secondary="Mosquitto broker" data-type="indexterm">&nbsp;</a> an MQTT broker. <a data-type="xref" href="#appendix_mosquitto">#appendix_mosquitto</a> explains how to download and install the Mosquitto broker.<a contenteditable="false" data-primary="Mosquitto broker" data-secondary="command-line tool to send/receive messages from MQTT broker" data-type="indexterm">&nbsp;</a> After it is done, we can use its <code>mosquitto_sub</code> command-line tool to connect to an MQTT broker (hosted at <em>iot.eclipse.org</em>) and subscribe to the device motion topic (in my case, <code>/mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/motion</code>; you will have to replace it using your own device identifier).</p>
+<p>However, the <a href="http://mosquitto.org">Mosquitto broker</a> provides a simple command-line tool to send and <span class="keep-together">receive</span> message from<a contenteditable="false" data-primary="brokers" data-secondary="Mosquitto broker" data-type="indexterm">&nbsp;</a> an MQTT broker. <a data-type="xref" href="#appendix_mosquitto">#appendix_mosquitto</a> explains how to download and install the Mosquitto broker.<a contenteditable="false" data-primary="Mosquitto broker" data-secondary="command-line tool to send/receive messages from MQTT broker" data-type="indexterm">&nbsp;</a> After it is done, we can use its <code>mosquitto_sub</code> command-line tool to connect to an MQTT broker (hosted at <em>iot.eclipse.org</em>) and subscribe to the device motion topic (in my case, <code>/mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/motion</code>; you will have to replace it using your own device identifier).</p>
 
 <p>This tool will display the message payload. We are sending binary payload, so we will pipe the command into the <code>hexdump</code> tool to<a contenteditable="false" data-primary="hexdump tool" data-type="indexterm">&nbsp;</a> display the hexadecimal representation of the binary payload:</p>
 
@@ -550,41 +551,43 @@ $ mosquitto_sub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/
 
 <pre data-code-language="objc" data-type="programlisting">
 # pragma mark - UI Actions
-
-// Warn the user by changing the view's background color to the specified color during 2 seconds
+// Warn the user by changing the view's background color to the specified color
+// during 2 seconds
 - (void)warnUser:(NSString *)colorStr
 {
-    // keep a reference to the original color
-    UIColor *originalColor = self.view.backgroundColor;
-
-    [UIView animateWithDuration:0.5
-                          delay:0.0
-                        options:0
-                     animations:^{
-                         // change it to the color passed in parameter
-                         SEL sel = NSSelectorFromString([NSString stringWith
-                         Format:@&quot;%@Color&quot;, colorStr]);
-                         UIColor* color = nil;
-                         if ([UIColor respondsToSelector:sel]) {
-                             color  = [UIColor performSelector:sel];
-                         } else {
-                             color = [UIColor redColor];
-                         }
-                         self.view.backgroundColor = color;
-                     }
-                completion:^(BOOL finished) {
-                         // after a delay of 2 seconds, revert it to 
-                         // the original color
-                         [UIView animateWithDuration:0.5
-                                               delay:2
-                                             options:0
-                                          animations:^{
-                                              self.view.backgroundColor =
-                                              originalColor;
-                                          }
-                                          completion:nil];
-                     }];
-}</pre>
+&nbsp; &nbsp; // keep a reference to the original color
+&nbsp; &nbsp; UIColor *originalColor = self.view.backgroundColor;
+&nbsp; &nbsp;&nbsp;
+&nbsp; &nbsp; [UIView animateWithDuration:0.5
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; delay:0.0
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; options:0
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;animations:^{
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;// change it to the color passed in parameter
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;NSString *colorCode =
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [NSString stringWithFormat:@&quot;%@Color&quot;, colorStr];
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;SEL sel = NSSelectorFromString(colorCode);
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;UIColor* color = nil;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;if ([UIColor respondsToSelector:sel]) {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;color &nbsp;= [UIColor performSelector:sel];
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;} else {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;color = [UIColor redColor];
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;self.view.backgroundColor = color;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;completion:^(BOOL finished) {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;// after a delay of 2 seconds, revert it to
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;// the original color
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;[UIView animateWithDuration:0.5
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;delay:2
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;options:0
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; animations:^{
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; self.view.backgroundColor =
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; originalColor;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; completion:nil];
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}];
+}
+</pre>
 
 <p>To consume messages from an MQTT broker, the <code>client</code> must do the following:</p>
 
@@ -702,29 +705,31 @@ $ mosquitto_sub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/
 <pre data-code-language="objc" data-type="programlisting">
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
+&nbsp; &nbsp; [super viewDidLoad];
 
-    self.deviceID = [UIDevice currentDevice].identifierForVendor.UUIDString;
-    NSLog(@&quot;Device identifier is %@&quot;, self.deviceID);
-    self.deviceIDLabel.text = self.deviceID;
+&nbsp; &nbsp; self.deviceID = [UIDevice currentDevice].identifierForVendor.UUIDString;
+&nbsp; &nbsp; NSLog(@&quot;Device identifier is %@&quot;, self.deviceID);
+&nbsp; &nbsp; self.deviceIDLabel.text = self.deviceID;
 
-    ...
-
-    self.client = [[MQTTClient alloc] initWithClientId:self.deviceID];
-    // use a weak reference to avoid a retain/release cycle in the block
-    __weak MWMViewController *weakSelf = self;
-    self.client.messageHandler = ^(MQTTMessage *message) {
-        NSString *alertTopic = [NSString stringWithFormat:kAlertTopic, weakSelf.deviceID];
-        if ([alertTopic isEqualToString:message.topic]) {
-            NSString *color = message.payloadString;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf warnUser:color];
-            });
-        }
-    };
-
-    [self connect];
-}</pre>
+&nbsp; &nbsp; ...
+&nbsp; &nbsp;&nbsp;
+&nbsp; &nbsp; self.client = [[MQTTClient alloc] initWithClientId:self.deviceID];
+&nbsp; &nbsp; // use a weak reference to avoid a retain/release cycle in the block
+&nbsp; &nbsp; __weak MWMViewController *weakSelf = self;
+&nbsp; &nbsp; self.client.messageHandler = ^(MQTTMessage *message) {
+&nbsp; &nbsp; &nbsp; &nbsp; NSString *alertTopic =
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [NSString stringWithFormat:kAlertTopic, weakSelf.deviceID];
+&nbsp; &nbsp; &nbsp; &nbsp; if ([alertTopic isEqualToString:message.topic]) {
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; NSString *color = message.payloadString;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; dispatch_async(dispatch_get_main_queue(), ^{
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [weakSelf warnUser:color];
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; });
+&nbsp; &nbsp; &nbsp; &nbsp; }
+&nbsp; &nbsp; };
+&nbsp; &nbsp;&nbsp;
+&nbsp; &nbsp; [self connect];
+}
+</pre>
 
 <p>We extracted the color using the message <code>payloadString</code> method after checking that it was indeed coming from the device alert topic. We then call the <code>warnUser:</code> method in a block that is run on the main queue, because it contains code related to <code>UIKit</code>.</p>
 
@@ -737,7 +742,7 @@ $ mosquitto_sub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/
 <pre data-code-language="bash" data-type="programlisting">
 $ mosquitto_pub -h iot.eclipse.org -t /mwm/C0962483-7DD9-43CC-B1A0-2E7FBFC05060/alert -m green</pre>
 
-<p>After this message is sent, the device will receive it and change its background color to green ().</p>
+<p>After this message is sent, the device will receive it and change its background color to green (<a data-type="xref" href="img_mobile_mqtt_225">img_mobile_mqtt_225</a>).</p>
 
 <figure id="img_mobile_mqtt_225"><img alt="Alert message is received by the Motions iOS application" src="images/mawm_0611.png" />
 <figcaption>Alert message is received by the Motions iOS application</figcaption>

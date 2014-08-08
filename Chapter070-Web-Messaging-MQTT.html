@@ -1,38 +1,36 @@
 <section data-type="chapter" id="ch_web_mqtt" xmlns="http://www.w3.org/1999/xhtml">
 <h1>Web Messaging with MQTT</h1>
 
-<p class="lead">In this chapter, we will write a web application that sends and receives messages using the MQTT protocol over HTML5 Web Sockets ().<a contenteditable="false" data-primary="web messaging with MQTT" data-type="indexterm" id="webmessMQTT">&nbsp;</a></p>
+<p class="lead">In this chapter, we will write a web application that sends and receives messages using the MQTT protocol over HTML5 Web Sockets (<a data-type="xref" href="img_web_mqtt_1">img_web_mqtt_1</a>).<a contenteditable="false" data-primary="web messaging with MQTT" data-type="indexterm" id="webmessMQTT">&nbsp;</a></p>
 
 <figure id="img_web_mqtt_1"><img alt="The +Motions+ Web application that displays data for two devices." src="images/mawm_0701.png" />
 <figcaption>Diagram of the Motions web application that displays data for two devices</figcaption>
 </figure>
 
 <div data-type="note">
-<p>Throughout the chapter, we will show all the code required to run the application.</p>
-
-<p>The whole application code can be retrieved from the <a href="https://github.com/mobile-web-messaging/code">GitHub repository</a> in the <em>mqtt/web/</em> directory.</p>
+<p>Throughout the chapter, we will show all the code required to run the application. The whole application code can be retrieved from the <a href="http://bit.ly/mwm-code">GitHub repository</a> in the <em>mqtt/web/</em> directory.</p>
 </div>
 
 <section data-type="sect1" id="_eclipse_paho_javascript_client">
 <h1>Eclipse Paho JavaScript Client</h1>
 
-<p>Earlier, we mentioned that <a href="http://iot.eclipse.org"><em>iot.eclipse.org</em></a> provides a <a contenteditable="false" data-primary="Eclipse, Paho JavaScript client" data-type="indexterm">&nbsp;</a>public MQTT broker that we use for our MQTT applications.<a contenteditable="false" data-primary="web messaging with MQTT" data-secondary="Eclipse Paho JavaScript client" data-type="indexterm">&nbsp;</a> <a contenteditable="false" data-primary="JavaScript" data-secondary="Eclipse Paho JavaScript MQTT client" data-type="indexterm">&nbsp;</a>Eclipse also provides a variety of MQTT clients for different languages and platforms.&nbsp; In particular, it has a JavaScript client for web browsers, which uses HTML5 Web Sockets.<a contenteditable="false" data-primary="Web Sockets" data-secondary="Eclipse Paho JavaScript client that uses" data-type="indexterm">&nbsp;</a></p>
+<p>Earlier, we mentioned that iot.eclipse.org provides a <a contenteditable="false" data-primary="Eclipse" data-secondary="Paho JavaScript client" data-type="indexterm">&nbsp;</a>public MQTT broker that we use for our MQTT applications.<a contenteditable="false" data-primary="web messaging with MQTT" data-secondary="Eclipse Paho JavaScript client" data-type="indexterm">&nbsp;</a> <a contenteditable="false" data-primary="JavaScript" data-secondary="Eclipse Paho JavaScript MQTT client" data-type="indexterm">&nbsp;</a>Eclipse also provides a variety of MQTT clients for different languages and platforms.&nbsp; In particular, it has a JavaScript client for web browsers, which uses HTML5 Web Sockets.<a contenteditable="false" data-primary="Web Sockets" data-secondary="Eclipse Paho JavaScript client that uses" data-type="indexterm">&nbsp;</a></p>
 
-<p>The source code of the project is hosted in this <a href="http://git.eclipse.org/c/paho/org.eclipse.paho.mqtt.javascript.git/">Git repository</a>.</p>
+<p>The source code of the project is hosted in this <a href="http://bit.ly/eclipse-git">Git repository</a>.</p>
 </section>
 
 <section data-type="sect1" id="_bootstrap_the_code_motions_html_code_web_application">
 <h1>Bootstrap the Motions Web Application</h1>
 
-<p>As we explained in <a data-type="xref" href="#ch_introduction_mqtt_example">#ch_introduction_mqtt_example</a>, this web application will display on a web page the motion data sent by the devices using the Motions iOS application written in .<a contenteditable="false" data-primary="web messaging with MQTT" data-secondary="bootstrapping Motions web application" data-type="indexterm">&nbsp;</a> Additionally, the web application will also be able to send alert messages to the devices.</p>
+<p>As we explained in <a data-type="xref" href="#ch_introduction_mqtt_example">#ch_introduction_mqtt_example</a>, this web application will display on a web page the motion data sent by the devices using the Motions iOS application written in <a contenteditable="false" data-primary="web messaging with MQTT" data-secondary="bootstrapping Motions web application" data-type="indexterm">&nbsp;</a>. Additionally, the web application will also be able to send alert messages to the devices.</p>
 
 <p>It will be a very simple one-page web application that can be run from a web server serving static pages. It does not require any server-side runtime as all the code will be executed inside the web browser using JavaScript.</p>
 
-<p>The device motions data will be displayed graphically as <a href="http://en.wikipedia.org/wiki/Sparkline">Sparklines</a>. The web application <a contenteditable="false" data-primary="sparklines" data-type="indexterm">&nbsp;</a>uses jQuery and a library named <a href="http://omnipotent.net/jquery.sparkline">jQuery Sparklines</a> to draw them.<a contenteditable="false" data-primary="jQuery" data-secondary="Sparklines library" data-type="indexterm">&nbsp;</a></p>
+<p>The device motions data will be displayed graphically as Sparklines. The web application <a contenteditable="false" data-primary="sparklines" data-type="indexterm">&nbsp;</a>uses jQuery and a library named <a href="http://bit.ly/jq-spark">jQuery Sparklines</a> to draw them.<a contenteditable="false" data-primary="jQuery" data-secondary="Sparklines library" data-type="indexterm">&nbsp;</a></p>
 
 <p>Note, however, that we use jQuery for convenience, but the MQTT JavaScript client does not require it at all and can be used with any JavaScript frameworks or libraries.</p>
 
-<p>Let&rsquo;s bootstrap the web application by creating a <em>motions.html</em> page.</p>
+<p>Let&rsquo;s bootstrap the web application by creating a <em>motions.html</em> page, seen in <a data-type="xref" href="ex_web_mqtt_1">ex_web_mqtt_1</a>.</p>
 
 <div data-type="example" id="ex_web_mqtt_1">
 <h5>Template for the motions.html web application</h5>
@@ -143,7 +141,7 @@ client.connect({onSuccess: function(frame) {
 <section data-type="sect1" id="_receive_mqtt_messages">
 <h1>Receive MQTT Messages</h1>
 
-<p>Once the client is successfully <a contenteditable="false" data-primary="messages" data-secondary="receiving MQTT messages" data-tertiary="web application Motions (example)" data-type="indexterm">&nbsp;</a>connected to the MQTT broker (i.e., when the <code>onSuccess</code> handler is called), we can then subscribe to a topic to receive all the device motions.<a contenteditable="false" data-primary="web messaging with MQTT" data-secondary="receiving MQTT messages" data-type="indexterm">&nbsp;</a></p>
+<p>Once the client is successfully <a contenteditable="false" data-primary="messages" data-secondary="receiving MQTT messages" data-tertiary="Motions web application (example)" data-type="indexterm">&nbsp;</a>connected to the MQTT broker (i.e., when the <code>onSuccess</code> handler is called), we can then subscribe to a topic to receive all the device motions.<a contenteditable="false" data-primary="web messaging with MQTT" data-secondary="receiving MQTT messages" data-type="indexterm">&nbsp;</a></p>
 
 <p>The MQTT client does not know the whole list of devices that send their motion data, so it cannot subscribe to specific MQTT topics.</p>
 
@@ -314,7 +312,7 @@ function updateSparklines(deviceID, pitch, yaw, roll) {
 
 <p>Note that we also create an &quot;Alert!&quot; button for each device that calls the <code>sendAlert()</code> method with the <code>deviceID</code> when the button is clicked. We will implement this method in the next section.</p>
 
-<p>At this stage, we can now load the application in a web browser. If there are devices that are running the Motions iOS application, we will see them appear automatically on the page ().</p>
+<p>At this stage, we can now load the application in a web browser. If there are devices that are running the Motions iOS application, we will see them appear automatically on the page (<a data-type="xref" href="img_web_mqtt_2">img_web_mqtt_2</a>).</p>
 
 <figure id="img_web_mqtt_2"><img alt="Two +Motions+ app are publishing their device motions." src="images/mawm_0702.png" />
 <figcaption>Two devices publishing their motions via the Motions application</figcaption>
@@ -344,12 +342,7 @@ function sendAlert(deviceID) {
   client.send(message);
 }</pre>
 
-<p>If we reload the web application and click on an &quot;Alert!&quot; button, the corresponding device will receive the message from its alert topic and the code that we wrote in <a data-type="xref" href="#ch_mobile_mqtt_receive">#ch_mobile_mqtt_receive</a> will be executed to temporarily change the background color of the device ().</p>
-
-<figure id="img_web_mqtt_3"><img alt="The +Motions+ application background becomes red when an alert is received from its alert topic." src="images/mawm_0703.png" />
-<figcaption>The Motions application background becomes red when an alert is received from its alert topic</figcaption>
-</figure>
-</section>
+<p>If we reload the web application and click on an &quot;Alert!&quot; button, the corresponding device will receive the message from its alert topic and the code that we wrote in <a data-type="xref" href="#ch_mobile_mqtt_receive">#ch_mobile_mqtt_receive</a> will be executed to temporarily change the background color of the device (<a data-type="xref" href="img_web_mqtt_3">img_web_mqtt_3</a>).</p>
 
 <section data-type="sect1" id="_summary_7">
 <h1>Summary</h1>
@@ -377,6 +370,11 @@ function sendAlert(deviceID) {
 	<p>Send the message to a topic.</p>
 	</li>
 </ol>
+
+<figure id="img_web_mqtt_3"><img alt="The +Motions+ application background becomes red when an alert is received from its alert topic." src="images/mawm_0703.png" />
+<figcaption>The Motions application background becomes red when an alert is received from its alert topic</figcaption>
+</figure>
+</section>
 
 <p>To consume a message, the application must do the following:</p>
 

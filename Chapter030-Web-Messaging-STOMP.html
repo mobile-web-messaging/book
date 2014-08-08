@@ -3,7 +3,7 @@
 
 <p class="lead">In this chapter, we will write a web application that sends and receives messages using the STOMP protocol <a contenteditable="false" data-primary="web messaging with STOMP" data-type="indexterm" id="webmessSTOMP">&nbsp;</a>over HTML5 Web Sockets.<a contenteditable="false" data-primary="STOMP" data-secondary="web messaging with" data-type="indexterm" id="STOMPwebmess">&nbsp;</a></p>
 
-<p>In <a data-type="xref" href="#ch_introduction_stomp_example">#ch_introduction_stomp_example</a>, we described the Locations application. In this chapter, we will write the web application (shown in ) that consumes the device&rsquo;s GPS position to display it on a map and send text messages to the device.</p>
+<p>In <a data-type="xref" href="#ch_introduction_stomp_example">#ch_introduction_stomp_example</a>, we described the Locations application. In this chapter, we will write the web application (shown in <a data-type="xref" href="img_web_stomp_1">img_web_stomp_1</a>) that consumes the device&rsquo;s GPS position to display it on a map and send text messages to the device.</p>
 
 <figure id="img_web_stomp_1"><img alt="Diagram of the +Locations+ Web application" src="images/mawm_0301.png" />
 <figcaption>Diagram of the Locations web application</figcaption>
@@ -12,7 +12,7 @@
 <div data-type="note">
 <p>Throughout the chapter, we will show all the code required to run the application.</p>
 
-<p>The whole application code can be retrieved from the <a href="https://github.com/mobile-web-messaging/code">GitHub repository</a> in the <em>stomp/web/</em> directory.</p>
+<p>The whole application code can be retrieved from the <a href="http://bit.ly/mwm-code">GitHub repository</a> in the <em>stomp/web/</em> directory.</p>
 </div>
 
 <section data-type="sect1" id="_html5_web_sockets">
@@ -27,7 +27,7 @@
 <div data-type="note">
 <p>Web Sockets have many use cases in addition to messaging. In some simple cases, sending data on Web Sockets without using a messaging protocol could be enough.</p>
 
-<p>For further information, the book <a class="orm:hideurl " href="http://bit.ly/hpbn-book">High Performance Browser Networking</a> contains a thorough introduction to Web Sockets.</p>
+<p>For further information, the book <a class="orm:hideurl " href="http://bit.ly/hpbn-book"><em>High Performance Browser Networking</em></a> contains a thorough introduction to Web Sockets.</p>
 </div>
 </section>
 
@@ -43,7 +43,7 @@
 <div data-type="warning">
 <p>A STOMP client running in a web browser is similar to another STOMP client running on another platform with one exception: STOMP messages are transported by Web Sockets and not regular TCP sockets. The significant difference between them is that a Web Socket is created by sending an HTTP request with an <code>Upgrade: websocket</code> header. The STOMP broker must be able to handle such an HTTP request and upgrade the connection from HTTP to the STOMP protocol.</p>
 
-<p>Web Sockets support is not part of the STOMP protocol. The most commonly used STOMP brokers&#x2014;such as ActiveMQ (which is used in this book), HornetQ, and RabbitMQ&#x2014;support it, but you will have to consult your broker documentation to check if it does.</p>
+<p>Web Sockets support is not part of the STOMP protocol. The most commonly used STOMP brokers&mdash;such as ActiveMQ (which is used in this book), HornetQ, and RabbitMQ&mdash;support it, but you will have to consult your broker documentation to check if it does.</p>
 </div>
 </section>
 
@@ -54,7 +54,7 @@
 
 <p>It will be a very simple one-page web application that can be run from a web server serving static pages. It does not require any server-side runtime, as all the code will be executed inside the web browser using JavaScript.</p>
 
-<p>As shown in , let&rsquo;s bootstrap the web application by creating a <em>locations.html</em> page.</p>
+<p>As shown in <a data-type="xref" href="ex_web_stomp_1">ex_web_stomp_1</a>, let&rsquo;s bootstrap the web application by creating a <em>locations.html</em> page.</p>
 
 <div data-type="example" id="ex_web_stomp_1">
 <h5>Template for the locations.html web application</h5>
@@ -62,57 +62,58 @@
 <pre data-code-language="html" data-type="programlisting">
 &lt;!DOCTYPE html&gt;
 &lt;html lang=&quot;en&quot;&gt;
-  &lt;head&gt;
-    &lt;meta content=&quot;width=device-width&quot; name=&quot;viewport&quot;&gt;
-    &lt;meta charset=&quot;utf-8&quot;&gt;
-    &lt;title&gt;Locations - STOMP Example&lt;/title&gt;
-  &lt;/head&gt;
-  &lt;body&gt;
-    &lt;h1&gt;Locations - STOMP Example&lt;/h1&gt;
-      &lt;form id='connect_form'&gt;
-        &lt;fieldset&gt;
-          &lt;label&gt;WebSocket URL&lt;/label&gt;
-          &lt;input name=url id='connect_url' value='ws://localhost:61614' type=&quot;text&quot;&gt;
-          &lt;button id='connect_button' type=&quot;submit&quot;&gt;Connect&lt;/button&gt;
-          &lt;button type=&quot;button&quot; id='disconnect_button' disabled&gt;Disconnect&lt;/button&gt;
-        &lt;/fieldset&gt;
-      &lt;/form&gt;
-      &lt;form id=&quot;text_form&quot; style=&quot;display: none;&quot;&gt;
-        &lt;fieldset&gt;
-          &lt;legend&gt;Send Text&lt;/legend&gt;
-          Device: &lt;select id=&quot;deviceID&quot;&gt;&lt;/select&gt;
-          &lt;br&gt;
-          Text: &lt;input id='text' size=64 placeholder=&quot;type the text 
-          to sent to the device&quot; type=&quot;text&quot;&gt;
-          &lt;br&gt;
-          &lt;button id='text_submit' type=&quot;submit&quot;&gt;Send&lt;/button&gt;
-        &lt;/fieldset&gt;
-      &lt;/form&gt;
-      &lt;hr&gt;
+&nbsp; &lt;head&gt;
+&nbsp; &nbsp; &lt;meta content=&quot;width=device-width&quot; name=&quot;viewport&quot;&gt;
+&nbsp; &nbsp; &lt;meta charset=&quot;utf-8&quot;&gt;
+&nbsp; &nbsp; &lt;title&gt;Locations - STOMP Example&lt;/title&gt;
+&nbsp; &lt;/head&gt;
+&nbsp; &lt;body&gt;
+&nbsp; &nbsp; &lt;h1&gt;Locations - STOMP Example&lt;/h1&gt;
+&nbsp; &nbsp; &lt;form id='connect_form'&gt;
+&nbsp; &nbsp; &nbsp; &lt;fieldset&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;label&gt;WebSocket URL&lt;/label&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;input name=url id='connect_url'&nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; value='ws://localhost:61614' type=&quot;text&quot;&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;button id='connect_button' type=&quot;submit&quot;&gt;Connect&lt;/button&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;button type=&quot;button&quot;&nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; id='disconnect_button' disabled&gt;Disconnect&lt;/button&gt;
+&nbsp; &nbsp; &nbsp; &lt;/fieldset&gt;
+&nbsp; &nbsp; &lt;/form&gt;
+&nbsp; &nbsp; &lt;form id=&quot;text_form&quot; style=&quot;display: none;&quot;&gt;
+&nbsp; &nbsp; &nbsp; &lt;fieldset&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;legend&gt;Send Text&lt;/legend&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; Device: &lt;select id=&quot;deviceID&quot;&gt;&lt;/select&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;br&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; Text: &lt;input id='text' size=64&nbsp;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; placeholder=&quot;type the text to sent to the device&quot; type=&quot;text&quot;&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;br&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;button id='text_submit' type=&quot;submit&quot;&gt;Send&lt;/button&gt;
+&nbsp; &nbsp; &nbsp; &lt;/fieldset&gt;
+&nbsp; &nbsp; &lt;/form&gt;
+&nbsp; &nbsp; &lt;hr&gt;
 
-      &lt;div id=&quot;map-canvas&quot; style=&quot;height:512px; width:100%; padding:0; margin:0&quot;&gt;
-      &lt;/div&gt;
+&nbsp; &nbsp; &lt;div id=&quot;map-canvas&quot; style=&quot;height:512px; width:100%; padding:0; margin:0&quot;&gt;
+&nbsp; &nbsp; &lt;/div&gt;
 
-      &lt;footer&gt;&amp;copy; 2014 &lt;a href=&quot;http://mobile-web-messaging.net&quot;&gt;Mobile &amp;
-      amp; Web Messaging&lt;/a&gt;&lt;/footer&gt;
+&nbsp; &nbsp; &lt;footer&gt;&amp;copy; 2014 &lt;a href=&quot;http://mobile-web-messaging.net&quot;&gt;Mobile &amp;amp;&nbsp;
+&nbsp; &nbsp; &nbsp; Web Messaging&lt;/a&gt;&lt;/footer&gt;
 
-      &lt;!-- Scripts placed at the end of the document so the pages load faster --&gt;
-      &lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.9.0
-      /jquery.min.js&quot;&gt;&lt;/script&gt;
-      &lt;script src=&quot;https://maps.googleapis.com/maps/api/js?v=3.exp&amp;sensor=false&quot;&gt;
-      &lt;/script&gt;
-      &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.1/
-      stomp.min.js&quot;&gt;&lt;/script&gt;
-      &lt;script&gt;
+&nbsp; &nbsp; &lt;!-- Scripts placed at the end of the document so the pages load faster --&gt;
+&nbsp; &nbsp; &lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js&quot;&gt;&lt;/script&gt;
+&nbsp; &nbsp; &lt;script src=&quot;https://maps.googleapis.com/maps/api/js?v=3.exp&amp;sensor=false&quot;&gt;&lt;/script&gt;
+&nbsp; &nbsp; &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.1/stomp.js&quot;&gt;&lt;/script&gt;
+&nbsp; &nbsp; &lt;script&gt;
 $(document).ready(function() {
 
 // We will put all the JavaScript code in this is called
 // when the document is ready
 
 };
-    &lt;/script&gt;
-  &lt;/body&gt;
-&lt;/html&gt;</pre>
+&nbsp; &nbsp; &lt;/script&gt;
+&nbsp; &lt;/body&gt;
+&lt;/html&gt;
+
+</pre>
 </div>
 </section>
 
@@ -210,7 +211,7 @@ client.connect({}, connectedCallback,
 	<p>The name of the destination</p>
 	</li>
 	<li>
-	<p>A function that is called back every time the broker delivers a message to the client</p>
+	<p>A function that is called back every time the broker delivers a message to the <span class="keep-together">client:</span></p>
 	</li>
 </ul>
 
@@ -218,7 +219,6 @@ client.connect({}, connectedCallback,
 client.subscribe(destination, function(message) {
   // this function is executed every time a message is consumed
 });</pre>
-
 
 <p>The <code>message</code> parameter that is passed to the subscription callback corresponds to a STOMP message and has three properties:</p>
 
@@ -253,7 +253,7 @@ for (deviceID in deviceIDs) {
 
 <p>But what happens if another device starts broadcasting its location <em>after</em> the web application fetches the list of device IDs? The web application will not subscribe to its topic and will never display it on the map. We would have to periodically fetch the list of device IDs and check whether there are new ones or if some devices have been removed.</p>
 
-<p>Fortunately, the flexibility of the STOMP protocol comes in handy to manage this in a simpler fashion. The STOMP 1.2 protocol defines very loosely the notion of destination:</p>
+<p>Fortunately, the flexibility of the STOMP protocol comes in handy to manage this in a simpler fashion. The STOMP 1.2 protocol defines very loosely the notion of <span class="keep-together">destination:</span></p>
 
 <blockquote data-type="epigraph">
 <p>A STOMP server is modelled as a set of destinations to which messages can be sent. The STOMP protocol treats destinations as opaque string and their syntax is server implementation specific. Additionally STOMP does not define what the delivery semantics of destinations should be. The delivery, or &ldquo;message exchange&rdquo;, semantics of destinations can vary from server to server and even from destination to destination. This allows servers to be creative with the semantics that they can support with STOMP.</p>
@@ -261,7 +261,7 @@ for (deviceID in deviceIDs) {
 
 <p>Until now, we have used <em>simple</em> destinations (e.g., <code>/topic/device.2262EC25-E9FD-4578-BADE-4E113DE45934.location</code> or <code>/queue/device.2262EC25-E9FD-4578-BADE-4E113DE45934.text</code>) that are straightforward to understand.</p>
 
-<p>We will now use a feature<a contenteditable="false" data-primary="wildcard destinations" data-type="indexterm">&nbsp;</a> from our STOMP broker, <a contenteditable="false" data-primary="ActiveMQ" data-secondary="wildcard destinations" data-type="indexterm">&nbsp;</a>ActiveMQ, that allows us to use <a href="http://activemq.apache.org/wildcards.html"><em>wildcard</em> destinations</a>.</p>
+<p>We will now use a feature<a contenteditable="false" data-primary="wildcard destinations" data-type="indexterm">&nbsp;</a> from our STOMP broker, <a contenteditable="false" data-primary="ActiveMQ" data-secondary="wildcard destinations" data-type="indexterm">&nbsp;</a>ActiveMQ, that allows us to use <a href="http://bit.ly/activemq"><em>wildcard</em> destinations</a>.</p>
 
 <ul>
 	<li>
@@ -319,7 +319,7 @@ client.subscribe(destination, function(message) {
   //...
 });</pre>
 
-<p>When we receive the position of a device, the last step we need to make is to display its position on a map. We will wrap this code in a <code>show</code> method that is called from the subscription callback with the device identifier, its latitute and longitude.</p>
+<p>When we receive the position of a device, the last step we need to make is to display its position on a map. We will wrap this code in a <code>show</code> method that is called from the subscription callback. The callback will pass three parameters to this method: the device identifier, its latitude, and its longitude.</p>
 
 <p>The code to connect to the STOMP broker and subscribe to the wildcard destination is shown here:</p>
 
@@ -374,7 +374,7 @@ function connect(url) {
 <section data-type="sect1" id="_draw_the_device_locations_on_a_map">
 <h1>Draw the Device Locations on a Map</h1>
 
-<p>The web application is now receiving the GPS coordinates of any devices that send them.<a contenteditable="false" data-primary="web messaging with STOMP" data-secondary="drawing device locations on a map" data-type="indexterm">&nbsp;</a> We could just display them as text like we did for the iOS application in <a data-type="xref" href="#ch_mobile_stomp_display_position">#ch_mobile_stomp_display_position</a>, but we can make it prettier by drawing them on a map using the Google Maps API.<a contenteditable="false" data-primary="Google Maps API, using to draw device locations on a map" data-type="indexterm">&nbsp;</a></p>
+<p>The web application is now receiving the GPS coordinates of any devices that send them.<a contenteditable="false" data-primary="web messaging with STOMP" data-secondary="drawing device locations on a map" data-type="indexterm">&nbsp;</a> We could just display them as text like we did for the iOS application in <a data-type="xref" href="#ch_mobile_stomp_display_position">#ch_mobile_stomp_display_position</a>, but we can make it prettier by drawing them on a map using the Google Maps API.<a contenteditable="false" data-primary="Google Maps API" data-type="indexterm">&nbsp;</a></p>
 
 <p>In the template in <a data-type="xref" href="#ex_web_stomp_1">#ex_web_stomp_1</a>, we already added the scripts to use Google Maps API. We now need to create the map and initialize it:</p>
 
@@ -433,23 +433,23 @@ function show(deviceID, lat, lng) {
   }
 }</pre>
 
-<p>If we now open this <em>locations.html</em> file in a web browser, we will see a map of the whole world displayed ().</p>
+<p>If we now open this <em>locations.html</em> file in a web browser, we will see a map of the whole world<a contenteditable="false" data-primary="Google Maps API" data-secondary="map for Locations STOMP application (example)" data-type="indexterm">&nbsp;</a> displayed (<a data-type="xref" href="img_web_stomp_125">img_web_stomp_125</a>).</p>
+
+<p>If we click on the Connect button, markers will appear on the map for each device that broadcasts its coordinates.</p>
+
+<p>In my case, I am using the iOS simulator to run the mobile application developed in . I use the Location tool to simulate a freeway drive (as explained in <a data-type="xref" href="#ch_mobile_stomp_location_simulator">#ch_mobile_stomp_location_simulator</a>). See <a data-type="xref" href="img_web_stomp_2">img_web_stomp_2</a>.</p>
+
+<p>The position of the device is updated every time the web application receives a STOMP message from the device&rsquo;s position destination and we see it move on the map.</p>
+
+<p>At this stage, the web application receives STOMP messages to display the position of the devices. We now need to write the code to send texts to the devices.</p>
 
 <figure id="img_web_stomp_125"><img alt="The Locations Web application" src="images/mawm_0302.png" />
 <figcaption>The Locations web application</figcaption>
 </figure>
 
-<p>If we click on the Connect button, markers will appear on the map for each device that broadcasts its coordinates.</p>
-
-<p>In my case, I am using the iOS simulator to run the mobile application developed in <a data-type="xref" href="ch_mobile_stomp"></a>. I use the Location tool to simulate a freeway drive (as explained in <a data-type="xref" href="#ch_mobile_stomp_location_simulator">#ch_mobile_stomp_location_simulator</a>). See .</p>
-
 <figure id="img_web_stomp_2"><img alt="Simulate a freeway drive" src="images/mawm_0303.png" />
 <figcaption>Simulating a freeway drive</figcaption>
 </figure>
-
-<p>The position of the device is updated every time the web application receives a STOMP message from the device&rsquo;s position destination and we see it move on the map.</p>
-
-<p>At this stage, the web application receives STOMP messages to display the position of the devices. We now need to write the code to send texts to the devices.</p>
 </section>
 
 <section data-type="sect1" id="_send_stomp_messages_2">
@@ -471,7 +471,7 @@ function show(deviceID, lat, lng) {
 <pre data-code-language="js" data-type="programlisting">
 client.send(destination, {}, body);</pre>
 
-<p>As we described in <a data-type="xref" href="#ch_introduction_stomp_example_topology">#ch_introduction_stomp_example_topology</a>, we use a queue to send orders to a given device, and the destination for this is named <code>/queue/device.XXX.text</code>.</p>
+<p>As we described in <a data-type="xref" href="#ch_introduction_stomp_example_topology">#ch_introduction_stomp_example_topology</a>, we use a queue to send orders to a given device, and the destination for this is named <span class="keep-together"><code>/queue/device.XXX.text</code></span>.</p>
 
 <p>The text is sent in the STOMP message body as a plain-text string:</p>
 
@@ -503,13 +503,13 @@ $('#text_form').submit(function() {
 
 <p>If we reload the <em>locations.html</em> file after adding this code, we can now send any text message to a device by selecting it in the list in the Send Text form.</p>
 
-<p>As illustrated in <a data-type="xref" href="img_web_stomp_3"></a>, let's type &quot;Hello, where are you?&quot; and click on the Send button.</p>
+<p>As illustrated in , let's type &quot;Hello, where are you?&quot; and click on the Send button.</p>
 
 <figure id="img_web_stomp_3"><img alt="Send a text message to a device" src="images/mawm_0304.png" />
 <figcaption>Send a text message to a device</figcaption>
 </figure>
 
-<p>The message is sent when you click on the Send button. The Locations iOS application is subscribed to this destination, so it will receive the message and display it in its table ().</p>
+<p>The message is sent when you click on the Send button. The Locations iOS application is subscribed to this destination, so it will receive the message and display it in its table (<a data-type="xref" href="img_web_stomp_4">img_web_stomp_4</a>).</p>
 
 <figure id="img_web_stomp_4"><img alt="The Locations iOS application received the text" src="images/mawm_0305.png" />
 <figcaption>The Locations iOS application received the text</figcaption>

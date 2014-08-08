@@ -56,7 +56,7 @@
 <section data-type="sect1" id="_messaging_models">
 <h1>Messaging Models</h1>
 
-<p>A messaging model describes how the messages will be routed between the producer and consumers.<a contenteditable="false" data-primary="models, messaging" data-type="indexterm">&nbsp;</a></p>
+<p>A messaging model describes how <a contenteditable="false" data-primary="messaging models" data-see="models, messaging" data-type="indexterm">&nbsp;</a>the messages will be routed between the producer and consumers.<a contenteditable="false" data-primary="models, messaging" data-type="indexterm">&nbsp;</a></p>
 
 <p>There are two main messaging models:</p>
 
@@ -140,9 +140,9 @@
 
 <p>Each truck is responsible for the delivery of packages and the drivers receive orders from the company's headquarters. To efficiently manage all the trucks, the company wants to monitor the truck&rsquo;s positions and be able to adjust the orders as necessary.</p>
 
-<p>We will build a very simple application named Locations that looks similar to this example (see ).</p>
+<p>We will build a very simple application named Locations that looks similar to this example (see <a data-type="xref" href="img_example_app_1">img_example_app_1</a>).</p>
 
-<p>The &quot;truck&quot; will use an iOS application to broadcast the device&rsquo;s geolocation data using its GPS sensor and display text messages that it receives from the headquarters.&nbsp; The &quot;headquarters&quot; will use a web application to display the location of all the &quot;trucks&quot; on a map.<a contenteditable="false" data-primary="web applications" data-secondary="Locations application (example)" data-type="indexterm">&nbsp;</a> It will also be used to send text messages to a given truck on their devices:</p>
+<p>The &quot;truck&quot; will use an iOS application to broadcast the device&rsquo;s geolocation data using its GPS sensor and display text messages that it receives from the headquarters.&nbsp; The &quot;headquarters&quot; will use a web application to display the location of all the trucks on a map.<a contenteditable="false" data-primary="web applications" data-secondary="Locations application (example)" data-type="indexterm">&nbsp;</a> It will also be used to send text messages to a given truck on their devices:</p>
 
 <ul>
 	<li>
@@ -152,10 +152,6 @@
 	<p>In <a data-type="xref" href="#ch_web_stomp">#ch_web_stomp</a>, we will write the web application using the STOMP protocol over Web Sockets to receive GPS data in a web browser and send text to the devices.</p>
 	</li>
 </ul>
-
-<figure id="img_example_app_1"><img alt="Diagram of the Locations application with two devices, AAA and BBB, and two web applications" src="images/mawm_0105.png" />
-<figcaption>Diagram of the Locations application with two devices, AAA and BBB, and two web applications</figcaption>
-</figure>
 
 <p>Before introducing STOMP, the messaging protocol that will be used by the application, we can already define the application&rsquo;s messaging models and how the different parts of the application will exchange messages.</p>
 
@@ -174,6 +170,11 @@
 </ul>
 
 <p>A topic is used to send the GPS data, as this allows potentially many consumers to receive the information. However, a queue is used to handle the device&rsquo;s text as only one single device will consume messages from this destination.</p>
+
+<figure id="img_example_app_1"><img alt="Diagram of the Locations application with two devices, AAA and BBB, and two web applications" src="images/mawm_0105.png" />
+<figcaption>Diagram of the Locations application with two devices, AAA and BBB, and two web applications</figcaption>
+</figure>
+
 
 <p>Each device (identified by a unique identifier <code>XXX</code>) running the Locations application will be:</p>
 
@@ -212,17 +213,17 @@
 	</li>
 </ul>
 
-<p>The Locations iOS application will send the GPS data using a JSON representation in <a contenteditable="false" data-primary="JSON" data-secondary="message payload in Locations iOS application" data-type="indexterm">&nbsp;</a>the message payload ().</p>
+<p>The Locations iOS application will send the GPS data using a JSON representation in <a contenteditable="false" data-primary="JSON" data-secondary="message payload in Locations iOS application" data-type="indexterm">&nbsp;</a>the message payload (<a data-type="xref" href="ex_example_gps_data">ex_example_gps_data</a>).</p>
 
 <div data-type="example" id="ex_example_gps_data">
 <h5>Geolocation message payload</h5>
 
 <pre data-type="programlisting">
 {
-  &quot;deviceID&quot;: &quot;BBB&quot;,<a class="co" href="#callout_ch1-co-1" id="co_ch1-co-1"><img alt="1" src="images/callouts/1.png" /></a>
-  &quot;lat&quot;: 48.8581,<a class="co" href="#callout_ch1-co-2" id="co_ch1-co-2"><img alt="2" src="images/callouts/2.png" /></a>
-  &quot;lng&quot;: 2.2946,<a class="co" href="#callout_ch1-co-3" id="co_ch1-co-3"><img alt="3" src="images/callouts/3.png" /></a>
-  &quot;ts&quot;: &quot;2013-09-23T08:43Z&quot;<a class="co" href="#callout_ch1-co-4" id="co_ch1-co-4"><img alt="4" src="images/callouts/4.png" /></a>
+  &quot;deviceID&quot;: &quot;BBB&quot;, <a class="co" href="#callout_ch1-co-1" id="co_ch1-co-1"><img alt="1" src="images/callouts/1.png" /></a>
+  &quot;lat&quot;: 48.8581, <a class="co" href="#callout_ch1-co-2" id="co_ch1-co-2"><img alt="2" src="images/callouts/2.png" /></a>
+  &quot;lng&quot;: 2.2946, <a class="co" href="#callout_ch1-co-3" id="co_ch1-co-3"><img alt="3" src="images/callouts/3.png" /></a>
+  &quot;ts&quot;: &quot;2013-09-23T08:43Z&quot; <a class="co" href="#callout_ch1-co-4" id="co_ch1-co-4"><img alt="4" src="images/callouts/4.png" /></a>
 }</pre>
 
 <dl class="calloutlist">
@@ -245,16 +246,17 @@
 </dl>
 </div>
 
-<p>The text messages that will be consumed by the Locations iOS application will be represented as a simple plain-text string, as shown in <a data-type="xref" href="heading_to"></a>.</p>
+<p>The text messages that will be consumed by the Locations iOS application will be represented as a simple plain-text string, as shown in .</p>
 
 <div data-type="example" id="heading_to">
 <h5>Text message payload</h5>
+
 <pre data-type="programlisting">
 &quot;Where are you heading to?&quot;</pre>
 
 <p>A more realistic representation of this message would also contain additional information such as the identifier of the headquarters sending the message. We are using a plain-text version, because this format is sufficient for our preliminary example.</p>
 
-<p>With the messaging topology and data representation known, we can now refine the Locations application diagram ().</p>
+<p>With the messaging topology and data representation known, we can now refine the Locations application diagram (<a data-type="xref" href="img_example_app_2">img_example_app_2</a>).</p>
 
 <figure id="img_example_app_2"><img alt="Diagram of the Locations application" src="images/mawm_0106.png" />
 <figcaption>Diagram of the Locations application with its messaging models and representations</figcaption>
@@ -270,20 +272,20 @@
 
 <p>Following this model, we will write a simple application called Motions to illustrate the use of the MQTT protocol. The iOS application will track the device motion and change its background color to advise its user when an alert message is received.<a contenteditable="false" data-primary="iOS applications" data-secondary="Motions application (example)" data-type="indexterm">&nbsp;</a></p>
 
-<p>Device motion will be represented by three values corresponding to<a contenteditable="false" data-primary="pitch, roll, and yaw values" data-type="indexterm">&nbsp;</a> its pitch, roll, and yaw values, as shown in .</p>
+<p>Device motion will be represented by three values corresponding to<a contenteditable="false" data-primary="pitch, roll, and yaw values" data-type="indexterm">&nbsp;</a> its pitch, roll, and yaw values, as shown in <a data-type="xref" href="img_mqtt_example_app_0">img_mqtt_example_app_0</a>.</p>
 
 <figure id="img_mqtt_example_app_0"><img alt="The pitch, roll and yaw values represents the device motion" src="images/mawm_0107.png" />
 <figcaption>The pitch, roll, and yaw values represent the device motion</figcaption>
 </figure>
 
-<p>The pending web application will display the motions of all devices that broadcast them and be able to send alert messages to them ():</p>
+<p>The pending web application will display the motions of all devices that broadcast them and be able to send alert messages to them (<a data-type="xref" href="img_mqtt_example_app_1">img_mqtt_example_app_1</a>):</p>
 
 <ul>
 	<li>
 	<p>In <a data-type="xref" href="#ch_mobile_mqtt">#ch_mobile_mqtt</a>, we will write the Motions iOS application using the MQTT protocol to send data about the device motions and receive alerts.</p>
 	</li>
 	<li>
-	<p>In <a data-type="xref" href="#ch_web_mqtt">#ch_web_mqtt</a>, we will write a web application <a contenteditable="false" data-primary="web applications" data-secondary="Motions application (example)" data-type="indexterm">&nbsp;</a>using the MQTT protocol over Web Sockets to receive all the device motions data and display them. The web application will also be able to send alert messages to any devices sending its motions data.</p>
+	<p>In <a data-type="xref" href="#ch_web_mqtt">#ch_web_mqtt</a>, we will write a web application <a contenteditable="false" data-primary="web applications" data-secondary="Motions application (example)" data-type="indexterm">&nbsp;</a>using the MQTT protocol over Web Sockets to receive all the device motions data and display them. The web application will also send alert messages to any devices sending its motions data.</p>
 	</li>
 </ul>
 
@@ -346,7 +348,7 @@
 	</li>
 </ul>
 
-<p>The Motions iOS application will send the device motions data in a binary message where its payload will be composed of three 64-bit floats representing the device&rsquo;s pitch, roll, and yaw values ().</p>
+<p>The Motions iOS application will send the device motions data in a binary message where its payload will be composed of three 64-bit floats representing the device&rsquo;s pitch, roll, and yaw values (<a data-type="xref" href="ex_example_motion_data">ex_example_motion_data</a>).</p>
 
 <div data-type="example" id="ex_example_motion_data">
 <h5>Device motion message paylaod</h5>
@@ -363,7 +365,7 @@
 </dl>
 </div>
 
-<p>The alert messages that <a contenteditable="false" data-primary="alert messages" data-secondary="consumed by Motions iOS application (example)" data-type="indexterm">&nbsp;</a>will be consumed by the Motions iOS application will be represented as a simple plain-text string corresponding to a color. The Motions application will use this payload to temporarily change its background color to alert the user ().</p>
+<p>The alert messages that <a contenteditable="false" data-primary="alert messages consumed by Motions iOS application (example)" data-type="indexterm">&nbsp;</a>will be consumed by the Motions iOS application will be represented as a simple plain-text string corresponding to a color. The Motions application will use this payload to temporarily change its background color to alert the user (<a data-type="xref" href="ex_example_alert_data">ex_example_alert_data</a>).</p>
 
 <div data-type="example" id="ex_example_alert_data">
 <h5>Alert message payload</h5>
@@ -379,7 +381,7 @@
 </dl>
 </div>
 
-<p>With the messaging topology and data representation known, we can now refine the Motions application diagram ().</p>
+<p>With the messaging topology and data representation known, we can now refine the Motions application diagram (<a data-type="xref" href="img_mqtt_example_app_2">img_mqtt_example_app_2</a>).</p>
 
 <figure id="img_mqtt_example_app_2"><img alt="Diagram of the Motions application" src="images/mawm_0109.png" />
 <figcaption>Diagram of the Motions application with its messaging models and representations</figcaption>
@@ -393,7 +395,7 @@
 
 <p>In this chapter, we learned about the messaging protocols and how they differ from request/reply protocols. We introduced two messaging models (point-to-point and publish/subscribe) and the parts that compose a message (destination, headers, and payload).</p>
 
-<p>We also took a look at the two applications that will be written in the subsequent chapters&#x2014;the Locations application (which uses STOMP) and the Motions application (which uses MQTT)&#x2014;and established the messaging models and representation that they will use.</p>
+<p>We also took a look at the two applications that will be written in the subsequent chapters&mdash;the Locations application (which uses STOMP) and the Motions application (which uses MQTT)&mdash;and established the messaging models and representation that they will use.</p>
 
 <p>In the next chapter, we will start writing the Locations iOS application. If you are more interested in learning about MQTT, you can go directly to <a data-type="xref" href="#ch_mobile_mqtt">#ch_mobile_mqtt</a> to start writing the Motions application.</p>
 </section>

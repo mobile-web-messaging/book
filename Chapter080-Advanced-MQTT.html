@@ -3,7 +3,7 @@
 
 <p class="lead">In Chapters 6 and 7, we used MQTT to send and receive messages from a native iOS application and a web application. MQTT provides additional features that we did not use to write these applications.<a contenteditable="false" data-primary="MQTT" data-secondary="advanced" data-type="indexterm" id="MQTTadv">&nbsp;</a> In this chapter, we will take a tour of all these advanced features provided by MQTT.</p>
 
-<p>This chapter covers the latest version of the protocol at the time of this writing (i.e., <a href="http://www.ibm.com/developerworks/webservices/library/ws-mqtt/index.html">MQTT v3.1</a>, which was released on August 19, 2010).</p>
+<p>This chapter covers the latest version of the protocol at the time of this writing (i.e., <a href="http://bit.ly/mqtt-spec">MQTT v3.1</a>, which was released on August 19, 2010).</p>
 
 <section data-type="sect1" id="_authentication_2">
 <h1>Authentication</h1>
@@ -124,6 +124,8 @@ client.connect({onSuccess: function(frame) {
 	</li>
 </ul>
 
+<p>We can modify the <code>Motions</code> web application to display an alert message when a connection loss is detected to inform the user:</p>
+
 <pre data-code-language="js" data-type="programlisting">
 client.onConnectionLost = function(response) {
   alert(response.errorMessage + &quot;\nclientID = &quot; + client.clientID + &quot; [&quot; + 
@@ -215,20 +217,19 @@ client.connect({onSuccess: function(frame) {
 <pre data-code-language="objc" data-type="programlisting">
 - (void)setLastWill
 {
-    NSString *willTopic = @&quot;/mwm/lastWill&quot;;
-    NSDictionary *dict = @{ @&quot;deviceID&quot;: self.deviceID};
-    NSData *willData = 
-    [NSJSONSerialization 
-    dataWithJSONObject:dict
-    
-                 options:0 
-                   error:nil];
+&nbsp; &nbsp; NSString *willTopic = @&quot;/mwm/lastWill&quot;;
+&nbsp; &nbsp; NSDictionary *dict = @{ @&quot;deviceID&quot;: self.deviceID};
+&nbsp; &nbsp; NSData *willData = [NSJSONSerialization dataWithJSONObject:dict
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;options:0
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;error:nil];
 
-[self.client setWillData:willData
-                 toTopic:willTopic
-                 withQos:ExactlyOnce
-                  retain:NO];
-}</pre>
+&nbsp; &nbsp; [self.client setWillData:willData
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;toTopic:willTopic
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;withQos:ExactlyOnce
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; retain:NO];
+}
+
+</pre>
 
 <p>We just need to call this method before connecting to the MQTT broker in <code>connect</code>:</p>
 

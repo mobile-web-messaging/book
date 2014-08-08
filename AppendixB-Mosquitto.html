@@ -125,7 +125,7 @@ $ mosquitto_sub -h iot.eclipse.org -t /mwm/XYZ/alert
 ...
 yellow</pre>
 
-<p>Each message consumed by the tool will be displayed on a new line. You can type Ctrl+c to exit the tool and stop consuming messages.</p>
+<p>Each message consumed by the tool will be displayed on a new line. You can type <span class="keep-together">Ctrl+c</span> to exit the tool and stop consuming messages.</p>
 
 <p>The full list of the <code>mosquitto_sub</code> parameters is available by calling <code>mosquitto_sub --help</code>:</p>
 
@@ -170,7 +170,8 @@ Usage: mosquitto_sub [-c] [-h host] [-k keepalive] [-p port] [-q qos] [-R] -t to
  --will-qos : QoS level for the client Will.
  --will-retain : if given, make the client Will retained.
  --will-topic : the topic on which to publish the client Will.
- --cafile : path to a file containing trusted CA certificates to enable encrypted certificate based communication.
+ --cafile : path to a file containing trusted CA certificates to enable
+ encrypted certificate based communication.
  --capath : path to a directory containing trusted CA certificates to 
  enable encrypted communication.
  --cert : client certificate for authentication, if required by server.
@@ -178,7 +179,8 @@ Usage: mosquitto_sub [-c] [-h host] [-k keepalive] [-p port] [-q qos] [-R] -t to
  --ciphers : openssl compatible list of TLS ciphers to support.
  --tls-version : TLS protocol version, can be one of tlsv1.2 tlsv1.1 or tlsv1.
                  Defaults to tlsv1.2 if available.
- --insecure : do not check that the server certificate hostname matches the remote hostname. Using this option means that you cannot be sure that the
+ --insecure : do not check that the server certificate hostname matches the
+ remote hostname. Using this option means that you cannot be sure that the
  remote host is the server you wish to connect to and so is insecure.
               Do not use this option in a production environment.
  --psk : pre-shared-key in hexadecimal (no leading 0x) to enable TLS-PSK mode.
