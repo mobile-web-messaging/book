@@ -1,6 +1,7 @@
 {
   "branch": "master",
   "files": [
+    "cover.html",
     "titlepage.html",
     "copyright.html",
     "toc.html",
@@ -44,5 +45,5 @@
     }
   },
   "theme": "oreillymedia/animal_theme",
-  "title": "mobile and web messaging"
+  "title": "Mobile and Web Messaging"
 }
